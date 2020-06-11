@@ -27,7 +27,7 @@ Install the toolchain and then:
 
 ## Deployment
 
-In short, the Node tools (npm) is used to build/compile the artefacts subject to deployment. 
+In short, the toolchain is used to build/compile the artefacts subject to deployment, i.e. the files contained in the various React components must be compiled to JavaScript in order to be executable by a borwser client. 
 
 Detailed instructions will follow...
 
