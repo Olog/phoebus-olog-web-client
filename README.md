@@ -23,7 +23,13 @@ Install the toolchain and then:
 3) Create a .env file in the root directory. Add the line:
    REACT_APP_BASE_URL='url-to-Olog-ES-service'
 4) Invoke "npm start" to launch the Node JS development server.
+5) Develop.
 
+## Deployment
+
+In short, the Node tools (npm) is used to build/compile the artefacts subject to deployment. 
+
+Detailed instructions will follow...
 
 
 
