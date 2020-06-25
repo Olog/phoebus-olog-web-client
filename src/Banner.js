@@ -23,8 +23,10 @@ import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import Navbar from 'react-bootstrap/Navbar';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Login from './Login';
+import Nav from 'react-bootstrap/Nav';
 
-const Banner = (props) =>{
+const Banner = (props) => {
 
   const [show, setShow] = useState(false);
   const [name, setName] = useState("");
@@ -52,16 +54,17 @@ const Banner = (props) =>{
     <>
       <Navbar bg="dark" variant="dark" expanded="true">
         <Navbar.Brand href="#home">Olog ES</Navbar.Brand>
-        <Button variant="primary">New Log Entry</Button>{' '}
+        <Button disabled={!props.userData.userName} variant="primary">New Log Entry</Button>
         <Dropdown>
-          <Dropdown.Toggle>
-            <span className="caret"></span>
-          </Dropdown.Toggle>
-          <DropdownMenu>
+          <Dropdown.Toggle disabled={!props.userData.userName}/>
+          <DropdownMenu alignRight="true">
             <Dropdown.Item onClick={showAddModal} name="Logbook">New Logbook</Dropdown.Item>
             <Dropdown.Item onClick={showAddModal} name="Tag">New Tag</Dropdown.Item>
           </DropdownMenu>
         </Dropdown>
+        <Nav className="justify-content-end" style={{ width: "100%" }}>
+          <Login userData={props.userData} showLogin={props.showLogin} showLogout={props.showLogout}/>
+        </Nav> 
       </Navbar>
 
       <Modal show={show} onHide={handleClose}>
@@ -72,12 +75,8 @@ const Banner = (props) =>{
           <Form.Control type="text" placeholder={what + ' name'} onChange={handleNameInput} /> 
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleCreate}>
-            Create
-          </Button>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
+          <Button variant="primary" onClick={handleCreate}>Create</Button>
+          <Button variant="secondary" onClick={handleClose}>Cancel</Button>
         </Modal.Footer>
       </Modal>
     </>
