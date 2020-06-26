@@ -57,7 +57,7 @@ class App extends Component {
     // TODO add error handling if request fails.
    axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks/` + name, {name: name, state: "Active"}, { withCredentials: true })
     .then(res => {
-      this.setState(prevState => ({logbooks: [...prevState.logbooks, res.data]}));
+        this.setState(prevState => ({logbooks: [...prevState.logbooks, res.data]}));
     });
   };
 
@@ -100,15 +100,23 @@ class App extends Component {
    
      axios.post(`${process.env.REACT_APP_BASE_URL}/login`, formData,  { withCredentials: true })
      .then(res => {
-      console.log(res);
-      console.log(res.data);
-      this.setState({loginError: "", userData: res.data});
-      this.hideLogin();
-    });
+        this.setState({loginError: "", userData: res.data});
+        this.hideLogin();
+       }, error => { 
+         console.log(error);
+         if(!error.response){
+          this.setState({loginError: "Login failed. Service off-line?"})
+         }
+         else if(error.response.status === 401){
+          this.setState({loginError: "Login failed, invalid credentials"})
+         }
+      });
   }
 
   logout = (event) => {
     event.preventDefault();
+
+    // Switch to axios?
     fetch(`${process.env.REACT_APP_BASE_URL}/logout`)
     .then(response => {
         this.setState({logoutError: "", userData: {}});
@@ -116,7 +124,7 @@ class App extends Component {
       })
     .catch(error => {
       // In case service is unavaliable...
-      this.setState({logoutError: "Logout Failed. Service off-line?"});
+      this.setState({logoutError: "Logout failed. Service off-line?"});
     })
   }
 
@@ -134,29 +142,36 @@ class App extends Component {
         <Logbooks logbooks={this.state.logbooks}/>
 
         <Modal centered show={this.state.showLogin} onHide={this.hideLogin}>
+          <Modal.Header closeButton>
+            <Modal.Title>Sign In</Modal.Title>
+          </Modal.Header>
           <Modal.Body>
-            <Form onSubmit={this.login}>
+            <Form>
               <Form.Group controlId="formLogin">
                 <Form.Control type="text" placeholder="Username" ref={this.userNameRef} />
               </Form.Group>
               <Form.Group controlId="formBasicPassword">
                 <Form.Control type="password" placeholder="Password" ref={this.passwordRef}/>
               </Form.Group>
-              <Button variant="primary" type="submit">
-                Login
-              </Button>
-              <Button variant="secondary" onClick={this.hideLogin}>
-                Cancel
-              </Button>
             </Form>
             <Form.Label style={failureStyle}>{this.state.loginError}</Form.Label>
           </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" type="submit" onClick={this.login}>
+                  Sign In
+            </Button>
+            <Button variant="secondary" onClick={this.hideLogin}>
+                  Cancel
+            </Button>
+          </Modal.Footer>
         </Modal>
 
         <Modal centered show={this.state.showLogout} onHide={this.hideLogout}>
+          <Modal.Header closeButton>
+            <Modal.Title>Sign Out?</Modal.Title>
+          </Modal.Header>
           <Modal.Body>
             <Form onSubmit={this.logout}>
-              <Form.Label>Logout?</Form.Label>
               <Form.Group></Form.Group>
               <Button variant="primary" type="submit">
                 Yes

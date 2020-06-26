@@ -33,7 +33,7 @@ class Login extends Component{
 
     render(){
         return(
-            <Button onClick={this.handleClick}>{this.props.userData.userName ? this.props.userData.userName : 'Login'}</Button>
+            <Button onClick={this.handleClick}>{this.props.userData.userName ? this.props.userData.userName : 'Sign In'}</Button>
         )
     }
 }
