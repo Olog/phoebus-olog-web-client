@@ -24,12 +24,17 @@ import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 
 class Filters extends Component{
 
-    state ={
-        open: false
+    state = {
+        openLogbooks: false,
+        openTags: false
     };
 
-    toggle = () => {
-        this.setState({open: !this.state.open});
+    toggleLogbooks = () => {
+        this.setState({openLogbooks: !this.state.openLogbooks});
+    }
+
+    toggleTags = () => {
+        this.setState({openTags: !this.state.openTags});
     }
 
     render(){
@@ -38,11 +43,9 @@ class Filters extends Component{
               <h6>Filter Log Entries</h6>
                 <Accordion>
                   <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Card.Header} eventKey="0" onClick={this.toggle}>
-                      { this.state.open ? <FaChevronDown /> : <FaChevronRight/> } LOGBOOKS
-                      </Accordion.Toggle>
-                    </Card.Header>
+                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={this.toggleLogbooks}>
+                    { this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } LOGBOOKS
+                    </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                        <Card.Body><Logbooks logbooks={this.props.logbooks}/></Card.Body>
                     </Accordion.Collapse>
@@ -50,11 +53,9 @@ class Filters extends Component{
                 </Accordion>
                 <Accordion>
                   <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Card.Header} eventKey="0" onClick={this.toggle}>
-                      { this.state.open ? <FaChevronDown /> : <FaChevronRight/> } TAGS
-                      </Accordion.Toggle>
-                    </Card.Header>
+                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={this.toggleTags}>
+                    { this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } TAGS
+                    </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                        <Card.Body><Tags tags={this.props.tags}/></Card.Body>
                     </Accordion.Collapse>
