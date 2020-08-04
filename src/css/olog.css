@@ -1,0 +1,14 @@
+.failureStyle {
+    color: red;
+    marginTop: 10px;
+    marginLeft: 2px;
+}
+
+.cell-style{
+    background-color: #f5f5f5;
+    margin: 3px;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    padding-right: 0px;
+    padding-left: 0px;
+}

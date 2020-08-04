@@ -16,14 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { Component } from 'react'
-import Banner from './Banner'
-import Logbooks from './Logbooks'
-import Form from 'react-bootstrap/Form'
-import Modal from 'react-bootstrap/Modal'
-import Button from 'react-bootstrap/Button'
+import React, { Component } from 'react';
+import Banner from './Banner';
+//import MainView from './MainView';
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 import axios from 'axios'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Logbooks from './Logbooks'
+
+import './css/olog.css';
 
 /**
  * Top level component that defines application state. It also handles 
@@ -33,25 +36,8 @@ class App extends Component {
 
   state = {
     logbooks: [],
-    userData: {userName: "", roles: []},
-    showLogin: false,
-    loginError: "",
-    showLogout: false,
-    logoutError: "",
-    showCreateLogbook: false
+    userData: {userName: "", roles: []}
   }
-
-  userNameRef = React.createRef();
-  passwordRef = React.createRef();
-
-  create = (what, name) => {
-    if(what === 'Logbook'){
-      this.createLogbook(name);
-    }
-    else if(what === 'Tag'){
-      this.createTag(name);
-    }
-  };
 
   createLogbook = (name) => {
     // TODO add error handling if request fails.
@@ -61,128 +47,45 @@ class App extends Component {
     });
   };
 
-  createTag = (name) => {
-
-  };
-
   componentDidMount() {
+    this.refreshLogbooks();
+  }
 
+  refreshLogbooks = () => {
     fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks`)
-      .then(response => response.json())
-      .then(data => this.setState({logbooks: data}))
+    .then(response => response.json())
+    .then(data => this.setState({logbooks: data}))
 
-    fetch(`${process.env.REACT_APP_BASE_URL}/user`)
-      .then(data => this.setState({userData : data}))
+  fetch(`${process.env.REACT_APP_BASE_URL}/user`)
+    .then(data => this.setState({userData : data}))
   }
 
-  showLogin = () => {
-    this.setState({showLogin: true, loginError: ""});
-  }
-
-  hideLogin = () => {
-    this.setState({showLogin: false});
-  }
-
-  showLogout= () => {
-    this.setState({showLogout: true, logoutError: ""});
-  }
-
-  hideLogout = () => {
-    this.setState({showLogout: false});
-  }
-
-
-  login = (event) => {
-    event.preventDefault();
-    var formData = new FormData();
-    formData.append("username", this.userNameRef.current.value);
-    formData.append("password", this.passwordRef.current.value);
-   
-     axios.post(`${process.env.REACT_APP_BASE_URL}/login`, formData,  { withCredentials: true })
-     .then(res => {
-        this.setState({loginError: "", userData: res.data});
-        this.hideLogin();
-       }, error => { 
-         console.log(error);
-         if(!error.response){
-          this.setState({loginError: "Login failed. Service off-line?"})
-         }
-         else if(error.response.status === 401){
-          this.setState({loginError: "Login failed, invalid credentials"})
-         }
-      });
-  }
-
-  logout = (event) => {
-    event.preventDefault();
-
-    // Switch to axios?
-    fetch(`${process.env.REACT_APP_BASE_URL}/logout`)
-    .then(response => {
-        this.setState({logoutError: "", userData: {}});
-        this.hideLogout();
-      })
-    .catch(error => {
-      // In case service is unavaliable...
-      this.setState({logoutError: "Logout failed. Service off-line?"});
-    })
+  setUserData = (userData) => {
+    this.setState({userData: userData});
   }
 
   render() {
 
-    const failureStyle = {
-      color: "red",
-      marginTop: "10px",
-      marginLeft: "2px"
-    };
-
     return (
       <div>
-        <Banner userData={this.state.userData}  create={this.create} showLogin={this.showLogin} showLogout={this.showLogout} />
-        <Logbooks logbooks={this.state.logbooks}/>
-
-        <Modal centered show={this.state.showLogin} onHide={this.hideLogin}>
-          <Modal.Header closeButton>
-            <Modal.Title>Sign In</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group controlId="formLogin">
-                <Form.Control type="text" placeholder="Username" ref={this.userNameRef} />
-              </Form.Group>
-              <Form.Group controlId="formBasicPassword">
-                <Form.Control type="password" placeholder="Password" ref={this.passwordRef}/>
-              </Form.Group>
-            </Form>
-            <Form.Label style={failureStyle}>{this.state.loginError}</Form.Label>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="primary" type="submit" onClick={this.login}>
-                  Sign In
-            </Button>
-            <Button variant="secondary" onClick={this.hideLogin}>
-                  Cancel
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-        <Modal centered show={this.state.showLogout} onHide={this.hideLogout}>
-          <Modal.Header closeButton>
-            <Modal.Title>Sign Out?</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form onSubmit={this.logout}>
-              <Form.Group></Form.Group>
-              <Button variant="primary" type="submit">
-                Yes
-              </Button>
-              <Button variant="secondary" onClick={this.hideLogout}>
-                No
-              </Button>
-            </Form>
-            <Form.Label style={failureStyle}>{this.state.logoutError}</Form.Label>
-          </Modal.Body>
-        </Modal>
+         <Container fluid>
+          <Row>
+            <Col>
+              <Banner userData={this.state.userData}  setUserData={this.setUserData} refreshLogbooks={this.refreshLogbooks}/>
+            </Col>
+          </Row>
+          <Row> 
+            <Col className="cell-style" sm={true}>
+              <Logbooks logbooks={this.state.logbooks}/>
+            </Col>
+            <Col className="cell-style" sm={true}>
+              Foo
+            </Col>
+            <Col className="cell-style">
+              Bar
+            </Col>
+          </Row>
+        </Container>
       </div>
     )
   }
