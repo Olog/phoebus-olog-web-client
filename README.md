@@ -25,8 +25,8 @@ Install the toolchain and then:
 2) Invoke ``npm install`` to download dependencies. The process may complain about various issues (e.g. missing git support on Mac, deprecated versions), but should result in a large number of modules being installed in the node_modules directory.
 3) Create a ``.env`` file in the root directory. Add the line:
    ``REACT_APP_BASE_URL='url-to-Olog-ES-service'``.
-4) Invoke ``npm start`` to launch the Node JS development server.
-5) Launch the Olog-ES backend. Or mock it.
+4) Launch the Olog-ES backend. Or mock it.
+5) Invoke ``npm start`` to launch the Node JS development server.
 6) Develop.
 
 ## Deployment
