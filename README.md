@@ -4,7 +4,10 @@ DISCLAIMER: this is work in progress!
 
 This project provides a web client for the olog es logbook service. The objective is to provide read, write and search capabilities, though not the full feature set of the CS Studio logbook client, see https://github.com/ControlSystemStudio/phoebus
 
-The olog es web client is based upon React JS and React Bootstrap.
+Technology stack:
+* ReactJS (main framework)
+* React Bootstrap (UI components)
+* axios (back-end access)
 
 ## Toolchain
 
@@ -23,7 +26,8 @@ Install the toolchain and then:
 3) Create a ``.env`` file in the root directory. Add the line:
    ``REACT_APP_BASE_URL='url-to-Olog-ES-service'``.
 4) Invoke ``npm start`` to launch the Node JS development server.
-5) Develop.
+5) Launch the Olog-ES backend. Or mock it.
+6) Develop.
 
 ## Deployment
 
