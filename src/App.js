@@ -18,13 +18,10 @@
 
 import React, { Component } from 'react';
 import Banner from './Banner';
-//import MainView from './MainView';
-// Need axios for back-end access as the "fetch" API does not support CORS cookies.
-import axios from 'axios'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Logbooks from './Logbooks'
+import Filters from './Filters'
 
 import './css/olog.css';
 
@@ -36,28 +33,25 @@ class App extends Component {
 
   state = {
     logbooks: [],
+    tags: [],
     userData: {userName: "", roles: []}
   }
 
-  createLogbook = (name) => {
-    // TODO add error handling if request fails.
-   axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks/` + name, {name: name, state: "Active"}, { withCredentials: true })
-    .then(res => {
-        this.setState(prevState => ({logbooks: [...prevState.logbooks, res.data]}));
-    });
-  };
-
   componentDidMount() {
     this.refreshLogbooks();
+    this.refreshTags();
   }
 
   refreshLogbooks = () => {
     fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks`)
     .then(response => response.json())
     .then(data => this.setState({logbooks: data}))
+  }
 
-  fetch(`${process.env.REACT_APP_BASE_URL}/user`)
-    .then(data => this.setState({userData : data}))
+  refreshTags = () => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/tags`)
+    .then(response => response.json())
+    .then(data => this.setState({tags: data}))
   }
 
   setUserData = (userData) => {
@@ -76,7 +70,7 @@ class App extends Component {
           </Row>
           <Row> 
             <Col className="cell-style" sm={true}>
-              <Logbooks logbooks={this.state.logbooks}/>
+              <Filters logbooks={this.state.logbooks} tags={this.state.tags}/>
             </Col>
             <Col className="cell-style" sm={true}>
               Foo

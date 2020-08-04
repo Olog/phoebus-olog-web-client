@@ -16,22 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react'
-import './css/olog.css'
+import './css/olog.css';
 
-class Logbooks extends Component{
+class Tags extends Component{
+
     
     render(){
-        var items = this.props.logbooks.map((row, index) => {
+        var items = this.props.tags.map((row, index) => {
             return (
-                <li  key={index}>{row.name} - {row.owner}</li>
+                <li  key={index}>{row.name}</li>
             )
          })
          
         return (
              <ul className="olog-ul">{items}</ul>
-            
         )
     }
 }
 
-export default Logbooks
+export default Tags
