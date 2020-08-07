@@ -15,23 +15,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react'
-import './css/olog.css'
+import React, {Component} from 'react';
+import SearchResultItem from './SearchResultItem';
 
-class Logbooks extends Component{
-    
+class SearchResultList extends Component{
+
     render(){
-        var items = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
+
+        var searchResultItems = this.props.logs.map((row, index) => {
             return (
-                <li  key={index}>{row.name}</li>
+                <li  key={index}><SearchResultItem log={row}/></li>
             )
-         })
-         
-        return (
-             <ul className="olog-ul">{items}</ul>
-            
+        })
+
+        return(
+            <>
+                <h6>Search Results</h6>
+                <ul className="olog-ul">{searchResultItems}</ul>
+            </>
         )
     }
 }
 
-export default Logbooks
+export default SearchResultList;

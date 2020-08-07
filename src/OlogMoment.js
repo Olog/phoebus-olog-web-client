@@ -15,23 +15,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react'
-import './css/olog.css'
+import React from 'react'
+import Moment from 'react-moment'
+import moment from 'moment'
 
-class Logbooks extends Component{
-    
+class OlogMoment extends Moment{
+
+    constructor(props) {
+        super(props);
+    }
+
     render(){
-        var items = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <li  key={index}>{row.name}</li>
-            )
-         })
-         
-        return (
-             <ul className="olog-ul">{items}</ul>
-            
+        return(
+            <>
+                {moment(this.props.date).isValid() ? <Moment format="YYYY-MM-DD HH:mm:ss">{this.props.date}</Moment> : "n/a"}
+            </>
         )
     }
 }
 
-export default Logbooks
+export default OlogMoment;

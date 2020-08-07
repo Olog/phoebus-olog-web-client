@@ -22,8 +22,11 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Filters from './Filters'
+// Need axios for back-end access as the "fetch" API does not support CORS cookies.
+import axios from 'axios'
 
 import './css/olog.css';
+import SearchResultList from './SearchResultList';
 
 /**
  * Top level component that defines application state. It also handles 
@@ -34,12 +37,14 @@ class App extends Component {
   state = {
     logbooks: [],
     tags: [],
+    logRecords: [],
     userData: {userName: "", roles: []}
   }
 
   componentDidMount() {
     this.refreshLogbooks();
     this.refreshTags();
+    this.getLogRecords();
   }
 
   refreshLogbooks = () => {
@@ -58,6 +63,12 @@ class App extends Component {
     this.setState({userData: userData});
   }
 
+  getLogRecords = (filter) => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logs?logbooks=Demo%20Logbook%201`)
+      .then(response => response.json())
+      .then(data => this.setState({logRecords: data}))
+  }
+
   render() {
 
     return (
@@ -73,7 +84,7 @@ class App extends Component {
               <Filters logbooks={this.state.logbooks} tags={this.state.tags}/>
             </Col>
             <Col className="cell-style" sm={true}>
-              Foo
+              <SearchResultList logs={this.state.logRecords}/>
             </Col>
             <Col className="cell-style">
               Bar

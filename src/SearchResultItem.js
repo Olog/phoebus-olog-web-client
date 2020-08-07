@@ -16,22 +16,34 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react'
+import Moment from 'react-moment';
+import moment from 'moment';
+import OlogMoment from './OlogMoment'
+
 import './css/olog.css'
 
-class Logbooks extends Component{
-    
+class SearchResultItem extends Component{
+
     render(){
-        var items = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
+        var attachments = this.props.log.attachments.map((row, index) => {
             return (
-                <li  key={index}>{row.name}</li>
+                <li  key={index}>{row.filename} - {row.fileMetadataDescription}</li>
             )
          })
-         
-        return (
-             <ul className="olog-ul">{items}</ul>
-            
+
+        return(
+            <>
+              <div className="search-list-item">
+                Author: {this.props.log.owner} <br/>
+                Created Date: <OlogMoment date={this.props.log.createdDate}/> <br/>
+                Modified Date: <OlogMoment date={this.props.log.modifyDate}/><br/>
+                Description: {this.props.log.description} <br/>
+                Attachments:<br/>
+                <ul className="olog-ul">{attachments}</ul>
+              </div>
+            </>
         )
     }
 }
 
-export default Logbooks
+export default SearchResultItem;
