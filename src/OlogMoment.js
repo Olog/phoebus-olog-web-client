@@ -21,10 +21,6 @@ import moment from 'moment'
 
 class OlogMoment extends Moment{
 
-    constructor(props) {
-        super(props);
-    }
-
     render(){
         return(
             <>

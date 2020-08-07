@@ -23,7 +23,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Filters from './Filters'
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
-import axios from 'axios'
+//import axios from 'axios'
 
 import './css/olog.css';
 import SearchResultList from './SearchResultList';
@@ -63,8 +63,8 @@ class App extends Component {
     this.setState({userData: userData});
   }
 
-  getLogRecords = (filter) => {
-    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logs?logbooks=Demo%20Logbook%201`)
+  getLogRecords = (name) => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logs?logbooks=` + name)
       .then(response => response.json())
       .then(data => this.setState({logRecords: data}))
   }
@@ -81,7 +81,7 @@ class App extends Component {
           </Row>
           <Row> 
             <Col className="cell-style" sm={true}>
-              <Filters logbooks={this.state.logbooks} tags={this.state.tags}/>
+              <Filters logbooks={this.state.logbooks} tags={this.state.tags} getLogRecords={this.getLogRecords}/>
             </Col>
             <Col className="cell-style" sm={true}>
               <SearchResultList logs={this.state.logRecords}/>

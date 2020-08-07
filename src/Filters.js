@@ -39,7 +39,7 @@ class Filters extends Component{
                     { this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } LOGBOOKS
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
-                       <Card.Body><Logbooks logbooks={this.props.logbooks}/></Card.Body>
+                       <Card.Body><Logbooks logbooks={this.props.logbooks} getLogRecords={this.props.getLogRecords}/></Card.Body>
                     </Accordion.Collapse>
                   </Card>
                 </Accordion>

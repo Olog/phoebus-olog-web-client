@@ -19,11 +19,15 @@ import React, {Component} from 'react'
 import './css/olog.css'
 
 class Logbooks extends Component{
+
+    getLogRecords = (name) =>{
+        this.props.getLogRecords(name);
+    }
     
     render(){
         var items = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
-                <li  key={index}>{row.name}</li>
+                <li  key={index}><a href="#" onClick={() => this.getLogRecords(row.name)}>{row.name}</a></li>
             )
          })
          
