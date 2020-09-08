@@ -22,6 +22,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Filters from './Filters'
+import LogDetails from './LogDetails'
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 //import axios from 'axios'
 
@@ -38,7 +39,8 @@ class App extends Component {
     logbooks: [],
     tags: [],
     logRecords: [],
-    userData: {userName: "", roles: []}
+    userData: {userName: "", roles: []},
+    currentLogRecord: null
   }
 
   componentDidMount() {
@@ -69,13 +71,17 @@ class App extends Component {
       .then(data => this.setState({logRecords: data}))
   }
 
+  setLogRecord = (record) => {
+    this.setState({currentLogRecord: record});
+  }
+
   render() {
 
     return (
       <div>
          <Container fluid>
           <Row>
-            <Col>
+            <Col >
               <Banner userData={this.state.userData}  setUserData={this.setUserData} refreshLogbooks={this.refreshLogbooks}/>
             </Col>
           </Row>
@@ -84,10 +90,10 @@ class App extends Component {
               <Filters logbooks={this.state.logbooks} tags={this.state.tags} getLogRecords={this.getLogRecords}/>
             </Col>
             <Col className="cell-style" sm={true}>
-              <SearchResultList logs={this.state.logRecords}/>
+              <SearchResultList logs={this.state.logRecords} setLogRecord={this.setLogRecord} />
             </Col>
             <Col className="cell-style">
-              Bar
+              <LogDetails currentLogRecord={this.state.currentLogRecord}/>
             </Col>
           </Row>
         </Container>

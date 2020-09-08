@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react'
+import Button from 'react-bootstrap/Button'
 import './css/olog.css'
 
 class Logbooks extends Component{
@@ -27,7 +28,7 @@ class Logbooks extends Component{
     render(){
         var items = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
-                <li  key={index}><a href="#" onClick={() => this.getLogRecords(row.name)}>{row.name}</a></li>
+                <li  key={index}><Button variant="link" onClick={() => this.getLogRecords(row.name)}>{row.name}</Button></li>
             )
          })
          

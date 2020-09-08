@@ -17,23 +17,35 @@
  */
 import React, {Component} from 'react';
 import SearchResultItem from './SearchResultItem';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 class SearchResultList extends Component{
 
     render(){
-
+        
         var searchResultItems = this.props.logs.map((row, index) => {
             return (
-                <li  key={index}><SearchResultItem log={row}/></li>
+                <SearchResultItem  key={index} log={row} setLogRecord={this.props.setLogRecord} currentLogRecord={this.props.currentLogRecord}/>
             )
         })
 
-        return(
-            <>
-                <h6>Search Results</h6>
-                <ul className="olog-ul">{searchResultItems}</ul>
-            </>
-        )
+        if(this.props.logs.length > 0){
+            return(
+                <>
+                    <h6>Search Results</h6>
+                    <ListGroup className="olog-ul">{searchResultItems}</ListGroup>
+                </>
+            )
+        }
+        else{
+            return(
+                <>
+                    <h6>Search Results</h6>
+                    No log records found
+                </>
+            )
+        }
+        
     }
 }
 

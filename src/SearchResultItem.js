@@ -15,9 +15,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react'
-import OlogMoment from './OlogMoment'
-
+import React, {Component} from 'react';
+import OlogMoment from './OlogMoment';
+import ListGroup from 'react-bootstrap/ListGroup';
 import './css/olog.css'
 
 class SearchResultItem extends Component{
@@ -25,20 +25,19 @@ class SearchResultItem extends Component{
     render(){
         var attachments = this.props.log.attachments.map((row, index) => {
             return (
-                <li  key={index}>{row.filename} - {row.fileMetadataDescription}</li>
+                <li key={index}>{row.filename} - {row.fileMetadataDescription}</li>
             )
          })
 
         return(
             <>
-              <div className="search-list-item">
+              <ListGroup.Item onClick={() => this.props.setLogRecord(this.props.log)}>
                 Author: {this.props.log.owner} <br/>
-                Created Date: <OlogMoment date={this.props.log.createdDate}/> <br/>
-                Modified Date: <OlogMoment date={this.props.log.modifyDate}/><br/>
+                Created Date: <OlogMoment date={this.props.log.createdDate}/><br/>
                 Description: {this.props.log.description} <br/>
                 Attachments:<br/>
                 <ul className="olog-ul">{attachments}</ul>
-              </div>
+              </ListGroup.Item>
             </>
         )
     }
