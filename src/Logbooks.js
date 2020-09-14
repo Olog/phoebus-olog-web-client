@@ -21,14 +21,10 @@ import './css/olog.css'
 
 class Logbooks extends Component{
 
-    getLogRecords = (name) =>{
-        this.props.getLogRecords(name);
-    }
-    
     render(){
         var items = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
-                <li  key={index}><Button variant="link" onClick={() => this.getLogRecords(row.name)}>{row.name}</Button></li>
+                <li  key={index}><Button variant="link" onClick={() => this.props.getLogRecords(row.name)}>{row.name}</Button></li>
             )
          })
          

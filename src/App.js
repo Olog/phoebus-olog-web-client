@@ -46,19 +46,26 @@ class App extends Component {
   componentDidMount() {
     this.refreshLogbooks();
     this.refreshTags();
-    this.getLogRecords();
+    //this.getLogRecords();
   }
 
   refreshLogbooks = () => {
     fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks`)
     .then(response => response.json())
     .then(data => this.setState({logbooks: data}))
+    .catch(() => this.setState({logbooks: []}));
   }
 
   refreshTags = () => {
     fetch(`${process.env.REACT_APP_BASE_URL}/Olog/tags`)
     .then(response => response.json())
-    .then(data => this.setState({tags: data}))
+    .then(data => {
+      // If back-end cannot return tags, an object containing status is available instead
+      if(data.status === 200){
+          this.setState({tags: data});
+      }
+    })
+    .catch(() => this.setState({tags: []}));
   }
 
   setUserData = (userData) => {

@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react'
-
 import './css/olog.css';
 
 class Tags extends Component{
 
-    
     render(){
-        var items = this.props.tags.map((row, index) => {
+        var items = this.props.tags && this.props.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
                 <li  key={index}>{row.name}</li>
             )
