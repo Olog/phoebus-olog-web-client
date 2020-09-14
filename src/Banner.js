@@ -26,6 +26,7 @@ import Nav from 'react-bootstrap/Nav';
 import LoginDialog from './LoginDialog';
 import LogoutDialog from './LogoutDialog';
 import AddLogbookDialog from './AddLogbookDialog';
+import AddTagDialog from './AddTagDialog';
 
 const Banner = (props) => {
 
@@ -33,6 +34,7 @@ const Banner = (props) => {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [showAddLogbookDialog, setShowAddLogbookDialog] = useState(false);
+  const [showAddTagDialog, setShowAddTagDialog] = useState(false);
 
   const setUserData = (userData) => {
     // Popagate to top level state
@@ -51,13 +53,25 @@ const Banner = (props) => {
     setShowAddLogbookDialog(true);
   }
 
+  const showAddTag = () => {
+    setShowAddTagDialog(true);
+  }
+
   const hideAddLogbook = () => {
     setShowAddLogbookDialog(false);
+  }
+
+  const hideAddTag = () => {
+    setShowAddTagDialog(false);
   }
 
   const refreshLogbooks = () => {
     // Propagate upwards
     props.refreshLogbooks();
+  }
+
+  const refreshTags = () => {
+    props.refreshTags();
   }
 
   return (
@@ -69,7 +83,7 @@ const Banner = (props) => {
           <Dropdown.Toggle disabled={!props.userData.userName}/>
           <DropdownMenu alignRight="true">
             <Dropdown.Item onClick={showAddLogbook}>New Logbook</Dropdown.Item>
-            <Dropdown.Item onClick={showAddLogbook}>New Tag</Dropdown.Item>
+            <Dropdown.Item onClick={showAddTag}>New Tag</Dropdown.Item>
           </DropdownMenu>
         </Dropdown>
         <Nav className="justify-content-end" style={{ width: "100%" }}>
@@ -80,6 +94,8 @@ const Banner = (props) => {
       <LoginDialog setUserData={setUserData} showLoginDialog={showLoginDialog} showLogin={showLogin}/>
       <LogoutDialog setUserData={setUserData} showLogoutDialog={showLogoutDialog} showLogout={showLogout}/>
       <AddLogbookDialog showAddLogbookDialog={showAddLogbookDialog} hideAddLogbook={hideAddLogbook} refreshLogbooks={refreshLogbooks}/>
+      <AddTagDialog showAddTagDialog={showAddTagDialog} hideAddTag={hideAddTag} refreshTags={refreshTags}/>
+  
     </>
   )
 }

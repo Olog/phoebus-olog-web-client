@@ -15,27 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react'
-import Logbooks from './Logbooks'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import React, {Component} from 'react';
 
-import './css/olog.css'
-
-
-class MainView extends Component{
+class LogEntryEditor extends Component{
     render(){
         return(
-            <Container fluid>
-                <Row>
-                    <Col className="cell-style"><Logbooks logbooks={this.props.logbooks}/></Col>
-                    <Col className="cell-style">Foo</Col>
-                    <Col className="cell-style">Bar</Col>
-                </Row>
-            </Container>
-        ) 
+            <h1>MUSIGNY</h1>
+        )
     }
 }
 
-export default MainView
+export default LogEntryEditor;
