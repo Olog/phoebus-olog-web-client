@@ -18,9 +18,6 @@
 
 import React, { Component } from 'react';
 import Banner from './Banner';
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import Filters from './Filters'
 import LogDetails from './LogDetails'
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
@@ -28,6 +25,7 @@ import LogDetails from './LogDetails'
 
 import './css/olog.css';
 import SearchResultList from './SearchResultList';
+import Grid from '@material-ui/core/Grid';
 
 /**
  * Top level component that defines application state. It also handles 
@@ -36,13 +34,13 @@ import SearchResultList from './SearchResultList';
 class MainApp extends Component {
 
   state = {
-    logbooks: [],
-    tags: [],
-    logRecords: [],
-    userData: {userName: "", roles: []},
-    currentLogRecord: null
-  }
-
+      logbooks: [],
+      tags: [],
+      logRecords: [],
+      userData: {userName: "", roles: []},
+      currentLogRecord: null
+    };
+  
   componentDidMount() {
     this.refreshLogbooks();
     this.refreshTags();
@@ -82,30 +80,26 @@ class MainApp extends Component {
   }
 
   render() {
-
+    
     return (
-      <div>
-         <Container fluid>
-          <Row>
-            <Col >
-              <Banner userData={this.state.userData}  
+      <div> 
+        <Grid container spacing={1}>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Banner userData={this.state.userData}  
                 setUserData={this.setUserData} 
                 refreshLogbooks={this.refreshLogbooks}
                 refreshTags={this.refreshTags}/>
-            </Col>
-          </Row>
-          <Row> 
-            <Col className="cell-style" sm={true}>
-              <Filters logbooks={this.state.logbooks} tags={this.state.tags} getLogRecords={this.getLogRecords}/>
-            </Col>
-            <Col className="cell-style" sm={true}>
-              <SearchResultList logs={this.state.logRecords} setLogRecord={this.setLogRecord} />
-            </Col>
-            <Col className="cell-style">
-              <LogDetails currentLogRecord={this.state.currentLogRecord}/>
-            </Col>
-          </Row>
-        </Container>
+          </Grid>
+          <Grid item xs={12} sm={4} md={2} lg={2} >
+            <Filters logbooks={this.state.logbooks} tags={this.state.tags} getLogRecords={this.getLogRecords}/>
+          </Grid>
+          <Grid item xs={12} sm={8} md={4} lg={4}>
+            <SearchResultList logs={this.state.logRecords} setLogRecord={this.setLogRecord} />
+          </Grid>
+          <Grid item xs={12} sm={12} md={6} lg={6}>
+            <LogDetails currentLogRecord={this.state.currentLogRecord}/>
+          </Grid>
+        </Grid>
       </div>
     )
   }

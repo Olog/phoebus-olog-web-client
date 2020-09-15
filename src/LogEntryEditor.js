@@ -20,7 +20,7 @@ import React, {Component} from 'react';
 class LogEntryEditor extends Component{
     render(){
         return(
-            <h1>MUSIGNY</h1>
+            <h1>TBD</h1>
         )
     }
 }

@@ -27,6 +27,9 @@ import LoginDialog from './LoginDialog';
 import LogoutDialog from './LogoutDialog';
 import AddLogbookDialog from './AddLogbookDialog';
 import AddTagDialog from './AddTagDialog';
+import {
+  Link
+} from "react-router-dom";
 
 const Banner = (props) => {
 
@@ -35,11 +38,6 @@ const Banner = (props) => {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [showAddLogbookDialog, setShowAddLogbookDialog] = useState(false);
   const [showAddTagDialog, setShowAddTagDialog] = useState(false);
-
-  const setUserData = (userData) => {
-    // Popagate to top level state
-    props.setUserData(userData);
-  }
 
   const showLogin = (show) => {
     setShowLoginDialog(show);
@@ -65,20 +63,13 @@ const Banner = (props) => {
     setShowAddTagDialog(false);
   }
 
-  const refreshLogbooks = () => {
-    // Propagate upwards
-    props.refreshLogbooks();
-  }
-
-  const refreshTags = () => {
-    props.refreshTags();
-  }
-
   return (
     <>
       <Navbar bg="dark" variant="dark">
         <Navbar.Brand href="#home">Olog ES</Navbar.Brand>
-        <Button disabled={!props.userData.userName} variant="primary">New Log Entry</Button>
+        <Link to="/edit">
+          <Button disabled={!props.userData.userName} variant="primary">New Log Entry</Button>
+        </Link>
         <Dropdown>
           <Dropdown.Toggle disabled={!props.userData.userName}/>
           <DropdownMenu alignRight="true">
@@ -91,11 +82,19 @@ const Banner = (props) => {
         </Nav> 
       </Navbar>
 
-      <LoginDialog setUserData={setUserData} showLoginDialog={showLoginDialog} showLogin={showLogin}/>
-      <LogoutDialog setUserData={setUserData} showLogoutDialog={showLogoutDialog} showLogout={showLogout}/>
-      <AddLogbookDialog showAddLogbookDialog={showAddLogbookDialog} hideAddLogbook={hideAddLogbook} refreshLogbooks={refreshLogbooks}/>
-      <AddTagDialog showAddTagDialog={showAddTagDialog} hideAddTag={hideAddTag} refreshTags={refreshTags}/>
-  
+      <LoginDialog setUserData={props.setUserData} 
+        showLoginDialog={showLoginDialog} 
+        showLogin={showLogin}/>
+      <LogoutDialog setUserData={props.setUserData} 
+        showLogoutDialog={showLogoutDialog} 
+        showLogout={showLogout}/>
+      <AddLogbookDialog showAddLogbookDialog={showAddLogbookDialog} 
+        hideAddLogbook={hideAddLogbook} 
+        refreshLogbooks={props.refreshLogbooks}/>
+      <AddTagDialog showAddTagDialog={showAddTagDialog} 
+        hideAddTag={hideAddTag} 
+        refreshTags={props.refreshTags}/>
+
     </>
   )
 }

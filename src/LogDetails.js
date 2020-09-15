@@ -27,6 +27,8 @@ import OlogMoment from './OlogMoment';
 import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
 
+import './css/olog.css';
+
 class LogDetails extends Component{
 
     state = {
@@ -36,13 +38,13 @@ class LogDetails extends Component{
     render(){
         var logbooks = this.props.currentLogRecord && this.props.currentLogRecord.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
-                <span key={index}>{row.name}&nbsp;</span>
+                <span key={index}>{row.name},</span>
             )}
         )
 
         var tags = this.props.currentLogRecord && this.props.currentLogRecord.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
-                <span key={index}>row.name}&nbsp;</span>
+                <span key={index}>{row.name},</span>
             )}
         )
 
@@ -68,45 +70,43 @@ class LogDetails extends Component{
         )
 
         return(
-            <div>
+            <Container className="grid-item">
+               <h6>Log Details</h6>
                 {/* Render only of current log record is defined */}
                 {this.props.currentLogRecord &&
-                    <Container show={this.props.currentLogRecord}>
-                        
+                    
                         <Accordion>
-                            <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openInfo: !this.state.openInfo})}>
-                                <b>{this.props.currentLogRecord.owner}, <OlogMoment date={this.props.currentLogRecord.createdDate}/></b>
-                                &nbsp;{this.state.openInfo ? <FaChevronDown /> : <FaChevronRight/>}
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="0">
-                                    <Card.Body>
-                                        Logbooks: {logbooks}<br/>
-                                        Tags: {tags}<br/>
-                                        Level: {this.props.currentLogRecord.level}<br/>
-                                        Created Date: <OlogMoment date={this.props.currentLogRecord.createdDate}/>
-                                    </Card.Body>
-                                </Accordion.Collapse>
-                                <Row>
-                                    <Col>
-                                        <h6>Description:</h6>
-                                        {this.props.currentLogRecord.description}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <h6>Attachments:</h6>
-                                        <ListGroup>
-                                        {attachments}
-                                        </ListGroup>
-                                    </Col>
-                                </Row>
-                            </Card>
+                            <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openInfo: !this.state.openInfo})}>
+                            <b>{this.props.currentLogRecord.owner}, <OlogMoment date={this.props.currentLogRecord.createdDate}/></b>
+                            &nbsp;{this.state.openInfo ? <FaChevronDown /> : <FaChevronRight/>}
+                            </Accordion.Toggle>
+                            
+                            <Accordion.Collapse eventKey="0">
+                                <Card.Body>
+                                    Logbooks: {logbooks}<br/>
+                                    Tags: {tags}<br/>
+                                    Level: {this.props.currentLogRecord.level}<br/>
+                                    Created Date: <OlogMoment date={this.props.currentLogRecord.createdDate}/>
+                                </Card.Body>
+                            </Accordion.Collapse>
+                            
+                            <Row>
+                                <Col>
+                                    <h6>Description:</h6>
+                                    {this.props.currentLogRecord.description}
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <h6>Attachments:</h6>
+                                    <ListGroup>
+                                    {attachments}
+                                    </ListGroup>
+                                </Col>
+                            </Row>
                         </Accordion>
-                           
-                    </Container>
                 }
-            </div>
+            </Container>
         )
     }
 

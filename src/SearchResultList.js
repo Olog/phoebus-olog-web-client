@@ -18,6 +18,8 @@
 import React, {Component} from 'react';
 import SearchResultItem from './SearchResultItem';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Card from 'react-bootstrap/Card'
+import Container from 'react-bootstrap/Container';
 
 class SearchResultList extends Component{
 
@@ -31,18 +33,18 @@ class SearchResultList extends Component{
 
         if(this.props.logs.length > 0){
             return(
-                <>
+                <Container className="grid-item">
                     <h6>Search Results</h6>
-                    <ListGroup className="olog-ul">{searchResultItems}</ListGroup>
-                </>
+                        <ListGroup className="olog-ul">{searchResultItems}</ListGroup>
+                </Container>
             )
         }
         else{
             return(
-                <>
+                <Container className="grid-item">
                     <h6>Search Results</h6>
                     No log records found
-                </>
+                </Container>
             )
         }
         

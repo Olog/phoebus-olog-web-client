@@ -21,6 +21,7 @@ import Card from 'react-bootstrap/Card'
 import Logbooks from './Logbooks'
 import Tags from './Tags'
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import Container from 'react-bootstrap/Container'
 
 class Filters extends Component{
 
@@ -31,7 +32,7 @@ class Filters extends Component{
 
     render(){
         return(
-            <>
+            <Container className="grid-item">
               <h6>Filter Log Entries</h6>
                 <Accordion defaultActiveKey="0">
                   <Card>
@@ -53,7 +54,7 @@ class Filters extends Component{
                     </Accordion.Collapse>
                   </Card>
                 </Accordion>
-            </>
+            </Container>
         )
     }
 }

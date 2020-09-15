@@ -42,7 +42,6 @@ class AddLogbookDialog extends Component{
         });
       };
 
-    
     render(){
         return(
             <Modal show={this.props.showAddLogbookDialog} onHide={this.props.hideAddLogbook}>
