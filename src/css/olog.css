@@ -40,3 +40,7 @@
     padding-right: 0px;
     padding-left: 0px;
 }
+
+html, body, #root, .App {
+    height: 100%;
+  }

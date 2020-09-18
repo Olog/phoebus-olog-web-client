@@ -30,6 +30,7 @@ import AddTagDialog from './AddTagDialog';
 import {
   Link
 } from "react-router-dom";
+import {withRouter} from 'react-router-dom';
 
 const Banner = (props) => {
 

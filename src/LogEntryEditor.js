@@ -16,11 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react';
+import Banner from './Banner';
 
 class LogEntryEditor extends Component{
     render(){
         return(
-            <h1>TBD</h1>
+            <div>
+                <Banner userData={this.props.userData}  
+                    setUserData={this.props.setUserData} 
+                    refreshLogbooks={this.props.refreshLogbooks}
+                    refreshTags={this.props.refreshTags}/>
+                <h3>TBD</h3>
+            </div>
         )
     }
 }

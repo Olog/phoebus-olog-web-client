@@ -26,6 +26,10 @@ import LogDetails from './LogDetails'
 import './css/olog.css';
 import SearchResultList from './SearchResultList';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 /**
  * Top level component that defines application state. It also handles 
@@ -34,40 +38,9 @@ import Grid from '@material-ui/core/Grid';
 class MainApp extends Component {
 
   state = {
-      logbooks: [],
-      tags: [],
       logRecords: [],
-      userData: {userName: "", roles: []},
       currentLogRecord: null
     };
-  
-  componentDidMount() {
-    this.refreshLogbooks();
-    this.refreshTags();
-    //this.getLogRecords();
-  }
-
-  refreshLogbooks = () => {
-    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks`)
-    .then(response => response.json())
-    .then(data => this.setState({logbooks: data}))
-    .catch(() => this.setState({logbooks: []}));
-  }
-
-  refreshTags = () => {
-    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/tags`)
-    .then(response => response.json())
-    .then(data => {
-      if(data){
-          this.setState({tags: data});
-      }
-    })
-    .catch(() => this.setState({tags: []}));
-  }
-
-  setUserData = (userData) => {
-    this.setState({userData: userData});
-  }
 
   getLogRecords = (name) => {
     fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logs?logbooks=` + name)
@@ -82,25 +55,40 @@ class MainApp extends Component {
   render() {
     
     return (
-      <div> 
-        <Grid container spacing={1}>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Banner userData={this.state.userData}  
-                setUserData={this.setUserData} 
-                refreshLogbooks={this.refreshLogbooks}
-                refreshTags={this.refreshTags}/>
-          </Grid>
-          <Grid item xs={12} sm={4} md={2} lg={2} >
-            <Filters logbooks={this.state.logbooks} tags={this.state.tags} getLogRecords={this.getLogRecords}/>
-          </Grid>
-          <Grid item xs={12} sm={8} md={4} lg={4}>
+      <>
+        <Container  fluid>
+          
+          <Row>
+           <Col xs={12} sm={12} md={12} lg={12}>
+            <Banner userData={this.props.userData}  
+                setUserData={this.props.setUserData} 
+                refreshLogbooks={this.props.refreshLogbooks}
+                refreshTags={this.props.refreshTags}/>
+            </Col>
+    </Row>
+          <Row>
+          <Col xs={12} sm={12} md={2} lg={2}>
+        
+            <Filters logbooks={this.props.logbooks} tags={this.props.tags} getLogRecords={this.getLogRecords}/>
+            
+           
+        </Col>
+      
+        
+          <Col xs={12} sm={12} md={4} lg={4}>
+         
             <SearchResultList logs={this.state.logRecords} setLogRecord={this.setLogRecord} />
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
+           
+          </Col>
+         
+          <Col  xs={12} sm={12} md={6} lg={6}>
+        
             <LogDetails currentLogRecord={this.state.currentLogRecord}/>
-          </Grid>
-        </Grid>
-      </div>
+           
+        </Col>
+    </Row>
+    </Container>
+      </>
     )
   }
 }
