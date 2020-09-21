@@ -70,7 +70,7 @@ class LogDetails extends Component{
         )
 
         return(
-            <Container className="grid-item">
+            <Container className="grid-item full-height">
                <h6>Log Details</h6>
                 {/* Render only of current log record is defined */}
                 {this.props.currentLogRecord &&

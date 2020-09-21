@@ -23,8 +23,7 @@ import {
   Route
 } from "react-router-dom";
 import MainApp from './MainApp';
-import LogEntryEditor from './LogEntryEditor'
-import './css/olog.css';
+import LogEntryEditorUI from './LogEntryEditorUI'
 
 class App extends Component{
 
@@ -74,10 +73,12 @@ class App extends Component{
                             tags={this.state.tags}/>
                     </Route>
                     <Route path="/edit">
-                        <LogEntryEditor userData={this.state.userData}
+                        <LogEntryEditorUI userData={this.state.userData}
                             setUserData={this.setUserData}
                             refreshLogbooks={this.refreshLogbooks}
-                            refreshTags={this.refreshTags}/>
+                            refreshTags={this.refreshTags}
+                            logbooks={this.state.logbooks}
+                            tags={this.state.tags}/>
                     </Route>
                 </Switch>
             </Router>

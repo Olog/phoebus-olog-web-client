@@ -41,7 +41,7 @@ class SearchResultList extends Component{
         }
         else{
             return(
-                <Container className="grid-item">
+                <Container className="grid-item full-height">
                     <h6>Search Results</h6>
                     No log records found
                 </Container>
