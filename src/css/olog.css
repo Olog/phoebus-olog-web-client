@@ -41,6 +41,31 @@
     padding-left: 0px;
 }
 
-html, body, #root, .App {
+html{
     height: 100%;
-  }
+}
+
+body{
+    height: 100%;
+}
+
+#root{
+    height: 100%;
+    font-size: 12px;    
+}
+
+.olog-container{
+    height: 100%;
+}
+
+.row{
+    height: 100%;
+}
+
+.banner-row{
+    height: auto;
+}
+
+.olog-col{
+    padding: 2px;
+}

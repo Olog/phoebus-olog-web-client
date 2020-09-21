@@ -31,7 +31,7 @@ class SearchResultItem extends Component{
 
         return(
             <>
-              <ListGroup.Item onClick={() => this.props.setLogRecord(this.props.log)}>
+              <ListGroup.Item action onClick={() => this.props.setLogRecord(this.props.log)}>
                 Author: {this.props.log.owner} <br/>
                 Created Date: <OlogMoment date={this.props.log.createdDate}/><br/>
                 Description: {this.props.log.description} <br/>

@@ -18,19 +18,19 @@
 import React, {Component} from 'react';
 import SearchResultItem from './SearchResultItem';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Card from 'react-bootstrap/Card'
 import Container from 'react-bootstrap/Container';
 
 class SearchResultList extends Component{
 
     render(){
         
-        var searchResultItems = this.props.logs.map((row, index) => {
+        // Order by created date, descending
+        var searchResultItems = this.props.logs.sort((a, b) => b.createdDate - a.createdDate).map((row, index) => {
             return (
                 <SearchResultItem  key={index} log={row} setLogRecord={this.props.setLogRecord} currentLogRecord={this.props.currentLogRecord}/>
             )
         })
-
+      
         if(this.props.logs.length > 0){
             return(
                 <Container className="grid-item">

@@ -25,8 +25,6 @@ import LogDetails from './LogDetails'
 
 import './css/olog.css';
 import SearchResultList from './SearchResultList';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -56,38 +54,27 @@ class MainApp extends Component {
     
     return (
       <>
-        <Container  fluid>
-          
-          <Row>
-           <Col xs={12} sm={12} md={12} lg={12}>
-            <Banner userData={this.props.userData}  
+        <Container fluid className="olog-container">
+          <Row className="banner-row">
+            <Col xs={12} sm={12} md={12} lg={12}>
+              <Banner userData={this.props.userData}  
                 setUserData={this.props.setUserData} 
                 refreshLogbooks={this.props.refreshLogbooks}
                 refreshTags={this.props.refreshTags}/>
             </Col>
-    </Row>
+          </Row>
           <Row>
-          <Col xs={12} sm={12} md={2} lg={2}>
-        
-            <Filters logbooks={this.props.logbooks} tags={this.props.tags} getLogRecords={this.getLogRecords}/>
-            
-           
-        </Col>
-      
-        
-          <Col xs={12} sm={12} md={4} lg={4}>
-         
-            <SearchResultList logs={this.state.logRecords} setLogRecord={this.setLogRecord} />
-           
-          </Col>
-         
-          <Col  xs={12} sm={12} md={6} lg={6}>
-        
-            <LogDetails currentLogRecord={this.state.currentLogRecord}/>
-           
-        </Col>
-    </Row>
-    </Container>
+            <Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
+              <Filters logbooks={this.props.logbooks} tags={this.props.tags} getLogRecords={this.getLogRecords}/>
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={4} style={{padding: "2px"}}>
+              <SearchResultList logs={this.state.logRecords} setLogRecord={this.setLogRecord} /> 
+            </Col>
+            <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>
+              <LogDetails currentLogRecord={this.state.currentLogRecord}/>
+            </Col>
+          </Row>
+        </Container>
       </>
     )
   }

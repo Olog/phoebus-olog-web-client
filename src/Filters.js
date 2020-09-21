@@ -32,7 +32,7 @@ class Filters extends Component{
 
     render(){
         return(
-            <Container className="grid-item">
+            <Container className="grid-item olog-container">
               <h6>Filter Log Entries</h6>
                 <Accordion defaultActiveKey="0">
                   <Card>
