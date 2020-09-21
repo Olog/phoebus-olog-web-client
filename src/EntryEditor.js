@@ -29,7 +29,8 @@ class EntryEditor extends Component{
 
     state = {
         selectedLogbooks: [],
-        selectedTags: []
+        selectedTags: [],
+        level: ""
     }
 
     addLogbook = (logbook) => {
@@ -51,17 +52,40 @@ class EntryEditor extends Component{
         this.setState({selectedLogbooks: this.state.selectedLogbooks.filter(item => item !== logbook)});
     }
 
+    addTag = (tag) => {
+        var present = false;
+        this.state.selectedTags.map(element => {
+            if(element === tag){
+                present = true;
+            }
+            return null;
+        });
+        if(!present){
+            this.setState({
+                selectedTags: [...this.state.selectedTags, tag]
+            });
+        }
+    }
+
+    removeTag = (tag) => {
+        this.setState({selectedTags: this.state.selectedTags.filter(item => item !== tag)});
+    }
+
     render(){
 
         var logbookItems = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
-                <Dropdown.Item key={index} eventKey={index} onSelect={() => this.addLogbook(row.name)}>{row.name}</Dropdown.Item>
+                <Dropdown.Item key={index} 
+                    eventKey={index} 
+                    onSelect={() => this.addLogbook(row.name)}>{row.name}</Dropdown.Item>
             )
         });
 
         var tagItems = this.props.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
-                <Dropdown.Item key={index} eventKey={index}>{row.name}</Dropdown.Item>
+                <Dropdown.Item key={index} 
+                    eventKey={index}
+                    onSelect={() => this.addTag(row.name)}>{row.name}</Dropdown.Item>
             )
         });
 
@@ -71,7 +95,17 @@ class EntryEditor extends Component{
             )
         });
 
+        var currentTagSelection = this.state.selectedTags.map((row, index) => {
+            return(
+                <Selection label={row} key={index} delete={this.removeTag}/>
+            )
+        });
+
+        let levels = ["Urgent", "Suggestion", "Info", "Request", "Problem"];
+
         return(
+
+        
             <>
                 <Container className="full-height">
                     <Row className="grid-item">
@@ -99,7 +133,8 @@ class EntryEditor extends Component{
                                         variant="secondary"
                                         title="Tags">
                                         {tagItems}
-                                    </SplitButton>
+                                    </SplitButton>&nbsp;
+                                    {currentTagSelection}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                 <SplitButton
@@ -107,12 +142,12 @@ class EntryEditor extends Component{
                                     size="sm"
                                     variant="secondary"
                                     title="Level">
-                                    <Dropdown.Item eventKey="1">Urgent</Dropdown.Item>
-                                    <Dropdown.Item eventKey="2">Suggestion</Dropdown.Item>
-                                    <Dropdown.Item eventKey="3">Info</Dropdown.Item>
-                                    <Dropdown.Item eventKey="4">Request</Dropdown.Item>
-                                    <Dropdown.Item eventKey="5">Problem</Dropdown.Item>
-                                </SplitButton>
+                                    {levels.map((level, index) => (
+                                        <Dropdown.Item eventKey={index}
+                                        onSelect={() => this.setState({level: level})}>{level}</Dropdown.Item>
+                                    ))}
+                                </SplitButton>&nbsp;
+                                {this.state.level}
                                 </ListGroup.Item>
                             </ListGroup>
                         </Col>
