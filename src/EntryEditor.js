@@ -22,16 +22,24 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import SplitButton from 'react-bootstrap/SplitButton';
+import Form from 'react-bootstrap/Form';
 import Selection from './Selection';
+import Button from 'react-bootstrap/Button';
+import FormGroup from 'react-bootstrap/esm/FormGroup';
+import {FaPlus} from 'react-icons/fa';
+import FormFile from 'react-bootstrap/FormFile';
+import Attachment from './Attachment.js'
 
 class EntryEditor extends Component{
 
     state = {
         selectedLogbooks: [],
         selectedTags: [],
-        level: ""
+        level: null,
+        attachedFiles: []
     }
+
+    fileInputRef = React.createRef();
 
     addLogbook = (logbook) => {
         var present = false;
@@ -71,6 +79,21 @@ class EntryEditor extends Component{
         this.setState({selectedTags: this.state.selectedTags.filter(item => item !== tag)});
     }
 
+    onBrowse = () => {
+        this.fileInputRef.current.click();
+    }
+    
+    onFileChanged = (event) => {
+        if(event.target.files){
+            this.setState({attachedFiles: [...this.state.attachedFiles, ...event.target.files]});
+        }
+        this.fileInputRef.current.value = null;
+    }
+
+    removeAttachment = (file) => {
+        this.setState({attachedFiles: this.state.attachedFiles.filter(item => item !== file)});
+    }
+    
     render(){
 
         var logbookItems = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
@@ -101,55 +124,105 @@ class EntryEditor extends Component{
             )
         });
 
+        var attachments = this.state.attachedFiles.map((file, index) => {
+            return(
+                <Attachment key={index} file={file} removeAttachment={this.removeAttachment}/>
+            )
+        })
+
         let levels = ["Urgent", "Suggestion", "Info", "Request", "Problem"];
 
-        return(
+        const doUpload = this.props.fileName !== '';
 
-        
+        return(
             <>
-                <Container className="full-height">
-                    <Row className="grid-item">
+                <Container fluid className="full-height">
+                    <Row>
                         <Col>
                             <h5>New Log Entry</h5>
+                        </Col>
+                        <Col>
+                            <Button className="float-right">Create</Button>
                         </Col>
                     </Row>
                     <Row className="grid-item">
                         <Col>
                             <ListGroup>
                                 <ListGroup.Item>
-                                    <SplitButton
+                                    <Dropdown 
                                         as={ButtonGroup}
-                                        size="sm"
-                                        variant="secondary"
-                                        title="Logbooks">
+                                        size="sm">
+                                        <Button variant="secondary" className="selection-dropdown">Logbooks</Button>
+                                        <Dropdown.Toggle split variant="secondary"/>
+                                        <Dropdown.Menu>
                                         {logbookItems}
-                                    </SplitButton>&nbsp;
+                                        </Dropdown.Menu>
+                                    </Dropdown>&nbsp;
                                     {currentLogbookSelection}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                    <SplitButton
+                                    <Dropdown
                                         as={ButtonGroup}
-                                        size="sm"
-                                        variant="secondary"
-                                        title="Tags">
+                                        size="sm">
+                                        <Button variant="secondary" className="selection-dropdown">Tags</Button>
+                                        <Dropdown.Toggle split variant="secondary"/>
+                                        <Dropdown.Menu>
                                         {tagItems}
-                                    </SplitButton>&nbsp;
+                                        </Dropdown.Menu>
+                                    </Dropdown>&nbsp;
                                     {currentTagSelection}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                <SplitButton
+                                <Dropdown
                                     as={ButtonGroup}
-                                    size="sm"
-                                    variant="secondary"
-                                    title="Level">
+                                    size="sm">
+                                    <Button variant="secondary" className="selection-dropdown">Level</Button>
+                                    <Dropdown.Toggle split variant="secondary"/>
+                                    <Dropdown.Menu>
                                     {levels.map((level, index) => (
                                         <Dropdown.Item eventKey={index}
+                                        key={index}
                                         onSelect={() => this.setState({level: level})}>{level}</Dropdown.Item>
                                     ))}
-                                </SplitButton>&nbsp;
-                                {this.state.level}
+                                    </Dropdown.Menu>
+                                </Dropdown>&nbsp;
+                                {this.state.level && <div className="selection">{this.state.level}</div>}
                                 </ListGroup.Item>
                             </ListGroup>
+                        </Col>
+                    </Row>
+                    <Row className="grid-item">
+                        <Col>
+                            <Form>
+                                <FormGroup>
+                                    <Form.Control type="text" placeholder="Title"></Form.Control>
+                                    <Form.Control as="textarea" rows="5" placeholder="Description"></Form.Control>
+                                </FormGroup>
+                            </Form>
+                        </Col>
+                    </Row>
+                    <Row className="grid-item">
+                        <Col>
+                            <h6>Attachments:</h6>
+                            <Form>
+                                <FormGroup>
+                                <Button variant="secondary"
+                                        disabled={ this.props.isUploading }
+                                        onClick={ doUpload && this.props.onUploadStarted ? this.props.onUploadStarted : this.onBrowse }>
+                                    <span><FaPlus/></span>Add Files
+                                </Button>
+                                <FormFile.Input
+                                    hidden
+                                    multiple
+                                    ref={ this.fileInputRef }
+                                    onChange={ this.onFileChanged } />
+                                </FormGroup>
+                            </Form>
+                        </Col>
+                    </Row>
+                    <Row className="grid-item">
+                        <Col id="attachements">
+                        {attachments}
                         </Col>
                     </Row>
                 </Container>

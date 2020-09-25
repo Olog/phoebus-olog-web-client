@@ -67,11 +67,31 @@ body{
     border-radius: 2px;
     color: #945203;
     display: inline-block;
-    padding: 5px;
+    padding: 3px;
     margin: 3px;
     border: #bbbbbb 1px solid;
 }
 
+.delete-selection{
+    margin-bottom: 2px;
+    margin-left: 4px;
+}
+
 .delete-selection:hover{
     cursor: pointer;
+}
+
+.selection-dropdown{
+    width: 80px;
+}
+
+#attachements > div{
+    float: left;
+    margin: 10px;
+    font-size: 10px;
+}
+
+
+.attachment{
+    width: 200px;
 }

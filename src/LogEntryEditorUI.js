@@ -28,21 +28,18 @@ class LogEntryEditorUI extends Component{
             <>
                 <Container fluid className="full-height">
                     <Row>
-                        <Col xs={12} sm={12} md={12} lg={12} style={{padding: "2px"}}>
+                        <Col xs={12} sm={12} md={12} lg={12} style={{padding: "0px"}}>
                             <Banner userData={this.props.userData}  
                                 setUserData={this.props.setUserData} 
                                 refreshLogbooks={this.props.refreshLogbooks}
                                 refreshTags={this.props.refreshTags}/>
                         </Col>
                     </Row>
-                    <Row className="olog-row">
-                        <Col xs={12} sm={12} md={12} lg={8} style={{padding: "2px"}}>
+                    <Row>
+                        <Col xs={12} sm={12} md={12} lg={12} style={{padding: "0px"}}>
                             <EntryEditor 
                                 logbooks={this.props.logbooks}
                                 tags={this.props.tags}/>
-                        </Col>
-                        <Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
-                            Add props
                         </Col>
                     </Row>
                 </Container>
