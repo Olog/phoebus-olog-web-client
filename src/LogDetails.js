@@ -49,7 +49,7 @@ class LogDetails extends Component{
         )
 
         var attachments = this.props.currentLogRecord && this.props.currentLogRecord.attachments.map((row, index) => {
-            if(row.fileMetadataDescription === 'image'){
+            if(row.fileMetadataDescription.startsWith('image')){
                 return(
                     <ListGroup.Item key={index}>
                     <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/Olog/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename}>
@@ -89,7 +89,12 @@ class LogDetails extends Component{
                                     Created Date: <OlogMoment date={this.props.currentLogRecord.createdDate}/>
                                 </Card.Body>
                             </Accordion.Collapse>
-                            
+                            <Row>
+                                <Col>
+                                    <h6>Title:</h6>
+                                    {this.props.currentLogRecord.title}
+                                </Col>
+                            </Row>
                             <Row>
                                 <Col>
                                     <h6>Description:</h6>

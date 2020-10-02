@@ -24,8 +24,8 @@ class Selection extends Component{
     render(){
         return(
             <div className="selection">
-                <span>{this.props.label}</span>&nbsp;<BsXCircle 
-                    onClick={() => this.props.delete(this.props.label)} 
+                <span>{this.props.item.name}</span>&nbsp;<BsXCircle 
+                    onClick={() => this.props.delete(this.props.item)} 
                     className="delete-selection"/>
             </div>
         )

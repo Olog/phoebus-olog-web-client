@@ -29,54 +29,59 @@ import FormGroup from 'react-bootstrap/esm/FormGroup';
 import {FaPlus} from 'react-icons/fa';
 import FormFile from 'react-bootstrap/FormFile';
 import Attachment from './Attachment.js'
+import axios from 'axios';
 
 class EntryEditor extends Component{
 
     state = {
         selectedLogbooks: [],
         selectedTags: [],
-        level: null,
-        attachedFiles: []
+        level: "",
+        title: "",
+        description: "",
+        attachedFiles: [],
     }
 
     fileInputRef = React.createRef();
-
+    titleRef = React.createRef();
+    descriptionRef = React.createRef();
+    
     addLogbook = (logbook) => {
         var present = false;
         this.state.selectedLogbooks.map(element => {
-            if(element === logbook){
+            if(element.name === logbook.name){
                 present = true;
             }
             return null;
         });
         if(!present){
-            this.setState({
-                selectedLogbooks: [...this.state.selectedLogbooks, logbook]
-            });
+            this.setState({selectedLogbooks: [...this.state.selectedLogbooks, logbook]})
         }
     }
 
     removeLogbook = (logbook) => {
-        this.setState({selectedLogbooks: this.state.selectedLogbooks.filter(item => item !== logbook)});
+        this.setState({
+                selectedLogbooks: this.state.selectedLogbooks.filter(item => item.name !== logbook.name)
+        });
     }
 
     addTag = (tag) => {
         var present = false;
         this.state.selectedTags.map(element => {
-            if(element === tag){
+            if(element.name === tag.name){
                 present = true;
             }
             return null;
         });
         if(!present){
-            this.setState({
-                selectedTags: [...this.state.selectedTags, tag]
-            });
+            this.setState({selectedTags: [...this.state.selectedTags, tag]});
         }
     }
 
     removeTag = (tag) => {
-        this.setState({selectedTags: this.state.selectedTags.filter(item => item !== tag)});
+        this.setState({
+                selectedTags: this.state.selectedTags.filter(item => item.name !== tag.name)
+        });
     }
 
     onBrowse = () => {
@@ -93,6 +98,76 @@ class EntryEditor extends Component{
     removeAttachment = (file) => {
         this.setState({attachedFiles: this.state.attachedFiles.filter(item => item !== file)});
     }
+
+    createLogEntry = () => {
+        // TODO add error handling if request fails.
+       axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, this.state.logEntry, { withCredentials: true })
+        .then(res => {
+            console.log(res);
+        });
+    };
+
+    submitAttachments = (id) => {
+        let promises = [];
+        this.state.attachedFiles.map((file) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('filename', file.name);
+            promises.push(axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                url: `${process.env.REACT_APP_BASE_URL}/Olog/logs/attachments/` + id,
+                data: formData,
+                withCredentials: true,
+            }));
+        });
+        Promise.all(promises).then(response => console.log(response));
+    }
+
+    submitAttachmentsMulti = (id) => {
+        const formData = new FormData();
+        this.state.attachedFiles.map(file => {
+            formData.append('file', file);
+        });
+        
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: `${process.env.REACT_APP_BASE_URL}/Olog/logs/attachments-multi/` + id,
+            data: formData,
+            withCredentials: true,
+        }).then(result => console.log(result));
+    }
+
+    submit = () => {
+        const logEntry = {
+            logbooks: this.state.selectedLogbooks,
+            tags: this.state.selectedTags,
+            title: this.state.title,
+            description: this.state.description,
+            level: this.state.level,
+            source: "source",
+            state: "Active"
+        }
+        // TODO add error handling if request fails.
+        axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
+            .then(res => {
+                this.submitAttachmentsMulti(res.data.id);
+            });
+    }
+
+    titleChanged = () => {
+       this.setState({title: this.titleRef.current.value})
+    }
+
+    descriptionChanged = () => {
+        this.setState({description: this.descriptionRef.current.value})
+    }
+
     
     render(){
 
@@ -100,7 +175,7 @@ class EntryEditor extends Component{
             return (
                 <Dropdown.Item key={index} 
                     eventKey={index} 
-                    onSelect={() => this.addLogbook(row.name)}>{row.name}</Dropdown.Item>
+                    onSelect={() => this.addLogbook(row)}>{row.name}</Dropdown.Item>
             )
         });
 
@@ -108,19 +183,19 @@ class EntryEditor extends Component{
             return (
                 <Dropdown.Item key={index} 
                     eventKey={index}
-                    onSelect={() => this.addTag(row.name)}>{row.name}</Dropdown.Item>
+                    onSelect={() => this.addTag(row)}>{row.name}</Dropdown.Item>
             )
         });
 
         var currentLogbookSelection = this.state.selectedLogbooks.map((row, index) => {
             return(
-                <Selection label={row} key={index} delete={this.removeLogbook}/>
+                <Selection item={row} key={index} delete={this.removeLogbook}/>
             )
         });
 
         var currentTagSelection = this.state.selectedTags.map((row, index) => {
             return(
-                <Selection label={row} key={index} delete={this.removeTag}/>
+                <Selection item={row} key={index} delete={this.removeTag}/>
             )
         });
 
@@ -142,7 +217,7 @@ class EntryEditor extends Component{
                             <h5>New Log Entry</h5>
                         </Col>
                         <Col>
-                            <Button className="float-right">Create</Button>
+                            <Button className="float-right" onClick={this.submit}>Create</Button>
                         </Col>
                     </Row>
                     <Row className="grid-item">
@@ -195,8 +270,15 @@ class EntryEditor extends Component{
                         <Col>
                             <Form>
                                 <FormGroup>
-                                    <Form.Control type="text" placeholder="Title"></Form.Control>
-                                    <Form.Control as="textarea" rows="5" placeholder="Description"></Form.Control>
+                                    <Form.Control ref={this.titleRef}
+                                        type="text" 
+                                        placeholder="Title" 
+                                        onChange={() => this.titleChanged()}></Form.Control>
+                                    <Form.Control ref={this.descriptionRef}
+                                        as="textarea" 
+                                        rows="5" 
+                                        placeholder="Description"
+                                        onChange={() => this.descriptionChanged()}></Form.Control>
                                 </FormGroup>
                             </Form>
                         </Col>
@@ -220,7 +302,7 @@ class EntryEditor extends Component{
                             </Form>
                         </Col>
                     </Row>
-                    <Row className="grid-item">
+                    <Row>
                         <Col id="attachements">
                         {attachments}
                         </Col>

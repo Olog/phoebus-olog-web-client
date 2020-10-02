@@ -34,6 +34,7 @@ class SearchResultItem extends Component{
               <ListGroup.Item action onClick={() => this.props.setLogRecord(this.props.log)}>
                 Author: {this.props.log.owner} <br/>
                 Created Date: <OlogMoment date={this.props.log.createdDate}/><br/>
+                Title: {this.props.log.title} <br/>
                 Description: {this.props.log.description} <br/>
                 Attachments:<br/>
                 <ul className="olog-ul">{attachments}</ul>
