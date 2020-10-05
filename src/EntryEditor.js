@@ -21,6 +21,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Form from 'react-bootstrap/Form';
 import Selection from './Selection';
@@ -200,44 +201,41 @@ class EntryEditor extends Component{
                         <Col>
                             <ListGroup>
                                 <ListGroup.Item>
-                                    <Dropdown 
-                                        as={ButtonGroup}
-                                        size="sm">
-                                        <Button variant="secondary" className="selection-dropdown">Logbooks</Button>
-                                        <Dropdown.Toggle split variant="secondary"/>
+                                    <Dropdown as={ButtonGroup}>
+                                        <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
+                                            Logbooks
+                                        </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                        {logbookItems}
+                                            {logbookItems}
                                         </Dropdown.Menu>
-                                    </Dropdown>&nbsp;
-                                    {currentLogbookSelection}
+                                    </Dropdown>
+                                    &nbsp;{currentLogbookSelection}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                    <Dropdown
-                                        as={ButtonGroup}
-                                        size="sm">
-                                        <Button variant="secondary" className="selection-dropdown">Tags</Button>
-                                        <Dropdown.Toggle split variant="secondary"/>
+                                    <Dropdown as={ButtonGroup}>
+                                        <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
+                                            Tags
+                                        </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                        {tagItems}
+                                            {tagItems}
                                         </Dropdown.Menu>
-                                    </Dropdown>&nbsp;
-                                    {currentTagSelection}
+                                    </Dropdown>
+                                    &nbsp;{currentTagSelection}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                <Dropdown
-                                    as={ButtonGroup}
-                                    size="sm">
-                                    <Button variant="secondary" className="selection-dropdown">Level</Button>
-                                    <Dropdown.Toggle split variant="secondary"/>
-                                    <Dropdown.Menu>
-                                    {levels.map((level, index) => (
-                                        <Dropdown.Item eventKey={index}
-                                        key={index}
-                                        onSelect={() => this.setState({level: level})}>{level}</Dropdown.Item>
-                                    ))}
-                                    </Dropdown.Menu>
-                                </Dropdown>&nbsp;
-                                {this.state.level && <div className="selection">{this.state.level}</div>}
+                                    <Dropdown as={ButtonGroup}>
+                                        <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
+                                            Level                                   
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                        {levels.map((level, index) => (
+                                            <Dropdown.Item eventKey={index}
+                                            key={index}
+                                            onSelect={() => this.setState({level: level})}>{level}</Dropdown.Item>
+                                        ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>&nbsp;
+                                    {this.state.level && <div className="selection">{this.state.level}</div>}
                                 </ListGroup.Item>
                             </ListGroup>
                         </Col>
