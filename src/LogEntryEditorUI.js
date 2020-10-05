@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react';
-import Banner from './Banner';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -27,14 +26,6 @@ class LogEntryEditorUI extends Component{
         return(
             <>
                 <Container fluid className="full-height">
-                    <Row>
-                        <Col xs={12} sm={12} md={12} lg={12} style={{padding: "0px"}}>
-                            <Banner userData={this.props.userData}  
-                                setUserData={this.props.setUserData} 
-                                refreshLogbooks={this.props.refreshLogbooks}
-                                refreshTags={this.props.refreshTags}/>
-                        </Col>
-                    </Row>
                     <Row>
                         <Col xs={12} sm={12} md={12} lg={12} style={{padding: "0px"}}>
                             <EntryEditor 

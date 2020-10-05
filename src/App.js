@@ -24,6 +24,7 @@ import {
 } from "react-router-dom";
 import MainApp from './MainApp';
 import LogEntryEditorUI from './LogEntryEditorUI'
+import Banner from './Banner';
 
 class App extends Component{
 
@@ -63,25 +64,22 @@ class App extends Component{
     render(){
         return(
             <Router>
+                <Banner userData={this.state.userData}
+                        setUserData={this.setUserData}
+                        refreshLogbooks={this.refreshLogbooks}
+                        refreshTags={this.refreshTags}/>
                 <Switch>
                     <Route exact path="/">
-                        <MainApp userData={this.state.userData}
-                            setUserData={this.setUserData}
-                            refreshLogbooks={this.refreshLogbooks}
-                            refreshTags={this.refreshTags}
-                            logbooks={this.state.logbooks}
+                        <MainApp logbooks={this.state.logbooks}
                             tags={this.state.tags}/>
                     </Route>
                     <Route path="/edit">
-                        <LogEntryEditorUI userData={this.state.userData}
-                            setUserData={this.setUserData}
-                            refreshLogbooks={this.refreshLogbooks}
-                            refreshTags={this.refreshTags}
-                            logbooks={this.state.logbooks}
+                        <LogEntryEditorUI logbooks={this.state.logbooks}
                             tags={this.state.tags}/>
                     </Route>
                 </Switch>
             </Router>
+      
         );
     }
 }

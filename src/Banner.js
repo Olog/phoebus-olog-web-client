@@ -94,7 +94,6 @@ const Banner = (props) => {
       <AddTagDialog showAddTagDialog={showAddTagDialog} 
         hideAddTag={hideAddTag} 
         refreshTags={props.refreshTags}/>
-
     </>
   )
 }

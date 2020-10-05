@@ -30,6 +30,7 @@ import {FaPlus} from 'react-icons/fa';
 import FormFile from 'react-bootstrap/FormFile';
 import Attachment from './Attachment.js'
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 class EntryEditor extends Component{
 
@@ -99,40 +100,14 @@ class EntryEditor extends Component{
         this.setState({attachedFiles: this.state.attachedFiles.filter(item => item !== file)});
     }
 
-    createLogEntry = () => {
-        // TODO add error handling if request fails.
-       axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, this.state.logEntry, { withCredentials: true })
-        .then(res => {
-            console.log(res);
-        });
-    };
-
-    submitAttachments = (id) => {
-        let promises = [];
-        this.state.attachedFiles.map((file) => {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('filename', file.name);
-            promises.push(axios({
-                method: 'post',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                url: `${process.env.REACT_APP_BASE_URL}/Olog/logs/attachments/` + id,
-                data: formData,
-                withCredentials: true,
-            }));
-        });
-        Promise.all(promises).then(response => console.log(response));
-    }
-
     submitAttachmentsMulti = (id) => {
         const formData = new FormData();
         this.state.attachedFiles.map(file => {
             formData.append('file', file);
+            return null;
         });
         
-        axios({
+        return axios({
             method: 'post',
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -140,10 +115,11 @@ class EntryEditor extends Component{
             url: `${process.env.REACT_APP_BASE_URL}/Olog/logs/attachments-multi/` + id,
             data: formData,
             withCredentials: true,
-        }).then(result => console.log(result));
+        });
     }
 
     submit = () => {
+        const { history } = this.props;
         const logEntry = {
             logbooks: this.state.selectedLogbooks,
             tags: this.state.selectedTags,
@@ -156,7 +132,7 @@ class EntryEditor extends Component{
         // TODO add error handling if request fails.
         axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
             .then(res => {
-                this.submitAttachmentsMulti(res.data.id);
+                this.submitAttachmentsMulti(res.data.id).then(res => history.push('/'));
             });
     }
 
@@ -313,4 +289,4 @@ class EntryEditor extends Component{
     }
 }
 
-export default EntryEditor;
+export default withRouter(EntryEditor);

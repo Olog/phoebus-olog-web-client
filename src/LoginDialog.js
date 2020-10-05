@@ -67,25 +67,25 @@ class LoginDialog extends Component{
             <Modal.Header closeButton>
               <Modal.Title>Sign In</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-              <Form>
+            <Form>
+              <Modal.Body>
                 <Form.Group controlId="formLogin">
                   <Form.Control type="text" placeholder="Username" ref={this.userNameRef} />
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                   <Form.Control type="password" placeholder="Password" ref={this.passwordRef}/>
                 </Form.Group>
-              </Form>
-              <Form.Label className="failureStyle">{this.state.loginError}</Form.Label>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="primary" type="submit" onClick={this.login}>
-                    Sign In
-              </Button>
-              <Button variant="secondary" onClick={this.hideLogin}>
-                    Cancel
-              </Button>
-            </Modal.Footer>
+                <Form.Label className="failureStyle">{this.state.loginError}</Form.Label>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="primary" type="submit" onClick={this.login}>
+                      Sign In
+                </Button>
+                <Button variant="secondary" type="button" onClick={this.hideLogin}>
+                      Cancel
+                </Button>
+              </Modal.Footer>
+            </Form>
           </Modal>
         )
     }

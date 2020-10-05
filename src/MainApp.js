@@ -17,7 +17,6 @@
  */
 
 import React, { Component } from 'react';
-import Banner from './Banner';
 import Filters from './Filters'
 import LogDetails from './LogDetails'
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
@@ -53,14 +52,6 @@ class MainApp extends Component {
     return (
       <>
         <Container fluid className="full-height">
-          <Row>
-            <Col xs={12} sm={12} md={12} lg={12} style={{padding: "0px"}}>
-              <Banner userData={this.props.userData}  
-                setUserData={this.props.setUserData} 
-                refreshLogbooks={this.props.refreshLogbooks}
-                refreshTags={this.props.refreshTags}/>
-            </Col>
-          </Row>
           <Row className="full-height">
             <Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
               <Filters logbooks={this.props.logbooks} tags={this.props.tags} getLogRecords={this.getLogRecords}/>
