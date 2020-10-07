@@ -1,6 +1,17 @@
 # Olog es web client
 
-DISCLAIMER: this is work in progress!
+Note: this is work in progress. 
+
+Current state of affairs:
+* Login to Olog-ES backend.
+* Create logbooks and tags.
+* List log entries in a logbook.
+* Display log entry details, including image thumbnails and links to non-image attachments.
+* Create new log entry, including attachments. Input is validated.
+Backlog:
+* Error handling when new log entry is submitted.
+* Improved session management.
+* Log entry result set pagination, i.e. fetch next/previous N entries.
 
 This project provides a web client for the olog es logbook service. The objective is to provide read, write and search capabilities, though not the full feature set of the CS Studio logbook client, see https://github.com/ControlSystemStudio/phoebus
 
