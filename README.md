@@ -22,6 +22,7 @@ Backlog:
 * Error handling when new log entry is submitted.
 * Improved session management.
 * Log entry result set pagination, i.e. fetch next/previous N entries.
+* Support for search criteria (date, title and description text, tags).
 
 ## Toolchain
 
