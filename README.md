@@ -9,7 +9,9 @@ Technology stack:
 * React Bootstrap (UI components)
 * axios (back-end access)
 
-Current state of affairs:
+## Current state of affairs:
+
+Available:
 * Login to Olog-ES backend.
 * Create logbooks and tags.
 * List log entries in a logbook.
