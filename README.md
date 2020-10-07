@@ -2,6 +2,13 @@
 
 Note: this is work in progress. 
 
+This project implements a web client for the olog es logbook service. The objective is to provide read, write and search capabilities, though not the full feature set of the CS Studio logbook client, see https://github.com/ControlSystemStudio/phoebus
+
+Technology stack:
+* ReactJS (main framework)
+* React Bootstrap (UI components)
+* axios (back-end access)
+
 Current state of affairs:
 * Login to Olog-ES backend.
 * Create logbooks and tags.
@@ -13,13 +20,6 @@ Backlog:
 * Error handling when new log entry is submitted.
 * Improved session management.
 * Log entry result set pagination, i.e. fetch next/previous N entries.
-
-This project provides a web client for the olog es logbook service. The objective is to provide read, write and search capabilities, though not the full feature set of the CS Studio logbook client, see https://github.com/ControlSystemStudio/phoebus
-
-Technology stack:
-* ReactJS (main framework)
-* React Bootstrap (UI components)
-* axios (back-end access)
 
 ## Toolchain
 
