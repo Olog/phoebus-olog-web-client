@@ -17,16 +17,11 @@
  */
 import React, {Component} from 'react';
 import Container from 'react-bootstrap/esm/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Form from 'react-bootstrap/Form';
 import Selection from './Selection';
 import Button from 'react-bootstrap/Button';
-import FormGroup from 'react-bootstrap/esm/FormGroup';
 import {FaPlus} from 'react-icons/fa';
 import FormFile from 'react-bootstrap/FormFile';
 import Attachment from './Attachment.js'
@@ -42,6 +37,7 @@ class EntryEditor extends Component{
         title: "",
         description: "",
         attachedFiles: [],
+        validated: false
     }
 
     fileInputRef = React.createRef();
@@ -119,9 +115,24 @@ class EntryEditor extends Component{
         });
     }
 
-    submit = () => {
-        const { history } = this.props;
-        const logEntry = {
+    selectionsValid = () => {
+        return this.state.selectedLogbooks.length > 0 
+            && this.state.level;
+    }
+
+    submit = (event) => {
+
+        const form = event.currentTarget;
+        if (form.checkValidity() === false || this.selectionsValid()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        this.setState({validated: true});
+
+        if (form.checkValidity() === true && this.selectionsValid()){
+            const { history } = this.props;
+            const logEntry = {
             logbooks: this.state.selectedLogbooks,
             tags: this.state.selectedTags,
             title: this.state.title,
@@ -129,12 +140,13 @@ class EntryEditor extends Component{
             level: this.state.level,
             source: "source",
             state: "Active"
+            }
+            // TODO add error handling if request fails.
+            axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
+                .then(res => {
+                    this.submitAttachmentsMulti(res.data.id).then(res => history.push('/'));
+                });
         }
-        // TODO add error handling if request fails.
-        axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
-            .then(res => {
-                this.submitAttachmentsMulti(res.data.id).then(res => history.push('/'));
-            });
     }
 
     titleChanged = () => {
@@ -189,98 +201,90 @@ class EntryEditor extends Component{
         return(
             <>
                 <Container fluid className="full-height">
-                    <Row>
-                        <Col>
-                            <h5>New Log Entry</h5>
-                        </Col>
-                        <Col>
-                            <Button className="float-right" onClick={this.submit}>Create</Button>
-                        </Col>
-                    </Row>
-                    <Row className="grid-item">
-                        <Col>
-                            <ListGroup>
-                                <ListGroup.Item>
-                                    <Dropdown as={ButtonGroup}>
-                                        <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                            Logbooks
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                            {logbookItems}
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                    &nbsp;{currentLogbookSelection}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <Dropdown as={ButtonGroup}>
-                                        <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                            Tags
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                            {tagItems}
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                    &nbsp;{currentTagSelection}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <Dropdown as={ButtonGroup}>
-                                        <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                            Level                                   
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                        {levels.map((level, index) => (
-                                            <Dropdown.Item eventKey={index}
-                                            key={index}
-                                            onSelect={() => this.setState({level: level})}>{level}</Dropdown.Item>
-                                        ))}
-                                        </Dropdown.Menu>
-                                    </Dropdown>&nbsp;
-                                    {this.state.level && <div className="selection">{this.state.level}</div>}
-                                </ListGroup.Item>
-                            </ListGroup>
-                        </Col>
-                    </Row>
-                    <Row className="grid-item">
-                        <Col>
-                            <Form>
-                                <FormGroup>
-                                    <Form.Control ref={this.titleRef}
-                                        type="text" 
-                                        placeholder="Title" 
-                                        onChange={() => this.titleChanged()}></Form.Control>
-                                    <Form.Control ref={this.descriptionRef}
-                                        as="textarea" 
-                                        rows="5" 
-                                        placeholder="Description"
-                                        onChange={() => this.descriptionChanged()}></Form.Control>
-                                </FormGroup>
-                            </Form>
-                        </Col>
-                    </Row>
-                    <Row className="grid-item">
-                        <Col>
-                            <h6>Attachments:</h6>
-                            <Form>
-                                <FormGroup>
+                    <Form noValidate validated={this.state.validated} onSubmit={this.submit}>
+                        <Form.Row>
+                            <Form.Label className="new-entry">New Log Entry</Form.Label>
+                            <Button type="submit">Create</Button>
+                        </Form.Row>
+                        <Form.Row className="grid-item">
+                            <Dropdown as={ButtonGroup}>
+                                <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
+                                    Logbooks
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    {logbookItems}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                            &nbsp;{currentLogbookSelection}
+                            {this.state.selectedLogbooks.length === 0 ? 
+                                <Form.Label column={true}>Select at least one logbook</Form.Label> :
+                                null}
+                        </Form.Row>
+                        <Form.Row className="grid-item">
+                            <Dropdown as={ButtonGroup}>
+                                <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
+                                    Tags
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    {tagItems}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                            &nbsp;{currentTagSelection}
+                        </Form.Row>
+                        <Form.Row className="grid-item">
+                            <Dropdown as={ButtonGroup}>
+                                <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
+                                    Level                                   
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                {levels.map((level, index) => (
+                                    <Dropdown.Item eventKey={index}
+                                    key={index}
+                                    onSelect={() => this.setState({level: level})}>{level}</Dropdown.Item>
+                                ))}
+                                </Dropdown.Menu>
+                            </Dropdown>&nbsp;
+                            {this.state.level && <div className="selection">{this.state.level}</div>}
+                            {this.state.level ? null : <Form.Label column={true}>Select a level</Form.Label>}
+                        </Form.Row>
+                        <Form.Row className="grid-item">
+                            <Form.Control ref={this.titleRef}
+                                required
+                                type="text" 
+                                placeholder="Title" 
+                                onChange={() => this.titleChanged()}/>
+                            <Form.Control.Feedback type="invalid">
+                                Please specify a title.
+                            </Form.Control.Feedback>
+                        </Form.Row>
+                        <Form.Row className="grid-item">
+                            <Form.Control ref={this.descriptionRef}
+                                required
+                                as="textarea" 
+                                rows="5" 
+                                placeholder="Description"
+                                onChange={() => this.descriptionChanged()}/>
+                            <Form.Control.Feedback type="invalid">
+                                Please specify a description.
+                            </Form.Control.Feedback>
+                        </Form.Row>
+                        <Form.Row>
+                            
                                 <Button variant="secondary"
                                         disabled={ this.props.isUploading }
                                         onClick={ doUpload && this.props.onUploadStarted ? this.props.onUploadStarted : this.onBrowse }>
-                                    <span><FaPlus/></span>Add Files
+                                    <span><FaPlus className="add-attachments"/></span>Add Attachments
                                 </Button>
                                 <FormFile.Input
                                     hidden
                                     multiple
                                     ref={ this.fileInputRef }
                                     onChange={ this.onFileChanged } />
-                                </FormGroup>
-                            </Form>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col id="attachements">
-                        {attachments}
-                        </Col>
-                    </Row>
+                       
+                        </Form.Row>
+                        {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
+                    </Form>
+                    
                 </Container>
             </>
         )

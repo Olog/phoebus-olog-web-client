@@ -91,7 +91,25 @@ body{
     font-size: 10px;
 }
 
-
 .attachment{
     width: 200px;
+    margin: 5px;
+}
+
+.form-row{
+    padding: 5px;
+}
+
+.new-entry{
+    font-size: 18px;
+    margin-right: 20px;
+    margin-bottom: 0px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+}
+
+.add-attachments{
+    margin-bottom: 3px;
+    margin-right: 3px;
 }
