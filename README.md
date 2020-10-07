@@ -8,6 +8,7 @@ Current state of affairs:
 * List log entries in a logbook.
 * Display log entry details, including image thumbnails and links to non-image attachments.
 * Create new log entry, including attachments. Input is validated.
+
 Backlog:
 * Error handling when new log entry is submitted.
 * Improved session management.
