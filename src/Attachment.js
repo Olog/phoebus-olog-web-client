@@ -26,18 +26,18 @@ class Attachment extends Component{
         if(this.props.file.type.toLowerCase().startsWith("image")){
             return(
                 <div className="attachment">
+                    <Button variant="danger" onClick={() => this.props.removeAttachment(this.props.file)}>Remove</Button>
                     <Image src={URL.createObjectURL(this.props.file)} className="attachment"/>
                     <p>{this.props.file.name}</p>
-                    <Button variant="danger" onClick={() => this.props.removeAttachment(this.props.file)}>Remove</Button>
                 </div>
             )
         }
         else{
             return(
                 <div className="attachment">
-                    <FaRegFile size={56}/>
+                    <Button variant="danger" onClick={() => this.props.removeAttachment(this.props.file)}>Remove</Button><br/>
+                    <FaRegFile style={{marginTop: "5px"}} size={56}/>
                     <p>{this.props.file.name}</p>
-                    <Button variant="danger" onClick={() => this.props.removeAttachment(this.props.file)}>Remove</Button>
                 </div>
             )
         }

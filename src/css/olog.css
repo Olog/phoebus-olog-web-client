@@ -113,3 +113,8 @@ body{
     margin-bottom: 3px;
     margin-right: 3px;
 }
+
+.form-error-label{
+    font-size: 10px;
+    color: #dc3545;
+}

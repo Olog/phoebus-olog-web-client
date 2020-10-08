@@ -43,7 +43,7 @@ class SearchResultList extends Component{
             return(
                 <Container className="grid-item full-height">
                     <h6>Search Results</h6>
-                    No log records found
+                    No log records to show
                 </Container>
             )
         }

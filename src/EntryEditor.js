@@ -37,30 +37,33 @@ class EntryEditor extends Component{
         title: "",
         description: "",
         attachedFiles: [],
-        validated: false
+        validated: false,
+        logbookSelectionValid: true,
+        levelSelectionValid: true
     }
 
     fileInputRef = React.createRef();
-    titleRef = React.createRef();
-    descriptionRef = React.createRef();
     
     addLogbook = (logbook) => {
         var present = false;
         this.state.selectedLogbooks.map(element => {
             if(element.name === logbook.name){
                 present = true;
+                return null;
             }
             return null;
         });
         if(!present){
-            this.setState({selectedLogbooks: [...this.state.selectedLogbooks, logbook]})
+            this.setState({selectedLogbooks: [...this.state.selectedLogbooks, logbook]},
+                () => this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0}));
         }
     }
 
     removeLogbook = (logbook) => {
         this.setState({
-                selectedLogbooks: this.state.selectedLogbooks.filter(item => item.name !== logbook.name)
-        });
+                selectedLogbooks: this.state.selectedLogbooks.filter(item => item.name !== logbook.name)},
+                () => this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0})
+        );
     }
 
     addTag = (tag) => {
@@ -116,21 +119,19 @@ class EntryEditor extends Component{
     }
 
     selectionsValid = () => {
-        return this.state.selectedLogbooks.length > 0 
-            && this.state.level;
+        this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0,
+            levelSelectionValid: this.state.level !== ""});
+        return this.state.logbookSelectionValid
+            && this.state.levelSelectionValid;
     }
 
     submit = (event) => {
-
-        const form = event.currentTarget;
-        if (form.checkValidity() === false || this.selectionsValid()) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
+        event.preventDefault();
+        const selectionsAreValid = this.selectionsValid();
+        const form = event.currentTarget;        
         this.setState({validated: true});
 
-        if (form.checkValidity() === true && this.selectionsValid()){
+        if (form.checkValidity() === true && selectionsAreValid){
             const { history } = this.props;
             const logEntry = {
             logbooks: this.state.selectedLogbooks,
@@ -144,17 +145,23 @@ class EntryEditor extends Component{
             // TODO add error handling if request fails.
             axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
                 .then(res => {
+                    //console.log(res);
                     this.submitAttachmentsMulti(res.data.id).then(res => history.push('/'));
-                });
+                })
+                .catch(error => console.log(error));
         }
     }
 
-    titleChanged = () => {
-       this.setState({title: this.titleRef.current.value})
+    titleChanged = (event) => {
+       this.setState({title: event.target.value})
     }
 
-    descriptionChanged = () => {
-        this.setState({description: this.descriptionRef.current.value})
+    descriptionChanged = (event) => {
+        this.setState({description: event.target.value})
+    }
+
+    selectLevel = (level) => {
+        this.setState({level: level}, () => this.setState({levelSelectionValid: level !== ""}));
     }
 
     
@@ -216,9 +223,8 @@ class EntryEditor extends Component{
                                 </Dropdown.Menu>
                             </Dropdown>
                             &nbsp;{currentLogbookSelection}
-                            {this.state.selectedLogbooks.length === 0 ? 
-                                <Form.Label column={true}>Select at least one logbook</Form.Label> :
-                                null}
+                            {!this.state.logbookSelectionValid && 
+                                <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Dropdown as={ButtonGroup}>
@@ -240,47 +246,47 @@ class EntryEditor extends Component{
                                 {levels.map((level, index) => (
                                     <Dropdown.Item eventKey={index}
                                     key={index}
-                                    onSelect={() => this.setState({level: level})}>{level}</Dropdown.Item>
+                                    onSelect={() => this.selectLevel(level)}>{level}</Dropdown.Item>
                                 ))}
                                 </Dropdown.Menu>
                             </Dropdown>&nbsp;
                             {this.state.level && <div className="selection">{this.state.level}</div>}
-                            {this.state.level ? null : <Form.Label column={true}>Select a level</Form.Label>}
+                            {this.state.levelSelectionValid ? null : <Form.Label className="form-error-label" column={true}>Select a level.</Form.Label>}
                         </Form.Row>
                         <Form.Row className="grid-item">
-                            <Form.Control ref={this.titleRef}
+                            <Form.Control 
                                 required
                                 type="text" 
                                 placeholder="Title" 
-                                onChange={() => this.titleChanged()}/>
+                                value={this.state.title}
+                                onChange={this.titleChanged}/>
                             <Form.Control.Feedback type="invalid">
                                 Please specify a title.
                             </Form.Control.Feedback>
                         </Form.Row>
                         <Form.Row className="grid-item">
-                            <Form.Control ref={this.descriptionRef}
+                            <Form.Control
                                 required
                                 as="textarea" 
                                 rows="5" 
+                                value={this.state.description}
                                 placeholder="Description"
-                                onChange={() => this.descriptionChanged()}/>
+                                onChange={this.descriptionChanged}/>
                             <Form.Control.Feedback type="invalid">
                                 Please specify a description.
                             </Form.Control.Feedback>
                         </Form.Row>
                         <Form.Row>
-                            
-                                <Button variant="secondary"
-                                        disabled={ this.props.isUploading }
-                                        onClick={ doUpload && this.props.onUploadStarted ? this.props.onUploadStarted : this.onBrowse }>
-                                    <span><FaPlus className="add-attachments"/></span>Add Attachments
-                                </Button>
-                                <FormFile.Input
+                            <Button variant="secondary"
+                                    disabled={ this.props.isUploading }
+                                    onClick={ doUpload && this.props.onUploadStarted ? this.props.onUploadStarted : this.onBrowse }>
+                                <span><FaPlus className="add-attachments"/></span>Add Attachments
+                            </Button>
+                            <FormFile.Input
                                     hidden
                                     multiple
                                     ref={ this.fileInputRef }
                                     onChange={ this.onFileChanged } />
-                       
                         </Form.Row>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
                     </Form>
