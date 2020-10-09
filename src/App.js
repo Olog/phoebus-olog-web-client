@@ -29,6 +29,11 @@ import LoginDialog from './LoginDialog';
 import LogoutDialog from './LogoutDialog';
 import AddLogbookDialog from './AddLogbookDialog';
 import AddTagDialog from './AddTagDialog';
+// Need axios for back-end access as the "fetch" API does not support CORS cookies.
+import axios from 'axios';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class App extends Component{
 
@@ -59,8 +64,20 @@ class App extends Component{
     }
 
     componentDidMount() {
+        // Logbooks and tags are public to read
         this.refreshLogbooks();
         this.refreshTags();
+
+        // If there is a session cookie, try to get user data from back-end.
+        // If server returns user data, there is a valid session.
+        if(cookies.get('SESSION')){
+            axios.get(`${process.env.REACT_APP_BASE_URL}/user`, { withCredentials: true })
+                .then(res => {
+                    if(res.data.userName){
+                        this.setState({userData: res.data});
+                    }
+            });
+        }
     }
 
     setUserData = (userData) => {
