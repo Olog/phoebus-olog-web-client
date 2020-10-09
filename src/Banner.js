@@ -16,52 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, {useState} from 'react'
+import React from 'react'
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import Navbar from 'react-bootstrap/Navbar';
 import Login from './Login';
 import Nav from 'react-bootstrap/Nav';
-import LoginDialog from './LoginDialog';
-import LogoutDialog from './LogoutDialog';
-import AddLogbookDialog from './AddLogbookDialog';
-import AddTagDialog from './AddTagDialog';
 import {
   Link
 } from "react-router-dom";
 
 const Banner = (props) => {
-
-  
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
-  const [showAddLogbookDialog, setShowAddLogbookDialog] = useState(false);
-  const [showAddTagDialog, setShowAddTagDialog] = useState(false);
-
-  const showLogin = (show) => {
-    setShowLoginDialog(show);
-  }
-
-  const showLogout = (show) => {
-    setShowLogoutDialog(show);
-  }
-
-  const showAddLogbook = () => {
-    setShowAddLogbookDialog(true);
-  }
-
-  const showAddTag = () => {
-    setShowAddTagDialog(true);
-  }
-
-  const hideAddLogbook = () => {
-    setShowAddLogbookDialog(false);
-  }
-
-  const hideAddTag = () => {
-    setShowAddTagDialog(false);
-  }
 
   return (
     <>
@@ -73,27 +39,16 @@ const Banner = (props) => {
         <Dropdown>
           <Dropdown.Toggle disabled={!props.userData.userName}/>
           <DropdownMenu alignRight="true">
-            <Dropdown.Item onClick={showAddLogbook}>New Logbook</Dropdown.Item>
-            <Dropdown.Item onClick={showAddTag}>New Tag</Dropdown.Item>
+            <Dropdown.Item onClick={() => props.setShowAddLogbook(true)}>New Logbook</Dropdown.Item>
+            <Dropdown.Item onClick={() => props.setShowAddTag(true)}>New Tag</Dropdown.Item>
           </DropdownMenu>
         </Dropdown>
         <Nav className="justify-content-end" style={{ width: "100%" }}>
-          <Login userData={props.userData} showLogin={showLogin} showLogout={showLogout}/>
+          <Login userData={props.userData} 
+            setShowLogin={props.setShowLogin} 
+            setShowLogout={props.setShowLogout}/>
         </Nav> 
       </Navbar>
-
-      <LoginDialog setUserData={props.setUserData} 
-        showLoginDialog={showLoginDialog} 
-        showLogin={showLogin}/>
-      <LogoutDialog setUserData={props.setUserData} 
-        showLogoutDialog={showLogoutDialog} 
-        showLogout={showLogout}/>
-      <AddLogbookDialog showAddLogbookDialog={showAddLogbookDialog} 
-        hideAddLogbook={hideAddLogbook} 
-        refreshLogbooks={props.refreshLogbooks}/>
-      <AddTagDialog showAddTagDialog={showAddTagDialog} 
-        hideAddTag={hideAddTag} 
-        refreshTags={props.refreshTags}/>
     </>
   )
 }

@@ -27,6 +27,9 @@ import FormFile from 'react-bootstrap/FormFile';
 import Attachment from './Attachment.js'
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class EntryEditor extends Component{
 
@@ -40,6 +43,14 @@ class EntryEditor extends Component{
         validated: false,
         logbookSelectionValid: true,
         levelSelectionValid: true
+    }
+
+    componentDidMount() {
+        // Check if we a have a non-expired session cookie.
+        // If not, trigger login dialog.
+        if(!cookies.get('SESSION')){
+            console.log("will redirect");
+        }
     }
 
     fileInputRef = React.createRef();
@@ -164,7 +175,6 @@ class EntryEditor extends Component{
         this.setState({level: level}, () => this.setState({levelSelectionValid: level !== ""}));
     }
 
-    
     render(){
 
         var logbookItems = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
@@ -290,7 +300,6 @@ class EntryEditor extends Component{
                         </Form.Row>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
                     </Form>
-                    
                 </Container>
             </>
         )

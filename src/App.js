@@ -23,8 +23,12 @@ import {
   Route
 } from "react-router-dom";
 import MainApp from './MainApp';
-import LogEntryEditorUI from './LogEntryEditorUI'
 import Banner from './Banner';
+import EntryEditor from './EntryEditor';
+import LoginDialog from './LoginDialog';
+import LogoutDialog from './LogoutDialog';
+import AddLogbookDialog from './AddLogbookDialog';
+import AddTagDialog from './AddTagDialog';
 
 class App extends Component{
 
@@ -32,6 +36,26 @@ class App extends Component{
         logbooks: [],
         tags: [],
         userData: {userName: "", roles: []},
+        showLogin: false,
+        showLogout: false,
+        showAddLogbook: false,
+        showAddTag: false
+    }
+
+    setShowLogin = (show) => {
+        this.setState({showLogin: show});
+    }
+
+    setShowLogout = (show) => {
+        this.setState({showLogout: show});
+    }
+
+    setShowAddLogbook = (show) => {
+        this.setState({showAddLogbook: show});
+    }
+
+    setShowAddTag = (show) => {
+        this.setState({showAddTag: show});
     }
 
     componentDidMount() {
@@ -63,23 +87,45 @@ class App extends Component{
 
     render(){
         return(
-            <Router>
-                <Banner userData={this.state.userData}
-                        setUserData={this.setUserData}
-                        refreshLogbooks={this.refreshLogbooks}
+            <>
+                <Router>
+                    <Banner userData={this.state.userData}
+                            setShowAddLogbook={this.setShowAddLogbook}
+                            setShowAddTag={this.setShowAddTag}
+                            refreshLogbooks={this.refreshLogbooks}
+                            refreshTags={this.refreshTags}
+                            setShowLogin={this.setShowLogin}
+                            setShowLogout={this.setShowLogout}/>
+                    <Switch>
+                        <Route exact path="/">
+                            <MainApp logbooks={this.state.logbooks}
+                                tags={this.state.tags}/>
+                        </Route>
+                        <Route path="/edit">
+                            <EntryEditor 
+                                logbooks={this.state.logbooks}
+                                tags={this.state.tags}
+                                setShowLogin={this.setShowLogin}/>
+                        </Route>
+                    </Switch>
+                </Router>
+
+                <LoginDialog setUserData={this.setUserData} 
+                        setShowLogin={this.setShowLogin}
+                        loginDialogVisible={this.state.showLogin}/>
+
+                <LogoutDialog setUserData={this.setUserData} 
+                        setShowLogout={this.setShowLogout} 
+                        logoutDialogVisible={this.state.showLogout}/>
+
+                <AddLogbookDialog addLogbookDialogVisible={this.state.showAddLogbook} 
+                        setShowAddLogbook={this.setShowAddLogbook} 
+                        refreshLogbooks={this.refreshLogbooks}/>
+
+                <AddTagDialog addTagDialogVisible={this.state.showAddTag} 
+                        setShowAddTag={this.setShowAddTag} 
                         refreshTags={this.refreshTags}/>
-                <Switch>
-                    <Route exact path="/">
-                        <MainApp logbooks={this.state.logbooks}
-                            tags={this.state.tags}/>
-                    </Route>
-                    <Route path="/edit">
-                        <LogEntryEditorUI logbooks={this.state.logbooks}
-                            tags={this.state.tags}/>
-                    </Route>
-                </Switch>
-            </Router>
-      
+            </>
         );
     }
 }

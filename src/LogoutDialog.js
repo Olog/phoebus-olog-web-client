@@ -31,7 +31,7 @@ class LogoutDialog extends Component{
 
     hideLogout = () => {
         this.setState({loginError: ""});
-        this.props.showLogout(false);
+        this.props.setShowLogout(false);
     }
 
     logout = (event) => {
@@ -52,7 +52,7 @@ class LogoutDialog extends Component{
 
     render(){
         return(
-        <Modal centered show={this.props.showLogoutDialog} onHide={this.hideLogout}>
+        <Modal centered show={this.props.logoutDialogVisible} onHide={this.hideLogout}>
           <Modal.Header closeButton>
             <Modal.Title>Sign Out?</Modal.Title>
           </Modal.Header>

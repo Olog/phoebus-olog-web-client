@@ -24,10 +24,10 @@ class Login extends Component{
 
     handleClick = () => {
         if(!this.props.userData.userName){
-            this.props.showLogin(true);
+            this.props.setShowLogin(true);
         }
         else{
-            this.props.showLogout(true);
+            this.props.setShowLogout(true);
         }
     }
 

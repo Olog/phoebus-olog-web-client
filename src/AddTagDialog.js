@@ -37,7 +37,7 @@ class AddTagDialog extends Component{
         // TODO add error handling if request fails.
        axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/tags/` + name, {name: name, state: "Active"}, { withCredentials: true })
         .then(res => {
-            this.props.hideAddTag();
+            this.props.setShowAddTag(false);
             this.props.refreshTags();
         });
       };
@@ -45,7 +45,8 @@ class AddTagDialog extends Component{
     
     render(){
         return(
-            <Modal show={this.props.showAddTagDialog} onHide={this.props.hideAddTag}>
+            <Modal show={this.props.addTagDialogVisible} 
+                onHide={() => this.props.setShowAddTag(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>New Tag</Modal.Title>
                 </Modal.Header>
@@ -54,7 +55,7 @@ class AddTagDialog extends Component{
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={this.createTag}>Create</Button>
-                    <Button variant="secondary" onClick={this.props.hideAddTag}>Cancel</Button>
+                    <Button variant="secondary" onClick={() => this.props.setShowAddTag(false)}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
         )

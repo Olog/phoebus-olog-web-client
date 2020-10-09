@@ -37,14 +37,15 @@ class AddLogbookDialog extends Component{
         // TODO add error handling if request fails.
        axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks/` + name, {name: name, state: "Active"}, { withCredentials: true })
         .then(res => {
-            this.props.hideAddLogbook();
+            this.props.setShowAddLogbook(false);
             this.props.refreshLogbooks();
         });
       };
 
     render(){
         return(
-            <Modal show={this.props.showAddLogbookDialog} onHide={this.props.hideAddLogbook}>
+            <Modal show={this.props.addLogbookDialogVisible} 
+                onHide={() => this.props.setShowAddLogbook(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>New Logbook</Modal.Title>
                 </Modal.Header>
@@ -53,7 +54,7 @@ class AddLogbookDialog extends Component{
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={this.createLogbook}>Create</Button>
-                    <Button variant="secondary" onClick={this.props.hideAddLogbook}>Cancel</Button>
+                    <Button variant="secondary" onClick={() => this.props.setShowAddLogbook(false)}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
         )

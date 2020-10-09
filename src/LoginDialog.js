@@ -37,7 +37,7 @@ class LoginDialog extends Component{
 
     hideLogin = () => {
         this.setState({loginError: ""});
-        this.props.showLogin(false);
+        this.props.setShowLogin(false);
     }
 
     login = (event) => {
@@ -56,14 +56,14 @@ class LoginDialog extends Component{
               this.setState({loginError: "Login failed. Service off-line?"})
              }
              else if(error.response.status === 401){
-              this.setState({loginError: "Login failed, invalid credentials"})
+              this.setState({loginError: "Login failed, invalid credentials."})
              }
          });
     }
     
     render(){
         return(
-            <Modal centered show={this.props.showLoginDialog} onHide={this.hideLogin}>
+            <Modal show={this.props.loginDialogVisible} centered onHide={this.hideLogin}>
             <Modal.Header closeButton>
               <Modal.Title>Sign In</Modal.Title>
             </Modal.Header>

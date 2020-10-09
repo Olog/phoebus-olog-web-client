@@ -35,24 +35,20 @@ class Filters extends Component{
             <Container className="grid-item full-height">
               <h6>Filter Log Entries</h6>
                 <Accordion defaultActiveKey="0">
-                  <Card>
                     <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openLogbooks: !this.state.openLogbooks})}>
                     { this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } LOGBOOKS
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
-                       <Card.Body><Logbooks logbooks={this.props.logbooks} getLogRecords={this.props.getLogRecords}/></Card.Body>
+                       <Logbooks logbooks={this.props.logbooks} getLogRecords={this.props.getLogRecords}/>
                     </Accordion.Collapse>
-                  </Card>
                 </Accordion>
                 <Accordion>
-                  <Card>
                     <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openTags: !this.state.openTags})}>
                     { this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } TAGS
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
-                       <Card.Body><Tags tags={this.props.tags}/></Card.Body>
+                       <Tags tags={this.props.tags}/>
                     </Accordion.Collapse>
-                  </Card>
                 </Accordion>
             </Container>
         )

@@ -19,8 +19,6 @@
 import React, { Component } from 'react';
 import Filters from './Filters'
 import LogDetails from './LogDetails'
-// Need axios for back-end access as the "fetch" API does not support CORS cookies.
-//import axios from 'axios'
 import SearchResultList from './SearchResultList';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
