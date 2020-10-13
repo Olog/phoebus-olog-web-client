@@ -69,14 +69,16 @@ class App extends Component{
         this.refreshTags();
 
         // If there is a session cookie, try to get user data from back-end.
-        // If server returns user data, there is a valid session.
+        // If server returns user data with non-null userName, there is a valid session.
         if(cookies.get('SESSION')){
             axios.get(`${process.env.REACT_APP_BASE_URL}/user`, { withCredentials: true })
                 .then(res => {
-                    if(res.data.userName){
+                    // As long as there is a session cookie, the response SHOULD contain
+                    // user data. Check for status just in case...
+                    if(res.status === 200 && res.data){ 
                         this.setState({userData: res.data});
                     }
-            });
+            }).catch(err => {/** Connection error handled here */});
         }
     }
 
@@ -122,7 +124,8 @@ class App extends Component{
                             <EntryEditor 
                                 logbooks={this.state.logbooks}
                                 tags={this.state.tags}
-                                setShowLogin={this.setShowLogin}/>
+                                setShowLogin={this.setShowLogin}
+                                userData={this.state.userData}/>
                         </Route>
                     </Switch>
                 </Router>

@@ -20,8 +20,10 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-
+import Cookies from 'universal-cookie';
 import './css/olog.css';
+
+const cookies = new Cookies();
 
 class LogoutDialog extends Component{
 
@@ -41,7 +43,8 @@ class LogoutDialog extends Component{
         fetch(`${process.env.REACT_APP_BASE_URL}/logout`)
         .then(response => {
             this.setState({logoutError: ""});
-            this.props.setUserData({});
+            this.props.setUserData({userName: "", roles: []});
+            cookies.remove('SESSION');
             this.hideLogout();
           })
         .catch(error => {

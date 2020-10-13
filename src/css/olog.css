@@ -62,7 +62,6 @@ body{
 }
 
 .selection{
-    font-size: 10px;
     background-color: #f2c889;
     border-radius: 2px;
     color: #945203;
@@ -75,6 +74,7 @@ body{
 .delete-selection{
     margin-bottom: 2px;
     margin-left: 4px;
+    margin-right: 2px;
 }
 
 .delete-selection:hover{
@@ -118,4 +118,3 @@ body{
     font-size: 10px;
     color: #dc3545;
 }
-

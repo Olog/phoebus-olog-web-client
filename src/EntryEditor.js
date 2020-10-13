@@ -28,7 +28,6 @@ import Attachment from './Attachment.js'
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
-
 class EntryEditor extends Component{
 
     state = {
@@ -102,6 +101,7 @@ class EntryEditor extends Component{
     }
 
     submitAttachmentsMulti = (id) => {
+
         const formData = new FormData();
         this.state.attachedFiles.map(file => {
             formData.append('file', file);
@@ -143,13 +143,23 @@ class EntryEditor extends Component{
             source: "source",
             state: "Active"
             }
-            // TODO add error handling if request fails.
             axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
                 .then(res => {
-                    //console.log(res);
-                    this.submitAttachmentsMulti(res.data.id).then(res => history.push('/'));
+                    if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
+                        this.submitAttachmentsMulti(res.data.id).then(res => history.push('/'));
+                    }
+                    else{
+                        history.push('/')
+                    }  
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    if(error.response && (error.response.status === 401 || error.response.status === 403)){
+                        alert('You are currently not authorized to create a log entry.')
+                    }
+                    else if(error.response && (error.response.status >= 500)){
+                        alert('Failed to create log entry.')
+                    }
+                });
         }
     }
 
@@ -169,7 +179,8 @@ class EntryEditor extends Component{
 
         var logbookItems = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
-                <Dropdown.Item key={index} 
+                <Dropdown.Item key={index}  
+                    style={{fontSize: "12px", paddingBottom: "1px"}}
                     eventKey={index} 
                     onSelect={() => this.addLogbook(row)}>{row.name}</Dropdown.Item>
             )
@@ -178,6 +189,7 @@ class EntryEditor extends Component{
         var tagItems = this.props.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
                 <Dropdown.Item key={index} 
+                    style={{fontSize: "12px", paddingBottom: "1px"}}
                     eventKey={index}
                     onSelect={() => this.addTag(row)}>{row.name}</Dropdown.Item>
             )
@@ -211,7 +223,7 @@ class EntryEditor extends Component{
                     <Form noValidate validated={this.state.validated} onSubmit={this.submit}>
                         <Form.Row>
                             <Form.Label className="new-entry">New Log Entry</Form.Label>
-                            <Button type="submit">Create</Button>
+                            <Button type="submit" disabled={!this.props.userData || this.props.userData.userName === ""}>Create</Button>
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Dropdown as={ButtonGroup}>
@@ -245,6 +257,7 @@ class EntryEditor extends Component{
                                 <Dropdown.Menu>
                                 {levels.map((level, index) => (
                                     <Dropdown.Item eventKey={index}
+                                    style={{fontSize: "12px", paddingBottom: "1px"}}
                                     key={index}
                                     onSelect={() => this.selectLevel(level)}>{level}</Dropdown.Item>
                                 ))}

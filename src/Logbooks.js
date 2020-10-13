@@ -25,7 +25,7 @@ class Logbooks extends Component{
         var items = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
                 <li key={index}>
-                    <Button style={{padding: "0px"}} variant="link" onClick={() => this.props.getLogRecords(row.name)}>{row.name}</Button>
+                    <Button style={{padding: "0px", fontSize: "12px"}} variant="link" onClick={() => this.props.getLogRecords(row.name)}>{row.name}</Button>
                 </li>
             )
          })         
