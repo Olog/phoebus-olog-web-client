@@ -17,8 +17,8 @@
  */
 import React, {Component} from 'react';
 import OlogMoment from './OlogMoment';
-import ListGroup from 'react-bootstrap/ListGroup';
-import './css/olog.css'
+import './css/olog.css';
+import Table from 'react-bootstrap/Table';
 
 class SearchResultItem extends Component{
 
@@ -31,14 +31,21 @@ class SearchResultItem extends Component{
 
         return(
             <>
-              <ListGroup.Item action onClick={() => this.props.setLogRecord(this.props.log)}>
-                Author: {this.props.log.owner} <br/>
-                Created Date: <OlogMoment date={this.props.log.createdDate}/><br/>
-                Title: {this.props.log.title} <br/>
-                Description: {this.props.log.description} <br/>
-                Attachments:<br/>
-                <ul className="olog-ul">{attachments}</ul>
-              </ListGroup.Item>
+                <Table bordered size="sm" onClick={() => this.props.setLogRecord(this.props.log)}>
+                    <tbody>
+                        <tr>
+                            <td>Author</td><td>{this.props.log.owner}</td>
+                        </tr>
+                        <tr>
+                            <td>Created Date</td><td><OlogMoment date={this.props.log.createdDate}/></td>
+                        </tr>
+                        <tr>
+                            <td>Title</td><td>{this.props.log.title}</td>
+                        </tr>
+                        {this.props.log.description ? null : <tr><td>Desription</td><td>{this.props.log.description}</td></tr>}
+                        {this.props.log.attachments.length === 0 ? null : <tr><td colSpan="2">Attachments:<br/>{attachments}</td></tr> }
+                    </tbody>
+                </Table>
             </>
         )
     }

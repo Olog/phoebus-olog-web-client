@@ -26,6 +26,7 @@ import Card from 'react-bootstrap/Card';
 import OlogMoment from './OlogMoment';
 import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Table from 'react-bootstrap/Table';
 
 import './css/olog.css';
 
@@ -83,24 +84,22 @@ class LogDetails extends Component{
                             
                             <Accordion.Collapse eventKey="0">
                                 <Card.Body>
-                                    Logbooks: {logbooks}<br/>
-                                    Tags: {tags}<br/>
-                                    Level: {this.props.currentLogRecord.level}<br/>
-                                    Created Date: <OlogMoment date={this.props.currentLogRecord.createdDate}/>
+                                    <Table bordered striped size="sm">
+                                        <tbody>
+                                            <tr><td>Logbooks</td><td>{logbooks}</td></tr>
+                                            <tr><td>Tags</td><td>{tags}</td></tr>
+                                            <tr><td>Level</td><td>{this.props.currentLogRecord.level}</td></tr>
+                                            <tr><td>Created Date</td><td><OlogMoment date={this.props.currentLogRecord.createdDate}/></td></tr>
+                                        </tbody>
+                                    </Table>
                                 </Card.Body>
                             </Accordion.Collapse>
-                            <Row>
-                                <Col>
-                                    <h6>Title:</h6>
-                                    {this.props.currentLogRecord.title}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <h6>Description:</h6>
-                                    {this.props.currentLogRecord.description}
-                                </Col>
-                            </Row>
+                            <Table bordered size="sm">
+                                <tbody>
+                                    <tr><td>Title</td><td>{this.props.currentLogRecord.title}</td></tr>
+                                    <tr><td>Description</td><td>{this.props.currentLogRecord.description}</td></tr>
+                                </tbody>
+                            </Table>
                             <Row>
                                 <Col>
                                     <h6>Attachments:</h6>

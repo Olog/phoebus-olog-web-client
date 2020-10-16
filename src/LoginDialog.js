@@ -70,7 +70,7 @@ class LoginDialog extends Component{
             <Form>
               <Modal.Body>
                 <Form.Group controlId="formLogin">
-                  <Form.Control type="text" placeholder="Username" ref={this.userNameRef} />
+                  <Form.Control  type="text" placeholder="Username" ref={this.userNameRef} />
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                   <Form.Control type="password" placeholder="Password" ref={this.passwordRef}/>
