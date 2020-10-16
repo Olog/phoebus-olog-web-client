@@ -27,6 +27,7 @@ import FormFile from 'react-bootstrap/FormFile';
 import Attachment from './Attachment.js'
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import checkSession from './session-check';
 
 class EntryEditor extends Component{
 
@@ -128,6 +129,21 @@ class EntryEditor extends Component{
 
     submit = (event) => {
         event.preventDefault();
+
+        var promise = checkSession();
+        if(!promise){
+            this.props.setShowLogin(true);
+            return;
+        }
+        else{
+            promise.then(data => {
+                if(!data){
+                    this.props.setShowLogin(true);
+                    return;
+                }
+            });
+        }
+
         const selectionsAreValid = this.selectionsValid();
         const form = event.currentTarget;        
         this.setState({validated: true});
@@ -252,7 +268,7 @@ class EntryEditor extends Component{
                         <Form.Row className="grid-item">
                             <Dropdown as={ButtonGroup}>
                                 <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                    Level                                   
+                                    Level                                
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                 {levels.map((level, index) => (

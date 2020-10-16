@@ -27,14 +27,30 @@ import {
   Link
 } from "react-router-dom";
 
+import checkSession from './session-check';
+
 const Banner = (props) => {
+
+  const isSessionValid = () => {
+    var promise = checkSession();
+    if(!promise){
+      props.setShowLogin(true);
+    }
+    else{
+      promise.then(data => {
+        if(!data){
+          props.setShowLogin(true);
+        }
+      });
+    }
+  }
 
   return (
     <>
       <Navbar bg="dark" variant="dark">
         <Navbar.Brand href="#home">Olog ES</Navbar.Brand>
         <Link to="/edit">
-          <Button disabled={!props.userData.userName} variant="primary">New Log Entry</Button>
+          <Button disabled={!props.userData.userName} variant="primary" onClick={() => isSessionValid()}>New Log Entry</Button>
         </Link>
         <Dropdown>
           <Dropdown.Toggle disabled={!props.userData.userName}/>
