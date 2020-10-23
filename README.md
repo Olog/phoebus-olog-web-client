@@ -19,6 +19,8 @@ Available:
 * Create new log entry, including attachments. Input is validated.
 
 Backlog:
+* Properties editor
+* Properties view
 * Log entry result set pagination, i.e. fetch next/previous N entries.
 * Support for search criteria (date, title and description text, tags).
 
