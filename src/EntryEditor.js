@@ -28,6 +28,7 @@ import Attachment from './Attachment.js'
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import checkSession from './session-check';
+import PropertyEditor from './PropertyEditor';
 
 class EntryEditor extends Component{
 
@@ -40,7 +41,8 @@ class EntryEditor extends Component{
         attachedFiles: [],
         validated: false,
         logbookSelectionValid: true,
-        levelSelectionValid: true
+        levelSelectionValid: true,
+        properties: []
     }
 
     fileInputRef = React.createRef();
@@ -191,6 +193,17 @@ class EntryEditor extends Component{
         this.setState({level: level}, () => this.setState({levelSelectionValid: level !== ""}));
     }
 
+    addProperty = () => {
+        var property = {name: "", values: [], index: this.state.properties.length}
+        this.setState({properties: [...this.state.properties, property]});
+    }
+
+    removeProperty = (property) => {
+        console.log(property);
+        this.setState({
+            properties: this.state.properties.filter(item => item.index !== property.index)});
+    }
+
     render(){
 
         var logbookItems = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
@@ -232,6 +245,12 @@ class EntryEditor extends Component{
         let levels = ["Urgent", "Suggestion", "Info", "Request", "Problem"];
 
         const doUpload = this.props.fileName !== '';
+
+        var editorRows = this.state.properties.map((row, index) => {
+            return (
+                <PropertyEditor key={index} property={row} removeProperty={this.removeProperty}/>
+            )
+        })
 
         return(
             <>
@@ -306,10 +325,10 @@ class EntryEditor extends Component{
                             </Form.Control.Feedback>
                         </Form.Row>
                         <Form.Row>
-                            <Button variant="secondary"
+                            <Button variant="secondary" size="sm"
                                     disabled={ this.props.isUploading }
                                     onClick={ doUpload && this.props.onUploadStarted ? this.props.onUploadStarted : this.onBrowse }>
-                                <span><FaPlus className="add-attachments"/></span>Add Attachments
+                                <span><FaPlus className="add-button"/></span>Add Attachments
                             </Button>
                             <FormFile.Input
                                     hidden
@@ -318,6 +337,14 @@ class EntryEditor extends Component{
                                     onChange={ this.onFileChanged } />
                         </Form.Row>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
+                        <Form.Row className="grid-item">
+                            <Form.Group>
+                                <Button variant="secondary" size="sm" onClick={this.addProperty}>
+                                    <span><FaPlus className="add-button"/></span>Add Property
+                                </Button>
+                                {editorRows}              
+                            </Form.Group>
+                        </Form.Row>
                     </Form>
                 </Container>
             </>

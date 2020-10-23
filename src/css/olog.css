@@ -109,7 +109,7 @@ body{
     text-align: center;
 }
 
-.add-attachments{
+.add-button{
     margin-bottom: 3px;
     margin-right: 3px;
 }
@@ -117,4 +117,13 @@ body{
 .form-error-label{
     font-size: 10px;
     color: #dc3545;
+}
+
+.property-editor{
+    padding-left: 0px;
+    background-color: #ffffff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }

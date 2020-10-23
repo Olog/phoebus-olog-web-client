@@ -31,23 +31,14 @@ class SearchResultList extends Component{
             )
         })
       
-        if(this.props.logs.length > 0){
-            return(
-                <Container className="grid-item">
-                    <h6>Search Results</h6>
-                        <ListGroup className="olog-ul">{searchResultItems}</ListGroup>
-                </Container>
-            )
-        }
-        else{
-            return(
-                <Container className="grid-item full-height">
-                    <h6>Search Results</h6>
-                    No log records to show
-                </Container>
-            )
-        }
-        
+        return(
+            <Container className="grid-item full-height">
+                <h6>Search Results</h6>
+                    {this.props.logs.length > 0 ? 
+                        <ListGroup className="olog-ul">{searchResultItems}</ListGroup> :
+                        <span>No log records to show</span>}
+            </Container>
+        )
     }
 }
 

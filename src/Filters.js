@@ -17,6 +17,7 @@
  */
 import React, {Component} from 'react'
 import Accordion from 'react-bootstrap/Accordion'
+import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import Logbooks from './Logbooks'
 import Tags from './Tags'
@@ -27,16 +28,21 @@ class Filters extends Component{
 
     state = {
         openLogbooks: true,
-        openTags: false
+        openTags: false,
+        openTimespan: false,
+        openFromTo: false
     };
 
     render(){
+
+        let timeSpans = ["Last minute", "Last hour", "Last day", "Last week"];
+
         return(
             <Container className="grid-item full-height">
               <h6>Filter Log Entries</h6>
                 <Accordion defaultActiveKey="0">
                     <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openLogbooks: !this.state.openLogbooks})}>
-                    { this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } LOGBOOKS
+                        {this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } LOGBOOKS
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                        <Logbooks logbooks={this.props.logbooks} getLogRecords={this.props.getLogRecords}/>
@@ -44,11 +50,30 @@ class Filters extends Component{
                 </Accordion>
                 <Accordion>
                     <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openTags: !this.state.openTags})}>
-                    { this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } TAGS
+                        {this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } TAGS
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                        <Tags tags={this.props.tags}/>
                     </Accordion.Collapse>
+                </Accordion>
+                <Accordion>
+                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openTimespan: !this.state.openTimespan})}>
+                        {this.state.openTimespan ? <FaChevronDown /> : <FaChevronRight/> } CREATED FROM
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey="0">
+                        <ul  className="olog-ul">
+                            {timeSpans.map((timeSpan, index) => (
+                                    <li key={index}>
+                                        <Button style={{padding: "0px", fontSize: "12px"}} variant="link" >{timeSpan}</Button>
+                                    </li>
+                            ))}
+                        </ul>
+                    </Accordion.Collapse>
+                </Accordion>
+                <Accordion>
+                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openFromTo: !this.state.openFromTo})}>
+                        {this.state.openFromTo ? <FaChevronDown /> : <FaChevronRight/> } CREATED FROM - TO
+                    </Accordion.Toggle>
                 </Accordion>
             </Container>
         )
