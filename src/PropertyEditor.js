@@ -24,6 +24,11 @@ import Table from 'react-bootstrap/esm/Table';
 
 class PropertyEditor extends Component{
 
+    /**
+     * The state in this component is used to maintain the
+     * editor. The state maintained in the top level editor component
+     * is updated whenever user adds data in this property editor.
+     */
     state = {
         keyValuePairs: {},
         key: "",
@@ -60,8 +65,9 @@ class PropertyEditor extends Component{
                 <tr key={key}>
                     <td>{key}</td>
                     <td>{this.state.keyValuePairs[key]}</td>
-                    <td><BsXCircle 
-                        onClick={() => this.removeKeyValuePair(key)}/></td>
+                    <td><Button variant="secondary" 
+                            className="property-table-button"
+                            onClick={() => this.removeKeyValuePair(key)}>Remove</Button></td>
                 </tr>
             )
         })
@@ -99,7 +105,7 @@ class PropertyEditor extends Component{
                                 </td>
                                 <td>
                                     <Button variant="secondary" 
-                                        size="sm" 
+                                        className="property-table-button"
                                         disabled={this.state.key === "" || this.state.value === ""}
                                         onClick={this.addRow}>Add</Button>
                                 </td>

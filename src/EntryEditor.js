@@ -132,6 +132,35 @@ class EntryEditor extends Component{
             && this.state.levelSelectionValid;
     }
 
+    getAttributes = (attributes) => {
+        const attrs = [];
+        Object.keys(attributes).map(key => {
+            attrs.push({
+                name: key,
+                value: attributes[key]
+            });
+            return {};
+        });
+        return attrs;
+    }
+
+    getProperties = () => {
+        const props = [];
+        if(Object.keys(this.state.properties).length > 0){
+            Object.keys(this.state.properties).map(key => {
+                props.push({
+                    name: key,
+                    owner: this.props.userData.userName,
+                    status: 'Active',
+                    attributes: this.getAttributes(this.state.properties[key])
+                });
+                return {};
+            });
+        }
+
+        return props;
+    }
+
     submit = (event) => {
         event.preventDefault();
 
@@ -156,13 +185,14 @@ class EntryEditor extends Component{
         if (form.checkValidity() === true && selectionsAreValid){
             const { history } = this.props;
             const logEntry = {
-            logbooks: this.state.selectedLogbooks,
-            tags: this.state.selectedTags,
-            title: this.state.title,
-            description: this.state.description,
-            level: this.state.level,
-            source: "source",
-            state: "Active"
+                logbooks: this.state.selectedLogbooks,
+                tags: this.state.selectedTags,
+                properties: this.getProperties(),
+                title: this.state.title,
+                description: this.state.description,
+                level: this.state.level,
+                source: "source",
+                state: "Active"
             }
             axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
                 .then(res => {
@@ -199,7 +229,7 @@ class EntryEditor extends Component{
     addProperty = () => {
         const properties = {...this.state.properties};
         properties[this.propertyNameRef.current.value] = {};
-        this.setState({properties, showAddProperty: false});
+        this.setState({showAddProperty: false, properties});
     }
 
     removeProperty = (key) => {
@@ -268,7 +298,7 @@ class EntryEditor extends Component{
 
         var editorRows = Object.keys(this.state.properties).map(key => {
             return (
-                <PropertyEditor key={key} 
+                <PropertyEditor key={key}
                     name={key}
                     addKeyValuePair={this.addKeyValuePair}
                     removeKeyValuePair={this.removeKeyValuePair}

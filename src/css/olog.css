@@ -127,3 +127,9 @@ body{
     margin-top: 3px;
     margin-bottom: 3px;
 }
+
+button.property-table-button{
+    padding-top: 0px;
+    padding-bottom: 0px;
+    width: 100%;
+}
