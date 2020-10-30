@@ -29,6 +29,7 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import checkSession from './session-check';
 import PropertyEditor from './PropertyEditor';
+import Modal from 'react-bootstrap/Modal';
 
 class EntryEditor extends Component{
 
@@ -42,9 +43,11 @@ class EntryEditor extends Component{
         validated: false,
         logbookSelectionValid: true,
         levelSelectionValid: true,
-        properties: []
+        properties: {},
+        showAddProperty: false
     }
 
+    propertyNameRef = React.createRef();
     fileInputRef = React.createRef();
     
     addLogbook = (logbook) => {
@@ -194,14 +197,31 @@ class EntryEditor extends Component{
     }
 
     addProperty = () => {
-        var property = {name: "", values: [], index: this.state.properties.length}
-        this.setState({properties: [...this.state.properties, property]});
+        const properties = {...this.state.properties};
+        properties[this.propertyNameRef.current.value] = {};
+        this.setState({properties, showAddProperty: false});
     }
 
-    removeProperty = (property) => {
-        console.log(property);
-        this.setState({
-            properties: this.state.properties.filter(item => item.index !== property.index)});
+    removeProperty = (key) => {
+        const properties = {...this.state.properties};
+        delete properties[key];
+        this.setState({properties});
+    }
+
+    addKeyValuePair = (propertyName, key, value) => {
+        const copy = this.state.properties[propertyName];
+        copy[key] = value;
+        const properties = {...this.state.properties};
+        properties[propertyName] = copy;
+        this.setState({properties});
+    }
+
+    removeKeyValuePair = (propertyName, key) => {
+        const copy = this.state.properties[propertyName];
+        delete copy[key];
+        const properties = {...this.state.properties};
+        properties[propertyName] = copy;
+        this.setState({properties});
     }
 
     render(){
@@ -246,9 +266,13 @@ class EntryEditor extends Component{
 
         const doUpload = this.props.fileName !== '';
 
-        var editorRows = this.state.properties.map((row, index) => {
+        var editorRows = Object.keys(this.state.properties).map(key => {
             return (
-                <PropertyEditor key={index} property={row} removeProperty={this.removeProperty}/>
+                <PropertyEditor key={key} 
+                    name={key}
+                    addKeyValuePair={this.addKeyValuePair}
+                    removeKeyValuePair={this.removeKeyValuePair}
+                    removeProperty={this.removeProperty}/>
             )
         })
 
@@ -336,17 +360,30 @@ class EntryEditor extends Component{
                                     ref={ this.fileInputRef }
                                     onChange={ this.onFileChanged } />
                         </Form.Row>
+                        </Form>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
                         <Form.Row className="grid-item">
                             <Form.Group>
-                                <Button variant="secondary" size="sm" onClick={this.addProperty}>
+                                <Button variant="secondary" size="sm" onClick={() => this.setState({showAddProperty: true})}>
                                     <span><FaPlus className="add-button"/></span>Add Property
                                 </Button>
                                 {editorRows}              
                             </Form.Group>
                         </Form.Row>
-                    </Form>
                 </Container>
+
+                <Modal show={this.state.showAddProperty} onHide={() => this.setState({showAddProperty: false})}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>New Property</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Control type="text" placeholder={'Property name'} ref={this.propertyNameRef} /> 
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={this.addProperty}>Add</Button>
+                        <Button variant="secondary" onClick={() => this.setState({showAddProperty: false})}>Cancel</Button>
+                    </Modal.Footer>
+                </Modal>
             </>
         )
     }

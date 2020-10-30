@@ -17,68 +17,95 @@
  */
 import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
-import PropertyRow from './PropertyRow';
 import Button from 'react-bootstrap/Button';
-import {FaPlus} from 'react-icons/fa';
 import Col from 'react-bootstrap/Col';
 import {BsXCircle} from 'react-icons/bs';
+import Table from 'react-bootstrap/esm/Table';
 
 class PropertyEditor extends Component{
 
     state = {
-        keyValuePairs: []
+        keyValuePairs: {},
+        key: "",
+        value: ""
     };
 
-    componentDidMount = () => {
-        this.addKeyValuePair(); // Add one key value pair row as default.
+    addRow = () => {
+        const keyValuePairs = {...this.state.keyValuePairs};
+        keyValuePairs[this.state.key] = this.state.value;
+        this.setState({keyValuePairs});
+        this.props.addKeyValuePair(this.props.name, this.state.key, this.state.value);
+        this.setState({key: "", value: ""});
     }
 
-    nameChanged = (event) => {
-        this.setState({name: event.target.value});
+    removeKeyValuePair = (key) => {
+        const keyValuePairs = {...this.state.keyValuePairs};
+        delete keyValuePairs[key];
+        this.setState({keyValuePairs});
+        this.props.removeKeyValuePair(this.props.name, key);
     }
 
-    addKeyValuePair = () => {
-        var keyValuePair = {key: "", value: "", index: this.state.keyValuePairs.length}
-        this.setState({keyValuePairs: [...this.state.keyValuePairs, keyValuePair]});
+    updateKey = (event) => {
+        this.setState({key: event.target.value});
     }
 
-    removeKeyValuePair = (keyValuePair) => {
-        this.setState({
-            keyValuePairs: this.state.keyValuePairs.filter(item => item.index !== keyValuePair.index)});
+    updateValue = (event) => {
+        this.setState({value: event.target.value});
     }
 
     render(){
 
-        var rows = this.state.keyValuePairs.map((row, index) => {
+        var rows = Object.keys(this.state.keyValuePairs).map(key => {
             return (
-                <PropertyRow key={index} keyValuePair={row} removeKeyValuePair={this.removeKeyValuePair}/>
+                <tr key={key}>
+                    <td>{key}</td>
+                    <td>{this.state.keyValuePairs[key]}</td>
+                    <td><BsXCircle 
+                        onClick={() => this.removeKeyValuePair(key)}/></td>
+                </tr>
             )
         })
 
         return(
             <div className="property-editor">
               <Form.Row>
-              <Col xs="auto">
-                <Form.Control 
-                    required
-                    type="text" 
-                    placeholder="Enter property name" 
-                    value={this.props.property.name}
-                    onChange={this.nameChanged}/>
-                <Form.Control.Feedback type="invalid">
-                    Please specify a property name.
-                </Form.Control.Feedback>
+                <Col>
+                    <Form.Label column="sm">Name: <b>{this.props.name}</b></Form.Label>
                 </Col>
-                <Col></Col>
-                <Col xs="auto"><BsXCircle style={{float: "right"}} 
-                    onClick={() => this.props.removeProperty(this.props.property)}/></Col>
+                <Col><BsXCircle style={{float: "right"}} 
+                    onClick={() => this.props.removeProperty(this.props.name)}/></Col>
               </Form.Row>
-                {rows}
+              
               <Form.Row>
-              <Col xs="auto">
-                <Button variant="secondary" size="sm" onClick={this.addKeyValuePair}>
-                    <span><FaPlus className="add-button"/></span>Add Key/Value pair
-                </Button>
+                <Col>
+                    <Table bordered size="sm">
+                        <thead>
+                            <tr><th>Key</th><th>Value</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            {rows}
+                            <tr>
+                                <td>
+                                    <Form.Control type="text" 
+                                        size="sm" 
+                                        value={this.state.key}
+                                        onChange={this.updateKey}/>
+                                </td>
+                                <td>
+                                    <Form.Control type="text" 
+                                        size="sm"
+                                        value={this.state.value}
+                                        onChange={this.updateValue}/>
+                                </td>
+                                <td>
+                                    <Button variant="secondary" 
+                                        size="sm" 
+                                        disabled={this.state.key === "" || this.state.value === ""}
+                                        onClick={this.addRow}>Add</Button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </Table>
                 </Col>
               </Form.Row>
             </div>
