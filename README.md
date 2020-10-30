@@ -17,9 +17,9 @@ Available:
 * List log entries in a logbook.
 * Display log entry details, including image thumbnails and links to non-image attachments.
 * Create new log entry, including attachments. Input is validated.
+* Properties editor. Data added to log entry request.
 
 Backlog:
-* Properties editor
 * Properties view
 * Log entry result set pagination, i.e. fetch next/previous N entries.
 * Support for search criteria (date, title and description text, tags).
