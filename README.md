@@ -18,6 +18,7 @@ Available:
 * Display log entry details, including image thumbnails and links to non-image attachments.
 * Create new log entry, including attachments. Input is validated.
 * Properties editor. Data added to log entry request.
+* Render properties in log entry details view.
 
 Backlog:
 * Properties view
