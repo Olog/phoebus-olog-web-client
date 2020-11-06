@@ -27,7 +27,10 @@ class SearchResultList extends Component{
         // Order by created date, descending
         var searchResultItems = this.props.logs.sort((a, b) => b.createdDate - a.createdDate).map((row, index) => {
             return (
-                <SearchResultItem  key={index} log={row} setLogRecord={this.props.setLogRecord} currentLogRecord={this.props.currentLogRecord}/>
+                <SearchResultItem  key={index} 
+                    log={row} 
+                    setLogRecord={this.props.setLogRecord} 
+                    currentLogRecord={this.props.currentLogRecord}/>
             )
         })
       

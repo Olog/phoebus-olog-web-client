@@ -27,6 +27,7 @@ import OlogMoment from './OlogMoment';
 import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Table from 'react-bootstrap/Table';
+import Property from './Property';
 
 import './css/olog.css';
 
@@ -70,12 +71,19 @@ class LogDetails extends Component{
             }
         )
 
+        var properties = 
+            this.props.currentLogRecord && this.props.currentLogRecord.properties.map((row, index) => {
+                
+                return(
+                   <Property key={index} property={row}/>
+                )
+            })
+
         return(
             <Container className="grid-item full-height">
                <h6>Log Details</h6>
                 {/* Render only of current log record is defined */}
                 {this.props.currentLogRecord &&
-                    
                         <Accordion>
                             <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openInfo: !this.state.openInfo})}>
                             <b>{this.props.currentLogRecord.owner}, <OlogMoment date={this.props.currentLogRecord.createdDate}/></b>
@@ -104,7 +112,15 @@ class LogDetails extends Component{
                                 <Col>
                                     <h6>Attachments:</h6>
                                     <ListGroup>
-                                    {attachments}
+                                        {attachments}
+                                    </ListGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <h6>Properties:</h6>
+                                    <ListGroup>
+                                        {properties}
                                     </ListGroup>
                                 </Col>
                             </Row>
