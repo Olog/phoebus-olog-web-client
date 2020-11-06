@@ -21,7 +21,6 @@ Available:
 * Render properties in log entry details view.
 
 Backlog:
-* Properties view
 * Log entry result set pagination, i.e. fetch next/previous N entries.
 * Support for search criteria (date, title and description text, tags).
 
