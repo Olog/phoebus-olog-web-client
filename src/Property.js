@@ -32,7 +32,7 @@ const Property = (props) => {
                         {visible ? <FaChevronDown /> : <FaChevronRight/> } {props.property.name}
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
-                    <Table bordered>
+                    <Table size="sm" bordered>
                         <tbody>
                             {props.property.attributes.map((a, index) => (<tr key={index}><td>{a.name}</td><td>{a.value}</td></tr>))}
                         </tbody>

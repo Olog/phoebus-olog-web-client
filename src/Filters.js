@@ -15,23 +15,78 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react'
-import Accordion from 'react-bootstrap/Accordion'
-import Button from 'react-bootstrap/Button'
-import Card from 'react-bootstrap/Card'
-import Logbooks from './Logbooks'
-import Tags from './Tags'
+import React, {Component} from 'react';
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+import Logbooks from './Logbooks';
+import Tags from './Tags';
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
-import Container from 'react-bootstrap/Container'
+import Container from 'react-bootstrap/Container';
+import FormCheck from 'react-bootstrap/FormCheck';
 
+/**
+ * Component holding search criteria elements, i.e.
+ * logbooks, tags and time range.
+ */
 class Filters extends Component{
 
     state = {
         openLogbooks: true,
         openTags: false,
         openTimespan: false,
-        openFromTo: false
+        openFromTo: false,
+        searchCriteria: {
+            logbooks: [],
+            tags: [],
+            timeSpan: 1,
+            from: null,
+            to: null
+          }
     };
+
+    /**
+     * Add or remove logbook from search criteria.
+     * @param {string} logbookName 
+     * @param {boolean} add 
+     */
+    addLogbookToSearchCriteria = (logbookName, add) => {
+        const copy = {...this.state.searchCriteria};
+        if(add){
+            copy.logbooks.push(logbookName);
+        }
+        else{
+            copy.logbooks = copy.logbooks.filter(item => item !== logbookName);
+        }
+        this.setState({searchCriteria: copy}, 
+            () =>  {
+                const searchCriteriaCopy = {...this.state.searchCriteria};
+                console.log(searchCriteriaCopy);
+                this.props.search(searchCriteriaCopy);
+            });
+    }
+
+    /**
+     * Add or remove tag from search criteria.
+     * @param {string} tagName 
+     * @param {boolean} add 
+     */
+    addTagToSearchCriteria = (tagName, add) => {
+        const copy = {...this.state.searchCriteria};
+        if(add){
+            copy.tags.push(tagName);
+        }
+        else{
+            copy.tags = copy.tags.filter(item => item !== tagName);
+        }
+        this.setState({searchCriteria: copy});
+    }
+
+    timespanChanged = (event) => {
+        const copy = {...this.state.searchCriteria};
+        copy.timeSpan = parseInt(event.target.id);
+        this.setState({searchCriteria: copy});
+    }
+
 
     render(){
 
@@ -45,7 +100,10 @@ class Filters extends Component{
                         {this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } LOGBOOKS
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
-                       <Logbooks logbooks={this.props.logbooks} getLogRecords={this.props.getLogRecords}/>
+                       <Logbooks 
+                        logbooks={this.props.logbooks} 
+                        searchCriteria={this.state.searchCriteria}
+                        addLogbookToSearchCriteria={this.addLogbookToSearchCriteria}/>
                     </Accordion.Collapse>
                 </Accordion>
                 <Accordion>
@@ -53,7 +111,9 @@ class Filters extends Component{
                         {this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } TAGS
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
-                       <Tags tags={this.props.tags}/>
+                       <Tags tags={this.props.tags}
+                            searchCriteria={this.state.searchCriteria}
+                            addTagToSearchCriteria={this.addTagToSearchCriteria}/>
                     </Accordion.Collapse>
                 </Accordion>
                 <Accordion>
@@ -64,7 +124,13 @@ class Filters extends Component{
                         <ul  className="olog-ul">
                             {timeSpans.map((timeSpan, index) => (
                                     <li key={index}>
-                                        <Button style={{padding: "0px", fontSize: "12px"}} variant="link" >{timeSpan}</Button>
+                                        <FormCheck>
+                                            <FormCheck.Input type="radio" 
+                                                id={index + 1} // For some reason {index} does not work when index = 0.
+                                                checked={this.state.searchCriteria.timeSpan === index + 1}
+                                                onChange={this.timespanChanged}/>
+                                            <FormCheck.Label>{timeSpan}</FormCheck.Label>
+                                        </FormCheck>
                                     </li>
                             ))}
                         </ul>

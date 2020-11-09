@@ -243,7 +243,7 @@ class EntryEditor extends Component{
         copy[key] = value;
         const properties = {...this.state.properties};
         properties[propertyName] = copy;
-        this.setState({properties});
+        this.setState({properties: properties});
     }
 
     removeKeyValuePair = (propertyName, key) => {
@@ -251,7 +251,7 @@ class EntryEditor extends Component{
         delete copy[key];
         const properties = {...this.state.properties};
         properties[propertyName] = copy;
-        this.setState({properties});
+        this.setState({properties: properties});
     }
 
     render(){

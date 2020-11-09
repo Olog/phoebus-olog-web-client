@@ -16,16 +16,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react'
-import Button from 'react-bootstrap/Button';
 import './css/olog.css';
+import FormCheck from 'react-bootstrap/FormCheck';
 
 class Tags extends Component{
+
+    tagSelectionChanged = (event) => {
+        this.props.addTagToSearchCriteria(event.target.id, event.target.checked);
+    }
 
     render(){
         var items = this.props.tags && this.props.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
                 <li  key={index}>
-                    <Button style={{padding: "0px", fontSize: "12px"}} variant="link">{row.name}</Button>
+                    <FormCheck>
+                        <FormCheck.Input type="checkbox" 
+                            id={row.name}
+                            checked={this.props.searchCriteria.tags.includes(row.name)}
+                            onChange={this.tagSelectionChanged}/>
+                        <FormCheck.Label>{row.name}</FormCheck.Label>
+                    </FormCheck>
                 </li>
             )
          })
@@ -36,4 +46,4 @@ class Tags extends Component{
     }
 }
 
-export default Tags
+export default Tags;

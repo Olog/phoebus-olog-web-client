@@ -35,6 +35,9 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
 
+/**
+ * Entry point component.
+ */
 class App extends Component{
 
     state = {

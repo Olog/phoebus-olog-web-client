@@ -15,23 +15,36 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react'
-import Button from 'react-bootstrap/Button'
-import './css/olog.css'
+import React, {Component} from 'react';
+import './css/olog.css';
+import FormCheck from 'react-bootstrap/FormCheck';
 
+/**
+ * Component to show list of available logbooks and maintain selection of logbooks
+ * to include in a search query.
+ */
 class Logbooks extends Component{
+
+    logbookSelectionChanged = (event) => {
+        this.props.addLogbookToSearchCriteria(event.target.id, event.target.checked);
+    }
 
     render(){
         var items = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
             return (
                 <li key={index}>
-                    <Button style={{padding: "0px", fontSize: "12px"}} variant="link" onClick={() => this.props.getLogRecords(row.name)}>{row.name}</Button>
+                    <FormCheck>
+                        <FormCheck.Input type="checkbox" 
+                            id={row.name}
+                            checked={this.props.searchCriteria.logbooks.includes(row.name)}
+                            onChange={this.logbookSelectionChanged}/>
+                        <FormCheck.Label>{row.name}</FormCheck.Label>
+                    </FormCheck>
                 </li>
             )
          })         
         return (
              <ul className="olog-ul">{items}</ul>
-            
         )
     }
 }
