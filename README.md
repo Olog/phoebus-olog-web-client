@@ -19,10 +19,11 @@ Available:
 * Create new log entry, including attachments. Input is validated.
 * Properties editor. Data added to log entry request.
 * Render properties in log entry details view.
+* Basic search criteria support: user may select list of logbooks and list of tags. Time span selection is limited to pre-defined options.
 
 Backlog:
-* Log entry result set pagination, i.e. fetch next/previous N entries.
-* Support for search criteria (date, title and description text, tags).
+* Log entry result set pagination, or other means to limit list of matching log records.
+* Additional search criteria, e.g. arbitrary time span, title, description, author.
 
 ## Toolchain
 
