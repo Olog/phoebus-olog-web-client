@@ -23,7 +23,6 @@ import SearchResultList from './SearchResultList';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {getSearchString} from './utils';
 
 /**
  * Top level component holding the main UI area components.
@@ -33,24 +32,26 @@ class MainApp extends Component {
   state = {
       logRecords: [],
       currentLogRecord: null,
+      searchString: ""
     };
 
-
-  getLogRecords = (name) => {
-    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logs?logbooks=` + name)
-      .then(response => response.json())
-      .then(data => this.setState({logRecords: data}))
-  }
-
-  search = (searchCriteria) => {
-    const searchString = getSearchString(searchCriteria);
-    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logs?` + searchString)
+  search = () => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logs?` + this.state.searchString)
       .then(response => response.json())
       .then(data => this.setState({logRecords: data}))
   }
 
   setLogRecord = (record) => {
     this.setState({currentLogRecord: record});
+  }
+
+  setSearchString = (searchString, performSearch) => {
+    console.log(performSearch + " " + searchString);
+    this.setState({searchString: searchString}, () => {
+      if(performSearch){
+        this.search();
+      }
+    });
   }
 
   render() {
@@ -62,11 +63,15 @@ class MainApp extends Component {
             <Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
               <Filters logbooks={this.props.logbooks} 
                 tags={this.props.tags} 
-                getLogRecords={this.getLogRecords}
-                search={this.search}/>
+                setSearchString={this.setSearchString}/>
             </Col>
             <Col xs={12} sm={12} md={12} lg={4} style={{padding: "2px"}}>
-              <SearchResultList logs={this.state.logRecords} setLogRecord={this.setLogRecord} /> 
+              <SearchResultList 
+                logs={this.state.logRecords} 
+                setLogRecord={this.setLogRecord}
+                searchString={this.state.searchString}
+                setSearchString={this.setSearchString}
+                search={this.search}/> 
             </Col>
             <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>
               <LogDetails currentLogRecord={this.state.currentLogRecord}/>

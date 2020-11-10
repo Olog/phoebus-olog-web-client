@@ -23,6 +23,7 @@ import Tags from './Tags';
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
 import FormCheck from 'react-bootstrap/FormCheck';
+import {getSearchString} from './utils';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -38,11 +39,13 @@ class Filters extends Component{
         searchCriteria: {
             logbooks: [],
             tags: [],
-            timeSpan: 1,
-            from: null,
-            to: null
+            timeSpan: 3
           }
     };
+
+    componentDidMount = () => {
+        this.props.setSearchString(getSearchString(this.state.searchCriteria, false));
+    }
 
     /**
      * Add or remove logbook from search criteria.
@@ -60,8 +63,7 @@ class Filters extends Component{
         this.setState({searchCriteria: copy}, 
             () =>  {
                 const searchCriteriaCopy = {...this.state.searchCriteria};
-                console.log(searchCriteriaCopy);
-                this.props.search(searchCriteriaCopy);
+                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
             });
     }
 
@@ -78,15 +80,22 @@ class Filters extends Component{
         else{
             copy.tags = copy.tags.filter(item => item !== tagName);
         }
-        this.setState({searchCriteria: copy});
+        this.setState({searchCriteria: copy}, 
+            () =>  {
+                const searchCriteriaCopy = {...this.state.searchCriteria};
+                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
+            });
     }
 
     timespanChanged = (event) => {
         const copy = {...this.state.searchCriteria};
         copy.timeSpan = parseInt(event.target.id);
-        this.setState({searchCriteria: copy});
+        this.setState({searchCriteria: copy},
+            () =>  {
+                const searchCriteriaCopy = {...this.state.searchCriteria};
+                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
+            });
     }
-
 
     render(){
 
@@ -136,11 +145,11 @@ class Filters extends Component{
                         </ul>
                     </Accordion.Collapse>
                 </Accordion>
-                <Accordion>
+                {/*<Accordion>
                     <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openFromTo: !this.state.openFromTo})}>
                         {this.state.openFromTo ? <FaChevronDown /> : <FaChevronRight/> } CREATED FROM - TO
                     </Accordion.Toggle>
-                </Accordion>
+                </Accordion>*/}
             </Container>
         )
     }

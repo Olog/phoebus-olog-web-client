@@ -19,8 +19,20 @@ import React, {Component} from 'react';
 import SearchResultItem from './SearchResultItem';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
 
 class SearchResultList extends Component{
+
+    search = (event) => {
+        event.preventDefault();
+        this.props.search();
+    }
+
+    setSearchString = (event) => {
+        this.props.setSearchString(event.target.value, false);
+    }
 
     render(){
         
@@ -35,12 +47,35 @@ class SearchResultList extends Component{
         })
       
         return(
+            <>
             <Container className="grid-item full-height">
+                {/*<Form onSubmit={this.search}>
+                    <Form.Row>
+                        <Col>
+                            <Form.Label style={{marginBottom: "0px"}}>Search string</Form.Label>
+                        </Col>
+                    </Form.Row>
+                    <Form.Row>
+                        <Col>
+                            <Form.Control size="sm" 
+                                type="input" 
+                                placeholder="No search string"
+                                defaultValue={this.props.searchString}
+                                style={{fontSize: "10px"}}
+                                onChange={this.setSearchString}> 
+                            </Form.Control>
+                        </Col>
+                        <Col>
+                            <Button type="submit" size="sm">Search</Button>
+                        </Col>
+                    </Form.Row>
+        </Form>*/}
                 <h6>Search Results</h6>
-                    {this.props.logs.length > 0 ? 
+                    {this.props.logs ? 
                         <ListGroup className="olog-ul">{searchResultItems}</ListGroup> :
                         <span>No log records to show</span>}
             </Container>
+            </>
         )
     }
 }

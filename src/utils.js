@@ -15,8 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import moment from 'moment';
+
+ const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
 
  function constructLogbooksString(logbooks){ 
+     if(logbooks.length === 0){
+         return "";
+     }
      var logbooksString = "logbooks=";
      for(var i = 0; i < logbooks.length - 1; i++){
          logbooksString += logbooks[i];
@@ -26,6 +32,36 @@
      return logbooksString;
  }
 
+ function constructTagsString(tags){ 
+    if(tags.length === 0){
+        return "";
+    }
+    var tagsString = "&tags=";
+    for(var i = 0; i < tags.length - 1; i++){
+        tagsString += tags[i];
+        tagsString += ",";
+    }
+    tagsString += tags[tags.length - 1];
+    return tagsString;
+}
+
+function constructTimeSpanString(timeSpan){
+    switch(timeSpan){
+        case 1:
+            return moment().subtract(1, 'minutes').format(dateTimeFormat);
+        case 2:
+            return moment().subtract(1, 'hours').format(dateTimeFormat);
+        case 3:
+        default:
+            return moment().subtract(1, 'days').format(dateTimeFormat);
+        case 4:
+            return moment().subtract(1, 'weeks').format(dateTimeFormat);
+    }
+}
+
  export function getSearchString(searchCriteria){
-    return constructLogbooksString(searchCriteria.logbooks);
+    return constructLogbooksString(searchCriteria.logbooks) 
+        + constructTagsString(searchCriteria.tags)
+        + "&start=" + constructTimeSpanString(searchCriteria.timeSpan)
+        + "&end=" + moment().format(dateTimeFormat);
  }
