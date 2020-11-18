@@ -14,11 +14,8 @@ Technology stack:
 Available:
 * Login to Olog-ES backend.
 * Create logbooks and tags.
-* List log entries in a logbook.
-* Display log entry details, including image thumbnails and links to non-image attachments.
-* Create new log entry, including attachments. Input is validated.
-* Properties editor. Data added to log entry request.
-* Render properties in log entry details view.
+* Display log entry details, including image thumbnails, links to non-image attachments and properties.
+* Create new log entry, including attachments and properties. Input is validated.
 * Search criteria support: user may specify list of logbooks, list of tags, title, description, level and author. Time span selection is limited to pre-defined options.
 
 Backlog:
