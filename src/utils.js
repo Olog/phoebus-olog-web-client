@@ -59,9 +59,41 @@ function constructTimeSpanString(timeSpan){
     }
 }
 
- export function getSearchString(searchCriteria){
+function getTitleSearchString(searchCriteria){
+     if(searchCriteria.title !== ""){
+         return "&title=" + searchCriteria.title;
+     }
+     return "";
+}
+
+function getTextSearchString(searchCriteria){
+    if(searchCriteria.text !== ""){
+        return "&desc=" + searchCriteria.text;
+    }
+    return "";
+}
+
+function getLevelSearchString(searchCriteria){
+    if(searchCriteria.level !== ""){
+        return "&level=" + searchCriteria.level;
+    }
+    return "";
+}
+
+function getAuthorSearchString(searchCriteria){
+    if(searchCriteria.owner !== ""){
+        return "&owner=" + searchCriteria.owner;
+    }
+    return "";
+}
+
+export function getSearchString(searchCriteria){
     return constructLogbooksString(searchCriteria.logbooks) 
         + constructTagsString(searchCriteria.tags)
         + "&start=" + constructTimeSpanString(searchCriteria.timeSpan)
-        + "&end=" + moment().format(dateTimeFormat);
- }
+        + "&end=" + moment().format(dateTimeFormat)
+        + getTitleSearchString(searchCriteria)
+        + getTextSearchString(searchCriteria)
+        + getLevelSearchString(searchCriteria)
+        + getAuthorSearchString(searchCriteria);
+}

@@ -24,6 +24,8 @@ import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
 import FormCheck from 'react-bootstrap/FormCheck';
 import {getSearchString} from './utils';
+import Form from 'react-bootstrap/Form';
+import Table from 'react-bootstrap/Table';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -36,10 +38,15 @@ class Filters extends Component{
         openTags: false,
         openTimespan: false,
         openFromTo: false,
+        openOther: false,
         searchCriteria: {
             logbooks: [],
             tags: [],
-            timeSpan: 3
+            timeSpan: 3,
+            title: "",
+            text: "",
+            level: "",
+            owner: ""
           }
     };
 
@@ -97,6 +104,47 @@ class Filters extends Component{
             });
     }
 
+    titleChanged = (event) => {
+        const copy = {...this.state.searchCriteria};
+        copy.title = event.target.value;
+        this.setState({searchCriteria: copy},
+            () =>  {
+                const searchCriteriaCopy = {...this.state.searchCriteria};
+                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
+            });
+    }
+
+    textChanged = (event) => {
+        const copy = {...this.state.searchCriteria};
+        copy.text = event.target.value;
+        this.setState({searchCriteria: copy},
+            () =>  {
+                const searchCriteriaCopy = {...this.state.searchCriteria};
+                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
+            });
+    }
+
+    levelChanged = (event) => {
+        const copy = {...this.state.searchCriteria};
+        copy.level = event.target.value;
+        this.setState({searchCriteria: copy},
+            () =>  {
+                const searchCriteriaCopy = {...this.state.searchCriteria};
+                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
+            });
+    }
+
+    authorChanged = (event) => {
+        const copy = {...this.state.searchCriteria};
+        copy.owner = event.target.value;
+        this.setState({searchCriteria: copy},
+            () =>  {
+                const searchCriteriaCopy = {...this.state.searchCriteria};
+                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
+            });
+    }
+
+
     render(){
 
         let timeSpans = ["Last minute", "Last hour", "Last day", "Last week"];
@@ -150,6 +198,53 @@ class Filters extends Component{
                         {this.state.openFromTo ? <FaChevronDown /> : <FaChevronRight/> } CREATED FROM - TO
                     </Accordion.Toggle>
                 </Accordion>*/}
+                <Accordion>
+                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openOther: !this.state.openOther})}>
+                        {this.state.openOther ? <FaChevronDown /> : <FaChevronRight/> } OTHER SEARCH FIELDS
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey="0">
+                        <Table size="sm" className="search-fields-table">
+                            <tbody>
+                                <tr>
+                                    <td>Title:</td>
+                                    <td style={{width: "100%"}}>
+                                        <Form.Control size="sm" 
+                                            type="text" 
+                                            value={this.state.searchCriteria.title}
+                                            onChange={this.titleChanged}></Form.Control>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Text:</td>
+                                    <td>
+                                        <Form.Control size="sm" 
+                                            type="text" 
+                                            value={this.state.searchCriteria.text}
+                                            onChange={this.textChanged}></Form.Control>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Level:</td>
+                                    <td>
+                                        <Form.Control size="sm" 
+                                            type="text" 
+                                            value={this.state.searchCriteria.level}
+                                            onChange={this.levelChanged}></Form.Control>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Author:</td>
+                                    <td>
+                                        <Form.Control size="sm" 
+                                            type="text" 
+                                            value={this.state.searchCriteria.owner}
+                                            onChange={this.authorChanged}></Form.Control>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                    </Accordion.Collapse>
+                </Accordion>
             </Container>
         )
     }

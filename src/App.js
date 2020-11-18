@@ -42,7 +42,6 @@ class App extends Component{
         this.refreshTags();
     }
 
-    
     refreshLogbooks = () => {
         fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks`)
         .then(response => response.json())

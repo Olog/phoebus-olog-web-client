@@ -52,11 +52,7 @@ class MainApp extends Component {
     if(searchString.endsWith('&')){
       searchString = searchString.substring(0, searchString.length - 1);
     }
-    this.setState({searchString: searchString}, () => {
-      if(performSearch){
-        this.search();
-      }
-    });
+    this.setState({searchString: searchString});
   }
 
   render() {

@@ -312,7 +312,7 @@ class EntryEditor extends Component{
                     <Form noValidate validated={this.state.validated} onSubmit={this.submit}>
                         <Form.Row>
                             <Form.Label className="new-entry">New Log Entry</Form.Label>
-                            <Button type="submit" disabled={!this.props.userData || this.props.userData.userName === ""}>Create</Button>
+                            <Button type="submit">Create</Button>
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Dropdown as={ButtonGroup}>

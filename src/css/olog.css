@@ -141,3 +141,7 @@ button.property-table-button{
 .list-item table>tbody>tr>td{
     padding: 0.1rem;
 }
+
+.search-fields-table tbody>tr>td{
+    vertical-align: middle;
+}
