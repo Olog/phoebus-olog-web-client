@@ -49,7 +49,7 @@ class SearchResultList extends Component{
         return(
             <>
             <Container className="grid-item full-height">
-                {/*<Form onSubmit={this.search}>
+                <Form onSubmit={this.search}>
                     <Form.Row>
                         <Col>
                             <Form.Label style={{marginBottom: "0px"}}>Search string</Form.Label>
@@ -60,16 +60,16 @@ class SearchResultList extends Component{
                             <Form.Control size="sm" 
                                 type="input" 
                                 placeholder="No search string"
-                                defaultValue={this.props.searchString}
+                                value={this.props.searchString}
                                 style={{fontSize: "10px"}}
                                 onChange={this.setSearchString}> 
                             </Form.Control>
                         </Col>
-                        <Col>
+                        <Col style={{flexGrow: "0"}}>
                             <Button type="submit" size="sm">Search</Button>
                         </Col>
                     </Form.Row>
-        </Form>*/}
+                </Form>
                 <h6>Search Results</h6>
                     {this.props.logs ? 
                         <ListGroup className="olog-ul">{searchResultItems}</ListGroup> :

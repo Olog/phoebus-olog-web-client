@@ -127,7 +127,7 @@ class Filters extends Component{
                 </Accordion>
                 <Accordion>
                     <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openTimespan: !this.state.openTimespan})}>
-                        {this.state.openTimespan ? <FaChevronDown /> : <FaChevronRight/> } CREATED FROM
+                        {this.state.openTimespan ? <FaChevronDown /> : <FaChevronRight/> } CREATED SINCE
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                         <ul  className="olog-ul">

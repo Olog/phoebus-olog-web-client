@@ -46,7 +46,12 @@ class MainApp extends Component {
   }
 
   setSearchString = (searchString, performSearch) => {
-    console.log(performSearch + " " + searchString);
+    if(searchString.startsWith('&')){
+      searchString = searchString.substring(1, searchString.length);
+    }
+    if(searchString.endsWith('&')){
+      searchString = searchString.substring(0, searchString.length - 1);
+    }
     this.setState({searchString: searchString}, () => {
       if(performSearch){
         this.search();

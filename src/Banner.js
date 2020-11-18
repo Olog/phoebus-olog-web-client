@@ -16,57 +16,140 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React from 'react'
+import React, { Component} from 'react'
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import Navbar from 'react-bootstrap/Navbar';
-import Login from './Login';
 import Nav from 'react-bootstrap/Nav';
 import {
   Link
 } from "react-router-dom";
-
+import AddLogbookDialog from './AddLogbookDialog';
+import AddTagDialog from './AddTagDialog';
+import LoginDialog from './LoginDialog';
+import LogoutDialog from './LogoutDialog';
 import checkSession from './session-check';
+// Need axios for back-end access as the "fetch" API does not support CORS cookies.
+import axios from 'axios';
+import Cookies from 'universal-cookie';
 
-const Banner = (props) => {
+const cookies = new Cookies();
 
-  const isSessionValid = () => {
+/**
+ * Banner component with controls to create log entry, log book or tag. Plus
+ * button for signing in/out. 
+ */
+class Banner extends Component {
+
+  state = {
+    userData: {userName: "", roles: []},
+    showLogin: false,
+    showLogout: false,
+    showAddLogbook: false,
+    showAddTag: false
+  }
+
+  componentDidMount() {
+
+    // If there is a session cookie, try to get user data from back-end.
+    // If server returns user data with non-null userName, there is a valid session.
+    if(cookies.get('SESSION')){
+        axios.get(`${process.env.REACT_APP_BASE_URL}/user`, { withCredentials: true })
+            .then(res => {
+                // As long as there is a session cookie, the response SHOULD contain
+                // user data. Check for status just in case...
+                if(res.status === 200 && res.data){ 
+                    this.setState({userData: res.data});
+                }
+        }).catch(err => {/** TODO: handle connection error */});
+    }
+  } 
+
+  setUserData = (userData) => {
+    this.setState({userData: userData});
+  }
+
+  isSessionValid = () => {
     var promise = checkSession();
     if(!promise){
-      props.setShowLogin(true);
+      this.props.setShowLogin(true);
     }
     else{
       promise.then(data => {
         if(!data){
-          props.setShowLogin(true);
+          this.props.setShowLogin(true);
         }
       });
     }
   }
 
-  return (
-    <>
-      <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="#home">Olog ES</Navbar.Brand>
-        <Link to="/edit">
-          <Button disabled={!props.userData.userName} variant="primary" onClick={() => isSessionValid()}>New Log Entry</Button>
-        </Link>
-        <Dropdown>
-          <Dropdown.Toggle disabled={!props.userData.userName}/>
-          <DropdownMenu alignRight="true">
-            <Dropdown.Item onClick={() => props.setShowAddLogbook(true)}>New Logbook</Dropdown.Item>
-            <Dropdown.Item onClick={() => props.setShowAddTag(true)}>New Tag</Dropdown.Item>
-          </DropdownMenu>
-        </Dropdown>
-        <Nav className="justify-content-end" style={{ width: "100%" }}>
-          <Login userData={props.userData} 
-            setShowLogin={props.setShowLogin} 
-            setShowLogout={props.setShowLogout}/>
-        </Nav> 
-      </Navbar>
-    </>
-  )
+  setShowAddLogbook = (show) => {
+    this.setState({showAddLogbook: show});
+  }
+
+  setShowAddTag = (show) => {
+    this.setState({showAddTag: show});
+  }
+
+
+  setShowLogin = (show) => {
+    this.setState({showLogin: show});
+  } 
+
+  setShowLogout = (show) => {
+    this.setState({showLogout: show});
+  }   
+
+  handleClick = () => {
+    if(!this.state.userData.userName){
+        this.setShowLogin(true);
+    }
+    else{
+        this.setShowLogout(true);
+    }
+  }
+
+  render(){
+    return (
+      <>
+        <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="#home">Olog ES</Navbar.Brand>
+          <Link to="/edit">
+            <Button disabled={!this.state.userData.userName} 
+              variant="primary" 
+              onClick={() => this.isSessionValid()}>New Log Entry</Button>
+          </Link>
+          <Dropdown>
+            <Dropdown.Toggle disabled={!this.state.userData.userName}/>
+            <DropdownMenu alignRight="true">
+              <Dropdown.Item onClick={() => this.setShowAddLogbook(true)}>New Logbook</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.setShowAddTag(true)}>New Tag</Dropdown.Item>
+            </DropdownMenu>
+          </Dropdown>
+          <Nav className="justify-content-end" style={{ width: "100%" }}>
+            <Button onClick={this.handleClick}>{this.state.userData.userName ? this.state.userData.userName : 'Sign In'}</Button>
+          </Nav> 
+        </Navbar>
+
+        <LoginDialog setUserData={this.setUserData} 
+                setShowLogin={this.setShowLogin}
+                loginDialogVisible={this.state.showLogin}/>
+
+        <LogoutDialog setUserData={this.setUserData} 
+                        setShowLogout={this.setShowLogout} 
+                        logoutDialogVisible={this.state.showLogout}/>
+
+        <AddLogbookDialog addLogbookDialogVisible={this.state.showAddLogbook} 
+                        setShowAddLogbook={this.setShowAddLogbook} 
+                        refreshLogbooks={this.props.refreshLogbooks}/>
+
+        <AddTagDialog addTagDialogVisible={this.state.showAddTag} 
+                setShowAddTag={this.setShowAddTag} 
+                refreshTags={this.props.refreshTags}/>
+      </>
+    )
+  }
 }
 
-export default Banner
+export default Banner;

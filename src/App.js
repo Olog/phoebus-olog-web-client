@@ -25,15 +25,6 @@ import {
 import MainApp from './MainApp';
 import Banner from './Banner';
 import EntryEditor from './EntryEditor';
-import LoginDialog from './LoginDialog';
-import LogoutDialog from './LogoutDialog';
-import AddLogbookDialog from './AddLogbookDialog';
-import AddTagDialog from './AddTagDialog';
-// Need axios for back-end access as the "fetch" API does not support CORS cookies.
-import axios from 'axios';
-import Cookies from 'universal-cookie';
-
-const cookies = new Cookies();
 
 /**
  * Entry point component.
@@ -42,53 +33,16 @@ class App extends Component{
 
     state = {
         logbooks: [],
-        tags: [],
-        userData: {userName: "", roles: []},
-        showLogin: false,
-        showLogout: false,
-        showAddLogbook: false,
-        showAddTag: false
-    }
-
-    setShowLogin = (show) => {
-        this.setState({showLogin: show});
-    }
-
-    setShowLogout = (show) => {
-        this.setState({showLogout: show});
-    }
-
-    setShowAddLogbook = (show) => {
-        this.setState({showAddLogbook: show});
-    }
-
-    setShowAddTag = (show) => {
-        this.setState({showAddTag: show});
+        tags: []
     }
 
     componentDidMount() {
         // Logbooks and tags are public to read
         this.refreshLogbooks();
         this.refreshTags();
-
-        // If there is a session cookie, try to get user data from back-end.
-        // If server returns user data with non-null userName, there is a valid session.
-        if(cookies.get('SESSION')){
-            axios.get(`${process.env.REACT_APP_BASE_URL}/user`, { withCredentials: true })
-                .then(res => {
-                    // As long as there is a session cookie, the response SHOULD contain
-                    // user data. Check for status just in case...
-                    if(res.status === 200 && res.data){ 
-                        this.setState({userData: res.data});
-                    }
-            }).catch(err => {/** Connection error handled here */});
-        }
     }
 
-    setUserData = (userData) => {
-        this.setState({userData: userData});
-    }
-
+    
     refreshLogbooks = () => {
         fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks`)
         .then(response => response.json())
@@ -112,8 +66,6 @@ class App extends Component{
             <>
                 <Router>
                     <Banner userData={this.state.userData}
-                            setShowAddLogbook={this.setShowAddLogbook}
-                            setShowAddTag={this.setShowAddTag}
                             refreshLogbooks={this.refreshLogbooks}
                             refreshTags={this.refreshTags}
                             setShowLogin={this.setShowLogin}
@@ -132,22 +84,6 @@ class App extends Component{
                         </Route>
                     </Switch>
                 </Router>
-
-                <LoginDialog setUserData={this.setUserData} 
-                        setShowLogin={this.setShowLogin}
-                        loginDialogVisible={this.state.showLogin}/>
-
-                <LogoutDialog setUserData={this.setUserData} 
-                        setShowLogout={this.setShowLogout} 
-                        logoutDialogVisible={this.state.showLogout}/>
-
-                <AddLogbookDialog addLogbookDialogVisible={this.state.showAddLogbook} 
-                        setShowAddLogbook={this.setShowAddLogbook} 
-                        refreshLogbooks={this.refreshLogbooks}/>
-
-                <AddTagDialog addTagDialogVisible={this.state.showAddTag} 
-                        setShowAddTag={this.setShowAddTag} 
-                        refreshTags={this.refreshTags}/>
             </>
         );
     }

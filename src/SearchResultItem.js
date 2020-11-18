@@ -30,11 +30,11 @@ class SearchResultItem extends Component{
          })
 
         return(
-            <>
-                <Table bordered size="sm" onClick={() => this.props.setLogRecord(this.props.log)}>
+            <div className="list-item">
+                <Table bordered  size="sm" onClick={() => this.props.setLogRecord(this.props.log)}>
                     <tbody>
                         <tr>
-                            <td>Author</td><td>{this.props.log.owner}</td>
+                            <td style={{width: "100px"}}>Author</td><td>{this.props.log.owner}</td>
                         </tr>
                         <tr>
                             <td>Created Date</td><td><OlogMoment date={this.props.log.createdDate}/></td>
@@ -46,7 +46,7 @@ class SearchResultItem extends Component{
                         {this.props.log.attachments.length === 0 ? null : <tr><td colSpan="2">Attachments:<br/>{attachments}</td></tr> }
                     </tbody>
                 </Table>
-            </>
+            </div>
         )
     }
 }

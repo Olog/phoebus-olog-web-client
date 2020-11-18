@@ -84,7 +84,7 @@ class LogDetails extends Component{
                <h6>Log Details</h6>
                 {/* Render only of current log record is defined */}
                 {this.props.currentLogRecord &&
-                        <Accordion>
+                        <Accordion className="list-item">
                             <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openInfo: !this.state.openInfo})}>
                             <b>{this.props.currentLogRecord.owner}, <OlogMoment date={this.props.currentLogRecord.createdDate}/></b>
                             &nbsp;{this.state.openInfo ? <FaChevronDown /> : <FaChevronRight/>}
@@ -92,9 +92,9 @@ class LogDetails extends Component{
                             
                             <Accordion.Collapse eventKey="0">
                                 <Card.Body>
-                                    <Table bordered striped size="sm">
+                                    <Table bordered size="sm">
                                         <tbody>
-                                            <tr><td>Logbooks</td><td>{logbooks}</td></tr>
+                                            <tr><td style={{width: "100px"}}>Logbooks</td><td>{logbooks}</td></tr>
                                             <tr><td>Tags</td><td>{tags}</td></tr>
                                             <tr><td>Level</td><td>{this.props.currentLogRecord.level}</td></tr>
                                             <tr><td>Created Date</td><td><OlogMoment date={this.props.currentLogRecord.createdDate}/></td></tr>
@@ -104,7 +104,7 @@ class LogDetails extends Component{
                             </Accordion.Collapse>
                             <Table bordered size="sm">
                                 <tbody>
-                                    <tr><td>Title</td><td>{this.props.currentLogRecord.title}</td></tr>
+                                    <tr><td style={{width: "100px"}}>Title</td><td>{this.props.currentLogRecord.title}</td></tr>
                                     <tr><td>Description</td><td>{this.props.currentLogRecord.description}</td></tr>
                                 </tbody>
                             </Table>

@@ -133,3 +133,11 @@ button.property-table-button{
     padding-bottom: 0px;
     width: 100%;
 }
+
+.list-item table{
+    background-color: white;
+}
+
+.list-item table>tbody>tr>td{
+    padding: 0.1rem;
+}
