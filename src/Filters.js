@@ -26,6 +26,7 @@ import FormCheck from 'react-bootstrap/FormCheck';
 import {getSearchString} from './utils';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
+import DateTimePicker from 'react-datetime-picker';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -46,7 +47,9 @@ class Filters extends Component{
             title: "",
             text: "",
             level: "",
-            owner: ""
+            owner: "",
+            startDate: null,
+            endDate: new Date(Date.now())
           }
     };
 
@@ -144,6 +147,23 @@ class Filters extends Component{
             });
     }
 
+    setStartDate = (value) => {
+        this.setState(previous => ({
+            searchCriteria: {...this.state.searchCriteria, startDate: value}
+        }), () =>  {
+            const searchCriteriaCopy = {...this.state.searchCriteria};
+            this.props.setSearchString(getSearchString(searchCriteriaCopy), false);
+        });
+    }
+
+    setEndDate = (value) => {
+        this.setState(previous => ({
+            searchCriteria: {...this.state.searchCriteria, endDate: value}
+        }), () =>  {
+            const searchCriteriaCopy = {...this.state.searchCriteria};
+            this.props.setSearchString(getSearchString(searchCriteriaCopy), false);
+        });
+    }
 
     render(){
 
@@ -193,11 +213,40 @@ class Filters extends Component{
                         </ul>
                     </Accordion.Collapse>
                 </Accordion>
-                {/*<Accordion>
+                <Accordion>
                     <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openFromTo: !this.state.openFromTo})}>
                         {this.state.openFromTo ? <FaChevronDown /> : <FaChevronRight/> } CREATED FROM - TO
                     </Accordion.Toggle>
-                </Accordion>*/}
+                    <Accordion.Collapse eventKey="0">
+                        <Table size="sm" className="search-fields-table">
+                            <tbody>
+                                <tr>
+                                    <td style={{width: "40px"}}>From:</td>
+                                    <td>
+                                    <DateTimePicker
+                                        onChange={(value) => this.setStartDate(value)}
+                                        value={this.state.searchCriteria.startDate}
+                                        format='y-MM-dd HH:mm'
+                                        clearIcon=""
+                                        disableClock></DateTimePicker>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={{width: "40px"}}>To:</td>
+                                    <td>
+                                    <DateTimePicker
+                                        onChange={(value) => this.setEndDate(value)}
+                                        value={this.state.searchCriteria.endDate}
+                                        format='y-MM-dd HH:mm'
+                                        clearIcon=""
+                                        disableClock></DateTimePicker>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                       
+                    </Accordion.Collapse>
+                </Accordion>
                 <Accordion>
                     <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openOther: !this.state.openOther})}>
                         {this.state.openOther ? <FaChevronDown /> : <FaChevronRight/> } OTHER SEARCH FIELDS

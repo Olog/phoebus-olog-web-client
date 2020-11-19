@@ -87,11 +87,20 @@ function getAuthorSearchString(searchCriteria){
     return "";
 }
 
+function getTimeRangeString(searchCriteria){
+    console.log(searchCriteria.startDate);
+    if(!searchCriteria.startDate || !searchCriteria.endDate){
+        return "&start=" + constructTimeSpanString(searchCriteria.timeSpan)
+        + "&end=" + moment().format(dateTimeFormat)
+    }
+    return "&start=" + moment(searchCriteria.startDate).format(dateTimeFormat) +
+        "&end=" + moment(searchCriteria.endDate).format(dateTimeFormat)
+}
+
 export function getSearchString(searchCriteria){
     return constructLogbooksString(searchCriteria.logbooks) 
         + constructTagsString(searchCriteria.tags)
-        + "&start=" + constructTimeSpanString(searchCriteria.timeSpan)
-        + "&end=" + moment().format(dateTimeFormat)
+        + getTimeRangeString(searchCriteria)
         + getTitleSearchString(searchCriteria)
         + getTextSearchString(searchCriteria)
         + getLevelSearchString(searchCriteria)
