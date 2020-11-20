@@ -32,6 +32,7 @@ import EntryEditor from './EntryEditor';
 class App extends Component{
 
     state = {
+        userData: {userName: "", roles: []},
         logbooks: [],
         tags: []
     }
@@ -60,6 +61,11 @@ class App extends Component{
         .catch(() => this.setState({tags: []}));
     }
 
+
+    setUserData = (userData) => {
+        this.setState({userData: userData});
+    }
+
     render(){
         return(
             <>
@@ -68,7 +74,8 @@ class App extends Component{
                             refreshLogbooks={this.refreshLogbooks}
                             refreshTags={this.refreshTags}
                             setShowLogin={this.setShowLogin}
-                            setShowLogout={this.setShowLogout}/>
+                            setShowLogout={this.setShowLogout}
+                            setUserData={this.setUserData}/>
                     <Switch>
                         <Route exact path="/">
                             <MainApp logbooks={this.state.logbooks}

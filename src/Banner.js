@@ -43,7 +43,6 @@ const cookies = new Cookies();
 class Banner extends Component {
 
   state = {
-    userData: {userName: "", roles: []},
     showLogin: false,
     showLogout: false,
     showAddLogbook: false,
@@ -66,9 +65,6 @@ class Banner extends Component {
     }
   } 
 
-  setUserData = (userData) => {
-    this.setState({userData: userData});
-  }
 
   isSessionValid = () => {
     var promise = checkSession();
@@ -92,7 +88,6 @@ class Banner extends Component {
     this.setState({showAddTag: show});
   }
 
-
   setShowLogin = (show) => {
     this.setState({showLogin: show});
   } 
@@ -102,7 +97,7 @@ class Banner extends Component {
   }   
 
   handleClick = () => {
-    if(!this.state.userData.userName){
+    if(!this.props.userData.userName){
         this.setShowLogin(true);
     }
     else{
@@ -116,27 +111,27 @@ class Banner extends Component {
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="#home">Olog ES</Navbar.Brand>
           <Link to="/edit">
-            <Button disabled={!this.state.userData.userName} 
+            <Button disabled={!this.props.userData.userName} 
               variant="primary" 
               onClick={() => this.isSessionValid()}>New Log Entry</Button>
           </Link>
           <Dropdown>
-            <Dropdown.Toggle disabled={!this.state.userData.userName}/>
+            <Dropdown.Toggle disabled={!this.props.userData.userName}/>
             <DropdownMenu alignRight="true">
               <Dropdown.Item onClick={() => this.setShowAddLogbook(true)}>New Logbook</Dropdown.Item>
               <Dropdown.Item onClick={() => this.setShowAddTag(true)}>New Tag</Dropdown.Item>
             </DropdownMenu>
           </Dropdown>
           <Nav className="justify-content-end" style={{ width: "100%" }}>
-            <Button onClick={this.handleClick}>{this.state.userData.userName ? this.state.userData.userName : 'Sign In'}</Button>
+            <Button onClick={this.handleClick}>{this.props.userData.userName ? this.props.userData.userName : 'Sign In'}</Button>
           </Nav> 
         </Navbar>
 
-        <LoginDialog setUserData={this.setUserData} 
+        <LoginDialog setUserData={this.props.setUserData} 
                 setShowLogin={this.setShowLogin}
                 loginDialogVisible={this.state.showLogin}/>
 
-        <LogoutDialog setUserData={this.setUserData} 
+        <LogoutDialog setUserData={this.props.setUserData} 
                         setShowLogout={this.setShowLogout} 
                         logoutDialogVisible={this.state.showLogout}/>
 
