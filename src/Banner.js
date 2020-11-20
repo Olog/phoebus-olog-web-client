@@ -59,7 +59,7 @@ class Banner extends Component {
                 // As long as there is a session cookie, the response SHOULD contain
                 // user data. Check for status just in case...
                 if(res.status === 200 && res.data){ 
-                    this.setState({userData: res.data});
+                    this.props.setUserData(res.data);
                 }
         }).catch(err => {/** TODO: handle connection error */});
     }

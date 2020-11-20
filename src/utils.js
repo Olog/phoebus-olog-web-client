@@ -45,20 +45,6 @@ import moment from 'moment';
     return tagsString;
 }
 
-function constructTimeSpanString(timeSpan){
-    switch(timeSpan){
-        case 1:
-            return moment().subtract(1, 'minutes').format(dateTimeFormat);
-        case 2:
-            return moment().subtract(1, 'hours').format(dateTimeFormat);
-        case 3:
-        default:
-            return moment().subtract(1, 'days').format(dateTimeFormat);
-        case 4:
-            return moment().subtract(1, 'weeks').format(dateTimeFormat);
-    }
-}
-
 function getTitleSearchString(searchCriteria){
      if(searchCriteria.title !== ""){
          return "&title=" + searchCriteria.title;
@@ -88,11 +74,6 @@ function getAuthorSearchString(searchCriteria){
 }
 
 function getTimeRangeString(searchCriteria){
-    console.log(searchCriteria.startDate);
-    if(!searchCriteria.startDate || !searchCriteria.endDate){
-        return "&start=" + constructTimeSpanString(searchCriteria.timeSpan)
-        + "&end=" + moment().format(dateTimeFormat)
-    }
     return "&start=" + moment(searchCriteria.startDate).format(dateTimeFormat) +
         "&end=" + moment(searchCriteria.endDate).format(dateTimeFormat)
 }

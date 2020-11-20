@@ -27,6 +27,7 @@ import {getSearchString} from './utils';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import DateTimePicker from 'react-datetime-picker';
+import moment from 'moment';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -40,16 +41,16 @@ class Filters extends Component{
         openTimespan: false,
         openFromTo: false,
         openOther: false,
+        timeSpan: 3,
         searchCriteria: {
             logbooks: [],
             tags: [],
-            timeSpan: 3,
             title: "",
             text: "",
             level: "",
             owner: "",
-            startDate: null,
-            endDate: new Date(Date.now())
+            startDate: moment().subtract(1, 'days').toDate(),
+            endDate: moment().toDate()
           }
     };
 
@@ -98,9 +99,28 @@ class Filters extends Component{
     }
 
     timespanChanged = (event) => {
+        var start;
+        var span = parseInt(event.target.id);
+        switch(span){
+            case 1:
+                start = moment().subtract(1, 'minutes');
+                break;
+            case 2:
+                start = moment().subtract(1, 'hours');
+                break;
+            case 3:
+            default:
+                start = moment().subtract(1, 'days');
+                break;
+            case 4:
+                start = moment().subtract(1, 'weeks');
+                break;
+        }
+    
         const copy = {...this.state.searchCriteria};
-        copy.timeSpan = parseInt(event.target.id);
-        this.setState({searchCriteria: copy},
+        copy.startDate = start.toDate();
+        copy.endDate = moment().toDate();
+        this.setState({searchCriteria: copy, timeSpan: parseInt(event.target.id)},
             () =>  {
                 const searchCriteriaCopy = {...this.state.searchCriteria};
                 this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
@@ -204,7 +224,7 @@ class Filters extends Component{
                                         <FormCheck>
                                             <FormCheck.Input type="radio" 
                                                 id={index + 1} // For some reason {index} does not work when index = 0.
-                                                checked={this.state.searchCriteria.timeSpan === index + 1}
+                                                checked={this.state.timeSpan === index + 1}
                                                 onChange={this.timespanChanged}/>
                                             <FormCheck.Label>{timeSpan}</FormCheck.Label>
                                         </FormCheck>
