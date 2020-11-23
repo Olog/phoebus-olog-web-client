@@ -71,7 +71,7 @@ class SearchResultList extends Component{
                     </Form.Row>
                 </Form>
                 <h6>Search Results</h6>
-                    {this.props.logs ? 
+                    {this.props.logs.length > 0 ? 
                         <ListGroup className="olog-ul">{searchResultItems}</ListGroup> :
                         <span>No log records to show</span>}
             </Container>
