@@ -29,6 +29,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Table from 'react-bootstrap/Table';
 import Property from './Property';
 import { Remarkable } from 'remarkable';
+import md from './utils';
 
 import './css/olog.css';
 
@@ -39,9 +40,7 @@ class LogDetails extends Component{
         xhtmlOut:     false,        // Use '/' to close single tags (<br />)
         breaks:       false,        // Convert '\n' in paragraphs into <br>
         langPrefix:   'language-',  // CSS language prefix for fenced blocks
-        linkify:      true,         // autoconvert URL-like texts to links
         linkTarget:   '',           // set target to open link in
-      
         // Enable some language-neutral replacements + quotes beautification
         typographer:  false,
       
@@ -50,13 +49,18 @@ class LogDetails extends Component{
         quotes: '“”‘’',
     
       });
-      
-
+    
     state = {
         openInfo: false
     };
 
+    componentDidMount = () => {
+        this.remarkable.use(md);
+    }
+
+
     getContent = (source) => {
+
         return {__html: this.remarkable.render(source)};
     }
 

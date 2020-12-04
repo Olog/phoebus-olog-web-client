@@ -15,64 +15,93 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import {matchImage, getSearchString} from './utils';
+import { Remarkable } from 'remarkable';
+import md, {matchImage, getSearchString} from './utils';
 
-test('Test image markup match', () => {
+test('Image markup match', () => {
     let imageString = '![foobar](http=whatever){width=640 height=480}';
-    expect(matchImage(imageString)[1]).toBe('http=whatever');
-    expect(matchImage(imageString)[3]).toBe('width=640');
-    expect(matchImage(imageString)[4]).toBe('height=480');
+    expect(matchImage(imageString)[1]).toBe('foobar');
+    expect(matchImage(imageString)[2]).toBe('http=whatever');
+    expect(matchImage(imageString)[4]).toBe('width=640 height=480');
+    imageString = '![foobar](http=whatever){width=640   height=480}';
+    expect(matchImage(imageString)[4]).toBe('width=640   height=480');
+    imageString = '![](http=whatever){width=640 height=480}';
+    expect(matchImage(imageString)[1]).toBe('');
 });
 
-test('Test image markup match, no width/height', () => {
+test('Image markup match, no width/height', () => {
     let imageString = '![foobar](http=whatever)';
-    expect(matchImage(imageString)[1]).toBe('http=whatever');
-    expect(matchImage(imageString)[2]).toBeUndefined();
+    expect(matchImage(imageString)[2]).toBe('http=whatever');
+    expect(matchImage(imageString)[3]).toBeUndefined();
 });
 
-test('Test image markup match, invalid width/height', () => {
+test('Image markup match, invalid width/height', () => {
     let imageString = '![foobar](http=whatever){width=a height=b}';
-    expect(matchImage(imageString)[1]).toBe('http=whatever');
-    expect(matchImage(imageString)[2]).toBeUndefined();
+    expect(matchImage(imageString)[2]).toBe('http=whatever');
+    expect(matchImage(imageString)[3]).toBeUndefined();
 });
 
-test('Test getSearchString owner', () => {
+test('Image markup conversion', () => {
+    let remarkable = new Remarkable('full', {
+        html:         false,        // Enable HTML tags in source
+        xhtmlOut:     false,        // Use '/' to close single tags (<br />)
+        breaks:       false,        // Convert '\n' in paragraphs into <br>
+        langPrefix:   'language-',  // CSS language prefix for fenced blocks
+        linkTarget:   '',           // set target to open link in
+        // Enable some language-neutral replacements + quotes beautification
+        typographer:  false,
+      
+        // Double + single quotes replacement pairs, when typographer enabled,
+        // and smartquotes on. Set doubles to '«»' for Russian, '„“' for German.
+        quotes: '“”‘’',
+    
+      });
+    remarkable.use(md);
+    let imageString = '![foobar](https://www.istockphoto.com/foto/temple-in-reflection-gm480556950-68802047){width=640 height=480}';
+    expect(remarkable.render(imageString)).toBe('<img src="https://www.istockphoto.com/foto/temple-in-reflection-gm480556950-68802047" alt="foobar" width=640 height=480>');
+    imageString = '![foobar](http=whatever)';
+    expect(remarkable.render(imageString)).toBe('<img src="http=whatever" alt="foobar">');
+    imageString = '![](http=whatever)';
+    expect(remarkable.render(imageString)).toBe('<img src="http=whatever">');
+});
+
+test('getSearchString owner', () => {
     let searchCriteria = {owner: "owner"};
     expect(getSearchString(searchCriteria)).toContain('owner=owner');
 });
 
-test('Test getSearchString title', () => {
+test('getSearchString title', () => {
     let searchCriteria = {title: "title"};
     expect(getSearchString(searchCriteria)).toContain('title=title');
 });
 
-test('Test getSearchString text', () => {
+test('getSearchString text', () => {
     let searchCriteria = {text: "text"};
     expect(getSearchString(searchCriteria)).toContain('desc=text');
 });
 
-test('Test getSearchString level', () => {
+test('getSearchString level', () => {
     let searchCriteria = {level: "level"};
     expect(getSearchString(searchCriteria)).toContain('level=level');
 });
 
-test('Test getSearchString logbooks', () => {
+test('getSearchString logbooks', () => {
     let searchCriteria = {logbooks: ["logbook1", "logbook2"]};
     expect(getSearchString(searchCriteria)).toContain('logbooks=logbook1,logbook2');
 });
 
-test('Test getSearchString tags', () => {
+test('getSearchString tags', () => {
     let searchCriteria = {tags: ["tag1", "tag2"]};
     expect(getSearchString(searchCriteria)).toContain('tags=tag1,tag2');
 });
 
-test('Test getSearchString default time tange', () => {
+test('getSearchString default time tange', () => {
     let searchCriteria = {};
     expect(getSearchString(searchCriteria)).toContain('start=');
     expect(getSearchString(searchCriteria)).toContain('end=');
 });
 
-test('Test getSearchString time tange', () => {
+test('getSearchString time tange', () => {
     let searchCriteria = {startDate: 0, endDate: 0};
     expect(getSearchString(searchCriteria)).toContain('start=1970-01-01');
     expect(getSearchString(searchCriteria)).toContain('end=1970-01-01');
