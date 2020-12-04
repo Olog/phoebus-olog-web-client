@@ -20,7 +20,7 @@ import moment from 'moment';
  const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
 
  function constructLogbooksString(logbooks){ 
-     if(logbooks.length === 0){
+     if(!logbooks || logbooks.length === 0){
          return "";
      }
      var logbooksString = "logbooks=";
@@ -33,7 +33,7 @@ import moment from 'moment';
  }
 
  function constructTagsString(tags){ 
-    if(tags.length === 0){
+    if(!tags || tags.length === 0){
         return "";
     }
     var tagsString = "&tags=";
@@ -46,28 +46,28 @@ import moment from 'moment';
 }
 
 function getTitleSearchString(searchCriteria){
-     if(searchCriteria.title !== ""){
+     if(searchCriteria.title && searchCriteria.title !== ""){
          return "&title=" + searchCriteria.title;
      }
      return "";
 }
 
 function getTextSearchString(searchCriteria){
-    if(searchCriteria.text !== ""){
+    if(searchCriteria.text && searchCriteria.text !== ""){
         return "&desc=" + searchCriteria.text;
     }
     return "";
 }
 
 function getLevelSearchString(searchCriteria){
-    if(searchCriteria.level !== ""){
+    if(searchCriteria.level && searchCriteria.level !== ""){
         return "&level=" + searchCriteria.level;
     }
     return "";
 }
 
 function getAuthorSearchString(searchCriteria){
-    if(searchCriteria.owner !== ""){
+    if(searchCriteria.owner && searchCriteria.owner !== ""){
         return "&owner=" + searchCriteria.owner;
     }
     return "";
@@ -87,3 +87,15 @@ export function getSearchString(searchCriteria){
         + getLevelSearchString(searchCriteria)
         + getAuthorSearchString(searchCriteria);
 }
+
+/**
+ * Extracts the elements of a commonmark string like ![whatever](http://image.png){width=100 height=100}
+ * where {width=100 height=100} is optional and a non-standard extension supported by commonmark-java. The
+ * purpose is to be able to construct a <img> tag and set inline width and height attributes.
+ * @param {string} rawImageMarkup 
+ */
+export function matchImage(rawImageMarkup){
+    let result = rawImageMarkup.match(/!\[.*]\((.*)\)(\{(width=[0-9]{1,9})\s(height=[0-9]{1,9})\})?/);
+    return result;
+}
+

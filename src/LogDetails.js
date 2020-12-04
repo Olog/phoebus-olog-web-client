@@ -28,14 +28,37 @@ import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Table from 'react-bootstrap/Table';
 import Property from './Property';
+import { Remarkable } from 'remarkable';
 
 import './css/olog.css';
 
 class LogDetails extends Component{
 
+    remarkable = new Remarkable('full', {
+        html:         false,        // Enable HTML tags in source
+        xhtmlOut:     false,        // Use '/' to close single tags (<br />)
+        breaks:       false,        // Convert '\n' in paragraphs into <br>
+        langPrefix:   'language-',  // CSS language prefix for fenced blocks
+        linkify:      true,         // autoconvert URL-like texts to links
+        linkTarget:   '',           // set target to open link in
+      
+        // Enable some language-neutral replacements + quotes beautification
+        typographer:  false,
+      
+        // Double + single quotes replacement pairs, when typographer enabled,
+        // and smartquotes on. Set doubles to '«»' for Russian, '„“' for German.
+        quotes: '“”‘’',
+    
+      });
+      
+
     state = {
         openInfo: false
     };
+
+    getContent = (source) => {
+        return {__html: this.remarkable.render(source)};
+    }
 
     render(){
         var logbooks = this.props.currentLogRecord && this.props.currentLogRecord.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
@@ -71,9 +94,10 @@ class LogDetails extends Component{
             }
         )
 
+        //var content = <div>{this.remarkable.render({this.props.currentLogRecord ? this.props.currentLogRecord.source : null})}</div>;
+
         var properties = 
             this.props.currentLogRecord && this.props.currentLogRecord.properties.map((row, index) => {
-                
                 return(
                    <Property key={index} property={row}/>
                 )
@@ -105,9 +129,10 @@ class LogDetails extends Component{
                             <Table bordered size="sm">
                                 <tbody>
                                     <tr><td style={{width: "100px"}}>Title</td><td>{this.props.currentLogRecord.title}</td></tr>
-                                    <tr><td>Description</td><td>{this.props.currentLogRecord.description}</td></tr>
                                 </tbody>
                             </Table>
+                            <div 
+                                dangerouslySetInnerHTML={this.getContent(this.props.currentLogRecord.source)}></div>
                             <Row>
                                 <Col>
                                     <h6>Attachments:</h6>
