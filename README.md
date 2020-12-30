@@ -45,7 +45,7 @@ Install the toolchain and then:
 
 ## Unit tests
 
-Unit test code can be added in file named like <mytest>.test.js.
+Unit test code can be added in file named like ``*.test.js``.
    
 To run tests, invoke ``npm run test``.
 
