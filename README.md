@@ -8,6 +8,7 @@ Technology stack:
 * ReactJS (main framework)
 * React Bootstrap (UI components)
 * axios (back-end access)
+* Remarkable for commonmark processing/rendering (https://github.com/jonschlinkert/remarkable)
 
 ## Current state of affairs:
 
