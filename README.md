@@ -16,11 +16,11 @@ Available:
 * Create logbooks and tags.
 * Display log entry details, including image thumbnails, links to non-image attachments and properties.
 * Create new log entry, including attachments and properties. Input is validated.
-* Search criteria support: user may specify list of logbooks, list of tags, time span, title, description, level and author.
+* Search criteria: list of logbooks, list of tags, time span, title, description, level and author.
+* Properties search critieria.
 
 Backlog:
 * Log entry result set pagination, or other means to limit list of matching log records.
-* Properties search critieria.
 * UX tuning and styling overhaul.
 
 ## Toolchain
