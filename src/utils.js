@@ -94,21 +94,18 @@ export function getSearchString(searchCriteria){
  * purpose is to be able to construct a <img> tag and set inline width and height attributes.
  * @param {string} rawImageMarkup 
  */
-export function matchImage(rawImageMarkup){
-    console.log(rawImageMarkup);
-    return rawImageMarkup.match(/!\[(.*)]\((.*)\)(\{(width=[0-9]{1,9}\s+height=[0-9]{1,9})\})?/);
-}
 
 /**
  * This is essentially a "remarkable" plugin processing image objects
  */
+/*
 export default md => {
     md.renderer.render = (tokens, options, env) => {
         let str = '';
         for (let i = 0; i < tokens.length; i++) {
             if (tokens[i].type === 'inline') {
                 let split = matchImage(tokens[i].content);
-                if(split[0]){
+                if(split && split[0]){
                     str += '<img src="' + split[2] + '"';
                     if(split[1]){
                         str += ' alt="' + split[1] + '"';
@@ -120,11 +117,36 @@ export default md => {
                         str += ' ' + split[4] + '>';
                     }
                 }
+                else{
+                    const content = tokens[i].content
+                    str += (content || '')
+                }
             } else {
                 const content = tokens[i].content
                 str += (content || '')
             }
         }
+        console.log(str);
         return str;
     }
 }
+
+
+export default md => {
+    md.renderer.render = (tokens, options, env) => {
+        let str = ''
+        for (let i = 0; i < tokens.length; i++) {
+            if (tokens[i].type === 'inline') {
+                str += md.renderer.render(tokens[i].children, options, env);
+            } else {
+                // console.log('content', tokens[i])
+                const content = tokens[i].content
+                str += (content || '')
+            }
+        }
+        return str
+    }
+}
+*/
+
+

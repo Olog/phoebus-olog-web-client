@@ -38,7 +38,7 @@ class EntryEditor extends Component{
         selectedTags: [],
         level: "",
         title: "",
-        description: "",
+        source: "",
         attachedFiles: [],
         validated: false,
         logbookSelectionValid: true,
@@ -189,10 +189,10 @@ class EntryEditor extends Component{
                 tags: this.state.selectedTags,
                 properties: this.getProperties(),
                 title: this.state.title,
-                description: this.state.description,
                 level: this.state.level,
-                source: "source",
-                state: "Active"
+                source: this.state.source,
+                state: "Active",
+                description: ""
             }
             axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
                 .then(res => {
@@ -218,8 +218,8 @@ class EntryEditor extends Component{
        this.setState({title: event.target.value})
     }
 
-    descriptionChanged = (event) => {
-        this.setState({description: event.target.value})
+    sourceChanged = (event) => {
+        this.setState({source: event.target.value})
     }
 
     selectLevel = (level) => {
@@ -373,7 +373,7 @@ class EntryEditor extends Component{
                                 rows="5" 
                                 value={this.state.description}
                                 placeholder="Description"
-                                onChange={this.descriptionChanged}/>
+                                onChange={this.sourceChanged}/>
                             <Form.Control.Feedback type="invalid">
                                 Please specify a description.
                             </Form.Control.Feedback>

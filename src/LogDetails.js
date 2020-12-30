@@ -29,11 +29,15 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Table from 'react-bootstrap/Table';
 import Property from './Property';
 import { Remarkable } from 'remarkable';
-import md from './utils';
+//import prettify from 'pretty-remarkable';
+import imageProcessor from './image-processor';
 
 import './css/olog.css';
 
+
+
 class LogDetails extends Component{
+
 
     remarkable = new Remarkable('full', {
         html:         false,        // Enable HTML tags in source
@@ -47,7 +51,6 @@ class LogDetails extends Component{
         // Double + single quotes replacement pairs, when typographer enabled,
         // and smartquotes on. Set doubles to '«»' for Russian, '„“' for German.
         quotes: '“”‘’',
-    
       });
     
     state = {
@@ -55,12 +58,11 @@ class LogDetails extends Component{
     };
 
     componentDidMount = () => {
-        this.remarkable.use(md);
+        this.remarkable.use(imageProcessor);
     }
 
 
     getContent = (source) => {
-
         return {__html: this.remarkable.render(source)};
     }
 
