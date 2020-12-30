@@ -43,6 +43,12 @@ Install the toolchain and then:
 5) Invoke ``npm start`` to launch the Node JS development server.
 6) Develop.
 
+## Unit tests
+
+Unit test code can be added in file named like <mytest>.test.js.
+   
+To run tests, invoke ``npm run test``.
+
 ## Deployment
 
 In short, the toolchain is used to build/compile the artefacts subject to deployment, i.e. the files contained in the various React components must be compiled to JavaScript in order to be executable by a browser client. 
