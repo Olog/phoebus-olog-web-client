@@ -16,12 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react';
-import SearchResultItem from './SearchResultItem';
-import ListGroup from 'react-bootstrap/ListGroup';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import SearchResultDay from './SearchResultDay';
 
 class SearchResultList extends Component{
 
@@ -35,28 +34,30 @@ class SearchResultList extends Component{
     }
 
     render(){
+        var searchResultDays = [];
+     
+        Object.keys(this.props.logs).map((key, index) => {
+            searchResultDays.push(
+                <SearchResultDay 
+                        key={index}
+                        logEntries={this.props.logs[key]}
+                        setLogRecord={this.props.setLogRecord}
+                        dateString={key}/>
+            );
+            return null;
+        });
         
-        // Order by created date, descending
-        var searchResultItems = this.props.logs.sort((a, b) => b.createdDate - a.createdDate).map((row, index) => {
-            return (
-                <SearchResultItem  key={index} 
-                    log={row} 
-                    setLogRecord={this.props.setLogRecord} 
-                    currentLogRecord={this.props.currentLogRecord}/>
-            )
-        })
-      
         return(
             <>
-            <Container className="grid-item full-height">
+            <Container className="full-height">
                 <Form onSubmit={this.search}>
                     <Form.Row>
-                        <Col>
+                        <Col style={{paddingLeft: "0px"}}>
                             <Form.Label style={{marginBottom: "0px"}}>Search string</Form.Label>
                         </Col>
                     </Form.Row>
                     <Form.Row>
-                        <Col>
+                        <Col style={{paddingLeft: "0px"}}>
                             <Form.Control size="sm" 
                                 type="input" 
                                 placeholder="No search string"
@@ -70,10 +71,9 @@ class SearchResultList extends Component{
                         </Col>
                     </Form.Row>
                 </Form>
-                <h6>Search Results</h6>
-                    {this.props.logs.length > 0 ? 
-                        <ListGroup className="olog-ul">{searchResultItems}</ListGroup> :
-                        <span>No log records to show</span>}
+                {searchResultDays.length > 0 ? 
+                    searchResultDays :
+                    "No search results"}
             </Container>
             </>
         )

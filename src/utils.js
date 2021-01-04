@@ -18,6 +18,8 @@
 import moment from 'moment';
 
  const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
+ const shortTimeFormat = 'HH:mm';
+ const shortDateFormat = 'YYYY-MM-DD';
 
  function constructLogbooksString(logbooks){ 
      if(!logbooks || logbooks.length === 0){
@@ -78,6 +80,14 @@ function getTimeRangeString(searchCriteria){
         "&end=" + moment(searchCriteria.endDate).format(dateTimeFormat)
 }
 
+export function formatShortTime(date){
+    return moment(date).format(shortTimeFormat);
+}
+
+export function formatShortDate(date){
+    return moment(date).format(shortDateFormat);
+}
+
 export function getSearchString(searchCriteria){
     return constructLogbooksString(searchCriteria.logbooks) 
         + constructTagsString(searchCriteria.tags)
@@ -89,64 +99,31 @@ export function getSearchString(searchCriteria){
 }
 
 /**
- * Extracts the elements of a commonmark string like ![whatever](http://image.png){width=100 height=100}
- * where {width=100 height=100} is optional and a non-standard extension supported by commonmark-java. The
- * purpose is to be able to construct a <img> tag and set inline width and height attributes.
- * @param {string} rawImageMarkup 
+ * Sorts a search result such that log entries with same createdDate are
+ * collected into separate arrays. The returned object is an array of such
+ * arrays, index on date on the format shortDateFormat.
+ * @param {*} searchResult 
  */
-
-/**
- * This is essentially a "remarkable" plugin processing image objects
- */
-/*
-export default md => {
-    md.renderer.render = (tokens, options, env) => {
-        let str = '';
-        for (let i = 0; i < tokens.length; i++) {
-            if (tokens[i].type === 'inline') {
-                let split = matchImage(tokens[i].content);
-                if(split && split[0]){
-                    str += '<img src="' + split[2] + '"';
-                    if(split[1]){
-                        str += ' alt="' + split[1] + '"';
-                    }
-                    if(!split[3]){
-                        str += '>';
-                    }
-                    else if(split[4]){
-                        str += ' ' + split[4] + '>';
-                    }
-                }
-                else{
-                    const content = tokens[i].content
-                    str += (content || '')
-                }
-            } else {
-                const content = tokens[i].content
-                str += (content || '')
-            }
-        }
-        console.log(str);
-        return str;
+export function sortSearchResult(searchResult){
+    if(!searchResult){
+        return [];
     }
-}
+    // First sort by createdDate
+    let searchResultItems = searchResult.sort((a, b) => b.createdDate - a.createdDate).map((row, index) => {
+        return row;
+    })
 
-
-export default md => {
-    md.renderer.render = (tokens, options, env) => {
-        let str = ''
-        for (let i = 0; i < tokens.length; i++) {
-            if (tokens[i].type === 'inline') {
-                str += md.renderer.render(tokens[i].children, options, env);
-            } else {
-                // console.log('content', tokens[i])
-                const content = tokens[i].content
-                str += (content || '')
-            }
+    let result = [];
+    searchResultItems.forEach((item, index) => {
+        let shortDate = formatShortDate(item.createdDate);
+        if(result[shortDate]){
+            result[shortDate].push(item);
         }
-        return str
-    }
+        else{
+            let items = [];
+            items.push(item);
+            result[shortDate] = items;
+        }
+    });
+    return result;
 }
-*/
-
-

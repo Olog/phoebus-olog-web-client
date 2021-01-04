@@ -23,6 +23,7 @@ import SearchResultList from './SearchResultList';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import {sortSearchResult} from './utils';
 
 /**
  * Top level component holding the main UI area components.
@@ -38,7 +39,10 @@ class MainApp extends Component {
   search = () => {
     fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logs?` + this.state.searchString)
       .then(response => response.json())
-      .then(data => this.setState({logRecords: data}))
+      .then(data => {
+        let sortedResults = sortSearchResult(data);
+        this.setState({logRecords: sortedResults});
+      });
   }
 
   setLogRecord = (record) => {

@@ -15,7 +15,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import {getSearchString} from './utils';
+import {formatShortDate, getSearchString, sortSearchResult} from './utils';
+import moment from 'moment';
 
 test('getSearchString owner', () => {
     let searchCriteria = {owner: "owner"};
@@ -35,6 +36,7 @@ test('getSearchString text', () => {
 test('getSearchString level', () => {
     let searchCriteria = {level: "level"};
     expect(getSearchString(searchCriteria)).toContain('level=level');
+    
 });
 
 test('getSearchString logbooks', () => {
@@ -57,4 +59,67 @@ test('getSearchString time tange', () => {
     let searchCriteria = {startDate: 0, endDate: 0};
     expect(getSearchString(searchCriteria)).toContain('start=1970-01-01');
     expect(getSearchString(searchCriteria)).toContain('end=1970-01-01');
+});
+
+test('sortSearchResult', () => {
+    let searchResult = [];
+
+    let date1 = moment().toDate();
+    searchResult.push({createdDate: date1});
+    searchResult.push({createdDate: date1});
+
+    let date2 = moment().subtract(2, 'days').toDate();
+    searchResult.push({createdDate: date2});
+    searchResult.push({createdDate: date2});
+    searchResult.push({createdDate: date2});
+
+    let date3 = moment().subtract(2, 'weeks').toDate();
+    searchResult.push({createdDate: date3});
+
+    let result = sortSearchResult(searchResult);
+    expect(result).toBeDefined();
+    expect(result[formatShortDate(date1)].length).toBe(2);
+    expect(result[formatShortDate(date2)].length).toBe(3);
+    expect(result[formatShortDate(date3)].length).toBe(1);
+});
+
+test('sortSearchResultUnsortedResult', () => {
+    let searchResult = [];
+
+    let date1 = moment().subtract(2, 'weeks').toDate();
+    searchResult.push({createdDate: date1});
+    searchResult.push({createdDate: date1});
+
+    let date2 = moment().toDate();
+    searchResult.push({createdDate: date2});
+    searchResult.push({createdDate: date2});
+    searchResult.push({createdDate: date2});
+
+    let date3 = moment().subtract(2, 'days').toDate();
+    searchResult.push({createdDate: date3});
+
+    let result = sortSearchResult(searchResult);
+    expect(result).toBeDefined();
+    let previousDate = null;
+    // Check that result array is sorted on date (descending).
+    Object.entries(result).forEach(([key, value]) => {
+        if(!previousDate){
+            previousDate = moment(key, 'YYYY-MM-DD');
+            return;
+        }
+        let nextDate = moment(key, 'YYYY-MM-DD');
+        expect(nextDate.isBefore(previousDate)).toBeTruthy();
+        previousDate = nextDate;
+    });
+});
+
+test('sortSearchNoResult', () => {
+    let searchResult = [];
+    let result = sortSearchResult(searchResult);
+    expect(result).toBeDefined();
+    expect(result.length).toBe(0);
+
+    result = sortSearchResult(null);
+    expect(result).toBeDefined();
+    expect(result.length).toBe(0);
 });

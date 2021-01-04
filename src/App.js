@@ -41,6 +41,8 @@ class App extends Component{
         // Logbooks and tags are public to read
         this.refreshLogbooks();
         this.refreshTags();
+        
+       
     }
 
     refreshLogbooks = () => {

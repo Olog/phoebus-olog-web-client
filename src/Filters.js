@@ -41,7 +41,7 @@ class Filters extends Component{
         openTimespan: false,
         openFromTo: false,
         openOther: false,
-        timeSpan: 3,
+        timeSpan: 3, // default time span item, e.g. "3 days"
         searchCriteria: {
             logbooks: [],
             tags: [],
@@ -49,7 +49,7 @@ class Filters extends Component{
             text: "",
             level: "",
             owner: "",
-            startDate: moment().subtract(1, 'days').toDate(),
+            startDate: moment().subtract(12, 'hours').toDate(),
             endDate: moment().toDate()
           }
     };
@@ -103,17 +103,17 @@ class Filters extends Component{
         var span = parseInt(event.target.id);
         switch(span){
             case 1:
-                start = moment().subtract(1, 'minutes');
+                start = moment().subtract(12, 'hours');
                 break;
             case 2:
-                start = moment().subtract(1, 'hours');
+                start = moment().subtract(1, 'days');
                 break;
             case 3:
             default:
-                start = moment().subtract(1, 'days');
+                start = moment().subtract(3, 'days');
                 break;
             case 4:
-                start = moment().subtract(1, 'weeks');
+                start = moment().subtract(7, 'days');
                 break;
         }
     
@@ -187,7 +187,7 @@ class Filters extends Component{
 
     render(){
 
-        let timeSpans = ["Last minute", "Last hour", "Last day", "Last week"];
+        let timeSpans = ["12 hours", "1 day", "3 days", "7 days"];
 
         return(
             <Container className="grid-item full-height">

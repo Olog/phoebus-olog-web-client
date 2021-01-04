@@ -34,8 +34,6 @@ import imageProcessor from './image-processor';
 
 import './css/olog.css';
 
-
-
 class LogDetails extends Component{
 
 
