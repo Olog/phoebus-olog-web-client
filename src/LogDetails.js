@@ -20,17 +20,12 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { FaChevronRight, FaChevronDown } from "react-icons/fa";
-import Accordion from 'react-bootstrap/Accordion';
-import Card from 'react-bootstrap/Card';
-import OlogMoment from './OlogMoment';
 import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Table from 'react-bootstrap/Table';
 import Property from './Property';
 import { Remarkable } from 'remarkable';
-//import prettify from 'pretty-remarkable';
 import imageProcessor from './image-processor';
+import LogDetailsMetaData from './LogDetailsMetaData';
 
 import './css/olog.css';
 
@@ -59,24 +54,12 @@ class LogDetails extends Component{
         this.remarkable.use(imageProcessor);
     }
 
-
     getContent = (source) => {
         return {__html: this.remarkable.render(source)};
     }
 
     render(){
-        var logbooks = this.props.currentLogRecord && this.props.currentLogRecord.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <span key={index}>{row.name},</span>
-            )}
-        )
-
-        var tags = this.props.currentLogRecord && this.props.currentLogRecord.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <span key={index}>{row.name},</span>
-            )}
-        )
-
+       
         var attachments = this.props.currentLogRecord && this.props.currentLogRecord.attachments.map((row, index) => {
             if(row.fileMetadataDescription.startsWith('image')){
                 return(
@@ -98,8 +81,6 @@ class LogDetails extends Component{
             }
         )
 
-        //var content = <div>{this.remarkable.render({this.props.currentLogRecord ? this.props.currentLogRecord.source : null})}</div>;
-
         var properties = 
             this.props.currentLogRecord && this.props.currentLogRecord.properties.map((row, index) => {
                 return(
@@ -109,34 +90,15 @@ class LogDetails extends Component{
 
         return(
             <Container className="grid-item full-height">
-               <h6>Log Details</h6>
                 {/* Render only of current log record is defined */}
                 {this.props.currentLogRecord &&
-                        <Accordion className="list-item">
-                            <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openInfo: !this.state.openInfo})}>
-                            <b>{this.props.currentLogRecord.owner}, <OlogMoment date={this.props.currentLogRecord.createdDate}/></b>
-                            &nbsp;{this.state.openInfo ? <FaChevronDown /> : <FaChevronRight/>}
-                            </Accordion.Toggle>
-                            
-                            <Accordion.Collapse eventKey="0">
-                                <Card.Body>
-                                    <Table bordered size="sm">
-                                        <tbody>
-                                            <tr><td style={{width: "100px"}}>Logbooks</td><td>{logbooks}</td></tr>
-                                            <tr><td>Tags</td><td>{tags}</td></tr>
-                                            <tr><td>Level</td><td>{this.props.currentLogRecord.level}</td></tr>
-                                            <tr><td>Created Date</td><td><OlogMoment date={this.props.currentLogRecord.createdDate}/></td></tr>
-                                        </tbody>
-                                    </Table>
-                                </Card.Body>
-                            </Accordion.Collapse>
-                            <Table bordered size="sm">
-                                <tbody>
-                                    <tr><td style={{width: "100px"}}>Title</td><td>{this.props.currentLogRecord.title}</td></tr>
-                                </tbody>
-                            </Table>
-                            <div 
-                                dangerouslySetInnerHTML={this.getContent(this.props.currentLogRecord.source)}></div>
+                    <>
+                        <h6 className="log-details-title">{this.props.currentLogRecord.title}</h6>
+                        <LogDetailsMetaData currentLogRecord={this.props.currentLogRecord}/>
+                        <div style={{paddingTop: "5px"}}
+                            dangerouslySetInnerHTML={this.getContent(this.props.currentLogRecord.source)}></div>
+                        {
+                            this.props.currentLogRecord.attachments.length > 0 &&
                             <Row>
                                 <Col>
                                     <h6>Attachments:</h6>
@@ -145,6 +107,9 @@ class LogDetails extends Component{
                                     </ListGroup>
                                 </Col>
                             </Row>
+                        }
+                        {
+                            this.props.currentLogRecord.properties.length > 0 &&
                             <Row>
                                 <Col>
                                     <h6>Properties:</h6>
@@ -153,7 +118,8 @@ class LogDetails extends Component{
                                     </ListGroup>
                                 </Col>
                             </Row>
-                        </Accordion>
+                        }
+                    </>
                 }
             </Container>
         )

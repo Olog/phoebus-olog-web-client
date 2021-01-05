@@ -29,6 +29,7 @@ class SearchResultList extends Component{
         this.props.search();
     }
 
+    
     setSearchString = (event) => {
         this.props.setSearchString(event.target.value, false);
     }
@@ -49,7 +50,8 @@ class SearchResultList extends Component{
         
         return(
             <>
-            <Container className="full-height">
+            <Container className="grid-item full-height">
+                <h6>Search results</h6>
                 <Form onSubmit={this.search}>
                     <Form.Row>
                         <Col style={{paddingLeft: "0px"}}>

@@ -17,7 +17,6 @@
  */
 import React, {Component} from 'react';
 import Accordion from 'react-bootstrap/Accordion';
-import Card from 'react-bootstrap/Card';
 import Logbooks from './Logbooks';
 import Tags from './Tags';
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
@@ -190,11 +189,12 @@ class Filters extends Component{
         let timeSpans = ["12 hours", "1 day", "3 days", "7 days"];
 
         return(
-            <Container className="grid-item full-height">
+            <Container className="grid-item filters full-height">
               <h6>Filter Log Entries</h6>
                 <Accordion defaultActiveKey="0">
-                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openLogbooks: !this.state.openLogbooks})}>
-                        {this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } LOGBOOKS
+                    <Accordion.Toggle eventKey="0" onClick={() => this.setState({openLogbooks: !this.state.openLogbooks})} 
+                        className="accordion-card-header">
+                        {this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } Logbooks
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                        <Logbooks 
@@ -204,8 +204,9 @@ class Filters extends Component{
                     </Accordion.Collapse>
                 </Accordion>
                 <Accordion>
-                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openTags: !this.state.openTags})}>
-                        {this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } TAGS
+                    <Accordion.Toggle eventKey="0" onClick={() => this.setState({openTags: !this.state.openTags})}
+                         className="accordion-card-header">
+                        {this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } Tags
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                        <Tags tags={this.props.tags}
@@ -214,8 +215,9 @@ class Filters extends Component{
                     </Accordion.Collapse>
                 </Accordion>
                 <Accordion>
-                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openTimespan: !this.state.openTimespan})}>
-                        {this.state.openTimespan ? <FaChevronDown /> : <FaChevronRight/> } CREATED SINCE
+                    <Accordion.Toggle eventKey="0" onClick={() => this.setState({openTimespan: !this.state.openTimespan})}
+                        className="accordion-card-header">
+                        {this.state.openTimespan ? <FaChevronDown /> : <FaChevronRight/> } Created since
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                         <ul  className="olog-ul">
@@ -234,8 +236,9 @@ class Filters extends Component{
                     </Accordion.Collapse>
                 </Accordion>
                 <Accordion>
-                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openFromTo: !this.state.openFromTo})}>
-                        {this.state.openFromTo ? <FaChevronDown /> : <FaChevronRight/> } CREATED FROM - TO
+                    <Accordion.Toggle eventKey="0" onClick={() => this.setState({openFromTo: !this.state.openFromTo})}
+                        className="accordion-card-header">
+                        {this.state.openFromTo ? <FaChevronDown /> : <FaChevronRight/> } Created from - to
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                         <Table size="sm" className="search-fields-table">
@@ -268,8 +271,9 @@ class Filters extends Component{
                     </Accordion.Collapse>
                 </Accordion>
                 <Accordion>
-                    <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => this.setState({openOther: !this.state.openOther})}>
-                        {this.state.openOther ? <FaChevronDown /> : <FaChevronRight/> } OTHER SEARCH FIELDS
+                    <Accordion.Toggle eventKey="0" onClick={() => this.setState({openOther: !this.state.openOther})}
+                        className="accordion-card-header">
+                        {this.state.openOther ? <FaChevronDown /> : <FaChevronRight/> } Other search fields
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                         <Table size="sm" className="search-fields-table">
