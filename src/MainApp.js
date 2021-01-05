@@ -33,7 +33,8 @@ class MainApp extends Component {
   state = {
       logRecords: [],
       currentLogRecord: null,
-      searchString: ""
+      searchString: "",
+      selectedLogEntryId: 0
     };
 
   search = () => {
@@ -46,7 +47,7 @@ class MainApp extends Component {
   }
 
   setLogRecord = (record) => {
-    this.setState({currentLogRecord: record});
+    this.setState({currentLogRecord: record, selectedLogEntryId: record.id});
   }
 
   setSearchString = (searchString, performSearch) => {
@@ -57,6 +58,10 @@ class MainApp extends Component {
       searchString = searchString.substring(0, searchString.length - 1);
     }
     this.setState({searchString: searchString});
+  }
+
+  setSelectedLogEntryId = (logEntryId) => {
+    this.setState({selectedLogEntryId: logEntryId});
   }
 
   render() {
@@ -76,6 +81,7 @@ class MainApp extends Component {
                 setLogRecord={this.setLogRecord}
                 searchString={this.state.searchString}
                 setSearchString={this.setSearchString}
+                selectedLogEntryId={this.state.selectedLogEntryId}
                 search={this.search}/> 
             </Col>
             <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>

@@ -15,11 +15,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react';
-import './css/olog.css';
+import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 import { FaPaperclip } from "react-icons/fa";
-import {formatShortTime} from './utils';
+import './css/olog.css';
+import { formatShortTime } from './utils';
 
 class SearchResultItem extends Component{
 
@@ -34,7 +34,7 @@ class SearchResultItem extends Component{
 
     render(){
         return(
-            <div className="list-item">
+            <div className={this.props.selectedLogEntryId === this.props.log.id ? "list-item selected-log-entry" : "list-item"}>
                 <Table size="sm" onClick={() => this.props.setLogRecord(this.props.log)}>
                     <tbody>
                         <tr>

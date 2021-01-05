@@ -22,10 +22,6 @@ import moment from 'moment';
 
 class SearchResultDay extends Component{
 
-    componentDidMount = () => {
-        
-    }
-
     isToday = (date) => {
         return date === moment().format('YYYY-MM-DD');
     }
@@ -36,7 +32,8 @@ class SearchResultDay extends Component{
                 <SearchResultItem  
                     key={index} 
                     log={row} 
-                    setLogRecord={this.props.setLogRecord}/>
+                    setLogRecord={this.props.setLogRecord}
+                    selectedLogEntryId={this.props.selectedLogEntryId}/>
             )
         })
 

@@ -43,6 +43,7 @@ class SearchResultList extends Component{
                         key={index}
                         logEntries={this.props.logs[key]}
                         setLogRecord={this.props.setLogRecord}
+                        selectedLogEntryId={this.props.selectedLogEntryId}
                         dateString={key}/>
             );
             return null;
@@ -50,7 +51,7 @@ class SearchResultList extends Component{
         
         return(
             <>
-            <Container className="grid-item full-height">
+            <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
                 <h6>Search results</h6>
                 <Form onSubmit={this.search}>
                     <Form.Row>
