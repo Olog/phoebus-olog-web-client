@@ -30,10 +30,10 @@
     "react-native-safe-area-context": "^3.1.7",
     "react-native-screens": "^2.10.1",
     "react-navigation": "^4.4.0",
+    "react-perfect-scrollbar": "^1.5.8",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "remarkable": "^2.0.1",
-    "universal-cookie": "^4.0.3"
+    "remarkable": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -50,7 +50,6 @@ class SearchResultList extends Component{
         });
         
         return(
-            <>
             <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
                 <h6>Search results</h6>
                 <Form onSubmit={this.search}>
@@ -78,7 +77,6 @@ class SearchResultList extends Component{
                     searchResultDays :
                     "No search results"}
             </Container>
-            </>
         )
     }
 }

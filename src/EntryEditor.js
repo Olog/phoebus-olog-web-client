@@ -39,6 +39,7 @@ class EntryEditor extends Component{
         level: "",
         title: "",
         source: "",
+        description: "",
         attachedFiles: [],
         validated: false,
         logbookSelectionValid: true,
@@ -192,7 +193,7 @@ class EntryEditor extends Component{
                 level: this.state.level,
                 source: this.state.source,
                 state: "Active",
-                description: ""
+                description: this.state.source
             }
             axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
                 .then(res => {
@@ -371,7 +372,6 @@ class EntryEditor extends Component{
                                 required
                                 as="textarea" 
                                 rows="5" 
-                                value={this.state.description}
                                 placeholder="Description"
                                 onChange={this.sourceChanged}/>
                             <Form.Control.Feedback type="invalid">

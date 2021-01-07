@@ -32,9 +32,7 @@ import LogoutDialog from './LogoutDialog';
 import checkSession from './session-check';
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 import axios from 'axios';
-import Cookies from 'universal-cookie';
 
-const cookies = new Cookies();
 
 /**
  * Banner component with controls to create log entry, log book or tag. Plus
@@ -51,18 +49,19 @@ class Banner extends Component {
 
   componentDidMount() {
 
-    // If there is a session cookie, try to get user data from back-end.
+    // Try to get user data from back-end.
     // If server returns user data with non-null userName, there is a valid session.
-    if(cookies.get('SESSION')){
-        axios.get(`${process.env.REACT_APP_BASE_URL}/user`, { withCredentials: true })
-            .then(res => {
-                // As long as there is a session cookie, the response SHOULD contain
-                // user data. Check for status just in case...
-                if(res.status === 200 && res.data){ 
-                    this.props.setUserData(res.data);
-                }
+    axios.get(`${process.env.REACT_APP_BASE_URL}/Olog/user`, { withCredentials: true })
+        .then(res => {
+            // As long as there is a session cookie, the response SHOULD contain
+            // user data. Check for status just in case...
+            if(res.status === 200 && res.data){ 
+                this.props.setUserData(res.data);
+            }
+            else if(res.status === 404){
+              this.props.setUserData({userName: "", roles: []});
+            }
         }).catch(err => {/** TODO: handle connection error */});
-    }
   } 
 
 
