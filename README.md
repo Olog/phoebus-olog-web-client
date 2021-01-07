@@ -15,8 +15,8 @@ The client supports markup as defined by the Commonmark specification, see https
 
 ### Commonmark extensions
 The following non-standard extensions are supported:
-- Image size, e.g. `![alt-text](http://foo.bar.com/image.jpg)**{width=640 height=480}**. The size markup **must** follow immediately after the closing paranthesis.
-- Tables, as supported by Github, see https://docs.github.com/en/free-pro-team@latest/github/writing-on-github/organizing-information-with-tables.
+- Image size, e.g. `![alt-text](http://foo.bar.com/image.jpg){width=640 height=480}`. The size markup **must** follow immediately after the closing paranthesis.
+- Tables, see https://docs.github.com/en/free-pro-team@latest/github/writing-on-github/organizing-information-with-tables.
 
 ## Current state of affairs:
 
