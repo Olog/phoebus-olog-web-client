@@ -48,11 +48,11 @@ In order to develop and test with reasonable effort you will need the proper too
 Install the toolchain and then:
 
 1) Clone this project and cd to it.
-2) Invoke ``npm install`` to download dependencies. The process may complain about various issues (e.g. missing git support on Mac, deprecated versions), but should result in a large number of modules being installed in the node_modules directory.
+2) Invoke ``>npm install`` to download dependencies. The process may complain about various issues (e.g. missing git support on Mac, deprecated versions), but should result in a large number of modules being installed in the node_modules directory.
 3) Create a ``.env`` file in the root directory. Add the line:
    ``REACT_APP_BASE_URL='url-to-Olog-ES-service'``.
 4) Launch the Olog-ES backend. Or mock it.
-5) Invoke ``npm start`` to launch the Node JS development server.
+5) Invoke ``>npm start`` to launch the Node JS development server.
 6) Develop.
 
 ## Unit tests
@@ -66,8 +66,8 @@ To run tests, invoke ``npm run test``.
 The below instructions apply to a deployment scenario where a web server hosts the (static) web client resources, and at the same time acts as a reverse proxy resolving calls to the Olog-ES backend. 
 
 1) Build the deployment artifacts:\
-   `>export REACT_APP_BASE_URL=`\
-   `>npm run-script build`\
+   `>REACT_APP_BASE_URL= npm run-script build`\
+   Note that the `REACT_APP_BASE_URL=` portion of the command is needed in order to override whatever value in the `.env` file.
    This will generate files in the `build` directory, all of which must be copied to the target web server. Publish the web client resource under the root context,, i.e. the URL `http://<host>/` shall resolve to the file `index.html` found in the build output.
    
 2) On the target web server, configure the reverse proxy to map the path /Olog to the Olog-ES backend. On Apache this is done like so:
