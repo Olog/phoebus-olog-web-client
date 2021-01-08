@@ -59,7 +59,7 @@ Install the toolchain and then:
 
 Unit test code can be added in file named like ``*.test.js``.
    
-To run tests, invoke ``npm run test``.
+To run tests, invoke ``>npm run test``.
 
 ## Deployment
 
@@ -67,8 +67,8 @@ The below instructions apply to a deployment scenario where a web server hosts t
 
 1) Build the deployment artifacts:\
    `>REACT_APP_BASE_URL= npm run-script build`\
-   Note that the `REACT_APP_BASE_URL=` portion of the command is needed in order to override whatever value in the `.env` file.
-   This will generate files in the `build` directory, all of which must be copied to the target web server. Publish the web client resource under the root context,, i.e. the URL `http://<host>/` shall resolve to the file `index.html` found in the build output.
+   Note that the `REACT_APP_BASE_URL=` portion of the command is needed in order to override whatever value in the `.env` file.  
+   This will generate files in the `build` directory, all of which must be copied to the target web server. Publish the web client resource under the root context, i.e. the URL `http://<host>/` shall resolve to the file `index.html` found in the build output.
    
 2) On the target web server, configure the reverse proxy to map the path /Olog to the Olog-ES backend. On Apache this is done like so:
 `<VirtualHost *:80>`\
