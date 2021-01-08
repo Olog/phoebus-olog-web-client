@@ -13,9 +13,11 @@ Technology stack:
 ## Commonmark support
 The client supports markup as defined by the Commonmark specification, see https://commonmark.org/. When creating a log entry the user may optionally use this markup scheme in the description field, which will be processed and converted to HTML elements when the log entry is rendered. 
 
+Commonmark cheatsheet: https://commonmark.org/help/
+
 ### Commonmark extensions
 The following non-standard extensions are supported:
-- Image size, e.g. `![alt-text](http://foo.bar.com/image.jpg){width=640 height=480}`. The size markup **must** follow immediately after the closing paranthesis.
+- Image size, e.g. `![alt-text](http://foo.bar.com/image.jpg){width=640 height=480}`.
 - Tables, see https://docs.github.com/en/free-pro-team@latest/github/writing-on-github/organizing-information-with-tables.
 
 ## Current state of affairs:
