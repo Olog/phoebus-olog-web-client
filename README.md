@@ -31,7 +31,6 @@ Available:
 * Properties search critieria.
 
 Backlog:
-* Scrollbar in search result view.
 * Localization.
 * Site customization.
 
