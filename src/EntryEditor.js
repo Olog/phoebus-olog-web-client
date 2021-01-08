@@ -28,8 +28,8 @@ import Attachment from './Attachment.js'
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import checkSession from './session-check';
-import PropertyEditor from './PropertyEditor';
-import Modal from 'react-bootstrap/Modal';
+//import PropertyEditor from './PropertyEditor';
+//import Modal from 'react-bootstrap/Modal';
 
 class EntryEditor extends Component{
 
@@ -297,6 +297,7 @@ class EntryEditor extends Component{
 
         const doUpload = this.props.fileName !== '';
 
+        /*
         var editorRows = Object.keys(this.state.properties).map(key => {
             return (
                 <PropertyEditor key={key}
@@ -306,6 +307,7 @@ class EntryEditor extends Component{
                     removeProperty={this.removeProperty}/>
             )
         })
+        */
 
         return(
             <>
@@ -313,7 +315,7 @@ class EntryEditor extends Component{
                     <Form noValidate validated={this.state.validated} onSubmit={this.submit}>
                         <Form.Row>
                             <Form.Label className="new-entry">New Log Entry</Form.Label>
-                            <Button type="submit">Create</Button>
+                            <Button type="submit" disabled={this.props.userData.userName === ""}>Create</Button>
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Dropdown as={ButtonGroup}>
@@ -392,16 +394,16 @@ class EntryEditor extends Component{
                         </Form.Row>
                         </Form>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
-                        <Form.Row className="grid-item">
+                        {/*<Form.Row className="grid-item">
                             <Form.Group>
                                 <Button variant="secondary" size="sm" onClick={() => this.setState({showAddProperty: true})}>
                                     <span><FaPlus className="add-button"/></span>Add Property
                                 </Button>
                                 {editorRows}              
                             </Form.Group>
-                        </Form.Row>
+                                </Form.Row>*/}
                 </Container>
-
+                {/*
                 <Modal show={this.state.showAddProperty} onHide={() => this.setState({showAddProperty: false})}>
                     <Modal.Header closeButton>
                         <Modal.Title>New Property</Modal.Title>
@@ -414,6 +416,7 @@ class EntryEditor extends Component{
                         <Button variant="secondary" onClick={() => this.setState({showAddProperty: false})}>Cancel</Button>
                     </Modal.Footer>
                 </Modal>
+                */}
             </>
         )
     }

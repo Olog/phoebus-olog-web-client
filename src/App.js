@@ -46,7 +46,6 @@ class App extends Component{
     }
 
     refreshLogbooks = () => {
-        console.log(`${process.env.REACT_APP_BASE_URL}`);
         fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks`)
         .then(response => response.json())
         .then(data => this.setState({logbooks: data}))

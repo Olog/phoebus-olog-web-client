@@ -108,7 +108,7 @@ class Banner extends Component {
     return (
       <>
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="#home">Olog ES</Navbar.Brand>
+          <Navbar.Brand href="/">Olog ES</Navbar.Brand>
           <Link to="/edit">
             <Button disabled={!this.props.userData.userName} 
               variant="primary" 

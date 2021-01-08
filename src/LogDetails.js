@@ -22,7 +22,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Property from './Property';
+//import Property from './Property';
 import { Remarkable } from 'remarkable';
 import imageProcessor from './image-processor';
 import LogDetailsMetaData from './LogDetailsMetaData';
@@ -80,13 +80,15 @@ class LogDetails extends Component{
                 )}
             }
         )
-
+        
+        /*
         var properties = 
             this.props.currentLogRecord && this.props.currentLogRecord.properties.map((row, index) => {
                 return(
                    <Property key={index} property={row}/>
                 )
             })
+        */
 
         return(
             <Container className="grid-item full-height">
@@ -108,7 +110,7 @@ class LogDetails extends Component{
                                 </Col>
                             </Row>
                         }
-                        {
+                        {/*
                             this.props.currentLogRecord.properties.length > 0 &&
                             <Row>
                                 <Col>
@@ -118,7 +120,7 @@ class LogDetails extends Component{
                                     </ListGroup>
                                 </Col>
                             </Row>
-                        }
+                        */}
                     </>
                 }
             </Container>
