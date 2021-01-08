@@ -30,6 +30,7 @@ import { withRouter } from 'react-router-dom';
 import checkSession from './session-check';
 //import PropertyEditor from './PropertyEditor';
 //import Modal from 'react-bootstrap/Modal';
+import customization from './customization';
 
 class EntryEditor extends Component{
 
@@ -293,7 +294,7 @@ class EntryEditor extends Component{
             )
         })
 
-        let levels = ["Urgent", "Suggestion", "Info", "Request", "Problem"];
+        let levels = customization.levelValues.split(",");
 
         const doUpload = this.props.fileName !== '';
 
@@ -344,7 +345,7 @@ class EntryEditor extends Component{
                         <Form.Row className="grid-item">
                             <Dropdown as={ButtonGroup}>
                                 <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                    Level                                
+                                    {customization.level}                                
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                 {levels.map((level, index) => (

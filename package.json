@@ -16,6 +16,7 @@
     "i18next-browser-languagedetector": "^6.0.1",
     "moment": "^2.27.0",
     "pretty-remarkable": "^1.0.0",
+    "properties-reader": "^2.2.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.3",
     "react-cookie": "^4.0.3",

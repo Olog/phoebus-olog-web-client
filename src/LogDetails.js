@@ -26,7 +26,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Remarkable } from 'remarkable';
 import imageProcessor from './image-processor';
 import LogDetailsMetaData from './LogDetailsMetaData';
-
+import customization from './customization';
 import './css/olog.css';
 
 class LogDetails extends Component{

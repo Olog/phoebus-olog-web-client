@@ -19,6 +19,7 @@
  import React, { Component } from 'react';
  import Table from 'react-bootstrap/Table';
  import OlogMoment from './OlogMoment';
+ import customization from './customization';
 
  class LogDetailsMetaData extends Component {
   
@@ -44,7 +45,7 @@
                     <tr><td>Created</td><td><b><OlogMoment date={this.props.currentLogRecord.createdDate}/></b></td></tr>
                     <tr><td>Logbooks</td><td><b>{logbooks}</b></td></tr>
                     <tr><td>Tags</td><td><b>{tags}</b></td></tr>
-                    <tr><td>Level</td><td><b>{this.props.currentLogRecord.level}</b></td></tr>
+                    <tr><td>{customization.level}</td><td><b>{this.props.currentLogRecord.level}</b></td></tr>
                     </tbody>
             </Table>
             </div>
