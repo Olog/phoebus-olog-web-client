@@ -73,9 +73,11 @@ class SearchResultList extends Component{
                         </Col>
                     </Form.Row>
                 </Form>
-                {searchResultDays.length > 0 ? 
-                    searchResultDays :
-                    "No search results"}
+                <div style={{overflowY: 'scroll', height: 'calc(100vh)'}}>
+                    {searchResultDays.length > 0 ? 
+                        searchResultDays :
+                        "No search results"}
+                </div>
             </Container>
         )
     }

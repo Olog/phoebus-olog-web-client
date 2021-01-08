@@ -189,7 +189,7 @@ class Filters extends Component{
         let timeSpans = ["12 hours", "1 day", "3 days", "7 days"];
 
         return(
-            <Container className="grid-item filters full-height">
+            <Container className="grid-item filters full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
               <h6>Filter Log Entries</h6>
                 <Accordion defaultActiveKey="0">
                     <Accordion.Toggle eventKey="0" onClick={() => this.setState({openLogbooks: !this.state.openLogbooks})} 
