@@ -72,12 +72,14 @@ The below instructions apply to a deployment scenario where a web server hosts t
    
 3) On the target web server, configure the reverse proxy to map the path /Olog to the Olog-ES backend. On Apache this is done like so:
 
-  ```<VirtualHost *:80>
+  ```
+  <VirtualHost *:80>
     ProxyPreserveHost On
     ServerName <my server name>
     ProxyPass /Olog/ http://localhost:8080/Olog/
     ProxyPassReverse /Olog/ http://localhost:8080/Olog/
-  </VirtualHost>```
+  </VirtualHost>
+  ```
   
    In this example the Olog-ES backend is deployed on the same host on port 8080.
    
