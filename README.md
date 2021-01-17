@@ -71,6 +71,7 @@ The below instructions apply to a deployment scenario where a web server hosts t
    This will generate files in the `build` directory, all of which must be copied to the target web server. Publish the web client resource under the root context, i.e. the URL `http://<host>/` shall resolve to the file `index.html` found in the build output.
    
 3) On the target web server, configure the reverse proxy to map the path /Olog to the Olog-ES backend. On Apache this is done like so:
+
 `<VirtualHost *:80>`\
   `ProxyPreserveHost On`\
   `ServerName <my server name>`\
