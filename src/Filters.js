@@ -40,7 +40,7 @@ class Filters extends Component{
         openTimespan: false,
         openFromTo: false,
         openOther: false,
-        timeSpan: 3, // default time span item, e.g. "3 days"
+        timeSpan: 1, // default time span item, e.g. "12 hours"
         searchCriteria: {
             logbooks: [],
             tags: [],
@@ -48,8 +48,8 @@ class Filters extends Component{
             text: "",
             level: "",
             owner: "",
-            startDate: moment().subtract(12, 'hours').toDate(),
-            endDate: moment().toDate()
+            startDate: "12 hours",
+            endDate: "now"
           }
     };
 
@@ -102,23 +102,23 @@ class Filters extends Component{
         var span = parseInt(event.target.id);
         switch(span){
             case 1:
-                start = moment().subtract(12, 'hours');
+                start = "12 hours"; 
                 break;
             case 2:
-                start = moment().subtract(1, 'days');
+                start = "1 day"; 
                 break;
             case 3:
             default:
-                start = moment().subtract(3, 'days');
+                start = "3 days";
                 break;
             case 4:
-                start = moment().subtract(7, 'days');
+                start = "7 days";
                 break;
         }
     
         const copy = {...this.state.searchCriteria};
-        copy.startDate = start.toDate();
-        copy.endDate = moment().toDate();
+        copy.startDate = start; 
+        copy.endDate = "now"; 
         this.setState({searchCriteria: copy, timeSpan: parseInt(event.target.id)},
             () =>  {
                 const searchCriteriaCopy = {...this.state.searchCriteria};
@@ -248,7 +248,7 @@ class Filters extends Component{
                                     <td>
                                     <DateTimePicker
                                         onChange={(value) => this.setStartDate(value)}
-                                        value={this.state.searchCriteria.startDate}
+                                        value={moment().toDate()}
                                         format='y-MM-dd HH:mm'
                                         clearIcon=""
                                         disableClock></DateTimePicker>
@@ -259,7 +259,7 @@ class Filters extends Component{
                                     <td>
                                     <DateTimePicker
                                         onChange={(value) => this.setEndDate(value)}
-                                        value={this.state.searchCriteria.endDate}
+                                        value={moment().toDate()}
                                         format='y-MM-dd HH:mm'
                                         clearIcon=""
                                         disableClock></DateTimePicker>

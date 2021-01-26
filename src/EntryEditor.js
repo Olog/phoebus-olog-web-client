@@ -38,9 +38,6 @@ class EntryEditor extends Component{
         selectedLogbooks: [],
         selectedTags: [],
         level: "",
-        title: "",
-        source: "",
-        description: "",
         attachedFiles: [],
         validated: false,
         logbookSelectionValid: true,
@@ -51,6 +48,8 @@ class EntryEditor extends Component{
 
     propertyNameRef = React.createRef();
     fileInputRef = React.createRef();
+    titleRef = React.createRef();
+    descriptionRef = React.createRef();
     
     addLogbook = (logbook) => {
         var present = false;
@@ -190,13 +189,12 @@ class EntryEditor extends Component{
                 logbooks: this.state.selectedLogbooks,
                 tags: this.state.selectedTags,
                 properties: this.getProperties(),
-                title: this.state.title,
+                title: this.titleRef.current.value,
                 level: this.state.level,
-                source: this.state.source,
                 state: "Active",
-                description: this.state.source
+                description: this.descriptionRef.current.value
             }
-            axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/`, logEntry, { withCredentials: true })
+            axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/?markup=commonmark`, logEntry, { withCredentials: true })
                 .then(res => {
                     if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
                         this.submitAttachmentsMulti(res.data.id).then(res => history.push('/'));
@@ -214,14 +212,6 @@ class EntryEditor extends Component{
                     }
                 });
         }
-    }
-
-    titleChanged = (event) => {
-       this.setState({title: event.target.value})
-    }
-
-    sourceChanged = (event) => {
-        this.setState({source: event.target.value})
     }
 
     selectLevel = (level) => {
@@ -364,8 +354,7 @@ class EntryEditor extends Component{
                                 required
                                 type="text" 
                                 placeholder="Title" 
-                                value={this.state.title}
-                                onChange={this.titleChanged}/>
+                                ref={this.titleRef}/>
                             <Form.Control.Feedback type="invalid">
                                 Please specify a title.
                             </Form.Control.Feedback>
@@ -376,7 +365,7 @@ class EntryEditor extends Component{
                                 as="textarea" 
                                 rows="5" 
                                 placeholder="Description"
-                                onChange={this.sourceChanged}/>
+                                ref={this.descriptionRef}/>
                             <Form.Control.Feedback type="invalid">
                                 Please specify a description.
                             </Form.Control.Feedback>

@@ -26,11 +26,13 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Remarkable } from 'remarkable';
 import imageProcessor from './image-processor';
 import LogDetailsMetaData from './LogDetailsMetaData';
-import customization from './customization';
 import './css/olog.css';
 
+/**
+ * A view show all details of a log entry. Images are renderd, if such are
+ * present. Other types of attachments are rendered as links.
+ */
 class LogDetails extends Component{
-
 
     remarkable = new Remarkable('full', {
         html:         false,        // Enable HTML tags in source
@@ -40,10 +42,6 @@ class LogDetails extends Component{
         linkTarget:   '',           // set target to open link in
         // Enable some language-neutral replacements + quotes beautification
         typographer:  false,
-      
-        // Double + single quotes replacement pairs, when typographer enabled,
-        // and smartquotes on. Set doubles to '«»' for Russian, '„“' for German.
-        quotes: '“”‘’',
       });
     
     state = {

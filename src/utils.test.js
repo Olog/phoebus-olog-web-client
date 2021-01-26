@@ -56,9 +56,8 @@ test('getSearchString default time tange', () => {
 });
 
 test('getSearchString time tange', () => {
-    let searchCriteria = {startDate: 0, endDate: 0};
-    expect(getSearchString(searchCriteria)).toContain('start=1970-01-01');
-    expect(getSearchString(searchCriteria)).toContain('end=1970-01-01');
+    let searchCriteria = {startDate: '1 hour', endDate: 'now'};
+    expect(getSearchString(searchCriteria)).toContain('start=1 hour&end=now');
 });
 
 test('sortSearchResult', () => {

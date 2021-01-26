@@ -17,7 +17,6 @@
  */
 import moment from 'moment';
 
- const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
  const shortTimeFormat = 'HH:mm';
  const shortDateFormat = 'YYYY-MM-DD';
 
@@ -76,8 +75,8 @@ function getAuthorSearchString(searchCriteria){
 }
 
 function getTimeRangeString(searchCriteria){
-    return "&start=" + moment(searchCriteria.startDate).format(dateTimeFormat) +
-        "&end=" + moment(searchCriteria.endDate).format(dateTimeFormat)
+    return "&start=" + searchCriteria.startDate +
+        "&end=" + searchCriteria.endDate; 
 }
 
 export function formatShortTime(date){

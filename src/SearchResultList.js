@@ -21,17 +21,26 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import SearchResultDay from './SearchResultDay';
+import { FaRegQuestionCircle} from "react-icons/fa";
+import SearchStringHelpDialog from './SearchStringHelpDialog';
 
 class SearchResultList extends Component{
+
+    state = {
+        showSearchStringHelpDialogVisible: false
+    }
 
     search = (event) => {
         event.preventDefault();
         this.props.search();
     }
 
-    
     setSearchString = (event) => {
         this.props.setSearchString(event.target.value, false);
+    }
+
+    setShowSearchStringHelpDialog = (show) => {
+        this.setState({showSearchStringHelpDialogVisible: show});
     }
 
     render(){
@@ -56,6 +65,8 @@ class SearchResultList extends Component{
                     <Form.Row>
                         <Col style={{paddingLeft: "0px"}}>
                             <Form.Label style={{marginBottom: "0px"}}>Search string</Form.Label>
+                                <FaRegQuestionCircle style={{cursor:'pointer', marginLeft: '5px'}}
+                                    onClick={() => this.setShowSearchStringHelpDialog(true)}/>
                         </Col>
                     </Form.Row>
                     <Form.Row>
@@ -64,7 +75,7 @@ class SearchResultList extends Component{
                                 type="input" 
                                 placeholder="No search string"
                                 value={this.props.searchString}
-                                style={{fontSize: "10px"}}
+                                style={{fontSize: "12px"}}
                                 onChange={this.setSearchString}> 
                             </Form.Control>
                         </Col>
@@ -78,6 +89,10 @@ class SearchResultList extends Component{
                         searchResultDays :
                         "No search results"}
                 </div>
+
+                <SearchStringHelpDialog
+                    showSearchStringHelpDialogVisible={this.state.showSearchStringHelpDialogVisible}
+                    setShowSearchStringHelpDialog={this.setShowSearchStringHelpDialog}/>
             </Container>
         )
     }
