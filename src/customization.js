@@ -18,5 +18,6 @@
 
 export default {
     level: "Level",
-    levelValues: "Urgent,Suggestion,Info,Request,Problem"
+    levelValues: "Urgent,Suggestion,Info,Request,Problem",
+    urlPrefix: `${process.env.REACT_APP_BASE_URL}/`
 }

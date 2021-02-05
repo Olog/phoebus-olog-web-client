@@ -120,7 +120,7 @@ class EntryEditor extends Component{
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
-            url: `${process.env.REACT_APP_BASE_URL}/Olog/logs/attachments-multi/` + id,
+            url: `${process.env.REACT_APP_BASE_URL}/logs/attachments-multi/` + id,
             data: formData,
             withCredentials: true,
         });
@@ -194,7 +194,7 @@ class EntryEditor extends Component{
                 state: "Active",
                 description: this.descriptionRef.current.value
             }
-            axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logs/?markup=commonmark`, logEntry, { withCredentials: true })
+            axios.put(`${process.env.REACT_APP_BASE_URL}/logs/?markup=commonmark`, logEntry, { withCredentials: true })
                 .then(res => {
                     if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
                         this.submitAttachmentsMulti(res.data.id).then(res => history.push('/'));

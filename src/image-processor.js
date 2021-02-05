@@ -22,6 +22,16 @@
  * see https://github.com/commonmark/commonmark-java#image-attributes.
  */ 
 
+ /**
+  * This is a string prepended to the src attribute when creating the img tag.
+  * It can be used to account for a deployment scenario where the 
+  * path to the image resource is relative in the markup, but must be changed
+  * to an absolute path. Client code should add this plugin like so:
+  * 
+  * remarkable.use(imageProcessor, {urlPrefix: 'http://foo.com/bar/'});
+  */
+ var urlPrefix = '';
+
 /**
  * Matches a string against the commonmark image markup specification, i.e.
  * ![alt-text](image url)
@@ -73,7 +83,7 @@ export function matchSizeDefinition(text){
  * also contain additional text.
  */
 export function processImage(imageNode, textNode){
-    var imgTag = '<img src="' + imageNode.src + '" alt="' + imageNode.alt + '"';
+    var imgTag = '<img src="' + urlPrefix + imageNode.src + '" alt="' + imageNode.alt + '"';
     var split = matchSizeDefinition(textNode);
     if(split && split[2]){
         let size = split[2].toLowerCase();
@@ -85,8 +95,10 @@ export function processImage(imageNode, textNode){
     return [img, leftOver];
 }
 
-const imageProcessor = (md, config = {}) => {
-
+const imageProcessor = (md, config) => {
+    if(config && config.urlPrefix){
+        urlPrefix = config.urlPrefix;
+    }
     md.core.ruler.push('sizeprocessor', function(state) {
         // state.tokens is an array of all tokens in the commonmark content.
         for (var i = 0; i < state.tokens.length; i++) {

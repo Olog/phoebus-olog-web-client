@@ -35,7 +35,7 @@ class AddLogbookDialog extends Component{
     createLogbook = () => {
         var name = this.nameRef.current.value;
         // TODO add error handling if request fails.
-       axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks/` + name, {name: name, state: "Active"}, { withCredentials: true })
+       axios.put(`${process.env.REACT_APP_BASE_URL}/logbooks/` + name, {name: name, state: "Active"}, { withCredentials: true })
         .then(res => {
             this.props.setShowAddLogbook(false);
             this.props.refreshLogbooks();

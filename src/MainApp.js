@@ -38,7 +38,7 @@ class MainApp extends Component {
     };
 
   search = () => {
-    fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logs?` + this.state.searchString)
+    fetch(`${process.env.REACT_APP_BASE_URL}/logs?` + this.state.searchString)
       .then(response => response.json())
       .then(data => {
         let sortedResults = sortSearchResult(data);

@@ -51,7 +51,7 @@ class Banner extends Component {
 
     // Try to get user data from back-end.
     // If server returns user data with non-null userName, there is a valid session.
-    axios.get(`${process.env.REACT_APP_BASE_URL}/Olog/user`, { withCredentials: true })
+    axios.get(`${process.env.REACT_APP_BASE_URL}/user`, { withCredentials: true })
         .then(res => {
             // As long as there is a session cookie, the response SHOULD contain
             // user data. Check for status just in case...

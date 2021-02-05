@@ -46,14 +46,14 @@ class App extends Component{
     }
 
     refreshLogbooks = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logbooks`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/logbooks`)
         .then(response => response.json())
         .then(data => this.setState({logbooks: data}))
         .catch(() => this.setState({logbooks: []}));
     }
     
     refreshTags = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/Olog/tags`)
+        fetch(`${process.env.REACT_APP_BASE_URL}/tags`)
         .then(response => response.json())
         .then(data => {
           if(data){

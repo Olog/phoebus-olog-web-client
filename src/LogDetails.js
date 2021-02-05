@@ -18,8 +18,6 @@
 
 import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
 //import Property from './Property';
@@ -27,6 +25,10 @@ import { Remarkable } from 'remarkable';
 import imageProcessor from './image-processor';
 import LogDetailsMetaData from './LogDetailsMetaData';
 import './css/olog.css';
+import customization from './customization';
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 
 /**
  * A view show all details of a log entry. Images are renderd, if such are
@@ -45,11 +47,12 @@ class LogDetails extends Component{
       });
     
     state = {
-        openInfo: false
+        openInfo: false,
+        attachmentVisible: false
     };
 
     componentDidMount = () => {
-        this.remarkable.use(imageProcessor);
+        this.remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});
     }
 
     getContent = (source) => {
@@ -62,8 +65,8 @@ class LogDetails extends Component{
             if(row.fileMetadataDescription.startsWith('image')){
                 return(
                     <ListGroup.Item key={index}>
-                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/Olog/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename}>
-                        <Image key={index} src={`${process.env.REACT_APP_BASE_URL}/Olog/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename} thumbnail/>
+                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename}>
+                        <Image key={index} src={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename} thumbnail/>
                     </a>
                     </ListGroup.Item>
                 )
@@ -71,7 +74,7 @@ class LogDetails extends Component{
             else{
                 return (
                     <ListGroup.Item key={index}>
-                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/Olog/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename}>
+                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename}>
                     {row.filename}
                     </a>
                     </ListGroup.Item>
@@ -96,17 +99,23 @@ class LogDetails extends Component{
                         <h6 className="log-details-title">{this.props.currentLogRecord.title}</h6>
                         <LogDetailsMetaData currentLogRecord={this.props.currentLogRecord}/>
                         <div style={{paddingTop: "5px"}}
-                            dangerouslySetInnerHTML={this.getContent(this.props.currentLogRecord.source)}></div>
+                            dangerouslySetInnerHTML={this.getContent(this.props.currentLogRecord.source)}>
+                        </div>
                         {
                             this.props.currentLogRecord.attachments.length > 0 &&
-                            <Row>
-                                <Col>
-                                    <h6>Attachments:</h6>
+                            <>
+                            <Accordion>
+                                <Accordion.Toggle as={Card.Header} eventKey="0" 
+                                onClick={() => this.setState({attachmentVisible: !this.state.attachmentVisible})}>
+                                {this.state.attachmentVisible ? <FaChevronDown /> : <FaChevronRight/> } Attachments
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="0">
                                     <ListGroup>
                                         {attachments}
                                     </ListGroup>
-                                </Col>
-                            </Row>
+                                </Accordion.Collapse>
+                            </Accordion>
+                            </>
                         }
                         {/*
                             this.props.currentLogRecord.properties.length > 0 &&
