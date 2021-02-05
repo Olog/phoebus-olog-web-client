@@ -38,7 +38,7 @@ class LogoutDialog extends Component{
     logout = (event) => {
         event.preventDefault();
 
-        axios.get(`${process.env.REACT_APP_BASE_URL}/Olog/logout`, { withCredentials: true })
+        axios.get(`${process.env.REACT_APP_BASE_URL}/logout`, { withCredentials: true })
           .then(res => {
             this.setState({logoutError: ""});
             this.props.setUserData({userName: "", roles: []});

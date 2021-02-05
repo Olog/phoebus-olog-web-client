@@ -35,7 +35,7 @@ class AddTagDialog extends Component{
     createTag = () => {
         var name = this.nameRef.current.value;
         // TODO add error handling if request fails.
-       axios.put(`${process.env.REACT_APP_BASE_URL}/Olog/tags/` + name, {name: name, state: "Active"}, { withCredentials: true })
+       axios.put(`${process.env.REACT_APP_BASE_URL}/tags/` + name, {name: name, state: "Active"}, { withCredentials: true })
         .then(res => {
             this.props.setShowAddTag(false);
             this.props.refreshTags();
