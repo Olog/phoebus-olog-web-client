@@ -46,7 +46,7 @@ class LoginDialog extends Component{
         formData.append("username", this.userNameRef.current.value);
         formData.append("password", this.passwordRef.current.value);
        
-        axios.post(`${process.env.REACT_APP_BASE_URL}/Olog/login`, formData,  { withCredentials: true })
+        axios.post(`${process.env.REACT_APP_BASE_URL}/login`, formData,  { withCredentials: true })
          .then(res => {
             this.setState({loginError: ""});
             this.props.setUserData(res.data);
