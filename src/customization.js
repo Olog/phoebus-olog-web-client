@@ -17,7 +17,7 @@
  */
 
 export default {
-    level: "Level",
-    levelValues: "Urgent,Suggestion,Info,Request,Problem",
+    level: "Entry Type",
+    levelValues: "Shift Start,Shift Update,Accelerator Mode Update,Beam Mode Update,Beam Destination Update,Beam Loss,Event,Call-in Personnel,Access to Restricted Area,Action,Note,Shift End,RP Survey",
     urlPrefix: `${process.env.REACT_APP_BASE_URL}/`
 }
