@@ -23,12 +23,12 @@ import { FaRegFile } from "react-icons/fa";
 class Attachment extends Component{
 
     render(){
-        if(this.props.file.type.toLowerCase().startsWith("image")){
+        if(this.props.file.file.type.toLowerCase().startsWith("image")){
             return(
                 <div className="attachment">
                     <Button variant="danger" onClick={() => this.props.removeAttachment(this.props.file)}>Remove</Button>
-                    <Image src={URL.createObjectURL(this.props.file)} className="attachment"/>
-                    <p>{this.props.file.name}</p>
+                    <Image src={URL.createObjectURL(this.props.file.file)} className="attachment"/>
+                    <p>{this.props.file.file.name}</p>
                 </div>
             )
         }
@@ -37,7 +37,7 @@ class Attachment extends Component{
                 <div className="attachment">
                     <Button variant="danger" onClick={() => this.props.removeAttachment(this.props.file)}>Remove</Button><br/>
                     <FaRegFile style={{marginTop: "5px"}} size={56}/>
-                    <p>{this.props.file.name}</p>
+                    <p>{this.props.file.file.name}</p>
                 </div>
             )
         }

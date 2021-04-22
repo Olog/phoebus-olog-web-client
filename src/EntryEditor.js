@@ -31,6 +31,10 @@ import checkSession from './session-check';
 //import PropertyEditor from './PropertyEditor';
 //import Modal from 'react-bootstrap/Modal';
 import customization from './customization';
+import EmbedImageDialog from './EmbedImageDialog';
+import { v4 as uuidv4 } from 'uuid';
+import OlogAttachment from './OlogAttachment';
+import {removeImageMarkup} from './utils';
 
 class EntryEditor extends Component{
 
@@ -43,7 +47,8 @@ class EntryEditor extends Component{
         logbookSelectionValid: true,
         levelSelectionValid: true,
         properties: {},
-        showAddProperty: false
+        showAddProperty: false,
+        showEmbedImageDialog: false
     }
 
     propertyNameRef = React.createRef();
@@ -98,32 +103,49 @@ class EntryEditor extends Component{
     
     onFileChanged = (event) => {
         if(event.target.files){
-            this.setState({attachedFiles: [...this.state.attachedFiles, ...event.target.files]});
+            let a = [];
+            for(var i = 0; i < event.target.files.length; i++){
+                a[i] = new OlogAttachment(event.target.files[i], uuidv4());
+            }
+            this.setState({attachedFiles: [...this.state.attachedFiles, ...a]});
         }
         this.fileInputRef.current.value = null;
     }
 
+    /**
+     * Removes attachment and - where applicable - updates the body/description.
+     * @param {*} file 
+     */
     removeAttachment = (file) => {
-        this.setState({attachedFiles: this.state.attachedFiles.filter(item => item !== file)});
+        this.setState({attachedFiles: this.state.attachedFiles.filter(item => item.file !== file.file)});
+        if(this.descriptionRef.current.value.indexOf(file.id) > -1){  // Find potential markup referencing the attachment
+            let updatedDescription = removeImageMarkup(this.descriptionRef.current.value, file.id);
+            this.descriptionRef.current.value = updatedDescription;
+        }
     }
 
-    submitAttachmentsMulti = (id) => {
-
-        const formData = new FormData();
-        this.state.attachedFiles.map(file => {
-            formData.append('file', file);
-            return null;
-        });
-        
-        return axios({
-            method: 'post',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            url: `${process.env.REACT_APP_BASE_URL}/logs/attachments-multi/` + id,
-            data: formData,
-            withCredentials: true,
-        });
+    /**
+     * Uploading multiple attachments must be done in a synchronous manner. Using axios.all()
+     * will upload only a single attachment, not sure why...
+     * @param {*} id 
+     * @returns 
+     */
+    submitAttachmentsMulti = async (id) => {
+        for (var i = 0; i < this.state.attachedFiles.length; i++) {
+            let formData = new FormData();
+            formData.append('file', this.state.attachedFiles[i].file);
+            formData.append('id', this.state.attachedFiles[i].id);
+            formData.append('filename', this.state.attachedFiles[i].file.name);
+            await axios.post(`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + id, 
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Accept': 'application/json'
+                    },
+                    withCredentials: true
+                });
+        }
     }
 
     selectionsValid = () => {
@@ -197,11 +219,9 @@ class EntryEditor extends Component{
             axios.put(`${process.env.REACT_APP_BASE_URL}/logs/?markup=commonmark`, logEntry, { withCredentials: true })
                 .then(res => {
                     if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
-                        this.submitAttachmentsMulti(res.data.id).then(res => history.push('/'));
+                        this.submitAttachmentsMulti(res.data.id);
                     }
-                    else{
-                        history.push('/')
-                    }  
+                    history.push('/')  
                 })
                 .catch(error => {
                     if(error.response && (error.response.status === 401 || error.response.status === 403)){
@@ -224,6 +244,10 @@ class EntryEditor extends Component{
         this.setState({showAddProperty: false, properties});
     }
 
+    setShowEmbeddImageDialog = (show) => {
+        this.setState({showEmbedImageDialog: show});
+    }
+
     removeProperty = (key) => {
         const properties = {...this.state.properties};
         delete properties[key];
@@ -244,6 +268,15 @@ class EntryEditor extends Component{
         const properties = {...this.state.properties};
         properties[propertyName] = copy;
         this.setState({properties: properties});
+    }
+
+    addEmbeddedImage = (file, width, height) => {
+        this.setState({showEmbedImageDialog: false});
+        const id = uuidv4();
+        var imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
+        this.descriptionRef.current.value += imageMarkup;
+        const ologAttachment = new OlogAttachment(file, id);
+        this.setState({attachedFiles: [...this.state.attachedFiles, ologAttachment]});
     }
 
     render(){
@@ -361,18 +394,13 @@ class EntryEditor extends Component{
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Form.Control
-                                required
                                 as="textarea" 
                                 rows="5" 
                                 placeholder="Description"
                                 ref={this.descriptionRef}/>
-                            <Form.Control.Feedback type="invalid">
-                                Please specify a description.
-                            </Form.Control.Feedback>
                         </Form.Row>
                         <Form.Row>
                             <Button variant="secondary" size="sm"
-                                    disabled={ this.props.isUploading }
                                     onClick={ doUpload && this.props.onUploadStarted ? this.props.onUploadStarted : this.onBrowse }>
                                 <span><FaPlus className="add-button"/></span>Add Attachments
                             </Button>
@@ -381,6 +409,10 @@ class EntryEditor extends Component{
                                     multiple
                                     ref={ this.fileInputRef }
                                     onChange={ this.onFileChanged } />
+                            <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                    onClick={() => this.setState({showEmbedImageDialog: true})}>
+                                Embed Image
+                            </Button>
                         </Form.Row>
                         </Form>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
@@ -407,6 +439,9 @@ class EntryEditor extends Component{
                     </Modal.Footer>
                 </Modal>
                 */}
+                <EmbedImageDialog showEmbedImageDialog={this.state.showEmbedImageDialog} 
+                    setShowEmbedImageDialog={this.setShowEmbeddImageDialog}
+                    addEmbeddedImage={this.addEmbeddedImage}/>
             </>
         )
     }

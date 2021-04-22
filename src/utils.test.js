@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import {formatShortDate, getSearchString, sortSearchResult} from './utils';
+import {formatShortDate, getSearchString, sortSearchResult, removeImageMarkup} from './utils';
 import moment from 'moment';
 
 test('getSearchString owner', () => {
@@ -121,4 +121,34 @@ test('sortSearchNoResult', () => {
     result = sortSearchResult(null);
     expect(result).toBeDefined();
     expect(result.length).toBe(0);
+});
+
+test('removeImageMarkupNoOtherContent', () => {
+    let markup = "![](attachment/123456789){width=100 height=100}";
+    let result = removeImageMarkup(markup, "123456789");
+    expect(result).toBe("");
+});
+
+test('removeImageMarkupWithOtherContent', () => {
+    let markup = "ABC ![](attachment/123456789){width=100 height=100} DEF";
+    let result = removeImageMarkup(markup, "123456789");
+    expect(result).toBe("ABC  DEF");
+});
+
+test('removeImageMarkupMultipleEmbeddedImages', () => {
+    let markup = "![](attachment/ABCDE){width=100 height=100}\n![](attachment/123456789){width=100 height=100}\n![](attachment/abcde){width=100 height=100}";
+    let result = removeImageMarkup(markup, "123456789");
+    expect(result).toBe("![](attachment/ABCDE){width=100 height=100}\n\n![](attachment/abcde){width=100 height=100}");
+});
+
+test('removeImageMarkupNonMatchingImageMarkup', () => {
+    let markup = "![](attachment/123456789){width=100 height=100}";
+    let result = removeImageMarkup(markup, "abcde");
+    expect(result).toBe("![](attachment/123456789){width=100 height=100}");
+});
+
+test('removeImageMarkupNoImageMarkup', () => {
+    let markup = "whatever";
+    let result = removeImageMarkup(markup, "123456789");
+    expect(result).toBe("whatever");
 });
