@@ -28,6 +28,7 @@ Available:
 * Display log entry details, including image thumbnails, links to non-image attachments and properties.
 * Create new log entry, including attachments and properties. Input is validated.
 * Search criteria: list of logbooks, list of tags, time span, title, description, level and author.
+* Custom dialog for embedding images (from file system) into log entry body.
 
 Backlog:
 * Localization.
