@@ -23,14 +23,15 @@ The following non-standard extensions are supported:
 ## Current state of affairs:
 
 Available:
-* Login to Olog-ES backend.
-* Create logbooks and tags.
+* Search and read log entries, no authentication required.
 * Display log entry details, including image thumbnails, links to non-image attachments and properties.
-* Create new log entry, including attachments and properties. Input is validated.
+* Login to Olog-ES backend.
+* Create new log entry, including attachments. Input is validated.
 * Search criteria: list of logbooks, list of tags, time span, title, description, level and author.
 * Custom dialog for embedding images (from file system) into log entry body.
 
 Backlog:
+* Properties editor.
 * Localization.
 * Site customization.
 
