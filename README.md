@@ -16,7 +16,7 @@ The client supports markup as defined by the Commonmark specification, see https
 Commonmark cheatsheet: https://commonmark.org/help/
 
 ### Commonmark extensions
-The following non-standard extensions are supported:
+The following extensions are supported:
 - Image size, e.g. `![alt-text](http://foo.bar.com/image.jpg){width=640 height=480}`.
 - Tables, see https://docs.github.com/en/free-pro-team@latest/github/writing-on-github/organizing-information-with-tables.
 
