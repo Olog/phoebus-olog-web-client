@@ -18,6 +18,6 @@
 
 export default {
     level: "Entry Type",
-    levelValues: "Shift Start,Shift Update,Accelerator Mode Update,Beam Mode Update,Beam Destination Update,Beam Loss,Event,Call-in Personnel,Access to Restricted Area,Action,Note,Shift End,RP Survey",
+    levelValues: "Normal,Shift Start,Shift End,Fault,Beam Loss,Beam Configuration,Crew",
     urlPrefix: `${process.env.REACT_APP_BASE_URL}/`
 }

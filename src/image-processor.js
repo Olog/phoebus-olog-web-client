@@ -20,17 +20,19 @@
  * The prupose of this Remarkable plugin is to support sizing of images as
  * defined by the commonmark-java image attributes extension, 
  * see https://github.com/commonmark/commonmark-java#image-attributes.
+ * 
+ * Both absolute and relative image URLs are supported.
  */ 
 
- /**
-  * This is a string prepended to the src attribute when creating the img tag.
-  * It can be used to account for a deployment scenario where the 
-  * path to the image resource is relative in the markup, but must be changed
-  * to an absolute path. Client code should add this plugin like so:
-  * 
-  * remarkable.use(imageProcessor, {urlPrefix: 'http://foo.com/bar/'});
-  */
- var urlPrefix = '';
+/**
+ * This is a string prepended to the src attribute when creating the img tag.
+ * It can be used to account for a deployment scenario where the 
+ * path to the image resource is relative in the markup, but must be changed
+ * to an absolute path. Client code should add this plugin like so:
+ * 
+ * remarkable.use(imageProcessor, {urlPrefix: 'http://foo.com/bar/'});
+ */
+var urlPrefix = '';
 
 /**
  * Matches a string against the commonmark image markup specification, i.e.

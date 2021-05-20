@@ -34,8 +34,8 @@ test('Image markup conversion', () => {
     
       });
     remarkable.use(imageProcessor);
-    let imageString = '![foobar](http://foo.bar){width=640 height=480}';
-    expect(remarkable.render(imageString)).toBe('<p><img src="http://foo.bar" alt="foobar" width=640 height=480></p>\n');
+    let imageString = '**bold** preceding text ![](http=whatever) trailing text *italic*';
+    expect(remarkable.render(imageString)).toBe('<p><strong>bold</strong> preceding text <img src="http=whatever" alt=""> trailing text <em>italic</em></p>\n');
     
     imageString = '![foobar](http=whatever)';
     expect(remarkable.render(imageString)).toBe('<p><img src="http=whatever" alt="foobar"></p>\n');
@@ -60,6 +60,9 @@ test('Image markup conversion', () => {
     
     imageString = '**bold** preceding text ![](http=whatever) trailing text *italic*';
     expect(remarkable.render(imageString)).toBe('<p><strong>bold</strong> preceding text <img src="http=whatever" alt=""> trailing text <em>italic</em></p>\n');
+
+    imageString = '**bold** preceding text ![](relative/image.jpg){width=640 height=480}';
+    expect(remarkable.render(imageString)).toBe('<p><strong>bold</strong> preceding text <img src="relative/image.jpg" alt="" width=640 height=480></p>\n');
 
 });
 
