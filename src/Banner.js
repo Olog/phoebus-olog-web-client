@@ -17,9 +17,9 @@
  */
 
 import React, { Component} from 'react'
-import Dropdown from 'react-bootstrap/Dropdown';
+//import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-import DropdownMenu from 'react-bootstrap/DropdownMenu';
+//import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import {
@@ -114,13 +114,13 @@ class Banner extends Component {
               variant="primary" 
               onClick={() => this.isSessionValid()}>New Log Entry</Button>
           </Link>
-          <Dropdown>
+          {/*<Dropdown>
             <Dropdown.Toggle disabled={!this.props.userData.userName}/>
             <DropdownMenu alignRight="true">
               <Dropdown.Item onClick={() => this.setShowAddLogbook(true)}>New Logbook</Dropdown.Item>
               <Dropdown.Item onClick={() => this.setShowAddTag(true)}>New Tag</Dropdown.Item>
             </DropdownMenu>
-          </Dropdown>
+          </Dropdown>*/}
           <Nav className="justify-content-end" style={{ width: "100%" }}>
             <Button onClick={this.handleClick}>{this.props.userData.userName ? this.props.userData.userName : 'Sign In'}</Button>
           </Nav> 

@@ -20,7 +20,7 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
-//import Property from './Property';
+import Property from './Property';
 import { Remarkable } from 'remarkable';
 import imageProcessor from './image-processor';
 import LogDetailsMetaData from './LogDetailsMetaData';
@@ -29,6 +29,8 @@ import customization from './customization';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 /**
  * A view show all details of a log entry. Images are renderd, if such are
@@ -82,14 +84,14 @@ class LogDetails extends Component{
             }
         )
         
-        /*
+        
         var properties = 
             this.props.currentLogRecord && this.props.currentLogRecord.properties.map((row, index) => {
                 return(
                    <Property key={index} property={row}/>
                 )
             })
-        */
+        
 
         return(
             <Container className="grid-item full-height">
@@ -98,7 +100,7 @@ class LogDetails extends Component{
                     <>
                         <h6 className="log-details-title">{this.props.currentLogRecord.title}</h6>
                         <LogDetailsMetaData currentLogRecord={this.props.currentLogRecord}/>
-                        <div style={{paddingTop: "5px"}}
+                        <div style={{paddingTop: "5px"}} className="olog-table"
                             dangerouslySetInnerHTML={this.getContent(this.props.currentLogRecord.source)}>
                         </div>
                         {
@@ -117,7 +119,7 @@ class LogDetails extends Component{
                             </Accordion>
                             </>
                         }
-                        {/*
+                        {
                             this.props.currentLogRecord.properties.length > 0 &&
                             <Row>
                                 <Col>
@@ -127,7 +129,7 @@ class LogDetails extends Component{
                                     </ListGroup>
                                 </Col>
                             </Row>
-                        */}
+                        }
                     </>
                 }
             </Container>
