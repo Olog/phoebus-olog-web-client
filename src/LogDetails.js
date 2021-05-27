@@ -50,13 +50,11 @@ class LogDetails extends Component{
     
     state = {
         openInfo: false,
-        attachmentVisible: false,
-        currentLogRecord: null
+        attachmentVisible: false
     };
 
     componentDidMount = () => {
         this.remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});
-        this.setState({currentLogRecord: this.props.currentLogRecord});
     }
 
     getContent = (source) => {
@@ -64,13 +62,12 @@ class LogDetails extends Component{
     }
 
     render(){
-       
-        var attachments = this.state.currentLogRecord && this.state.currentLogRecord.attachments.map((row, index) => {
+        var attachments = this.props.currentLogRecord && this.props.currentLogRecord.attachments.map((row, index) => {
             if(row.fileMetadataDescription.startsWith('image')){
                 return(
                     <ListGroup.Item key={index}>
-                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.state.currentLogRecord.id + "/" + row.filename}>
-                        <Image key={index} src={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.state.currentLogRecord.id + "/" + row.filename} thumbnail/>
+                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename}>
+                        <Image key={index} src={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename} thumbnail/>
                     </a>
                     </ListGroup.Item>
                 )
@@ -78,7 +75,7 @@ class LogDetails extends Component{
             else{
                 return (
                     <ListGroup.Item key={index}>
-                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.state.currentLogRecord.id + "/" + row.filename}>
+                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename}>
                     {row.filename}
                     </a>
                     </ListGroup.Item>
@@ -87,7 +84,7 @@ class LogDetails extends Component{
         );
         
         var properties = 
-            this.state.currentLogRecord && this.state.currentLogRecord.properties.map((row, index) => {
+            this.props.currentLogRecord && this.props.currentLogRecord.properties.map((row, index) => {
                 return(
                    <Property key={index} property={row}/>
                 )
@@ -97,15 +94,15 @@ class LogDetails extends Component{
         return(
             <Container className="grid-item full-height">
                 {/* Render only of current log record is defined */}
-                {this.state.currentLogRecord &&
+                {this.props.currentLogRecord &&
                     <>
-                        <h6 className="log-details-title">{this.state.currentLogRecord.title}</h6>
-                        <LogDetailsMetaData currentLogRecord={this.state.currentLogRecord}/>
+                        <h6 className="log-details-title">{this.props.currentLogRecord.title}</h6>
+                        <LogDetailsMetaData currentLogRecord={this.props.currentLogRecord}/>
                         <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
-                            dangerouslySetInnerHTML={this.getContent(this.state.currentLogRecord.source)}>
+                            dangerouslySetInnerHTML={this.getContent(this.props.currentLogRecord.source)}>
                         </div>
                         {
-                            this.state.currentLogRecord.attachments.length > 0 &&
+                            this.props.currentLogRecord.attachments.length > 0 &&
                             <>
                             <Accordion>
                                 <Accordion.Toggle as={Card.Header} eventKey="0" 
@@ -121,7 +118,7 @@ class LogDetails extends Component{
                             </>
                         }
                         {
-                            this.state.currentLogRecord.properties.length > 0 &&
+                            this.props.currentLogRecord.properties.length > 0 &&
                             <Row>
                                 <Col>
                                     <h6>Properties:</h6>

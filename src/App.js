@@ -35,7 +35,9 @@ class App extends Component{
     state = {
         userData: {userName: "", roles: []},
         logbooks: [],
-        tags: []
+        tags: [],
+        currentLogRecord: null,
+        selectedLogEntryId: 0
     }
 
     componentDidMount() {
@@ -66,6 +68,10 @@ class App extends Component{
         this.setState({userData: userData});
     }
 
+    setLogRecord = (record) => {
+        this.setState({currentLogRecord: record, selectedLogEntryId: record.id});
+    }
+
     render(){
         return(
             <>
@@ -79,7 +85,10 @@ class App extends Component{
                     <Switch>
                         <Route exact path="/">
                             <MainApp logbooks={this.state.logbooks}
-                                tags={this.state.tags}/>
+                                tags={this.state.tags}
+                                setLogRecord={this.setLogRecord}
+                                selectedLogEntryId={this.state.selectedLogEntryId}
+                                currentLogRecord={this.state.currentLogRecord}/>
                         </Route>
                         <Route path="/edit">
                             <EntryEditor 
@@ -88,7 +97,9 @@ class App extends Component{
                                 setShowLogin={this.setShowLogin}
                                 userData={this.state.userData}/>
                         </Route>
-                        <Route path="/logs/:id" render={(props) => <LogDetailsDetached {...props} />}>
+                        <Route path="/logs/:id" render={(props) => <LogDetailsDetached {...props} 
+                            setLogRecord={this.setLogRecord}
+                            currentLogRecord={this.state.currentLogRecord}/>}>
                         </Route>
                     </Switch>
                 </Router>
