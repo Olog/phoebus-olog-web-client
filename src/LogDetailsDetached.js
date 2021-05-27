@@ -36,7 +36,7 @@ import Col from 'react-bootstrap/Col';
  * A view show all details of a log entry. Images are renderd, if such are
  * present. Other types of attachments are rendered as links.
  */
-class LogDetails extends Component{
+class LogDetailsDetached extends Component{
 
     remarkable = new Remarkable('full', {
         html:         false,        // Enable HTML tags in source
@@ -51,20 +51,46 @@ class LogDetails extends Component{
     state = {
         openInfo: false,
         attachmentVisible: false,
-        currentLogRecord: null
+        currentLogRecord: null,
+        currentLogEntryId: 0,
+        showError: false
     };
 
     componentDidMount = () => {
-        this.remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});
-        this.setState({currentLogRecord: this.props.currentLogRecord});
+        this.remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});      
+        this.setState({currentLogEntryId: this.props.match.params.id}, this.loadLogEntry);
     }
 
     getContent = (source) => {
         return {__html: this.remarkable.render(source)};
     }
 
+    loadLogEntry = () => {
+        if(this.state.currentLogEntryId < 1){
+            return;
+        }
+        this.setState({showError: false});
+        fetch(`${process.env.REACT_APP_BASE_URL}/logs/` + this.state.currentLogEntryId)
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            }
+            else{
+                throw Error("Server returned error.");
+            }
+        })
+        .then(data => {
+          if(data){
+              this.setState({currentLogRecord: data});
+          }
+        })
+        .catch(() => {
+            this.setState({currentLogRecord: null, showError: true});
+        });
+    }
+
     render(){
-       
+
         var attachments = this.state.currentLogRecord && this.state.currentLogRecord.attachments.map((row, index) => {
             if(row.fileMetadataDescription.startsWith('image')){
                 return(
@@ -92,10 +118,10 @@ class LogDetails extends Component{
                    <Property key={index} property={row}/>
                 )
             });
-        
 
         return(
             <Container className="grid-item full-height">
+                {this.state.showError && <h6>Log entry id {this.state.currentLogEntryId} not found</h6>}
                 {/* Render only of current log record is defined */}
                 {this.state.currentLogRecord &&
                     <>
@@ -139,4 +165,4 @@ class LogDetails extends Component{
 
 }
 
-export default LogDetails;
+export default LogDetailsDetached;

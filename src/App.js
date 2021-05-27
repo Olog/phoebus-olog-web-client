@@ -25,6 +25,7 @@ import {
 import MainApp from './MainApp';
 import Banner from './Banner';
 import EntryEditor from './EntryEditor';
+import LogDetailsDetached from './LogDetailsDetached';
 
 /**
  * Entry point component.
@@ -41,8 +42,6 @@ class App extends Component{
         // Logbooks and tags are public to read
         this.refreshLogbooks();
         this.refreshTags();
-        
-       
     }
 
     refreshLogbooks = () => {
@@ -62,7 +61,6 @@ class App extends Component{
         })
         .catch(() => this.setState({tags: []}));
     }
-
 
     setUserData = (userData) => {
         this.setState({userData: userData});
@@ -89,6 +87,8 @@ class App extends Component{
                                 tags={this.state.tags}
                                 setShowLogin={this.setShowLogin}
                                 userData={this.state.userData}/>
+                        </Route>
+                        <Route path="/logs/:id" render={(props) => <LogDetailsDetached {...props} />}>
                         </Route>
                     </Switch>
                 </Router>
