@@ -29,6 +29,7 @@ Available:
 * Create new log entry, including attachments. Input is validated.
 * Search criteria: list of logbooks, list of tags, time span, title, description, level and author.
 * Custom dialog for embedding images (from file system) into log entry body.
+* Support for URLs to show single log entry, e.g. http://my.olog.server.com/logs/1234.
 
 Backlog:
 * Properties editor.
@@ -74,7 +75,7 @@ The below instructions apply to a deployment scenario where a web server hosts t
    
    This will generate files in the `build` directory, all of which must be copied to the target web server. Publish the web client resource under the root context, i.e. the URL `http://<host>/` shall resolve to the file `index.html` found in the build output.
    
-3) On the target web server, configure the reverse proxy to map the path /Olog to the Olog-ES backend. On Apache this is done like so:
+3) On the target web server, configure the reverse proxy to map the path /Olog to the Olog-ES backend. On Apache this is done like so (the rewrite rules may not be needed on other type of front end servers):
 
   ```
   <VirtualHost *:80>
@@ -82,8 +83,17 @@ The below instructions apply to a deployment scenario where a web server hosts t
     ServerName <my server name>
     ProxyPass /Olog/ http://localhost:8080/Olog/
     ProxyPassReverse /Olog/ http://localhost:8080/Olog/
+    
+    <Directory "/path/to/npm/build/output">
+       RewriteEngine on
+       RewriteCond %{HTTP_ACCEPT} text/html
+       RewriteCond %{REQUEST_FILENAME} !-f
+       RewriteRule ^ index.html [last]
+       RewriteRule ^ - [last]
+    </Directory>
   </VirtualHost>
   ```
+   
   
    In this example the Olog-ES backend is deployed on the same host on port 8080.
    
