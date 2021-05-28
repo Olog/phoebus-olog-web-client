@@ -61,8 +61,13 @@ class LogDetailsDetached extends Component{
 
     render(){
         return(
-            <LogDetails currentLogRecord={this.props.currentLogRecord}/>
-        );
+            <>
+            {!this.state.showError && 
+                <LogDetails currentLogRecord={this.props.currentLogRecord}/>}
+            {this.state.showError &&
+                <h5>Log record id {this.props.match.params.id} not found</h5>}
+            </>
+        );     
     }
 
 }

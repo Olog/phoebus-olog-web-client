@@ -69,7 +69,7 @@ class App extends Component{
     }
 
     setLogRecord = (record) => {
-        this.setState({currentLogRecord: record, selectedLogEntryId: record.id});
+        this.setState({currentLogRecord: record});
     }
 
     render(){
