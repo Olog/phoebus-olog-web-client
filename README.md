@@ -9,6 +9,7 @@ Technology stack:
 * React Bootstrap (UI components)
 * axios (back-end access)
 * Remarkable for commonmark processing/rendering (https://github.com/jonschlinkert/remarkable)
+* Jest for unit testing
 
 ## Commonmark support
 The client supports markup as defined by the Commonmark specification, see https://commonmark.org/. When creating a log entry the user may optionally use this markup scheme in the description field, which will be processed and converted to HTML elements when the log entry is rendered. 
