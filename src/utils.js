@@ -150,3 +150,30 @@ export function removeImageMarkup(markup, imageId){
     return markup.substring(0, exclamationMarkIndex) +
         markup.substring((stringBefore + imageId).length + closingCurlyBraceIndex + 1, markup.length);
 }
+
+/**
+ * Checks if a log entry contains the special purpose property "Log Entry Group" and returns
+ * its id attribute value if it does. Otherwise returns null.
+ * @param {*} logEntry 
+ */
+export function getLogEntryGroup(logEntry){
+    if(!logEntry.properties || logEntry.properties.length === 0){
+        return null;
+    }
+    for(let i = 0; i < logEntry.properties.length; i++){
+        if(logEntry.properties[i].name === 'Log Entry Group'){
+            if(!logEntry.properties[i].attributes || logEntry.properties[i].attributes.length === 0){
+                return null;
+            }
+            if(!logEntry.properties[i].attributes || logEntry.properties[i].attributes.length === 0){
+                return null;
+            }
+            for(let j = 0; j < logEntry.properties[i].attributes.length; j++){
+                if(logEntry.properties[i].attributes[j].name === 'id'){
+                    return logEntry.properties[i].attributes[j].value;
+                }
+            }
+        }
+    };
+    return null;
+}

@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import {formatShortDate, getSearchString, sortSearchResult, removeImageMarkup} from './utils';
+import {formatShortDate, getSearchString, sortSearchResult, removeImageMarkup, getLogEntryGroup} from './utils';
 import moment from 'moment';
 
 test('getSearchString owner', () => {
@@ -151,4 +151,48 @@ test('removeImageMarkupNoImageMarkup', () => {
     let markup = "whatever";
     let result = removeImageMarkup(markup, "123456789");
     expect(result).toBe("whatever");
+});
+
+test('getLogEntryGroup', () => {
+    let logEntry = {
+        properties: [
+            {"name" : "Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
+        ]
+    }
+    let result = getLogEntryGroup(logEntry);
+    expect(result).toBe("myLogEntryGroupId");
+});
+
+test('getLogEntryGroupMissing', () => {
+    let logEntry = {
+        properties: [
+            {"name" : "Not Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
+        ]
+    }
+    let result = getLogEntryGroup(logEntry);
+    expect(result).toBeNull();
+
+    logEntry = {
+        properties: [
+            {"name" : "Log Entry Group"}
+        ]
+    }
+    result = getLogEntryGroup(logEntry);
+    expect(result).toBeNull();
+
+    logEntry = {
+        properties: [
+            {"name" : "Log Entry Group", "attributes" : []}
+        ]
+    }
+    result = getLogEntryGroup(logEntry);
+    expect(result).toBeNull();
+
+    logEntry = {
+        properties: [
+            {"name" : "Log Entry Group", "attributes" : [{"name" : "not id", "value" : "myLogEntryGroupId"}]}
+        ]
+    }
+    result = getLogEntryGroup(logEntry);
+    expect(result).toBeNull();
 });

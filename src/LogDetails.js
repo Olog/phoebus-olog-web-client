@@ -31,6 +31,9 @@ import Card from 'react-bootstrap/Card';
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import {getLogEntryGroup} from './utils';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 
 /**
  * A view show all details of a log entry. Images are renderd, if such are
@@ -61,6 +64,12 @@ class LogDetails extends Component{
         return {__html: this.remarkable.render(source)};
     }
 
+    vvalue = "";
+
+    handleChange = (v) => {
+        console.log(v);
+    }
+
     render(){
         var attachments = this.props.currentLogRecord && this.props.currentLogRecord.attachments.map((row, index) => {
             if(row.fileMetadataDescription.startsWith('image')){
@@ -89,6 +98,7 @@ class LogDetails extends Component{
                    <Property key={index} property={row}/>
                 )
             });
+        
         
 
         return(
