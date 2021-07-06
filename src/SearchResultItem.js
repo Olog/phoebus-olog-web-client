@@ -34,7 +34,7 @@ class SearchResultItem extends Component{
 
     render(){
         return(
-            <div className={this.props.selectedLogEntryId === this.props.log.id ? "list-item selected-log-entry" : "list-item"}>
+            <div className={`${this.props.selectedLogEntryId === this.props.log.id ? "list-item selected-log-entry" : "list-item"}`}>
                 <Table size="sm" onClick={() => this.props.setLogRecord(this.props.log)}>
                     <tbody>
                         <tr>
@@ -47,6 +47,7 @@ class SearchResultItem extends Component{
                         </tr>
                         <tr>
                             <td>{this.formatDescription(this.props.log.description)}</td>
+                            <td style={{textAlign: "right"}}>{this.props.log.id}</td>
                         </tr>
                     </tbody>
                 </Table>

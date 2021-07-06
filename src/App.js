@@ -36,8 +36,7 @@ class App extends Component{
         userData: {userName: "", roles: []},
         logbooks: [],
         tags: [],
-        currentLogRecord: null,
-        selectedLogEntryId: 0
+        currentLogRecord: null
     }
 
     componentDidMount() {
@@ -87,7 +86,6 @@ class App extends Component{
                             <MainApp logbooks={this.state.logbooks}
                                 tags={this.state.tags}
                                 setLogRecord={this.setLogRecord}
-                                selectedLogEntryId={this.state.selectedLogEntryId}
                                 currentLogRecord={this.state.currentLogRecord}/>
                         </Route>
                         <Route path="/edit">

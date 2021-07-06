@@ -169,11 +169,9 @@ button.property-table-button{
 
 .log-details-meta-data table>tbody>tr>td:nth-child(1){
     text-align: right;
+    width: 70px;
 }
 
-.log-details-meta-data table>tbody>tr>td:nth-child(2){
-    width: 100%;
-}
 
 blockquote{
     padding: 10px 20px;
@@ -198,4 +196,11 @@ blockquote{
     text-align: left;
     background-color: #0095CA;
     color: white;
+}
+
+.group-header{
+    font-weight: 200;
+    font-size: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }

@@ -32,7 +32,9 @@ class MainApp extends Component {
 
   state = {
       logRecords: [],
-      searchString: ""
+      searchString: "",
+      selectedLogEntryId: 0,
+      showGroup: false
     };
 
   search = () => {
@@ -45,7 +47,12 @@ class MainApp extends Component {
   }
 
   setLogRecord = (record) => {
+    this.setState({selectedLogEntryId: record.id, showGroup: false});
     this.props.setLogRecord(record);
+  }
+
+  setShowGroup = (show) => {
+    this.setState({showGroup: show});
   }
 
   setSearchString = (searchString, performSearch) => {
@@ -58,12 +65,7 @@ class MainApp extends Component {
     this.setState({searchString: searchString});
   }
 
-  setSelectedLogEntryId = (logEntryId) => {
-    this.setState({selectedLogEntryId: logEntryId});
-  }
-
   render() {
-    
     return (
       <>
         <Container fluid className="full-height">
@@ -79,11 +81,14 @@ class MainApp extends Component {
                 setLogRecord={this.setLogRecord}
                 searchString={this.state.searchString}
                 setSearchString={this.setSearchString}
-                selectedLogEntryId={this.props.selectedLogEntryId}
+                selectedLogEntryId={this.state.selectedLogEntryId}
                 search={this.search}/> 
             </Col>
             <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>
-              <LogDetails currentLogRecord={this.props.currentLogRecord}/>
+              <LogDetails 
+                currentLogRecord={this.props.currentLogRecord} 
+                showGroup={this.state.showGroup}
+                setShowGroup= {this.setShowGroup}/>
             </Col>
           </Row>
         </Container>

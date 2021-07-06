@@ -18,22 +18,15 @@
 
 import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
-import Image from 'react-bootstrap/Image';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Property from './Property';
 import { Remarkable } from 'remarkable';
 import imageProcessor from './image-processor';
-import LogDetailsMetaData from './LogDetailsMetaData';
 import './css/olog.css';
 import customization from './customization';
-import Accordion from 'react-bootstrap/Accordion';
-import Card from 'react-bootstrap/Card';
-import { FaChevronRight, FaChevronDown } from "react-icons/fa";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import {getLogEntryGroup} from './utils';
 import ToggleButton from 'react-bootstrap/ToggleButton';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import LogEntryGroupView from './LogEntryGroupView';
+import LogEntrySingleView from './LogEntrySingleView';
 
 /**
  * A view show all details of a log entry. Images are renderd, if such are
@@ -64,86 +57,33 @@ class LogDetails extends Component{
         return {__html: this.remarkable.render(source)};
     }
 
-    vvalue = "";
-
-    handleChange = (v) => {
-        console.log(v);
+    toggleShowMerged = (e) => {
+        this.props.setShowGroup(e);
     }
 
     render(){
-        var attachments = this.props.currentLogRecord && this.props.currentLogRecord.attachments.map((row, index) => {
-            if(row.fileMetadataDescription.startsWith('image')){
-                return(
-                    <ListGroup.Item key={index}>
-                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename}>
-                        <Image key={index} src={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename} thumbnail/>
-                    </a>
-                    </ListGroup.Item>
-                )
-            }
-            else{
-                return (
-                    <ListGroup.Item key={index}>
-                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogRecord.id + "/" + row.filename}>
-                    {row.filename}
-                    </a>
-                    </ListGroup.Item>
-                )}
-            }
-        );
-        
-        var properties = 
-            this.props.currentLogRecord && this.props.currentLogRecord.properties.map((row, index) => {
-                return(
-                   <Property key={index} property={row}/>
-                )
-            });
-        
-        
-
         return(
             <Container className="grid-item full-height">
+                {this.props.currentLogRecord && getLogEntryGroup(this.props.currentLogRecord) &&
+                     <ButtonGroup toggle className="mb-2" style={{marginTop: "10px"}}>
+                        <ToggleButton 
+                            size="sm"
+                            type="checkbox"
+                            checked={this.props.showGroup}
+                            onChange={(e) => this.toggleShowMerged(e.currentTarget.checked)}>Show/hide group
+                        </ToggleButton>
+                    </ButtonGroup>
+                }
                 {/* Render only of current log record is defined */}
-                {this.props.currentLogRecord &&
-                    <>
-                        <h6 className="log-details-title">{this.props.currentLogRecord.title}</h6>
-                        <LogDetailsMetaData currentLogRecord={this.props.currentLogRecord}/>
-                        <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
-                            dangerouslySetInnerHTML={this.getContent(this.props.currentLogRecord.source)}>
-                        </div>
-                        {
-                            this.props.currentLogRecord.attachments.length > 0 &&
-                            <>
-                            <Accordion>
-                                <Accordion.Toggle as={Card.Header} eventKey="0" 
-                                onClick={() => this.setState({attachmentVisible: !this.state.attachmentVisible})}>
-                                {this.state.attachmentVisible ? <FaChevronDown /> : <FaChevronRight/> } Attachments
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="0">
-                                    <ListGroup>
-                                        {attachments}
-                                    </ListGroup>
-                                </Accordion.Collapse>
-                            </Accordion>
-                            </>
-                        }
-                        {
-                            this.props.currentLogRecord.properties.length > 0 &&
-                            <Row>
-                                <Col>
-                                    <h6>Properties:</h6>
-                                    <ListGroup>
-                                        {properties}
-                                    </ListGroup>
-                                </Col>
-                            </Row>
-                        }
-                    </>
+                {this.props.currentLogRecord && !this.props.showGroup &&
+                    <LogEntrySingleView currentLogRecord={this.props.currentLogRecord} remarkable={this.remarkable}/>
+                }
+                {this.props.currentLogRecord && this.props.showGroup &&
+                    <LogEntryGroupView currentLogRecord={this.props.currentLogRecord} remarkable={this.remarkable}/>
                 }
             </Container>
         )
     }
-
 }
 
 export default LogDetails;
