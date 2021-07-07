@@ -27,6 +27,7 @@
  import { FaChevronRight, FaChevronDown } from "react-icons/fa";
  import Row from 'react-bootstrap/Row';
  import Col from 'react-bootstrap/Col';
+ import {hasOnlyLogEntryGroupProperty} from './utils';
  
  /**
  * Merged view of all log entries 
@@ -105,8 +106,8 @@ class LogEntrySingleView extends Component{
                     </Accordion>
                     </>
                 }
-                {
-                    this.props.currentLogRecord.properties.length > 0 &&
+                {this.props.currentLogRecord.properties.length > 0 && 
+                 !hasOnlyLogEntryGroupProperty(this.props.currentLogRecord.properties) &&
                     <Row>
                         <Col>
                             <h6>Properties:</h6>

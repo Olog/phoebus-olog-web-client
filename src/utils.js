@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
 
  const shortTimeFormat = 'HH:mm';
  const shortDateFormat = 'YYYY-MM-DD';
@@ -156,24 +157,55 @@ export function removeImageMarkup(markup, imageId){
  * its id attribute value if it does. Otherwise returns null.
  * @param {*} logEntry 
  */
-export function getLogEntryGroup(logEntry){
-    if(!logEntry.properties || logEntry.properties.length === 0){
+export function getLogEntryGroup(properties){
+    if(!properties || properties.length === 0){
         return null;
     }
-    for(let i = 0; i < logEntry.properties.length; i++){
-        if(logEntry.properties[i].name === 'Log Entry Group'){
-            if(!logEntry.properties[i].attributes || logEntry.properties[i].attributes.length === 0){
+    for(let i = 0; i < properties.length; i++){
+        if(properties[i].name === 'Log Entry Group'){
+            if(!properties[i].attributes || properties[i].attributes.length === 0){
                 return null;
             }
-            if(!logEntry.properties[i].attributes || logEntry.properties[i].attributes.length === 0){
+            if(!properties[i].attributes || properties[i].attributes.length === 0){
                 return null;
             }
-            for(let j = 0; j < logEntry.properties[i].attributes.length; j++){
-                if(logEntry.properties[i].attributes[j].name === 'id'){
-                    return logEntry.properties[i].attributes[j].value;
+            for(let j = 0; j < properties[i].attributes.length; j++){
+                if(properties[i].attributes[j].name === 'id'){
+                    return properties[i].attributes[j].value;
                 }
             }
         }
     };
     return null;
+}
+
+/**
+ * Creates a new Log Entry Group property with an UUID id attribute value.
+ */
+export function newLogEntryGroup(){
+    return {
+        name : "Log Entry Group",
+        attributes: [
+            {
+                name: "id",
+                value: uuidv4()
+            }
+        ]
+    }
+}
+
+/**
+ * Determines if the Log Entry Group is the only property. This can be 
+ * used to determine if a property view should be rendered or not.
+ * @param {*} properties 
+ * @returns 
+ */
+export function hasOnlyLogEntryGroupProperty(properties){
+    if(!properties || properties.length === 0){
+        return false;
+    }
+    if(getLogEntryGroup(properties)){
+        return properties.length === 1;
+    }
+    return false;
 }

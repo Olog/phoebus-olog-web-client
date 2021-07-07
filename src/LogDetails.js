@@ -25,8 +25,10 @@ import customization from './customization';
 import {getLogEntryGroup} from './utils';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Button from 'react-bootstrap/Button';
 import LogEntryGroupView from './LogEntryGroupView';
 import LogEntrySingleView from './LogEntrySingleView';
+import {Link} from "react-router-dom";
 
 /**
  * A view show all details of a log entry. Images are renderd, if such are
@@ -61,27 +63,44 @@ class LogDetails extends Component{
         this.props.setShowGroup(e);
     }
 
+    reply = () => {
+        
+    }
+
     render(){
         return(
-            <Container className="grid-item full-height">
-                {this.props.currentLogRecord && getLogEntryGroup(this.props.currentLogRecord) &&
-                     <ButtonGroup toggle className="mb-2" style={{marginTop: "10px"}}>
-                        <ToggleButton 
-                            size="sm"
-                            type="checkbox"
-                            checked={this.props.showGroup}
-                            onChange={(e) => this.toggleShowMerged(e.currentTarget.checked)}>Show/hide group
-                        </ToggleButton>
-                    </ButtonGroup>
-                }
-                {/* Render only of current log record is defined */}
-                {this.props.currentLogRecord && !this.props.showGroup &&
-                    <LogEntrySingleView currentLogRecord={this.props.currentLogRecord} remarkable={this.remarkable}/>
-                }
-                {this.props.currentLogRecord && this.props.showGroup &&
-                    <LogEntryGroupView currentLogRecord={this.props.currentLogRecord} remarkable={this.remarkable}/>
-                }
-            </Container>
+            <>
+            {/* Render only if currentLogRecord is defined, i.e. when user has selected from search result list */}
+            {this.props.currentLogRecord &&
+                <Container className="grid-item full-height">
+                    {/* Site may choose to not support log entry groups */}
+                    {customization.log_entry_groups_support && 
+                        <Link to={{
+                                pathname: "/edit", 
+                                state : {template: this.props.currentLogRecord}
+                            }}>
+                            <Button size="sm" style={{marginTop: "10px", marginRight: "5px"}} onClick={this.reply}>Reply</Button>
+                        </Link>
+                    }
+                    {getLogEntryGroup(this.props.currentLogRecord.properties) &&
+                        <ButtonGroup toggle style={{marginTop: "10px"}}>
+                            <ToggleButton 
+                                size="sm"
+                                type="checkbox"
+                                checked={this.props.showGroup}
+                                onChange={(e) => this.toggleShowMerged(e.currentTarget.checked)}>Show/hide group
+                            </ToggleButton>
+                        </ButtonGroup>
+                    }
+                    {!this.props.showGroup &&
+                        <LogEntrySingleView currentLogRecord={this.props.currentLogRecord} remarkable={this.remarkable}/>
+                    }
+                    {this.props.showGroup &&
+                        <LogEntryGroupView currentLogRecord={this.props.currentLogRecord} remarkable={this.remarkable}/>
+                    }
+                </Container>
+            }
+            </>
         )
     }
 }

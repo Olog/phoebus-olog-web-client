@@ -22,9 +22,7 @@ import Button from 'react-bootstrap/Button';
 //import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import {
-  Link
-} from "react-router-dom";
+import {Link} from "react-router-dom";
 import AddLogbookDialog from './AddLogbookDialog';
 import AddTagDialog from './AddTagDialog';
 import LoginDialog from './LoginDialog';

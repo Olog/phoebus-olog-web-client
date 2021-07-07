@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import {formatShortDate, getSearchString, sortSearchResult, removeImageMarkup, getLogEntryGroup} from './utils';
+import {formatShortDate, getSearchString, sortSearchResult, removeImageMarkup, getLogEntryGroup, hasOnlyLogEntryGroupProperty} from './utils';
 import moment from 'moment';
 
 test('getSearchString owner', () => {
@@ -159,7 +159,7 @@ test('getLogEntryGroup', () => {
             {"name" : "Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
         ]
     }
-    let result = getLogEntryGroup(logEntry);
+    let result = getLogEntryGroup(logEntry.properties);
     expect(result).toBe("myLogEntryGroupId");
 });
 
@@ -169,7 +169,7 @@ test('getLogEntryGroupMissing', () => {
             {"name" : "Not Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
         ]
     }
-    let result = getLogEntryGroup(logEntry);
+    let result = getLogEntryGroup(logEntry.properties);
     expect(result).toBeNull();
 
     logEntry = {
@@ -177,7 +177,7 @@ test('getLogEntryGroupMissing', () => {
             {"name" : "Log Entry Group"}
         ]
     }
-    result = getLogEntryGroup(logEntry);
+    result = getLogEntryGroup(logEntry.properties);
     expect(result).toBeNull();
 
     logEntry = {
@@ -185,7 +185,7 @@ test('getLogEntryGroupMissing', () => {
             {"name" : "Log Entry Group", "attributes" : []}
         ]
     }
-    result = getLogEntryGroup(logEntry);
+    result = getLogEntryGroup(logEntry.properties);
     expect(result).toBeNull();
 
     logEntry = {
@@ -193,6 +193,37 @@ test('getLogEntryGroupMissing', () => {
             {"name" : "Log Entry Group", "attributes" : [{"name" : "not id", "value" : "myLogEntryGroupId"}]}
         ]
     }
-    result = getLogEntryGroup(logEntry);
+    result = getLogEntryGroup(logEntry.properties);
     expect(result).toBeNull();
+});
+
+test('hasOnlyLogEntryGroupProperty', () => {
+    
+    let result = hasOnlyLogEntryGroupProperty(null);
+    expect(result).toBeFalsy(); 
+
+    result = hasOnlyLogEntryGroupProperty([]);
+    expect(result).toBeFalsy(); 
+
+    let properties = [
+        {"name" : "Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
+    ]
+
+    result = hasOnlyLogEntryGroupProperty(properties);
+    expect(result).toBeTruthy(); 
+
+    properties = [
+        {"name" : "Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]},
+        {"name" : "foo", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
+    ]
+
+    result = hasOnlyLogEntryGroupProperty(properties);
+    expect(result).toBeFalsy();
+
+    properties = [
+        {"name" : "foo", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
+    ]
+
+    result = hasOnlyLogEntryGroupProperty(properties);
+    expect(result).toBeFalsy();
 });

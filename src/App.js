@@ -93,7 +93,8 @@ class App extends Component{
                                 logbooks={this.state.logbooks}
                                 tags={this.state.tags}
                                 setShowLogin={this.setShowLogin}
-                                userData={this.state.userData}/>
+                                userData={this.state.userData}
+                                currentLogRecord={this.state.currentLogRecord}/>
                         </Route>
                         <Route path="/logs/:id" render={(props) => <LogDetailsDetached {...props} 
                             setLogRecord={this.setLogRecord}

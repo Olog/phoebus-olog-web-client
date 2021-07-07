@@ -39,7 +39,7 @@ class LogEntryGroupView extends Component{
     }
 
     search = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/logs?properties=Log Entry Group.id.` + getLogEntryGroup(this.props.currentLogRecord))
+        fetch(`${process.env.REACT_APP_BASE_URL}/logs?properties=Log Entry Group.id.` + getLogEntryGroup(this.props.currentLogRecord.properties))
           .then(response => response.json())
           .then(data => {
             let sortedResult = data.sort((a, b) => a.createdDate - b.createdDate).map((row, index) => {

@@ -19,5 +19,6 @@
 export default {
     level: "Entry Type",
     levelValues: "Normal, Shift Start, Shift End, Fault, Beam Loss, Beam Configuration, Crew, Expert Intervention Call",
-    urlPrefix: `${process.env.REACT_APP_BASE_URL}/`
+    urlPrefix: `${process.env.REACT_APP_BASE_URL}/`,
+    log_entry_groups_support: true
 }
