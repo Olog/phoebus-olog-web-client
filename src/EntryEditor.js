@@ -175,8 +175,6 @@ class EntryEditor extends Component{
     }
 
     updateCurrentLogRecord = () => {
-        console.log(this.props.currentLogRecord.source);
-        console.log(this.props.currentLogRecord.description);
         const logEntry = {
             id: this.props.currentLogRecord.id,
             logbooks: this.props.currentLogRecord.logbooks,

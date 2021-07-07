@@ -17,8 +17,20 @@
  */
 
 export default {
+    /**
+     * The name of the "level" (legacy name) meta data field.
+     */
     level: "Entry Type",
+    /**
+     * Values for the "level" drop-down.
+     */
     levelValues: "Normal, Shift Start, Shift End, Fault, Beam Loss, Beam Configuration, Crew, Expert Intervention Call",
+    /**
+     * Base URL pointing to the Olog service. Required in order to support imbedded into the description (body) of a log entry.
+     */
     urlPrefix: `${process.env.REACT_APP_BASE_URL}/`,
+    /**
+     * Specifies whether to support grouping of log entries.
+     */
     log_entry_groups_support: true
 }
