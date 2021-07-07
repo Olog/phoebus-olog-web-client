@@ -24,10 +24,20 @@ import SearchResultDay from './SearchResultDay';
 import { FaRegQuestionCircle} from "react-icons/fa";
 import SearchStringHelpDialog from './SearchStringHelpDialog';
 
+
+/**
+ * Pane showing search query input and a the list of log entries 
+ * matching the query. 
+ */
 class SearchResultList extends Component{
 
+   
     state = {
         showSearchStringHelpDialogVisible: false
+    }
+
+    componentDidMount = () => {
+        this.props.search();
     }
 
     search = (event) => {
