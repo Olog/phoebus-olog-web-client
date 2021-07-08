@@ -47,7 +47,7 @@ The file `customization.js` contains customizable items. Please review its conte
 In order to develop and test with reasonable effort you will need the proper toolchain:
 
 1) Node JS, install the latest version.
-2) A text editor capable of syntax highlighting. Visual Studio Code is a good alternative as it comes with good support for React development. There are a numerous extensions for VS Code that may enhance the development experience even further.
+2) A text editor capable of syntax highlighting. Visual Studio Code is a good alternative as it comes with good support for React development. There are numerous extensions for VS Code that may enhance the development experience even further.
 3) Optional: a React JS add-on to your browser, which should probably be Chrome or Firefox.
 
 ## Development
