@@ -55,16 +55,16 @@ In order to develop and test with reasonable effort you will need the proper too
 Install the toolchain and then:
 
 1) Clone this project and cd to it.
-2) Invoke ``>npm install`` to download dependencies. The process may complain about various issues (e.g. missing git support on Mac, deprecated versions).
+2) Invoke ``>npm install`` to download dependencies. Various warning messages may be shown (e.g. missing git support on Mac, deprecated versions).
 3) Create a ``.env`` file in the root directory. Add the line:
    ``REACT_APP_BASE_URL='url-to-Olog-ES-service'``.
-4) Launch the Olog-ES backend. Or mock it.
-5) Invoke ``>npm start`` to launch the Node JS development server.
+4) Launch the Olog-ES backend.
+5) Invoke ``>npm start`` to launch the Node JS development server. Web application available on ``http://localhost:3000``.
 6) Develop.
 
 ### Unit testing
 
-Unit test code can be added in file named like ``*.test.js``.
+Unit test code can be added in files named ``*.test.js``.
    
 To run tests, invoke ``>npm run test``.
 
