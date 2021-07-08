@@ -36,6 +36,7 @@ Available:
 Backlog:
 * Properties editor.
 * Localization.
+* Adaptations for small screens.
 
 ## Site customization
 
