@@ -17,18 +17,17 @@
  */
 import React, { useState } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
-import Card from 'react-bootstrap/Card';
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import Table from 'react-bootstrap/Table';
 
-const Property = (props) => {
+const Properties = (props) => {
 
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(true);
 
     return(
         <>
-            <Accordion>
-                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => setVisible(!visible)}>
+            <Accordion defaultActiveKey="0">
+                <Accordion.Toggle eventKey="0" onClick={() => setVisible(!visible)}>
                         {visible ? <FaChevronDown /> : <FaChevronRight/> } {props.property.name}
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
@@ -43,4 +42,4 @@ const Property = (props) => {
     )
 }
 
-export default Property;
+export default Properties;

@@ -25,10 +25,6 @@
  import Accordion from 'react-bootstrap/Accordion';
  import Card from 'react-bootstrap/Card';
  import { FaChevronRight, FaChevronDown } from "react-icons/fa";
- import Row from 'react-bootstrap/Row';
- import Col from 'react-bootstrap/Col';
- import {hasOnlyLogEntryGroupProperty} from './utils';
- 
  /**
  * Merged view of all log entries 
  */
@@ -36,7 +32,8 @@ class LogEntrySingleView extends Component{
 
     state = {
         openInfo: false,
-        attachmentVisible: false,
+        attachmentVisible: true,
+        propertiesVisible: false,
         showGroup: false
     };
 
@@ -45,8 +42,7 @@ class LogEntrySingleView extends Component{
     }
 
     render(){
-
-        var attachments = this.props.currentLogRecord && this.props.currentLogRecord.attachments.map((row, index) => {
+        var attachments = this.props.currentLogRecord.attachments.map((row, index) => {
             if(row.fileMetadataDescription.startsWith('image')){
                 return(
                     <ListGroup.Item key={index}>
@@ -67,8 +63,7 @@ class LogEntrySingleView extends Component{
             }
         );
         
-        var properties = 
-            this.props.currentLogRecord && this.props.currentLogRecord.properties.map((row, index) => {
+        var properties = this.props.currentLogRecord.properties.map((row, index) => {
                 if(row.name !== 'Log Entry Group'){
                     return(
                         <Property key={index} property={row}/>
@@ -78,7 +73,6 @@ class LogEntrySingleView extends Component{
                     return null;
                 }
             });
-        
     
         return(
             <>
@@ -90,33 +84,28 @@ class LogEntrySingleView extends Component{
                 <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
                     dangerouslySetInnerHTML={this.getContent(this.props.currentLogRecord.source)}>
                 </div>
-                {
-                    this.props.currentLogRecord.attachments.length > 0 &&
-                    <>
-                    <Accordion>
-                        <Accordion.Toggle as={Card.Header} eventKey="0" 
-                        onClick={() => this.setState({attachmentVisible: !this.state.attachmentVisible})}>
-                        {this.state.attachmentVisible ? <FaChevronDown /> : <FaChevronRight/> } Attachments
-                        </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="0">
-                            <ListGroup>
-                                {attachments}
-                            </ListGroup>
-                        </Accordion.Collapse>
-                    </Accordion>
-                    </>
-                }
-                {this.props.currentLogRecord.properties.length > 0 && 
-                 !hasOnlyLogEntryGroupProperty(this.props.currentLogRecord.properties) &&
-                    <Row>
-                        <Col>
-                            <h6>Properties:</h6>
-                            <ListGroup>
-                                {properties}
-                            </ListGroup>
-                        </Col>
-                    </Row>
-                }
+                <Accordion defaultActiveKey="0">
+                    <Accordion.Toggle as={Card.Header} eventKey="0" 
+                    onClick={() => this.setState({attachmentVisible: !this.state.attachmentVisible})}>
+                    {this.state.attachmentVisible ? <FaChevronDown /> : <FaChevronRight/> } Attachments
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey="0">
+                        <ListGroup>
+                            {this.props.currentLogRecord.attachments.length === 0 ? <p>No Attachments</p> : attachments}
+                        </ListGroup>
+                    </Accordion.Collapse>
+                </Accordion>
+                <Accordion>
+                    <Accordion.Toggle as={Card.Header} eventKey="0" 
+                        onClick={() => this.setState({propertiesVisible: !this.state.propertiesVisible})}>
+                        {this.state.propertiesVisible ? <FaChevronDown /> : <FaChevronRight/> } Properties
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey="0">
+                        <ListGroup>
+                            {this.props.currentLogRecord.properties.length === 0 ? <p>No Properties</p> : properties}
+                        </ListGroup>
+                    </Accordion.Collapse>
+                </Accordion>
             </>
         );
     }
