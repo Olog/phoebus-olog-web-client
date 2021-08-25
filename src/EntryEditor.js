@@ -34,8 +34,8 @@ import customization from './customization';
 import EmbedImageDialog from './EmbedImageDialog';
 import { v4 as uuidv4 } from 'uuid';
 import OlogAttachment from './OlogAttachment';
-import {getLogEntryGroup, removeImageMarkup, newLogEntryGroup} from './utils';
-
+import {getLogEntryGroupId, removeImageMarkup, newLogEntryGroup} from './utils';
+import queryString from 'query-string';
 
 class EntryEditor extends Component{
 
@@ -57,28 +57,31 @@ class EntryEditor extends Component{
     fileInputRef = React.createRef();
     titleRef = React.createRef();
     descriptionRef = React.createRef();
+    isReply = false;
 
     componentDidMount = () => {
-        // If currentLogRecord is defined, use it as a "template", i.e. user is replying to a log entry.
+        this.isReply = queryString.parse(this.props.location.search).isReply === 'true';
+        
+        // If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
         // Copy relevant fields to the state of this class, taking into account that a Log Entry Group
         // may or may not exist in the template.
-        if(this.props.currentLogRecord){
+        if(this.isReply){
             let p = [];
-            this.props.currentLogRecord.properties.forEach((property, i) => {
+            this.props.currentLogEntry.properties.forEach((property, i) => {
                 p.push(property);
             });
-            if(!getLogEntryGroup(this.props.currentLogRecord.properties)){
+            if(!getLogEntryGroupId(this.props.currentLogEntry.properties)){
                 let property = newLogEntryGroup();
                 this.setState({logEntryGroupPoroperty: property});
                 p.push(property);
             }
             this.setState({
-                selectedLogbooks: this.props.currentLogRecord.logbooks,
-                selectedTags: this.props.currentLogRecord.tags,
-                level: this.props.currentLogRecord.level,
+                selectedLogbooks: this.props.currentLogEntry.logbooks,
+                selectedTags: this.props.currentLogEntry.tags,
+                level: this.props.currentLogEntry.level,
                 properties: p
             });
-            this.titleRef.current.value = this.props.currentLogRecord.title;
+            this.titleRef.current.value = this.props.currentLogEntry.title;
         }
     }
     
@@ -174,18 +177,18 @@ class EntryEditor extends Component{
         }
     }
 
-    updateCurrentLogRecord = () => {
+    updateCurrentLogEntry = () => {
         const logEntry = {
-            id: this.props.currentLogRecord.id,
-            logbooks: this.props.currentLogRecord.logbooks,
-            tags: this.props.currentLogRecord.logbooks.tags,
+            id: this.props.currentLogEntry.id,
+            logbooks: this.props.currentLogEntry.logbooks,
+            tags: this.props.currentLogEntry.logbooks.tags,
             properties: this.state.properties,
-            title: this.props.currentLogRecord.title,
-            level: this.props.currentLogRecord.level,
-            description: this.props.currentLogRecord.source,
+            title: this.props.currentLogEntry.title,
+            level: this.props.currentLogEntry.level,
+            description: this.props.currentLogEntry.source,
             source: null
         };
-        axios.post(`${process.env.REACT_APP_BASE_URL}/logs/` + this.props.currentLogRecord.id + `?markup=commonmark`, logEntry, { withCredentials: true })
+        axios.post(`${process.env.REACT_APP_BASE_URL}/logs/` + this.props.currentLogEntry.id + `?markup=commonmark`, logEntry, { withCredentials: true })
         .catch(error => {
             if(error.response && (error.response.status === 401 || error.response.status === 403)){
                 alert('You are currently not authorized to create a log entry.')
@@ -242,8 +245,8 @@ class EntryEditor extends Component{
                     }
                     // If the currentLogRecord is defined then user is creating a reply entry. So we need to update the currentLogRecord 
                     // with the Log Entry Group, but only if the currentLogRecord does not yet contain it.
-                    if(this.props.currentLogRecord && !getLogEntryGroup(this.props.currentLogRecord.properties)){    
-                        this.updateCurrentLogRecord();
+                    if(this.isReply && !getLogEntryGroupId(this.props.currentLogEntry.properties)){    
+                        this.updateCurrentLogEntry();
                     }
                     history.push('/');
                 })
@@ -405,7 +408,7 @@ class EntryEditor extends Component{
                                 </Dropdown.Menu>
                             </Dropdown>&nbsp;
                             {this.state.level && <div className="selection">{this.state.level}</div>}
-                            {this.state.levelSelectionValid ? null : <Form.Label className="form-error-label" column={true}>Select a level.</Form.Label>}
+                            {this.state.levelSelectionValid ? null : <Form.Label className="form-error-label" column={true}>Select an Entry Type.</Form.Label>}
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Form.Control 

@@ -18,7 +18,7 @@
 
  import React, { Component } from 'react';
  import './css/olog.css';
- import {getLogEntryGroup} from './utils';
+ import {getLogEntryGroupId, sortLogsDateCreated} from './utils';
  import GroupHeader from './GroupHeader';
  
  /**
@@ -39,12 +39,10 @@ class LogEntryGroupView extends Component{
     }
 
     search = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/logs?properties=Log Entry Group.id.` + getLogEntryGroup(this.props.currentLogRecord.properties))
+        fetch(`${process.env.REACT_APP_BASE_URL}/logs?properties=Log Entry Group.id.` + getLogEntryGroupId(this.props.currentLogEntry.properties))
           .then(response => response.json())
           .then(data => {
-            let sortedResult = data.sort((a, b) => a.createdDate - b.createdDate).map((row, index) => {
-                return row;
-            })  
+            let sortedResult = sortLogsDateCreated(data, false);
             this.setState({logRecords: sortedResult});
           });
     }
@@ -53,7 +51,7 @@ class LogEntryGroupView extends Component{
 
         var logGroupItems = this.state.logRecords.map((row, index) => {
             return(
-                <div key={index} className={`${this.props.currentLogRecord.id === row.id ? "selected-log-entry" : ""}`}>
+                <div key={index} className={`${this.props.currentLogEntry.id === row.id ? "selected-log-entry" : ""}`}>
                     <GroupHeader logEntry={row}/>
                     <div style={{paddingTop: "5px", wordWrap: "break-word", borderBottom: "1px solid #e0e0e0"}} 
                                     dangerouslySetInnerHTML={this.getContent(row.source)}/>

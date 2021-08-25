@@ -36,7 +36,7 @@ class App extends Component{
         userData: {userName: "", roles: []},
         logbooks: [],
         tags: [],
-        currentLogRecord: null
+        currentLogEntry: null // This is the log entry selected by the user and shown in the detailed log view
     }
 
     componentDidMount() {
@@ -67,8 +67,8 @@ class App extends Component{
         this.setState({userData: userData});
     }
 
-    setLogRecord = (record) => {
-        this.setState({currentLogRecord: record});
+    setCurrentLogEntry = (logEntry) => {
+        this.setState({currentLogEntry: logEntry});
     }
 
     render(){
@@ -85,8 +85,8 @@ class App extends Component{
                         <Route exact path="/">
                             <MainApp logbooks={this.state.logbooks}
                                 tags={this.state.tags}
-                                setLogRecord={this.setLogRecord}
-                                currentLogRecord={this.state.currentLogRecord}/>
+                                setCurrentLogEntry={this.setCurrentLogEntry}
+                                currentLogEntry={this.state.currentLogEntry}/>
                         </Route>
                         <Route path="/edit">
                             <EntryEditor 
@@ -94,11 +94,12 @@ class App extends Component{
                                 tags={this.state.tags}
                                 setShowLogin={this.setShowLogin}
                                 userData={this.state.userData}
-                                currentLogRecord={this.state.currentLogRecord}/>
+                                currentLogEntry={this.state.currentLogEntry}
+                                />
                         </Route>
                         <Route path="/logs/:id" render={(props) => <LogDetailsDetached {...props} 
-                            setLogRecord={this.setLogRecord}
-                            currentLogRecord={this.state.currentLogRecord}/>}>
+                            setCurrentLogEntry={this.setCurrentLogEntry}
+                            currentLogEntry={this.state.currentLogEntry}/>}>
                         </Route>
                     </Switch>
                 </Router>
