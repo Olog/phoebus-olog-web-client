@@ -22,7 +22,7 @@ import { Remarkable } from 'remarkable';
 import imageProcessor from './image-processor';
 import './css/olog.css';
 import customization from './customization';
-import {getLogEntryGroup} from './utils';
+import {getLogEntryGroupId} from './utils';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
@@ -48,10 +48,11 @@ class LogDetails extends Component{
     
     state = {
         openInfo: false,
-        attachmentVisible: false
+        attachmentVisible: false,
+        showGroup: false // Used to toggle single/merged log view
     };
 
-    componentDidMount = () => {
+    componentDidMount = () => { 
         this.remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});
     }
 
@@ -60,43 +61,37 @@ class LogDetails extends Component{
     }
 
     toggleShowMerged = (e) => {
-        this.props.setShowGroup(e);
-    }
-
-    reply = () => {
-        
+        this.setState({showGroup: e});
     }
 
     render(){
         return(
             <>
-            {/* Render only if currentLogRecord is defined, i.e. when user has selected from search result list */}
-            {this.props.currentLogRecord &&
+            {/* Render only if currentLogRecord is defined, i.e. when user has selected from search result list,
+            or if the route is of the type /logs/:id */}
+            {this.props.currentLogEntry &&
                 <Container className="grid-item full-height">
                     {/* Site may choose to not support log entry groups */}
                     {customization.log_entry_groups_support && 
-                        <Link to={{
-                                pathname: "/edit", 
-                                state : {template: this.props.currentLogRecord}
-                            }}>
+                        <Link to="/edit?isReply=true">
                             <Button size="sm" style={{marginTop: "10px", marginRight: "5px"}} onClick={this.reply}>Reply</Button>
                         </Link>
                     }
-                    {getLogEntryGroup(this.props.currentLogRecord.properties) &&
+                    {getLogEntryGroupId(this.props.currentLogEntry.properties) &&
                         <ButtonGroup toggle style={{marginTop: "10px"}}>
                             <ToggleButton 
                                 size="sm"
                                 type="checkbox"
-                                checked={this.props.showGroup}
+                                checked={this.state.showGroup}
                                 onChange={(e) => this.toggleShowMerged(e.currentTarget.checked)}>Show/hide group
                             </ToggleButton>
                         </ButtonGroup>
                     }
-                    {!this.props.showGroup &&
-                        <LogEntrySingleView currentLogRecord={this.props.currentLogRecord} remarkable={this.remarkable}/>
+                    {!this.state.showGroup &&
+                        <LogEntrySingleView currentLogEntry={this.props.currentLogEntry} remarkable={this.remarkable}/>
                     }
-                    {this.props.showGroup &&
-                        <LogEntryGroupView currentLogRecord={this.props.currentLogRecord} remarkable={this.remarkable}/>
+                    {this.state.showGroup &&
+                        <LogEntryGroupView currentLogEntry={this.props.currentLogEntry} remarkable={this.remarkable}/>
                     }
                 </Container>
             }

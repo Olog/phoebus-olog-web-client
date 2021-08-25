@@ -135,6 +135,12 @@ button.property-table-button{
     padding-right: 5px;
 }
 
+.list-item{
+    border-color: transparent transparent #e4e4e4 transparent;
+    border-style: solid;
+    border-width: 1px;
+}
+
 .selected-log-entry{
     background-color: #c8e0f4;
 }
@@ -203,4 +209,9 @@ blockquote{
     font-size: 20px;
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.child-item{
+    background-color:#e8edee;
+    margin-left: 15px;
 }

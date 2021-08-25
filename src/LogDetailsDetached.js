@@ -50,11 +50,11 @@ class LogDetailsDetached extends Component{
         })
         .then(data => {
           if(data){
-              this.props.setLogRecord(data);
+              this.props.setCurrentLogEntry(data);
           }
         })
         .catch(() => {
-            this.props.setLogRecord(null);
+            this.props.setCurrentLogEntry(null);
             this.setState({showError: true});
         });
     }
@@ -63,7 +63,7 @@ class LogDetailsDetached extends Component{
         return(
             <>
             {!this.state.showError && 
-                <LogDetails currentLogRecord={this.props.currentLogRecord}/>}
+                <LogDetails currentLogEntry={this.props.currentLogEntry}/>}
             {this.state.showError &&
                 <h5>Log record id {this.props.match.params.id} not found</h5>}
             </>

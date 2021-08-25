@@ -63,7 +63,7 @@ class Banner extends Component {
   } 
 
 
-  isSessionValid = () => {
+  handleNewLogEntry = () => {
     var promise = checkSession();
     if(!promise){
       this.props.setShowLogin(true);
@@ -72,6 +72,10 @@ class Banner extends Component {
       promise.then(data => {
         if(!data){
           this.props.setShowLogin(true);
+        }
+        else{
+          // Reset the current log entry state
+          //this.props.newLogRecord();
         }
       });
     }
@@ -107,10 +111,10 @@ class Banner extends Component {
       <>
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Olog ES</Navbar.Brand>
-          <Link to="/edit">
+          <Link to="/edit?isReply=false">
             <Button disabled={!this.props.userData.userName} 
               variant="primary" 
-              onClick={() => this.isSessionValid()}>New Log Entry</Button>
+              onClick={() => this.handleNewLogEntry()}>New Log Entry</Button>
           </Link>
           {/*<Dropdown>
             <Dropdown.Toggle disabled={!this.props.userData.userName}/>

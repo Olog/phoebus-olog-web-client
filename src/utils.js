@@ -17,9 +17,11 @@
  */
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import TreeItem from './TreeItem';
 
  const shortTimeFormat = 'HH:mm';
  const shortDateFormat = 'YYYY-MM-DD';
+ const fullDateTime = 'YYYY-MM-DD HH:mm:ss';
 
  function constructLogbooksString(logbooks){ 
      if(!logbooks || logbooks.length === 0){
@@ -88,6 +90,10 @@ export function formatShortDate(date){
     return moment(date).format(shortDateFormat);
 }
 
+export function formatFullDateTime(date){
+    return moment(date).format(fullDateTime);
+}
+
 export function getSearchString(searchCriteria){
     return constructLogbooksString(searchCriteria.logbooks) 
         + constructTagsString(searchCriteria.tags)
@@ -104,7 +110,7 @@ export function getSearchString(searchCriteria){
  * arrays, index on date on the format shortDateFormat.
  * @param {*} searchResult 
  */
-export function sortSearchResult(searchResult){
+export function sortSearchResultByDay(searchResult){
     if(!searchResult){
         return [];
     }
@@ -157,15 +163,12 @@ export function removeImageMarkup(markup, imageId){
  * its id attribute value if it does. Otherwise returns null.
  * @param {*} logEntry 
  */
-export function getLogEntryGroup(properties){
+export function getLogEntryGroupId(properties){
     if(!properties || properties.length === 0){
         return null;
     }
     for(let i = 0; i < properties.length; i++){
         if(properties[i].name === 'Log Entry Group'){
-            if(!properties[i].attributes || properties[i].attributes.length === 0){
-                return null;
-            }
             if(!properties[i].attributes || properties[i].attributes.length === 0){
                 return null;
             }
@@ -204,8 +207,65 @@ export function hasOnlyLogEntryGroupProperty(properties){
     if(!properties || properties.length === 0){
         return false;
     }
-    if(getLogEntryGroup(properties)){
+    if(getLogEntryGroupId(properties)){
         return properties.length === 1;
     }
     return false;
+}
+
+/**
+ * Sorts log entries based on created date.
+ * input array to be sorted when this method returns.
+ * @param {*} logs, list of log entries
+ * @param {*} descending, true if sort order should be descending, otherwise false
+ */
+export function sortLogsDateCreated(logs, descending){
+    if(descending){
+        return logs.sort((a, b) => b.createdDate - a.createdDate);
+    }
+    else{
+        return logs.sort((a, b) => a.createdDate - b.createdDate);
+    }
+}
+
+
+export function getLogEntryTree(logEntries){
+    if(!logEntries || logEntries.length === 0){
+        return [];
+    }
+    var tree = [];
+
+    for(var i = 0; i < logEntries.length; i++){
+        var newGroupId = getLogEntryGroupId(logEntries[i].properties);
+        if(!newGroupId){
+            let treeItem = new TreeItem();
+            treeItem.addLogEntry(logEntries[i]);
+            tree.push(treeItem);
+        } 
+        else{
+            var potentialTreeItem = findLogEntryGroup(tree, newGroupId);
+            if(!potentialTreeItem){
+                let treeItem = new TreeItem();
+                treeItem.addLogEntry(logEntries[i]);
+                tree.push(treeItem);
+            }
+            else{
+                potentialTreeItem.addLogEntry(logEntries[i]);
+            }
+        }
+    }
+
+    // Sort array of tree items before returning it.
+    return tree.sort((a, b) => b.getParent().createdDate - a.getParent().createdDate);
+}
+
+export function findLogEntryGroup(tree, logEntryGroupId){
+    for(var i = 0; i < tree.length; i++){
+        var treeItem = tree[i];
+        let existingLogGroupId = treeItem.getLogGroupId();
+        if(existingLogGroupId && existingLogGroupId === logEntryGroupId){
+            return tree[i];
+        }
+    }
+    return null;
 }
