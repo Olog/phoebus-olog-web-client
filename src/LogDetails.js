@@ -77,6 +77,13 @@ class LogDetails extends Component{
                             <Button size="sm" style={{marginTop: "10px", marginRight: "5px"}} onClick={this.reply}>Reply</Button>
                         </Link>
                     }
+                    <span style={{float: "right"}}>
+                        <Button type="button" size="sm" style={{marginTop: "10px"}} onClick={() => {navigator.clipboard.writeText(
+                            document.baseURI.endsWith('logs/' + this.props.currentLogEntry.id)
+                                ? document.baseURI
+                                : document.baseURI + 'logs/' + this.props.currentLogEntry.id
+                        )}}>Copy URL</Button>
+                    </span>
                     {getLogEntryGroupId(this.props.currentLogEntry.properties) &&
                         <ButtonGroup toggle style={{marginTop: "10px"}}>
                             <ToggleButton 
