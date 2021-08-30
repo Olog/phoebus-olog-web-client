@@ -33,10 +33,10 @@ Available:
 * Support for URLs to show single log entry, e.g. http://my.olog.server.com/logs/1234.
 * Support for grouping log entries through a "reply" button. 
 * Basic tree view for search results.
+* Properties editor
 
 Backlog:
-* Tree view for search results does not yet support expand/collapse of parent items.
-* Properties editor.
+* Add expand/collapse of parent items in search results tree view.
 * Localization.
 * Adaptations for small screens.
 
