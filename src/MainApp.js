@@ -82,7 +82,7 @@ class MainApp extends Component {
             <Col xs={12} sm={12} md={12} lg={4} style={{padding: "2px"}}>
               <SearchResultList 
                 logs={this.state.logRecords} 
-                setCurrentLogEntry={this.props.setCurrentLogEntry}
+                setCurrentLogEntry={this.setLogEntry}
                 searchString={this.state.searchString}
                 setSearchString={this.setSearchString}
                 selectedLogEntryId={this.state.selectedLogEntryId}

@@ -15,27 +15,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react';
-import Container from 'react-bootstrap/esm/Container';
-import Dropdown from 'react-bootstrap/Dropdown';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Form from 'react-bootstrap/Form';
-import Selection from './Selection';
-import Button from 'react-bootstrap/Button';
-import {FaPlus} from 'react-icons/fa';
-import FormFile from 'react-bootstrap/FormFile';
-import Attachment from './Attachment.js'
 import axios from 'axios';
+import queryString from 'query-string';
+import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Container from 'react-bootstrap/esm/Container';
+import Form from 'react-bootstrap/Form';
+import FormFile from 'react-bootstrap/FormFile';
+import Modal from 'react-bootstrap/Modal';
+import { FaPlus } from 'react-icons/fa';
 import { withRouter } from 'react-router-dom';
-import checkSession from './session-check';
-//import PropertyEditor from './PropertyEditor';
-//import Modal from 'react-bootstrap/Modal';
+import { v4 as uuidv4 } from 'uuid';
+import Attachment from './Attachment.js';
 import customization from './customization';
 import EmbedImageDialog from './EmbedImageDialog';
-import { v4 as uuidv4 } from 'uuid';
 import OlogAttachment from './OlogAttachment';
-import {getLogEntryGroupId, removeImageMarkup, newLogEntryGroup} from './utils';
-import queryString from 'query-string';
+import PropertyEditor from './PropertyEditor';
+import PropertySelector from './PropertySelector';
+import Selection from './Selection';
+import checkSession from './session-check';
+import { getLogEntryGroupId, newLogEntryGroup, removeImageMarkup } from './utils';
 
 class EntryEditor extends Component{
 
@@ -47,13 +48,13 @@ class EntryEditor extends Component{
         validated: false,
         logbookSelectionValid: true,
         levelSelectionValid: true,
-        properties: [],
+        selectedProperties: [],
         showAddProperty: false,
         showEmbedImageDialog: false,
-        logEntryGroupProperty: null
+        logEntryGroupProperty: null,
+        availableProperties: []
     }
 
-    propertyNameRef = React.createRef();
     fileInputRef = React.createRef();
     titleRef = React.createRef();
     descriptionRef = React.createRef();
@@ -65,7 +66,7 @@ class EntryEditor extends Component{
         // If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
         // Copy relevant fields to the state of this class, taking into account that a Log Entry Group
         // may or may not exist in the template.
-        if(this.isReply){
+        if(this.isReply && this.props.currentLogEntry){
             let p = [];
             this.props.currentLogEntry.properties.forEach((property, i) => {
                 p.push(property);
@@ -79,10 +80,18 @@ class EntryEditor extends Component{
                 selectedLogbooks: this.props.currentLogEntry.logbooks,
                 selectedTags: this.props.currentLogEntry.tags,
                 level: this.props.currentLogEntry.level,
-                properties: p
+                selectedProperties: p
             });
             this.titleRef.current.value = this.props.currentLogEntry.title;
         }
+        this.getAvailableProperties();
+    }
+
+    getAvailableProperties = () => {
+        fetch(`${process.env.REACT_APP_BASE_URL}/properties`)
+        .then(response => response.json())
+        .then(data => this.setState({availableProperties: data}))
+        .catch(() => this.setState({availableProperties: []}));
     }
     
     addLogbook = (logbook) => {
@@ -182,13 +191,15 @@ class EntryEditor extends Component{
             id: this.props.currentLogEntry.id,
             logbooks: this.props.currentLogEntry.logbooks,
             tags: this.props.currentLogEntry.logbooks.tags,
-            properties: this.state.properties,
+            properties: this.state.selectedProperties,
             title: this.props.currentLogEntry.title,
             level: this.props.currentLogEntry.level,
             description: this.props.currentLogEntry.source,
             source: null
         };
+        const { history } = this.props;
         axios.post(`${process.env.REACT_APP_BASE_URL}/logs/` + this.props.currentLogEntry.id + `?markup=commonmark`, logEntry, { withCredentials: true })
+        .then(res => history.push('/'))
         .catch(error => {
             if(error.response && (error.response.status === 401 || error.response.status === 403)){
                 alert('You are currently not authorized to create a log entry.')
@@ -209,7 +220,6 @@ class EntryEditor extends Component{
 
     submit = (event) => {
         event.preventDefault();
-
         var promise = checkSession();
         if(!promise){
             this.props.setShowLogin(true);
@@ -233,7 +243,7 @@ class EntryEditor extends Component{
             const logEntry = {
                 logbooks: this.state.selectedLogbooks,
                 tags: this.state.selectedTags,
-                properties: this.state.properties,
+                properties: this.state.selectedProperties,
                 title: this.titleRef.current.value,
                 level: this.state.level,
                 description: this.descriptionRef.current.value
@@ -248,7 +258,9 @@ class EntryEditor extends Component{
                     if(this.isReply && !getLogEntryGroupId(this.props.currentLogEntry.properties)){    
                         this.updateCurrentLogEntry();
                     }
-                    history.push('/');
+                    else{
+                        history.push('/');
+                    }
                 })
                 .catch(error => {
                     if(error.response && (error.response.status === 401 || error.response.status === 403)){
@@ -266,10 +278,9 @@ class EntryEditor extends Component{
         this.setState({level: level}, () => this.setState({levelSelectionValid: level !== ""}));
     }
 
-    addProperty = () => {
-        const properties = {...this.state.properties};
-        properties[this.propertyNameRef.current.value] = {};
-        this.setState({showAddProperty: false, properties});
+    addProperty = (property) => {
+        this.setState({selectedProperties: [...this.state.selectedProperties, property],
+            showAddProperty: false});
     }
 
     setShowEmbeddImageDialog = (show) => {
@@ -277,25 +288,8 @@ class EntryEditor extends Component{
     }
 
     removeProperty = (key) => {
-        const properties = {...this.state.properties};
-        delete properties[key];
-        this.setState({properties});
-    }
-
-    addKeyValuePair = (propertyName, key, value) => {
-        const copy = this.state.properties[propertyName];
-        copy[key] = value;
-        const properties = {...this.state.properties};
-        properties[propertyName] = copy;
-        this.setState({properties: properties});
-    }
-
-    removeKeyValuePair = (propertyName, key) => {
-        const copy = this.state.properties[propertyName];
-        delete copy[key];
-        const properties = {...this.state.properties};
-        properties[propertyName] = copy;
-        this.setState({properties: properties});
+        let properties = [...this.state.selectedProperties].filter(property => property.name !== key);
+        this.setState({selectedProperties: properties});
     }
 
     addEmbeddedImage = (file, width, height) => {
@@ -305,6 +299,22 @@ class EntryEditor extends Component{
         this.descriptionRef.current.value += imageMarkup;
         const ologAttachment = new OlogAttachment(file, id);
         this.setState({attachedFiles: [...this.state.attachedFiles, ologAttachment]});
+    }
+
+    /**
+     * Watch the horror!
+     * @param {*} property 
+     * @param {*} attribute 
+     * @param {*} attributeValue 
+     */
+    updateAttributeValue = (property, attribute, attributeValue) => {
+        let copyOfSelectedProperties = [...this.state.selectedProperties];
+        let propertyIndex = copyOfSelectedProperties.indexOf(property);
+        let copyOfProperty = copyOfSelectedProperties[propertyIndex];
+        let attributeIndex = copyOfProperty.attributes.indexOf(attribute);
+        let copyOfAttribute = copyOfProperty.attributes[attributeIndex];
+        copyOfAttribute.value = attributeValue;
+        this.setState({selectedProperties: copyOfSelectedProperties});
     }
 
     render(){
@@ -348,18 +358,15 @@ class EntryEditor extends Component{
         let levels = customization.levelValues.split(",");
 
         const doUpload = this.props.fileName !== '';
-
-        /*
-        var editorRows = Object.keys(this.state.properties).map(key => {
+        
+        var propertyItems = this.state.selectedProperties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
             return (
-                <PropertyEditor key={key}
-                    name={key}
-                    addKeyValuePair={this.addKeyValuePair}
-                    removeKeyValuePair={this.removeKeyValuePair}
-                    removeProperty={this.removeProperty}/>
+                <PropertyEditor key={index}
+                    property={property}
+                    removeProperty={this.removeProperty}
+                    updateAttributeValue={this.updateAttributeValue}/>
             )
         })
-        */
 
         return(
             <>
@@ -444,29 +451,28 @@ class EntryEditor extends Component{
                         </Form.Row>
                         </Form>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
-                        {/*<Form.Row className="grid-item">
-                            <Form.Group>
+                        {<Form.Row className="grid-item">
+                            <Form.Group style={{width: "400px"}}>
                                 <Button variant="secondary" size="sm" onClick={() => this.setState({showAddProperty: true})}>
                                     <span><FaPlus className="add-button"/></span>Add Property
                                 </Button>
-                                {editorRows}              
+                                {propertyItems}              
                             </Form.Group>
-                                </Form.Row>*/}
+                                </Form.Row>}
                 </Container>
-                {/*
+                {
                 <Modal show={this.state.showAddProperty} onHide={() => this.setState({showAddProperty: false})}>
                     <Modal.Header closeButton>
-                        <Modal.Title>New Property</Modal.Title>
+                        <Modal.Title>Add Property</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form.Control type="text" placeholder={'Property name'} ref={this.propertyNameRef} /> 
+                        <PropertySelector 
+                            availableProperties={this.state.availableProperties} 
+                            selectedProperties={this.state.selectedProperties}
+                            addProperty={this.addProperty}/>
                     </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="primary" onClick={this.addProperty}>Add</Button>
-                        <Button variant="secondary" onClick={() => this.setState({showAddProperty: false})}>Cancel</Button>
-                    </Modal.Footer>
                 </Modal>
-                */}
+                }
                 <EmbedImageDialog showEmbedImageDialog={this.state.showEmbedImageDialog} 
                     setShowEmbedImageDialog={this.setShowEmbeddImageDialog}
                     addEmbeddedImage={this.addEmbeddedImage}/>
