@@ -19,7 +19,7 @@
  import React, { Component } from 'react';
  import Image from 'react-bootstrap/Image';
  import ListGroup from 'react-bootstrap/ListGroup';
- import Property from './Property';
+ import Properties from './Properties';
  import LogDetailsMetaData from './LogDetailsMetaData';
  import './css/olog.css';
  import Accordion from 'react-bootstrap/Accordion';
@@ -64,7 +64,7 @@ class LogEntrySingleView extends Component{
         var properties = this.props.currentLogEntry.properties.map((row, index) => {
                 if(row.name !== 'Log Entry Group'){
                     return(
-                        <Property key={index} property={row}/>
+                        <Properties key={index} property={row}/>
                      )
                 }
                 else{

@@ -198,22 +198,6 @@ export function newLogEntryGroup(){
 }
 
 /**
- * Determines if the Log Entry Group is the only property. This can be 
- * used to determine if a property view should be rendered or not.
- * @param {*} properties 
- * @returns 
- */
-export function hasOnlyLogEntryGroupProperty(properties){
-    if(!properties || properties.length === 0){
-        return false;
-    }
-    if(getLogEntryGroupId(properties)){
-        return properties.length === 1;
-    }
-    return false;
-}
-
-/**
  * Sorts log entries based on created date.
  * input array to be sorted when this method returns.
  * @param {*} logs, list of log entries
