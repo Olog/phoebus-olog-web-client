@@ -17,7 +17,7 @@
  */
 
 import React, { Component } from 'react';
-import Filters from './Filters'
+//import Filters from './Filters'
 import LogDetails from './LogDetails'
 import SearchResultList from './SearchResultList';
 import Container from 'react-bootstrap/Container'
@@ -56,12 +56,13 @@ class MainApp extends Component {
   }
 
   setSearchString = (searchString, performSearch) => {
+    /*
     if(searchString.startsWith('&')){
       searchString = searchString.substring(1, searchString.length);
     }
     if(searchString.endsWith('&')){
       searchString = searchString.substring(0, searchString.length - 1);
-    }
+    }*/
     this.setState({searchString: searchString});
   }
 
@@ -74,11 +75,11 @@ class MainApp extends Component {
       <>
         <Container fluid className="full-height">
           <Row className="full-height">
-            <Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
+            {/*<Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
               <Filters logbooks={this.props.logbooks} 
                 tags={this.props.tags} 
                 setSearchString={this.setSearchString}/>
-            </Col>
+            </Col>*/}
             <Col xs={12} sm={12} md={12} lg={4} style={{padding: "2px"}}>
               <SearchResultList 
                 logs={this.state.logRecords} 
