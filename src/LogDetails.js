@@ -29,6 +29,7 @@ import Button from 'react-bootstrap/Button';
 import LogEntryGroupView from './LogEntryGroupView';
 import LogEntrySingleView from './LogEntrySingleView';
 import {Link} from "react-router-dom";
+import Toolbar from './Toolbar';
 
 /**
  * A view show all details of a log entry. Images are renderd, if such are
@@ -67,10 +68,12 @@ class LogDetails extends Component{
     render(){
         return(
             <>
+            
             {/* Render only if currentLogRecord is defined, i.e. when user has selected from search result list,
             or if the route is of the type /logs/:id */}
             {this.props.currentLogEntry &&
                 <Container className="grid-item full-height">
+                    <Toolbar step={this.props.step}/>
                     {/* Site may choose to not support log entry groups */}
                     {customization.log_entry_groups_support && 
                         <Link to="/edit?isReply=true">

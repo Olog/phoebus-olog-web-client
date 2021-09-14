@@ -50,7 +50,7 @@ class MainApp extends Component {
     this.setState({logRecords: tree});
   }
 
-  setLogEntry = (logEntry) => {
+  setCurrentLogEntry = (logEntry) => {
     this.setState({selectedLogEntryId: logEntry.id, showGroup: false});
     this.props.setCurrentLogEntry(logEntry);
   }
@@ -83,7 +83,7 @@ class MainApp extends Component {
             <Col xs={12} sm={12} md={12} lg={4} style={{padding: "2px"}}>
               <SearchResultList 
                 logs={this.state.logRecords} 
-                setCurrentLogEntry={this.setLogEntry}
+                setCurrentLogEntry={this.setCurrentLogEntry}
                 searchString={this.state.searchString}
                 setSearchString={this.setSearchString}
                 selectedLogEntryId={this.state.selectedLogEntryId}
