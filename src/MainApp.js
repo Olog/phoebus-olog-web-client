@@ -91,6 +91,7 @@ class MainApp extends Component {
             </Col>
             <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>
               <LogDetails 
+                setCurrentLogEntry={this.props.setCurrentLogEntry}
                 currentLogEntry={this.props.currentLogEntry} />
             </Col>
           </Row>
