@@ -21,7 +21,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { Remarkable } from 'remarkable';
 import './css/olog.css';
-import imageProcessor from './preview-image-processor';
+import imageProcessor from './image-processor';
 
 class HtmlPreview extends Component{
 
@@ -45,7 +45,7 @@ class HtmlPreview extends Component{
 
     reset = (source) => {
         var allAttachedFiles = this.props.getAttachedFiles();
-        this.remarkable.use(imageProcessor, {attachedFiles: allAttachedFiles});
+        this.remarkable.use(imageProcessor, {attachedFiles: allAttachedFiles, setHtmlPreview: true});
         this.setState({commonmarkSrc: source})
     }
 
