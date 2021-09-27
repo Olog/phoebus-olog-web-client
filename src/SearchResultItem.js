@@ -19,7 +19,7 @@ import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 import { FaPaperclip } from "react-icons/fa";
 import './css/olog.css';
-import { formatShortTime } from './utils';
+import { formatFullDateTime } from './utils';
 
 class SearchResultItem extends Component{
 
@@ -34,16 +34,18 @@ class SearchResultItem extends Component{
 
     render(){
         return(
+            <div className={`${this.props.childItem ? "child-item" : ""}`}>
+            {this.props.log ? 
             <div className={`${this.props.selectedLogEntryId === this.props.log.id ? "list-item selected-log-entry" : "list-item"}`}>
-                <Table size="sm" onClick={() => this.props.setLogRecord(this.props.log)}>
+                <Table size="sm" onClick={() => this.props.setCurrentLogEntry(this.props.log)}>
                     <tbody>
                         <tr>
                             <td style={{fontSize: "18px", fontWeight: "200"}}>{this.props.log.owner}</td>
-                            <td style={{textAlign: "right"}}>{this.props.log.attachments.length !== 0 ? <FaPaperclip/> : ""}</td>
+                            <td style={{textAlign: "right"}}>{this.props.log.attachments && this.props.log.attachments.length  !== 0 ? <FaPaperclip/> : ""}</td>
                         </tr>
                         <tr>
                             <td style={{fontWeight: "600"}}>{this.props.log.title}</td><td style={{textAlign: "right"}}>
-                                {formatShortTime(this.props.log.createdDate)}</td>
+                                {formatFullDateTime(this.props.log.createdDate)}</td>
                         </tr>
                         <tr>
                             <td>{this.formatDescription(this.props.log.description)}</td>
@@ -51,6 +53,8 @@ class SearchResultItem extends Component{
                         </tr>
                     </tbody>
                 </Table>
+            </div>
+            : ""}
             </div>
         )
     }

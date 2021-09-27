@@ -17,13 +17,13 @@
  */
 
 import React, { Component } from 'react';
-import Filters from './Filters'
+//import Filters from './Filters'
 import LogDetails from './LogDetails'
 import SearchResultList from './SearchResultList';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {sortSearchResult} from './utils';
+import {sortLogsDateCreated, getLogEntryTree} from './utils';
 
 /**
  * Top level component holding the main UI area components.
@@ -33,36 +33,41 @@ class MainApp extends Component {
   state = {
       logRecords: [],
       searchString: "",
-      selectedLogEntryId: 0,
-      showGroup: false
+      selectedLogEntryId: 0
     };
 
   search = () => {
     fetch(`${process.env.REACT_APP_BASE_URL}/logs?` + this.state.searchString)
       .then(response => response.json())
       .then(data => {
-        let sortedResults = sortSearchResult(data);
-        this.setState({logRecords: sortedResults});
+        this.constructTree(data);
       });
   }
 
-  setLogRecord = (record) => {
-    this.setState({selectedLogEntryId: record.id, showGroup: false});
-    this.props.setLogRecord(record);
+  constructTree = (data) => {
+    let sorted = sortLogsDateCreated(data, true);
+    let tree = getLogEntryTree(sorted);
+    this.setState({logRecords: tree});
   }
 
-  setShowGroup = (show) => {
-    this.setState({showGroup: show});
+  setLogEntry = (logEntry) => {
+    this.setState({selectedLogEntryId: logEntry.id, showGroup: false});
+    this.props.setCurrentLogEntry(logEntry);
   }
 
   setSearchString = (searchString, performSearch) => {
+    /*
     if(searchString.startsWith('&')){
       searchString = searchString.substring(1, searchString.length);
     }
     if(searchString.endsWith('&')){
       searchString = searchString.substring(0, searchString.length - 1);
-    }
+    }*/
     this.setState({searchString: searchString});
+  }
+
+  newLogEntry = () => {
+    this.setState({currentLogRecord: {}});
   }
 
   render() {
@@ -70,15 +75,15 @@ class MainApp extends Component {
       <>
         <Container fluid className="full-height">
           <Row className="full-height">
-            <Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
+            {/*<Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
               <Filters logbooks={this.props.logbooks} 
                 tags={this.props.tags} 
                 setSearchString={this.setSearchString}/>
-            </Col>
+            </Col>*/}
             <Col xs={12} sm={12} md={12} lg={4} style={{padding: "2px"}}>
               <SearchResultList 
                 logs={this.state.logRecords} 
-                setLogRecord={this.setLogRecord}
+                setCurrentLogEntry={this.setLogEntry}
                 searchString={this.state.searchString}
                 setSearchString={this.setSearchString}
                 selectedLogEntryId={this.state.selectedLogEntryId}
@@ -86,9 +91,7 @@ class MainApp extends Component {
             </Col>
             <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>
               <LogDetails 
-                currentLogRecord={this.props.currentLogRecord} 
-                showGroup={this.state.showGroup}
-                setShowGroup= {this.setShowGroup}/>
+                currentLogEntry={this.props.currentLogEntry} />
             </Col>
           </Row>
         </Container>

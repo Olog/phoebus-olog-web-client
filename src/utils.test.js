@@ -15,7 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import {formatShortDate, getSearchString, sortSearchResult, removeImageMarkup, getLogEntryGroup, hasOnlyLogEntryGroupProperty} from './utils';
+import {formatShortDate, 
+    getSearchString, 
+    sortSearchResultByDay, 
+    removeImageMarkup, 
+    getLogEntryGroupId, 
+    sortLogsDateCreated,
+    getLogEntryTree} from './utils';
 import moment from 'moment';
 
 test('getSearchString owner', () => {
@@ -60,7 +66,7 @@ test('getSearchString time tange', () => {
     expect(getSearchString(searchCriteria)).toContain('start=1 hour&end=now');
 });
 
-test('sortSearchResult', () => {
+test('sortSearchResultByDay', () => {
     let searchResult = [];
 
     let date1 = moment().toDate();
@@ -75,14 +81,14 @@ test('sortSearchResult', () => {
     let date3 = moment().subtract(2, 'weeks').toDate();
     searchResult.push({createdDate: date3});
 
-    let result = sortSearchResult(searchResult);
+    let result = sortSearchResultByDay(searchResult);
     expect(result).toBeDefined();
     expect(result[formatShortDate(date1)].length).toBe(2);
     expect(result[formatShortDate(date2)].length).toBe(3);
     expect(result[formatShortDate(date3)].length).toBe(1);
 });
 
-test('sortSearchResultUnsortedResult', () => {
+test('sortSearchResultByDayUnsortedResult', () => {
     let searchResult = [];
 
     let date1 = moment().subtract(2, 'weeks').toDate();
@@ -97,7 +103,7 @@ test('sortSearchResultUnsortedResult', () => {
     let date3 = moment().subtract(2, 'days').toDate();
     searchResult.push({createdDate: date3});
 
-    let result = sortSearchResult(searchResult);
+    let result = sortSearchResultByDay(searchResult);
     expect(result).toBeDefined();
     let previousDate = null;
     // Check that result array is sorted on date (descending).
@@ -112,13 +118,13 @@ test('sortSearchResultUnsortedResult', () => {
     });
 });
 
-test('sortSearchNoResult', () => {
+test('sortSearchByDayNoResult', () => {
     let searchResult = [];
-    let result = sortSearchResult(searchResult);
+    let result = sortSearchResultByDay(searchResult);
     expect(result).toBeDefined();
     expect(result.length).toBe(0);
 
-    result = sortSearchResult(null);
+    result = sortSearchResultByDay(null);
     expect(result).toBeDefined();
     expect(result.length).toBe(0);
 });
@@ -159,71 +165,105 @@ test('getLogEntryGroup', () => {
             {"name" : "Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
         ]
     }
-    let result = getLogEntryGroup(logEntry.properties);
+    let result = getLogEntryGroupId(logEntry.properties);
     expect(result).toBe("myLogEntryGroupId");
 });
+
+test('getLogEntryGroupNoMatch', () => {
+    let logEntry = {
+        properties: [
+            {"name" : "not a log entry group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
+        ]
+    }
+    let result = getLogEntryGroupId(logEntry.properties);
+    expect(result).toBeNull();
+
+    logEntry = {
+        properties: [
+            {"name" : "Log Entry Group", "attributes" : [{"name" : "not an id", "value" : "myLogEntryGroupId"}]}
+        ]
+    }
+    result = getLogEntryGroupId(logEntry.properties);
+    expect(result).toBeNull();
+});
+
+test('sortLogsDateCreatedDescending', () => {
+    let searchResult = [];
+    let date1 = moment().toDate();
+    searchResult.push({id: '1', createdDate: date1});
+    let date2 = moment().subtract(2, 'days').toDate();
+    searchResult.push({id: '2', createdDate: date2});
+   
+    let result = sortLogsDateCreated(searchResult, true);
+    expect(result[0].id).toBe('1');
+    expect(result.length).toBe(2);
+});
+
+test('sortLogsDateCreatedAscending', () => {
+    let searchResult = [];
+    let date1 = moment().toDate();
+    searchResult.push({id: '1', createdDate: date1});
+    let date2 = moment().subtract(2, 'days').toDate();
+    searchResult.push({id: '2', createdDate: date2});
+   
+    let result = sortLogsDateCreated(searchResult, false);
+    expect(result[0].id).toBe('2');
+    expect(result.length).toBe(2);
+});
+
 
 test('getLogEntryGroupMissing', () => {
     let logEntry = {
         properties: [
-            {"name" : "Not Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
+            {name : "Not Log Entry Group", attributes : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
         ]
     }
-    let result = getLogEntryGroup(logEntry.properties);
+    let result = getLogEntryGroupId(logEntry.properties);
     expect(result).toBeNull();
 
     logEntry = {
         properties: [
-            {"name" : "Log Entry Group"}
+            {name : "Log Entry Group"}
         ]
     }
-    result = getLogEntryGroup(logEntry.properties);
+    result = getLogEntryGroupId(logEntry.properties);
     expect(result).toBeNull();
 
     logEntry = {
         properties: [
-            {"name" : "Log Entry Group", "attributes" : []}
+            {name : "Log Entry Group", attributes : []}
         ]
     }
-    result = getLogEntryGroup(logEntry.properties);
+    result = getLogEntryGroupId(logEntry.properties);
     expect(result).toBeNull();
 
     logEntry = {
         properties: [
-            {"name" : "Log Entry Group", "attributes" : [{"name" : "not id", "value" : "myLogEntryGroupId"}]}
+            {name : "Log Entry Group", attributes : [{name : "not id", value : "myLogEntryGroupId"}]}
         ]
     }
-    result = getLogEntryGroup(logEntry.properties);
+    result = getLogEntryGroupId(logEntry.properties);
     expect(result).toBeNull();
 });
 
-test('hasOnlyLogEntryGroupProperty', () => {
-    
-    let result = hasOnlyLogEntryGroupProperty(null);
-    expect(result).toBeFalsy(); 
-
-    result = hasOnlyLogEntryGroupProperty([]);
-    expect(result).toBeFalsy(); 
-
-    let properties = [
-        {"name" : "Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
+test('getLogEntryTree', () => {
+    let properties1 = [
+        {name : "Log Entry Group", attributes : [{name : "id", value : "myLogEntryGroupId"}]}
     ]
 
-    result = hasOnlyLogEntryGroupProperty(properties);
-    expect(result).toBeTruthy(); 
-
-    properties = [
-        {"name" : "Log Entry Group", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]},
-        {"name" : "foo", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
+    let properties2 = [
+        {name : "Log Entry Group", attributes : [{name : "id", value : "bad"}]}
     ]
 
-    result = hasOnlyLogEntryGroupProperty(properties);
-    expect(result).toBeFalsy();
+    let logEntry1 = {id: "1", properties: properties1};
+    let logEntry2 = {id: "2", properties: properties1};
+    let logEntry22 = {id: "22", properties: properties1};
+    let logEntry23 = {id: "23", properties: properties1};
+    let logEntry3 = {id: "3", properties: properties2};
+    let logEntry4 = {id: "4", properties: []};
 
-    properties = [
-        {"name" : "foo", "attributes" : [{"name" : "id", "value" : "myLogEntryGroupId"}]}
-    ]
+    let tree = getLogEntryTree([logEntry1, logEntry2, logEntry22, logEntry23, logEntry3, logEntry4]);
 
-    result = hasOnlyLogEntryGroupProperty(properties);
-    expect(result).toBeFalsy();
+    expect(tree.length).toBe(3);
+    expect(tree[0].getChildItems().length).toBe(3);
 });

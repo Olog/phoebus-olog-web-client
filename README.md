@@ -31,11 +31,12 @@ Available:
 * Search criteria: list of logbooks, list of tags, time span, title, description, level and author.
 * Custom dialog for embedding images (from file system) into log entry body.
 * Support for URLs to show single log entry, e.g. http://my.olog.server.com/logs/1234.
-* Support for grouping log entries through a "reply" button. See also Backlog.
+* Support for grouping log entries through a "reply" button. 
+* Basic tree view for search results.
+* Properties editor
 
 Backlog:
-* Tree view for search results, needed for grouped log entries (as in Phoebus client).
-* Properties editor.
+* Add expand/collapse of parent items in search results tree view.
 * Localization.
 * Adaptations for small screens.
 
