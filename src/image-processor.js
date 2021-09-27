@@ -113,19 +113,21 @@ export function matchSizeDefinition(text){
 export function processImageHtmlPreview(imageNode, textNode){
     // Find the image attachment object index
     var imgId = imageNode.src.split("attachment/");
+    var imgTag = null;
     if (imgId.length > 1) {
         imgId = imgId[1];
         // Find the image file object using the image Attachment index
         var fileObj = getFileObject(imgId);
+        var imgSrc = null;
         if (fileObj) {
-            var imgSrc = URL.createObjectURL(fileObj.file);
+            imgSrc = URL.createObjectURL(fileObj.file);
         }else{
-            var imgSrc = imageNode.src;
+            imgSrc = imageNode.src;
         }
-        var imgTag = '<img src="' + imgSrc + '" alt="' + imageNode.alt + '"';
+        imgTag = '<img src="' + imgSrc + '" alt="' + imageNode.alt + '"';
     }
     else{
-        var imgTag = '<img src="' + imageNode.src + '" alt="' + imageNode.alt + '"';
+        imgTag = '<img src="' + imageNode.src + '" alt="' + imageNode.alt + '"';
     }
     var split = matchSizeDefinition(textNode);
     if(split && split[2]){
@@ -193,11 +195,12 @@ const imageProcessor = (md, config) => {
                     }
                     if(value.type === 'image'){
                         if(i + 1 < token.children.length && token.children[i + 1].type === 'text'){
+                            var v = '';
                             if(setHtmlPreview){
-                                var v = processImageHtmlPreview(value, token.children[i + 1].content);
+                                v = processImageHtmlPreview(value, token.children[i + 1].content);
                             }
                             else{
-                                var v = processImage(value, token.children[i + 1].content);
+                                v = processImage(value, token.children[i + 1].content);
                             }
                             tmp = tmp.concat(v);
                             skip = true; // Next element must be skipped in loop.
