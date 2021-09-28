@@ -25,6 +25,11 @@ export default {
      * Values for the "level" drop-down.
      */
     levelValues: "Normal, Shift Start, Shift End, Fault, Beam Loss, Beam Configuration, Crew, Expert Intervention Call",
+
+    /**
+     * Default "level" for new log entries
+     */
+    defaultLevel: "Normal",
     /**
      * Base URL pointing to the Olog service. Required in order to support imbedded into the description (body) of a log entry.
      */

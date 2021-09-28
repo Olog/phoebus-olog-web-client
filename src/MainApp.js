@@ -38,10 +38,11 @@ class MainApp extends Component {
 
   search = () => {
     fetch(`${process.env.REACT_APP_BASE_URL}/logs?` + this.state.searchString)
-      .then(response => response.json())
+      .then(response => {if(response.ok){return response.json();} else {return []}})
       .then(data => {
         this.constructTree(data);
-      });
+      })
+      .catch(() => alert("Olog service off-line?"));
   }
 
   constructTree = (data) => {
@@ -66,10 +67,6 @@ class MainApp extends Component {
     this.setState({searchString: searchString});
   }
 
-  newLogEntry = () => {
-    this.setState({currentLogRecord: {}});
-  }
-
   render() {
     return (
       <>
@@ -91,7 +88,8 @@ class MainApp extends Component {
             </Col>
             <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>
               <LogDetails 
-                currentLogEntry={this.props.currentLogEntry} />
+                currentLogEntry={this.props.currentLogEntry}
+                setReplyAction={this.props.setReplyAction} />
             </Col>
           </Row>
         </Container>

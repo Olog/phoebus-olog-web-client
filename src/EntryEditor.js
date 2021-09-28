@@ -43,7 +43,7 @@ class EntryEditor extends Component{
     state = {
         selectedLogbooks: [],
         selectedTags: [],
-        level: null,
+        level: customization.defaultLevel,
         attachedFiles: [],
         validated: false,
         selectedProperties: [],
@@ -56,33 +56,42 @@ class EntryEditor extends Component{
     fileInputRef = React.createRef();
     titleRef = React.createRef();
     descriptionRef = React.createRef();
-    isReply = false;
-
-    componentDidMount = () => {
-        this.isReply = queryString.parse(this.props.location.search).isReply === 'true';
-        
+   
+    componentDidMount = () => { 
         // If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
         // Copy relevant fields to the state of this class, taking into account that a Log Entry Group
         // may or may not exist in the template.
-        if(this.isReply && this.props.currentLogEntry){
+        if(this.props.replyAction && this.props.currentLogEntry){
             let p = [];
             this.props.currentLogEntry.properties.forEach((property, i) => {
                 p.push(property);
             });
             if(!getLogEntryGroupId(this.props.currentLogEntry.properties)){
                 let property = newLogEntryGroup();
-                this.setState({logEntryGroupPoroperty: property});
                 p.push(property);
             }
             this.setState({
                 selectedLogbooks: this.props.currentLogEntry.logbooks,
                 selectedTags: this.props.currentLogEntry.tags,
-                level: this.props.currentLogEntry.level,
+                level: customization.defaultLevel,
                 selectedProperties: p
             });
             this.titleRef.current.value = this.props.currentLogEntry.title;
         }
+
         this.getAvailableProperties();
+    }
+
+    componentDidUpdate = (nextProps, nextState) => {
+        // The below will ensure that when user has selected Reply and then New Log Entry,
+        // the entry being edited does not contain any copied data.
+        if(nextProps.replyAction !== this.props.replyAction){
+            this.setState({selectedLogbooks: [], 
+                selectedTags: [], 
+                level: customization.defaultLevel, 
+                selectedProperties: []});
+            this.titleRef.current.value = "";
+        }
     }
 
     getAvailableProperties = () => {
@@ -209,12 +218,8 @@ class EntryEditor extends Component{
     }
 
     selectionsValid = () => {
-        console.log("Level: " + this.state.level + "*");
-        this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0,
-            levelSelectionValid: this.state.level !== null});
-        console.log(this.state.levelSelectionValid);
-        return this.state.logbookSelectionValid
-            && this.state.levelSelectionValid;
+        this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0});
+        return this.state.logbookSelectionValid;
     }
 
 
@@ -238,9 +243,6 @@ class EntryEditor extends Component{
         const form = event.currentTarget;        
         this.setState({validated: true});
 
-        console.log(form.checkValidity());
-        console.log(selectionsAreValid);
-
         if (form.checkValidity() === true && selectionsAreValid){
             const { history } = this.props;
             const logEntry = {
@@ -258,7 +260,7 @@ class EntryEditor extends Component{
                     }
                     // If the currentLogRecord is defined then user is creating a reply entry. So we need to update the currentLogRecord 
                     // with the Log Entry Group, but only if the currentLogRecord does not yet contain it.
-                    if(this.isReply && !getLogEntryGroupId(this.props.currentLogEntry.properties)){    
+                    if(this.props.replyAction  && !getLogEntryGroupId(this.props.currentLogEntry.properties)){    
                         this.updateCurrentLogEntry();
                     }
                     else{
@@ -278,7 +280,7 @@ class EntryEditor extends Component{
     }
 
     selectLevel = (level) => {
-        this.setState({level: level}, () => this.setState({levelSelectionValid: level !== ""}));
+        this.setState({level: level});
     }
 
     addProperty = (property) => {
@@ -389,7 +391,7 @@ class EntryEditor extends Component{
                                 </Dropdown.Menu>
                             </Dropdown>
                             &nbsp;{currentLogbookSelection}
-                            {!this.state.logbookSelectionValid && 
+                            {this.state.selectedLogbooks.length === 0 && 
                                 <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
                         </Form.Row>
                         <Form.Row className="grid-item">
@@ -418,7 +420,8 @@ class EntryEditor extends Component{
                                 </Dropdown.Menu>
                             </Dropdown>&nbsp;
                             {this.state.level && <div className="selection">{this.state.level}</div>}
-                            {this.state.levelSelectionValid ? null : <Form.Label className="form-error-label" column={true}>Select an Entry Type.</Form.Label>}
+                            {(this.state.level === "" || !this.state.level) && 
+                                <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Form.Control 

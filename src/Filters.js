@@ -180,6 +180,7 @@ class Filters extends Component{
             startDate: value
         }), () =>  {
             const searchCriteriaCopy = {...this.state.searchCriteria};
+            console.log(searchCriteriaCopy);
             this.props.setSearchString(getSearchString(searchCriteriaCopy), false);
         });
     }

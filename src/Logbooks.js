@@ -42,7 +42,7 @@ class Logbooks extends Component{
                     </FormCheck>
                 </li>
             )
-         })         
+        })       
         return (
              <ul className="olog-ul">{items}</ul>
         )
