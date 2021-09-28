@@ -37,6 +37,7 @@ import PropertySelector from './PropertySelector';
 import Selection from './Selection';
 import checkSession from './session-check';
 import { getLogEntryGroupId, newLogEntryGroup, removeImageMarkup } from './utils';
+import HtmlPreview from './HtmlPreview';
 
 class EntryEditor extends Component{
 
@@ -52,7 +53,8 @@ class EntryEditor extends Component{
         showAddProperty: false,
         showEmbedImageDialog: false,
         logEntryGroupProperty: null,
-        availableProperties: []
+        availableProperties: [],
+        showHtmlPreview: false
     }
 
     fileInputRef = React.createRef();
@@ -287,6 +289,18 @@ class EntryEditor extends Component{
         this.setState({showEmbedImageDialog: show});
     }
 
+    setShowHtmlPreview = (show) => {
+        this.setState({showHtmlPreview: show});
+    }
+
+    getCommonmarkSrc = () => {
+        return this.descriptionRef.current.value;
+    }
+
+    getAttachedFiles = () => {
+        return this.state.attachedFiles;
+    }
+
     removeProperty = (key) => {
         let properties = [...this.state.selectedProperties].filter(property => property.name !== key);
         this.setState({selectedProperties: properties});
@@ -448,6 +462,10 @@ class EntryEditor extends Component{
                                     onClick={() => this.setState({showEmbedImageDialog: true})}>
                                 Embed Image
                             </Button>
+                            <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                    onClick={() => this.setState({showHtmlPreview: true})}>
+                                HTML Preview
+                            </Button>
                         </Form.Row>
                         </Form>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
@@ -476,6 +494,11 @@ class EntryEditor extends Component{
                 <EmbedImageDialog showEmbedImageDialog={this.state.showEmbedImageDialog} 
                     setShowEmbedImageDialog={this.setShowEmbeddImageDialog}
                     addEmbeddedImage={this.addEmbeddedImage}/>
+
+                <HtmlPreview showHtmlPreview={this.state.showHtmlPreview}
+                    setShowHtmlPreview={this.setShowHtmlPreview}
+                    getCommonmarkSrc={this.getCommonmarkSrc}
+                    getAttachedFiles={this.getAttachedFiles}/>
             </>
         )
     }
