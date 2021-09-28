@@ -43,11 +43,9 @@ class EntryEditor extends Component{
     state = {
         selectedLogbooks: [],
         selectedTags: [],
-        level: "",
+        level: null,
         attachedFiles: [],
         validated: false,
-        logbookSelectionValid: true,
-        levelSelectionValid: true,
         selectedProperties: [],
         showAddProperty: false,
         showEmbedImageDialog: false,
@@ -211,8 +209,10 @@ class EntryEditor extends Component{
     }
 
     selectionsValid = () => {
+        console.log("Level: " + this.state.level + "*");
         this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0,
-            levelSelectionValid: this.state.level !== ""});
+            levelSelectionValid: this.state.level !== null});
+        console.log(this.state.levelSelectionValid);
         return this.state.logbookSelectionValid
             && this.state.levelSelectionValid;
     }
@@ -234,9 +234,12 @@ class EntryEditor extends Component{
             });
         }
 
-        const selectionsAreValid = this.selectionsValid();
+        const selectionsAreValid = this.state.selectedLogbooks.length > 0 && this.state.level !== null;
         const form = event.currentTarget;        
         this.setState({validated: true});
+
+        console.log(form.checkValidity());
+        console.log(selectionsAreValid);
 
         if (form.checkValidity() === true && selectionsAreValid){
             const { history } = this.props;
