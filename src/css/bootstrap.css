@@ -5503,11 +5503,14 @@ button.close {
   .modal-sm {
     max-width: 300px;
   }
+  .modal-lg {
+    max-width: 98%;
+  }
 }
 
 @media (min-width: 992px) {
   .modal-lg {
-    max-width: 800px;
+    max-width: 98%;
   }
 }
 
