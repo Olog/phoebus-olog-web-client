@@ -32,23 +32,26 @@ class MainApp extends Component {
 
   state = {
       logRecords: [],
-      searchString: "",
-      selectedLogEntryId: 0
+      searchString: "start=12 hours&end=now",
+      selectedLogEntryId: 0,
+      searchInProgress: false
     };
 
   search = () => {
+
+    this.setState({searchInProgress: true}, () => {
     fetch(`${process.env.REACT_APP_BASE_URL}/logs?` + this.state.searchString)
       .then(response => {if(response.ok){return response.json();} else {return []}})
       .then(data => {
         this.constructTree(data);
       })
-      .catch(() => alert("Olog service off-line?"));
+      .catch(() => {this.setState({searchInProgress: false}); alert("Olog service off-line?");})});
   }
 
   constructTree = (data) => {
     let sorted = sortLogsDateCreated(data, true);
     let tree = getLogEntryTree(sorted);
-    this.setState({logRecords: tree});
+    this.setState({logRecords: tree, searchInProgress: false});
   }
 
   setLogEntry = (logEntry) => {
@@ -84,7 +87,8 @@ class MainApp extends Component {
                 searchString={this.state.searchString}
                 setSearchString={this.setSearchString}
                 selectedLogEntryId={this.state.selectedLogEntryId}
-                search={this.search}/> 
+                search={this.search}
+                searchInProgress={this.state.searchInProgress}/> 
             </Col>
             <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>
               <LogDetails 

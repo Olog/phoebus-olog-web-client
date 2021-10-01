@@ -23,6 +23,7 @@ import Col from 'react-bootstrap/Col';
 import { FaRegQuestionCircle} from "react-icons/fa";
 import SearchStringHelpDialog from './SearchStringHelpDialog';
 import SearchResultGroup from './SearchResultGroup';
+import LoadingOverlay from 'react-loading-overlay';
 
 
 /**
@@ -88,11 +89,22 @@ class SearchResultList extends Component{
                         </Col>
                     </Form.Row>
                 </Form>
+                <LoadingOverlay
+                    active={this.props.searchInProgress}
+                    spinner
+                    styles={{
+                        overlay: (base) => ({
+                          ...base,
+                          background: 'rgba(97, 97, 97, 0.3)',
+                          '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
+                        })
+                      }}>
                 <div style={{overflowY: 'scroll', height: 'calc(100vh)'}}>
                     {this.props.logs.length > 0 ? 
                         tree :
                         "No search results"}
                 </div>
+                </LoadingOverlay>
 
                 <SearchStringHelpDialog
                     showSearchStringHelpDialogVisible={this.state.showSearchStringHelpDialogVisible}
