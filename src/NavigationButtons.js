@@ -26,7 +26,7 @@ class NavigationButtons extends Component {
 
     step = (amount) => {
         const {history} = this.props;
-        fetch(`${process.env.REACT_APP_BASE_URL}/logs/` + this.props.selectedLogEntryId + "/step/" + amount)
+        fetch(`${process.env.REACT_APP_BASE_URL}/logs?from=` + this.props.selectedLogEntryId + "&limit=1")
         .then(response => {
             if(response.ok){
                 return response.json();
@@ -36,13 +36,17 @@ class NavigationButtons extends Component {
             }
         })
         .then(data => {
-            if(data){
+            if(data.length > 0){
                 history.push('/logs/' + data.id);
                 this.props.setCurrentLogEntry(data);
             }
+            else{
+                alert("Unable to step further.")
+            }
         })
         .catch(err => {
-            alert("Unable to step further.")
+            console.log(err);
+            alert("Server encountered error.")
         });
     }
 
