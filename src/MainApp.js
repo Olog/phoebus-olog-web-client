@@ -50,7 +50,7 @@ class MainApp extends Component {
 
   constructTree = (data) => {
     let sorted = sortLogsDateCreated(data, true);
-    let tree = getLogEntryTree(sorted);
+    let tree = getLogEntryTree(sorted, true);
     this.setState({logRecords: tree, searchInProgress: false});
   }
 

@@ -24,7 +24,8 @@ import { FaRegQuestionCircle} from "react-icons/fa";
 import SearchStringHelpDialog from './SearchStringHelpDialog';
 import SearchResultGroup from './SearchResultGroup';
 import LoadingOverlay from 'react-loading-overlay';
-
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 /**
  * Pane showing search query input and a the list of log entries 
@@ -86,6 +87,16 @@ class SearchResultList extends Component{
                         </Col>
                         <Col style={{flexGrow: "0"}}>
                             <Button type="submit" size="sm">Search</Button>
+                        </Col>
+                        <Col style={{flexGrow: "0"}}>
+                            <ButtonGroup toggle >
+                                <ToggleButton 
+                                    size="sm"
+                                    type="checkbox"
+                                    checked={this.state.showGroup}
+                                    onChange={(e) => this.toggleShowMerged(e.currentTarget.checked)}> 
+                                </ToggleButton>
+                        </ButtonGroup>
                         </Col>
                     </Form.Row>
                 </Form>

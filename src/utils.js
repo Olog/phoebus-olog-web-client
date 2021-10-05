@@ -213,7 +213,7 @@ export function sortLogsDateCreated(logs, descending){
 }
 
 
-export function getLogEntryTree(logEntries){
+export function getLogEntryTree(logEntries, sortAscending){
     if(!logEntries || logEntries.length === 0){
         return [];
     }
@@ -223,18 +223,18 @@ export function getLogEntryTree(logEntries){
         var newGroupId = getLogEntryGroupId(logEntries[i].properties);
         if(!newGroupId){
             let treeItem = new TreeItem();
-            treeItem.addLogEntry(logEntries[i]);
+            treeItem.addLogEntry(logEntries[i], sortAscending);
             tree.push(treeItem);
         } 
         else{
             var potentialTreeItem = findLogEntryGroup(tree, newGroupId);
             if(!potentialTreeItem){
                 let treeItem = new TreeItem();
-                treeItem.addLogEntry(logEntries[i]);
+                treeItem.addLogEntry(logEntries[i], sortAscending);
                 tree.push(treeItem);
             }
             else{
-                potentialTreeItem.addLogEntry(logEntries[i]);
+                potentialTreeItem.addLogEntry(logEntries[i], sortAscending);
             }
         }
     }
