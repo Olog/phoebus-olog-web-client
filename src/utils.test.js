@@ -262,7 +262,7 @@ test('getLogEntryTree', () => {
     let logEntry3 = {id: "3", properties: properties2};
     let logEntry4 = {id: "4", properties: []};
 
-    let tree = getLogEntryTree([logEntry1, logEntry2, logEntry22, logEntry23, logEntry3, logEntry4]);
+    let tree = getLogEntryTree([logEntry1, logEntry2, logEntry22, logEntry23, logEntry3, logEntry4], false);
 
     expect(tree.length).toBe(3);
     expect(tree[0].getChildItems().length).toBe(3);

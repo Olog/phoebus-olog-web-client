@@ -24,8 +24,7 @@ import { FaRegQuestionCircle} from "react-icons/fa";
 import SearchStringHelpDialog from './SearchStringHelpDialog';
 import SearchResultGroup from './SearchResultGroup';
 import LoadingOverlay from 'react-loading-overlay';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { FaArrowUp, FaArrowDown} from "react-icons/fa";
 
 /**
  * Pane showing search query input and a the list of log entries 
@@ -56,7 +55,7 @@ class SearchResultList extends Component{
 
     render(){
 
-        var tree = this.props.logs.map((element, index) => {
+        var tree = this.props.logEntryTree.map((element, index) => {
             return <SearchResultGroup 
                             key={index}
                             logEntries={element}
@@ -89,14 +88,11 @@ class SearchResultList extends Component{
                             <Button type="submit" size="sm">Search</Button>
                         </Col>
                         <Col style={{flexGrow: "0"}}>
-                            <ButtonGroup toggle >
-                                <ToggleButton 
-                                    size="sm"
-                                    type="checkbox"
-                                    checked={this.state.showGroup}
-                                    onChange={(e) => this.toggleShowMerged(e.currentTarget.checked)}> 
-                                </ToggleButton>
-                        </ButtonGroup>
+                            <Button 
+                                size="sm"
+                                onClick={(e) => this.props.reverseSort()}>
+                                    {this.props.sortAscending ? <FaArrowUp/> : <FaArrowDown/>}
+                            </Button>
                         </Col>
                     </Form.Row>
                 </Form>
@@ -111,7 +107,7 @@ class SearchResultList extends Component{
                         })
                       }}>
                 <div style={{overflowY: 'scroll', height: 'calc(100vh)'}}>
-                    {this.props.logs.length > 0 ? 
+                    {this.props.logEntryTree.length > 0 ? 
                         tree :
                         "No search results"}
                 </div>

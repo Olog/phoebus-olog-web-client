@@ -28,7 +28,6 @@ class SearchResultGroup extends Component{
 
 
     render(){
-        //let copy = [...this.props.logEntries].slice(0, this.props.logEntries.length - 1).sort((a, b) => a.createdDate - b.createdDate);
         var childItems = this.props.logEntries.getChildItems().map((row, index) => {
                 return (
                     <SearchResultItem 
