@@ -17,13 +17,13 @@
  */
 
 import React, { Component } from 'react';
-//import Filters from './Filters'
+import Filters from './Filters'
 import LogDetails from './LogDetails'
 import SearchResultList from './SearchResultList';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {sortLogsDateCreated, getLogEntryTree} from './utils';
+import {getLogEntryTree} from './utils';
 
 /**
  * Top level component holding the main UI area components.
@@ -31,23 +31,30 @@ import {sortLogsDateCreated, getLogEntryTree} from './utils';
 class MainApp extends Component {
 
   state = {
-      logRecords: [],
-      searchString: "",
-      selectedLogEntryId: 0
+      logEntryTree: [],
+      searchString: "start=12 hours&end=now",
+      selectedLogEntryId: 0,
+      searchResult: [],
+      searchInProgress: false,
+      sortAscending: false
     };
 
   search = () => {
+
+    this.setState({searchInProgress: true}, () => {
     fetch(`${process.env.REACT_APP_BASE_URL}/logs?` + this.state.searchString)
-      .then(response => response.json())
+      .then(response => {if(response.ok){return response.json();} else {return []}})
       .then(data => {
-        this.constructTree(data);
-      });
+        this.setState({searchResult: data}, () => this.constructTree());
+      })
+      .catch(() => {this.setState({searchInProgress: false}); alert("Olog service off-line?");})});
   }
 
-  constructTree = (data) => {
-    let sorted = sortLogsDateCreated(data, true);
-    let tree = getLogEntryTree(sorted);
-    this.setState({logRecords: tree});
+  constructTree = () => {
+    console.log(this.state.sortAscending);
+    let tree = getLogEntryTree(this.state.searchResult, this.state.sortAscending);
+    this.setState({logEntryTree: tree, searchInProgress: false});
+    console.log(tree);
   }
 
   setCurrentLogEntry = (logEntry) => {
@@ -56,18 +63,11 @@ class MainApp extends Component {
   }
 
   setSearchString = (searchString, performSearch) => {
-    /*
-    if(searchString.startsWith('&')){
-      searchString = searchString.substring(1, searchString.length);
-    }
-    if(searchString.endsWith('&')){
-      searchString = searchString.substring(0, searchString.length - 1);
-    }*/
     this.setState({searchString: searchString});
   }
 
-  newLogEntry = () => {
-    this.setState({currentLogRecord: {}});
+  reverseSort = () => {
+    this.setState(prevState => ({sortAscending: !prevState.sortAscending}), () => this.constructTree());
   }
 
   render() {
@@ -75,24 +75,28 @@ class MainApp extends Component {
       <>
         <Container fluid className="full-height">
           <Row className="full-height">
-            {/*<Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
+            {<Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
               <Filters logbooks={this.props.logbooks} 
                 tags={this.props.tags} 
                 setSearchString={this.setSearchString}/>
-            </Col>*/}
+            </Col>}
             <Col xs={12} sm={12} md={12} lg={4} style={{padding: "2px"}}>
               <SearchResultList 
-                logs={this.state.logRecords} 
-                setCurrentLogEntry={this.setCurrentLogEntry}
+                logEntryTree={this.state.logEntryTree} 
+                setCurrentLogEntry={this.setLogEntry}
                 searchString={this.state.searchString}
                 setSearchString={this.setSearchString}
                 selectedLogEntryId={this.state.selectedLogEntryId}
-                search={this.search}/> 
+                search={this.search}
+                searchInProgress={this.state.searchInProgress}
+                sortAscending={this.state.sortAscending}
+                reverseSort={this.reverseSort}/> 
             </Col>
             <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>
               <LogDetails 
                 setCurrentLogEntry={this.props.setCurrentLogEntry}
-                currentLogEntry={this.props.currentLogEntry} />
+                currentLogEntry={this.props.currentLogEntry}
+                setReplyAction={this.props.setReplyAction} />
             </Col>
           </Row>
         </Container>

@@ -212,8 +212,30 @@ export function sortLogsDateCreated(logs, descending){
     }
 }
 
+/**
+ * Creates a sorted array of log entries from a log entry tree.
+ * @param {*} tree 
+ */
+export function flattenTree(tree){
+    let logEntries = [];
 
-export function getLogEntryTree(logEntries){
+
+    return logEntries;
+}
+
+/**
+ * Reconstructs the tree of log entry items using ascending
+ * or descending sort order (created date).
+ * @param {*} tree 
+ * @param {*} sortAscending true to sort on ascending created date, otherwise
+ * sort descending.
+ */
+export function sortLogEntryTree(tree, sortAscending){
+
+}
+
+
+export function getLogEntryTree(logEntries, sortAscending){
     if(!logEntries || logEntries.length === 0){
         return [];
     }
@@ -223,24 +245,30 @@ export function getLogEntryTree(logEntries){
         var newGroupId = getLogEntryGroupId(logEntries[i].properties);
         if(!newGroupId){
             let treeItem = new TreeItem();
-            treeItem.addLogEntry(logEntries[i]);
+            treeItem.addLogEntry(logEntries[i], sortAscending);
             tree.push(treeItem);
         } 
         else{
             var potentialTreeItem = findLogEntryGroup(tree, newGroupId);
             if(!potentialTreeItem){
                 let treeItem = new TreeItem();
-                treeItem.addLogEntry(logEntries[i]);
+                treeItem.addLogEntry(logEntries[i], sortAscending);
                 tree.push(treeItem);
             }
             else{
-                potentialTreeItem.addLogEntry(logEntries[i]);
+                potentialTreeItem.addLogEntry(logEntries[i], sortAscending);
             }
         }
     }
 
     // Sort array of tree items before returning it.
-    return tree.sort((a, b) => b.getParent().createdDate - a.getParent().createdDate);
+    if(sortAscending){
+        return tree.sort((a, b) => a.getParent().createdDate - b.getParent().createdDate);
+    }
+    else{
+        return tree.sort((a, b) => b.getParent().createdDate - a.getParent().createdDate);
+    }
+    
 }
 
 export function findLogEntryGroup(tree, logEntryGroupId){

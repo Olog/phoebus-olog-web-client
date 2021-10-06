@@ -26,7 +26,6 @@ import {getSearchString} from './utils';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import DateTimePicker from 'react-datetime-picker';
-import moment from 'moment';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -50,7 +49,9 @@ class Filters extends Component{
             owner: "",
             startDate: "12 hours",
             endDate: "now"
-          }
+          },
+        startDate: new Date(), // Used by calendar component
+        endDate: new Date()    // Used by calendar component
     };
 
     componentDidMount = () => {
@@ -166,18 +167,28 @@ class Filters extends Component{
             });
     }
 
+    dateToString = (value) => {
+        return value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + 
+               ("0" + value.getDate()).slice(-2) + ' ' + ('0' + value.getHours()).slice(-2) + 
+               ':' + ('0' + value.getMinutes()).slice(-2) + ':' + 
+               ('0' + value.getSeconds()).slice(-2);
+    }
+
     setStartDate = (value) => {
         this.setState(previous => ({
-            searchCriteria: {...this.state.searchCriteria, startDate: value}
+            searchCriteria: {...this.state.searchCriteria, startDate: this.dateToString(value)},
+            startDate: value
         }), () =>  {
             const searchCriteriaCopy = {...this.state.searchCriteria};
+            console.log(searchCriteriaCopy);
             this.props.setSearchString(getSearchString(searchCriteriaCopy), false);
         });
     }
 
     setEndDate = (value) => {
         this.setState(previous => ({
-            searchCriteria: {...this.state.searchCriteria, endDate: value}
+            searchCriteria: {...this.state.searchCriteria, endDate: this.dateToString(value)},
+            endDate: value
         }), () =>  {
             const searchCriteriaCopy = {...this.state.searchCriteria};
             this.props.setSearchString(getSearchString(searchCriteriaCopy), false);
@@ -248,7 +259,7 @@ class Filters extends Component{
                                     <td>
                                     <DateTimePicker
                                         onChange={(value) => this.setStartDate(value)}
-                                        value={moment().toDate()}
+                                        value={this.state.startDate}
                                         format='y-MM-dd HH:mm'
                                         clearIcon=""
                                         disableClock></DateTimePicker>
@@ -259,7 +270,7 @@ class Filters extends Component{
                                     <td>
                                     <DateTimePicker
                                         onChange={(value) => this.setEndDate(value)}
-                                        value={moment().toDate()}
+                                        value={this.state.endDate}
                                         format='y-MM-dd HH:mm'
                                         clearIcon=""
                                         disableClock></DateTimePicker>

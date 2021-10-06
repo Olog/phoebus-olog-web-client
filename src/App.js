@@ -36,7 +36,8 @@ class App extends Component{
         userData: {userName: "", roles: []},
         logbooks: [],
         tags: [],
-        currentLogEntry: null // This is the log entry selected by the user and shown in the detailed log view
+        currentLogEntry: null, // This is the log entry selected by the user and shown in the detailed log view.
+        replyAction: false
     }
 
     componentDidMount() {
@@ -47,14 +48,14 @@ class App extends Component{
 
     refreshLogbooks = () => {
         fetch(`${process.env.REACT_APP_BASE_URL}/logbooks`)
-        .then(response => response.json())
+        .then(response => {if(response.ok){return response.json();} else throw Error("Unable to fetch logbooks");})
         .then(data => this.setState({logbooks: data}))
         .catch(() => this.setState({logbooks: []}));
     }
     
     refreshTags = () => {
         fetch(`${process.env.REACT_APP_BASE_URL}/tags`)
-        .then(response => response.json())
+        .then(response => {if(response.ok){return response.json();} else throw Error("Unable to fetch tags");})
         .then(data => {
           if(data){
               this.setState({tags: data});
@@ -71,6 +72,10 @@ class App extends Component{
         this.setState({currentLogEntry: logEntry});
     }
 
+    setReplyAction = (reply) => {
+        this.setState({replyAction: reply});
+    }
+
     render(){
         return(
             <>
@@ -80,13 +85,16 @@ class App extends Component{
                             refreshTags={this.refreshTags}
                             setShowLogin={this.setShowLogin}
                             setShowLogout={this.setShowLogout}
-                            setUserData={this.setUserData}/>
+                            setUserData={this.setUserData}
+                            setReplyAction={this.setReplyAction}/>
                     <Switch>
                         <Route exact path="/">
                             <MainApp logbooks={this.state.logbooks}
                                 tags={this.state.tags}
                                 setCurrentLogEntry={this.setCurrentLogEntry}
-                                currentLogEntry={this.state.currentLogEntry}/>
+                                currentLogEntry={this.state.currentLogEntry}
+                                setReplyAction={this.setReplyAction}
+                                />
                         </Route>
                         <Route path="/edit">
                             <EntryEditor 
@@ -95,6 +103,7 @@ class App extends Component{
                                 setShowLogin={this.setShowLogin}
                                 userData={this.state.userData}
                                 currentLogEntry={this.state.currentLogEntry}
+                                replyAction={this.state.replyAction}
                                 />
                         </Route>
                         <Route path="/logs/:id" render={(props) => <LogDetailsDetached {...props} 

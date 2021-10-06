@@ -50,7 +50,7 @@ class TreeItem {
      * @param {*} logEntry 
      * @returns 
      */
-    addLogEntry(logEntry){
+    addLogEntry(logEntry, sortAscending){
         let newGroupId = getLogEntryGroupId(logEntry.properties);
         let existingGroupId = this.getLogGroupId();
         // A group id is defined, so new entry must define same group id.
@@ -74,7 +74,12 @@ class TreeItem {
             }
         }
         this.logEntries.push(logEntry);
-        this.logEntries.sort((a, b) => a.createdDate - b.createdDate);
+        if(sortAscending){
+            this.logEntries.sort((a, b) => a.createdDate - b.createdDate);
+        }
+        else{
+            this.logEntries.sort((a, b) => b.createdDate - a.createdDate);
+        }
     }
 
     getParent(){
@@ -95,25 +100,6 @@ class TreeItem {
         }
         return subArray;
     }
-
-    /*
-    getLogEntryGroupId(properties){
-        if(!properties || properties.length === 0){
-            return null;
-        }
-        for(let i = 0; i < properties.length; i++){
-            if(properties[i].name === 'Log Entry Group'){
-                if(!properties[i].attributes || properties[i].attributes.length === 0){
-                    return null;
-                }
-                for(let j = 0; j < properties[i].attributes.length; j++){
-                    if(properties[i].attributes[j].name === 'id'){
-                        return properties[i].attributes[j].value;
-                    }
-                }
-            }
-        };
-        */
 }
 
 export default TreeItem;

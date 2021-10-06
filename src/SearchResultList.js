@@ -23,7 +23,8 @@ import Col from 'react-bootstrap/Col';
 import { FaRegQuestionCircle} from "react-icons/fa";
 import SearchStringHelpDialog from './SearchStringHelpDialog';
 import SearchResultGroup from './SearchResultGroup';
-
+import LoadingOverlay from 'react-loading-overlay';
+import { FaArrowUp, FaArrowDown} from "react-icons/fa";
 
 /**
  * Pane showing search query input and a the list of log entries 
@@ -54,7 +55,7 @@ class SearchResultList extends Component{
 
     render(){
 
-        var tree = this.props.logs.map((element, index) => {
+        var tree = this.props.logEntryTree.map((element, index) => {
             return <SearchResultGroup 
                             key={index}
                             logEntries={element}
@@ -86,13 +87,31 @@ class SearchResultList extends Component{
                         <Col style={{flexGrow: "0"}}>
                             <Button type="submit" size="sm">Search</Button>
                         </Col>
+                        <Col style={{flexGrow: "0"}}>
+                            <Button 
+                                size="sm"
+                                onClick={(e) => this.props.reverseSort()}>
+                                    {this.props.sortAscending ? <FaArrowUp/> : <FaArrowDown/>}
+                            </Button>
+                        </Col>
                     </Form.Row>
                 </Form>
+                <LoadingOverlay
+                    active={this.props.searchInProgress}
+                    spinner
+                    styles={{
+                        overlay: (base) => ({
+                          ...base,
+                          background: 'rgba(97, 97, 97, 0.3)',
+                          '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
+                        })
+                      }}>
                 <div style={{overflowY: 'scroll', height: 'calc(100vh)'}}>
-                    {this.props.logs.length > 0 ? 
+                    {this.props.logEntryTree.length > 0 ? 
                         tree :
                         "No search results"}
                 </div>
+                </LoadingOverlay>
 
                 <SearchStringHelpDialog
                     showSearchStringHelpDialogVisible={this.state.showSearchStringHelpDialogVisible}

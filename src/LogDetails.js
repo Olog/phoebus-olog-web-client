@@ -79,8 +79,8 @@ class LogDetails extends Component{
                         setCurrentLogEntry={this.props.setCurrentLogEntry}/>}
                     {/* Site may choose to not support log entry groups */}
                     {customization.log_entry_groups_support && 
-                        <Link to="/edit?isReply=true">
-                            <Button size="sm" style={{marginTop: "10px", marginRight: "5px"}} onClick={this.reply}>Reply</Button>
+                        <Link to="/edit">
+                            <Button size="sm" style={{marginTop: "10px", marginRight: "5px"}} onClick={() => this.props.setReplyAction(true)}>Reply</Button>
                         </Link>
                     }
                     <span style={{float: "right"}}>

@@ -17,13 +17,13 @@
  */
 
 /**
- * The prupose of this Remarkable plugin is to support sizing of images as
- * defined by the commonmark-java image attributes extension, 
+ * The prupose of this Remarkable plugin is to support sizing of images
+ * which are locally uploaded image objects,
+ * as defined by the commonmark-java image attributes extension,
  * see https://github.com/commonmark/commonmark-java#image-attributes.
  * 
  * Both absolute and relative image URLs are supported.
  */ 
-
 /**
  * This is a string prepended to the src attribute when creating the img tag.
  * It can be used to account for a deployment scenario where the 
@@ -34,6 +34,32 @@
  */
 var urlPrefix = '';
 
+/**
+ * This is a boolean flag that set to be set if you are prcoessing images for
+ * HTML preview. You can set this using:
+ *
+ * remarkable.use(imageProcessor, {SetHtmlPreview: true});
+ */
+var setHtmlPreview = false;
+
+/**
+ * This is an array containing all the attached files structure.
+ * Similar to EntryEditor.state.attachedFiles. To set it in the parent file:
+ * remarkable.use(imageProcessor, {attachedFiles: this.state.attachedFiles});
+ */
+var attachedFiles = [];
+
+/**
+ * Returns a Attachment object based on given id.
+ */
+export function getFileObject(id){
+    for (var i = 0; i < attachedFiles.length; i++){
+        if (attachedFiles[i].id === id) {
+            return attachedFiles[i];
+        }
+    }
+        return null;
+}
 /**
  * Matches a string against the commonmark image markup specification, i.e.
  * ![alt-text](image url)
@@ -77,10 +103,48 @@ export function matchSizeDefinition(text){
 }
 
 /**
+ * Processes an image node and optionally for HTML preview - if the text node contains a size
+ * specification - adds image size to the html. If the text node contains additional
+ * content, it is returned as a seperate text node in the output array.
+ * @param {*} imageNode The image markup node, e.g. ![alt-text](http://foo.bar/image.jpg)
+ * @param {*} textNode Contains an image specification, e.g. {width=100 height=100}, but may
+ * also contain additional text.
+ */
+export function processImageHtmlPreview(imageNode, textNode){
+    // Find the image attachment object index
+    var imgId = imageNode.src.split("attachment/");
+    var imgTag = null;
+    if (imgId.length > 1) {
+        imgId = imgId[1];
+        // Find the image file object using the image Attachment index
+        var fileObj = getFileObject(imgId);
+        var imgSrc = null;
+        if (fileObj) {
+            imgSrc = URL.createObjectURL(fileObj.file);
+        }else{
+            imgSrc = imageNode.src;
+        }
+        imgTag = '<img src="' + imgSrc + '" alt="' + imageNode.alt + '"';
+    }
+    else{
+        imgTag = '<img src="' + imageNode.src + '" alt="' + imageNode.alt + '"';
+    }
+    var split = matchSizeDefinition(textNode);
+    if(split && split[2]){
+        let size = split[2].toLowerCase();
+        imgTag += ' ' + size;
+    }
+    imgTag += '>';
+    var img = {type: 'htmltag', content: imgTag};
+    var leftOver = {type: 'text', content: split ? split[3] : ""};
+    return [img, leftOver];
+}
+
+/**
  * Processes an image node and optionally - if the text node contains a size
  * specification - adds image size to the html. If the text node contains additional
  * content, it is returned as a seperate text node in the output array.
- * @param {*} imageNode The image markup node, e.g. ![alt-text](http://foo.bar/image.jpg) 
+ * @param {*} imageNode The image markup node, e.g. ![alt-text](http://foo.bar/image.jpg)
  * @param {*} textNode Contains an image specification, e.g. {width=100 height=100}, but may
  * also contain additional text.
  */
@@ -98,8 +162,16 @@ export function processImage(imageNode, textNode){
 }
 
 const imageProcessor = (md, config) => {
-    if(config && config.urlPrefix){
-        urlPrefix = config.urlPrefix;
+    if(config){
+        if(config.urlPrefix){
+            urlPrefix = config.urlPrefix;
+        }
+        if(config.attachedFiles){
+            attachedFiles = config.attachedFiles;
+        }
+        if(config.setHtmlPreview){
+            setHtmlPreview = config.setHtmlPreview;
+        }
     }
     md.core.ruler.push('sizeprocessor', function(state) {
         // state.tokens is an array of all tokens in the commonmark content.
@@ -123,7 +195,13 @@ const imageProcessor = (md, config) => {
                     }
                     if(value.type === 'image'){
                         if(i + 1 < token.children.length && token.children[i + 1].type === 'text'){
-                            var v = processImage(value, token.children[i + 1].content);
+                            var v = '';
+                            if(setHtmlPreview){
+                                v = processImageHtmlPreview(value, token.children[i + 1].content);
+                            }
+                            else{
+                                v = processImage(value, token.children[i + 1].content);
+                            }
                             tmp = tmp.concat(v);
                             skip = true; // Next element must be skipped in loop.
                         }
