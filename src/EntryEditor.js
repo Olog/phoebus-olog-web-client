@@ -233,6 +233,7 @@ class EntryEditor extends Component{
         }
         else{
             promise.then(data => {
+                console.log(data);
                 if(!data){
                     this.props.setShowLogin(true);
                     return;

@@ -51,10 +51,8 @@ class MainApp extends Component {
   }
 
   constructTree = () => {
-    console.log(this.state.sortAscending);
     let tree = getLogEntryTree(this.state.searchResult, this.state.sortAscending);
     this.setState({logEntryTree: tree, searchInProgress: false});
-    console.log(tree);
   }
 
   setLogEntry = (logEntry) => {

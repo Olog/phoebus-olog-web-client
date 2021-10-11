@@ -37,7 +37,9 @@ class App extends Component{
         logbooks: [],
         tags: [],
         currentLogEntry: null, // This is the log entry selected by the user and shown in the detailed log view.
-        replyAction: false
+        replyAction: false,
+        showLogin: false,
+        showLogout: false
     }
 
     componentDidMount() {
@@ -76,6 +78,14 @@ class App extends Component{
         this.setState({replyAction: reply});
     }
 
+    setShowLogin = (show) => {
+        this.setState({showLogin: show});
+    } 
+    
+    setShowLogout = (show) => {
+        this.setState({showLogout: show});
+    }   
+
     render(){
         return(
             <>
@@ -86,7 +96,9 @@ class App extends Component{
                             setShowLogin={this.setShowLogin}
                             setShowLogout={this.setShowLogout}
                             setUserData={this.setUserData}
-                            setReplyAction={this.setReplyAction}/>
+                            setReplyAction={this.setReplyAction}
+                            showLogin={this.state.showLogin}
+                            showLogout={this.state.showLogout}/>
                     <Switch>
                         <Route exact path="/">
                             <MainApp logbooks={this.state.logbooks}
@@ -104,6 +116,8 @@ class App extends Component{
                                 userData={this.state.userData}
                                 currentLogEntry={this.state.currentLogEntry}
                                 replyAction={this.state.replyAction}
+                                showLogin={this.state.showLogin}
+                                showLogout={this.state.showLogout}
                                 />
                         </Route>
                         <Route path="/logs/:id" render={(props) => <LogDetailsDetached {...props} 

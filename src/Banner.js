@@ -40,8 +40,6 @@ import Row from 'react-bootstrap/Row';
 class Banner extends Component {
 
   state = {
-    showLogin: false,
-    showLogout: false,
     showAddLogbook: false,
     showAddTag: false
   }
@@ -90,20 +88,12 @@ class Banner extends Component {
     this.setState({showAddTag: show});
   }
 
-  setShowLogin = (show) => {
-    this.setState({showLogin: show});
-  } 
-
-  setShowLogout = (show) => {
-    this.setState({showLogout: show});
-  }   
-
   handleClick = () => {
     if(!this.props.userData.userName){
-        this.setShowLogin(true);
+        this.props.setShowLogin(true);
     }
     else{
-        this.setShowLogout(true);
+        this.props.setShowLogout(true);
     }
   }
 
@@ -133,12 +123,12 @@ class Banner extends Component {
         </Navbar>
 
         <LoginDialog setUserData={this.props.setUserData} 
-                setShowLogin={this.setShowLogin}
-                loginDialogVisible={this.state.showLogin}/>
+                setShowLogin={this.props.setShowLogin}
+                loginDialogVisible={this.props.showLogin}/>
 
         <LogoutDialog setUserData={this.props.setUserData} 
-                        setShowLogout={this.setShowLogout} 
-                        logoutDialogVisible={this.state.showLogout}/>
+                        setShowLogout={this.props.setShowLogout} 
+                        logoutDialogVisible={this.props.showLogout}/>
 
         <AddLogbookDialog addLogbookDialogVisible={this.state.showAddLogbook} 
                         setShowAddLogbook={this.setShowAddLogbook} 

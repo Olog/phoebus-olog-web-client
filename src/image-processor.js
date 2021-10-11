@@ -188,7 +188,6 @@ const imageProcessor = (md, config) => {
                 // and if it contains a size definition.
                 var skip = false; // Keep track of whether to skip next element when iterating.
                 for (const [i, value] of token.children.entries()) {
-                    //console.log(tmp);
                     if(skip){
                         skip = false;
                         continue;
