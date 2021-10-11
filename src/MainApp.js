@@ -75,12 +75,12 @@ class MainApp extends Component {
       <>
         <Container fluid className="full-height">
           <Row className="full-height">
-            {<Col xs={12} sm={12} md={12} lg={2} style={{padding: "2px"}}>
+            {<Col xs={{span: 12, order: 3}} sm={{span: 12, order: 3}} md={{span: 12, order: 3}} lg={{span: 2, order: 1}} style={{padding: "2px"}}>
               <Filters logbooks={this.props.logbooks} 
                 tags={this.props.tags} 
                 setSearchString={this.setSearchString}/>
             </Col>}
-            <Col xs={12} sm={12} md={12} lg={4} style={{padding: "2px"}}>
+            <Col xs={{span: 12, order: 2}} sm={{span: 12, order: 2}} md={{span: 12, order: 2}} lg={{span: 4, order: 2}} style={{padding: "2px"}}>
               <SearchResultList 
                 logEntryTree={this.state.logEntryTree} 
                 setCurrentLogEntry={this.setLogEntry}
@@ -92,7 +92,7 @@ class MainApp extends Component {
                 sortAscending={this.state.sortAscending}
                 reverseSort={this.reverseSort}/> 
             </Col>
-            <Col  xs={12} sm={12} md={12} lg={6} style={{padding: "2px"}}>
+            <Col  xs={{span: 12, order: 1}} sm={{span: 12, order: 1}} md={{span: 12, order: 1}} lg={{span: 6, order: 3}} style={{padding: "2px"}}>
               <LogDetails 
                 currentLogEntry={this.props.currentLogEntry}
                 setReplyAction={this.props.setReplyAction} />
