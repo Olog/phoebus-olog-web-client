@@ -55,7 +55,7 @@ class MainApp extends Component {
     this.setState({logEntryTree: tree, searchInProgress: false});
   }
 
-  setLogEntry = (logEntry) => {
+  setCurrentLogEntry = (logEntry) => {
     this.setState({selectedLogEntryId: logEntry.id, showGroup: false});
     this.props.setCurrentLogEntry(logEntry);
   }
