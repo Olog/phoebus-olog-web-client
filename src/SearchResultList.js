@@ -20,21 +20,17 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import { FaRegQuestionCircle} from "react-icons/fa";
-import SearchStringHelpDialog from './SearchStringHelpDialog';
 import SearchResultGroup from './SearchResultGroup';
 import LoadingOverlay from 'react-loading-overlay';
 import { FaArrowUp, FaArrowDown} from "react-icons/fa";
+import Popover from 'react-bootstrap/Popover';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 /**
  * Pane showing search query input and a the list of log entries 
  * matching the query. 
  */
 class SearchResultList extends Component{
-
-    state = {
-        showSearchStringHelpDialogVisible: false,
-    }
 
     componentDidMount = () => {
         this.props.search();
@@ -49,9 +45,20 @@ class SearchResultList extends Component{
         this.props.setSearchString(event.target.value, false);
     }
 
-    setShowSearchStringHelpDialog = (show) => {
-        this.setState({showSearchStringHelpDialogVisible: show});
-    }
+    popover = (
+        <Popover id="1">
+          <Popover.Title as="h4">How to specify search string</Popover.Title>
+          <Popover.Content>To define a time span, specify "start" and "end" times. These can be specified in
+                    two different manners:
+                    <ol>
+                        <li>Relative date/time using expressions like <b>12 hours</b>,
+                            <b>1 day</b>, <b>3 weeks</b> or <b>now</b>. The actual timestamp will be calculated
+                            by the log service when the search query is submitted.</li>
+                        <li>Absolute date/time on the format <pre style={{margin: "0px"}}>yyyy-MM-dd HH:mm:ss.SSS</pre> e.g. <b>2020-12-24 15:30:30.000</b>.</li>
+                    </ol>
+            </Popover.Content>
+        </Popover>
+      );
 
     render(){
 
@@ -62,19 +69,19 @@ class SearchResultList extends Component{
                             setCurrentLogEntry={this.props.setCurrentLogEntry}
                             selectedLogEntryId={this.props.selectedLogEntryId}/>
         });
-        
+
         return(
             <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
-                <h6>Search results</h6>
-                <Form onSubmit={this.search}>
+                <Form onSubmit={this.search} style={{paddingTop: "5px"}}>
                     <Form.Row>
-                        <Col style={{paddingLeft: "0px"}}>
-                            <Form.Label style={{marginBottom: "0px"}}>Search string</Form.Label>
-                                <FaRegQuestionCircle style={{cursor:'pointer', marginLeft: '5px'}}
-                                    onClick={() => this.setShowSearchStringHelpDialog(true)}/>
+                        <Col style={{flexGrow: "0", paddingTop: "5px"}}>
+                            <OverlayTrigger trigger="click"
+                                overlay={this.popover}
+                                rootClose
+                                placement="right">
+                                <Form.Label style={{marginBottom: "0px"}}>Query: </Form.Label>
+                            </OverlayTrigger>
                         </Col>
-                    </Form.Row>
-                    <Form.Row>
                         <Col style={{paddingLeft: "0px"}}>
                             <Form.Control size="sm" 
                                 type="input" 
@@ -112,10 +119,6 @@ class SearchResultList extends Component{
                         "No search results"}
                 </div>
                 </LoadingOverlay>
-
-                <SearchStringHelpDialog
-                    showSearchStringHelpDialogVisible={this.state.showSearchStringHelpDialogVisible}
-                    setShowSearchStringHelpDialog={this.setShowSearchStringHelpDialog}/>
             </Container>
         )
     }

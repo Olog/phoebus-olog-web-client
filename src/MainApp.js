@@ -81,7 +81,7 @@ class MainApp extends Component {
             <Col xs={{span: 12, order: 2}} sm={{span: 12, order: 2}} md={{span: 12, order: 2}} lg={{span: 4, order: 2}} style={{padding: "2px"}}>
               <SearchResultList 
                 logEntryTree={this.state.logEntryTree} 
-                setCurrentLogEntry={this.setLogEntry}
+                setCurrentLogEntry={this.setCurrentLogEntry}
                 searchString={this.state.searchString}
                 setSearchString={this.setSearchString}
                 selectedLogEntryId={this.state.selectedLogEntryId}
