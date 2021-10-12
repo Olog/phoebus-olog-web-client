@@ -114,6 +114,7 @@ class App extends Component{
                                 tags={this.state.tags}
                                 setShowLogin={this.setShowLogin}
                                 userData={this.state.userData}
+                                setUserData={this.setUserData}
                                 currentLogEntry={this.state.currentLogEntry}
                                 replyAction={this.state.replyAction}
                                 showLogin={this.state.showLogin}

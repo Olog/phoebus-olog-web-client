@@ -225,59 +225,60 @@ class EntryEditor extends Component{
 
 
     submit = (event) => {
+        const checkValidity = event.currentTarget.checkValidity();
         event.preventDefault();
         var promise = checkSession();
         if(!promise){
-            this.props.setShowLogin(true);
+            this.props.setUserData({});
             return;
         }
         else{
             promise.then(data => {
-                console.log(data);
                 if(!data){
-                    this.props.setShowLogin(true);
+                    this.props.setUserData({});
+                    return;
+                }
+                else{
+                    const selectionsAreValid = this.state.selectedLogbooks.length > 0 && this.state.level !== null;
+                    this.setState({validated: true});
+
+                    if (checkValidity && selectionsAreValid){
+                        const { history } = this.props;
+                        const logEntry = {
+                            logbooks: this.state.selectedLogbooks,
+                            tags: this.state.selectedTags,
+                            properties: this.state.selectedProperties,
+                            title: this.titleRef.current.value,
+                            level: this.state.level,
+                            description: this.descriptionRef.current.value
+                        }
+                        axios.put(`${process.env.REACT_APP_BASE_URL}/logs?markup=commonmark`, logEntry, { withCredentials: true })
+                            .then(res => {
+                                if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
+                                    this.submitAttachmentsMulti(res.data.id);
+                                }
+                                // If the currentLogRecord is defined then user is creating a reply entry. So we need to update the currentLogRecord 
+                                // with the Log Entry Group, but only if the currentLogRecord does not yet contain it.
+                                if(this.props.replyAction  && !getLogEntryGroupId(this.props.currentLogEntry.properties)){    
+                                    this.updateCurrentLogEntry();
+                                }
+                                else{
+                                    history.push('/');
+                                }
+                            })
+                            .catch(error => {
+                                if(error.response && (error.response.status === 401 || error.response.status === 403)){
+                                    alert('You are currently not authorized to create a log entry.')
+                                }
+                                else if(error.response && (error.response.status >= 500)){
+                                    alert('Failed to create log entry.')
+                                }
+                            });
+                        
+                    }
                     return;
                 }
             });
-        }
-
-        const selectionsAreValid = this.state.selectedLogbooks.length > 0 && this.state.level !== null;
-        const form = event.currentTarget;        
-        this.setState({validated: true});
-
-        if (form.checkValidity() === true && selectionsAreValid){
-            const { history } = this.props;
-            const logEntry = {
-                logbooks: this.state.selectedLogbooks,
-                tags: this.state.selectedTags,
-                properties: this.state.selectedProperties,
-                title: this.titleRef.current.value,
-                level: this.state.level,
-                description: this.descriptionRef.current.value
-            }
-            axios.put(`${process.env.REACT_APP_BASE_URL}/logs?markup=commonmark`, logEntry, { withCredentials: true })
-                .then(res => {
-                    if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
-                        this.submitAttachmentsMulti(res.data.id);
-                    }
-                    // If the currentLogRecord is defined then user is creating a reply entry. So we need to update the currentLogRecord 
-                    // with the Log Entry Group, but only if the currentLogRecord does not yet contain it.
-                    if(this.props.replyAction  && !getLogEntryGroupId(this.props.currentLogEntry.properties)){    
-                        this.updateCurrentLogEntry();
-                    }
-                    else{
-                        history.push('/');
-                    }
-                })
-                .catch(error => {
-                    if(error.response && (error.response.status === 401 || error.response.status === 403)){
-                        alert('You are currently not authorized to create a log entry.')
-                    }
-                    else if(error.response && (error.response.status >= 500)){
-                        alert('Failed to create log entry.')
-                    }
-                });
-            
         }
     }
 
