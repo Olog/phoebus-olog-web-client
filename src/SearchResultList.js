@@ -25,6 +25,8 @@ import LoadingOverlay from 'react-loading-overlay';
 import { FaArrowUp, FaArrowDown} from "react-icons/fa";
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import {addSortOrder} from './utils';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 /**
  * Pane showing search query input and a the list of log entries 
@@ -36,8 +38,10 @@ class SearchResultList extends Component{
         this.props.search();
     }
 
-    search = (event) => {
-        event.preventDefault();
+    search = (ascending) => {
+        this.props.setSortAscending(ascending);
+        let queryWithSortOrder = addSortOrder(this.props.searchString, ascending);
+        this.props.setSearchString(queryWithSortOrder);
         this.props.search();
     }
 
@@ -72,14 +76,14 @@ class SearchResultList extends Component{
 
         return(
             <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
-                <Form onSubmit={this.search} style={{paddingTop: "5px"}}>
+                <Form style={{paddingTop: "5px"}}>
                     <Form.Row>
-                        <Col style={{flexGrow: "0", paddingTop: "5px"}}>
+                        <Col style={{flexGrow: "0", paddingTop: "7px"}}>
                             <OverlayTrigger trigger="click"
                                 overlay={this.popover}
                                 rootClose
                                 placement="right">
-                                <Form.Label style={{marginBottom: "0px"}}>Query: </Form.Label>
+                                <Form.Label>Query: </Form.Label>
                             </OverlayTrigger>
                         </Col>
                         <Col style={{paddingLeft: "0px"}}>
@@ -91,15 +95,36 @@ class SearchResultList extends Component{
                                 onChange={this.setSearchString}> 
                             </Form.Control>
                         </Col>
-                        <Col style={{flexGrow: "0"}}>
-                            <Button type="submit" size="sm">Search</Button>
+                        <Col style={{flexGrow: "0",paddingTop: "7px"}}>
+                            <Form.Label>Search: </Form.Label>
                         </Col>
-                        <Col style={{flexGrow: "0"}}>
-                            <Button 
-                                size="sm"
-                                onClick={(e) => this.props.reverseSort()}>
-                                    {this.props.sortAscending ? <FaArrowUp/> : <FaArrowDown/>}
-                            </Button>
+                        <Col style={{flexGrow: "0" }}>
+                            <OverlayTrigger delay={{ hide: 450, show: 300 }}
+                                overlay={(props) => (
+                                    <Tooltip {...props}>Search and sort descending on date</Tooltip>
+                                )}
+                                rootClose
+                                placement="bottom">
+                                    <Button 
+                                        size="sm"
+                                        onClick={(e) => this.search(false)}>
+                                        <FaArrowDown/>
+                                    </Button>
+                            </OverlayTrigger>
+                        </Col>
+                        <Col style={{flexGrow: "0", paddingLeft: "0px", paddingRight: "0px" }}>
+                            <OverlayTrigger delay={{ hide: 450, show: 300 }}
+                                    overlay={(props) => (
+                                        <Tooltip {...props}>Search and sort ascending on date</Tooltip>
+                                    )}
+                                    rootClose
+                                    placement="bottom">
+                                    <Button 
+                                        size="sm"
+                                        onClick={(e) => this.search(true)}>
+                                        <FaArrowUp/>
+                                    </Button>
+                            </OverlayTrigger>
                         </Col>
                     </Form.Row>
                 </Form>

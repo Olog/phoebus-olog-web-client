@@ -64,8 +64,8 @@ class MainApp extends Component {
     this.setState({searchString: searchString});
   }
 
-  reverseSort = () => {
-    this.setState(prevState => ({sortAscending: !prevState.sortAscending}), () => this.constructTree());
+  setSortAscending = (ascending) => {
+    this.setState({sortAscending: ascending});
   }
 
   render() {
@@ -87,8 +87,7 @@ class MainApp extends Component {
                 selectedLogEntryId={this.state.selectedLogEntryId}
                 search={this.search}
                 searchInProgress={this.state.searchInProgress}
-                sortAscending={this.state.sortAscending}
-                reverseSort={this.reverseSort}/> 
+                setSortAscending={this.setSortAscending}/> 
             </Col>
             <Col  xs={{span: 12, order: 1}} sm={{span: 12, order: 1}} md={{span: 12, order: 1}} lg={{span: 6, order: 3}} style={{padding: "2px"}}>
               <LogDetails 
