@@ -21,7 +21,9 @@ import {formatShortDate,
     removeImageMarkup, 
     getLogEntryGroupId, 
     sortLogsDateCreated,
-    getLogEntryTree} from './utils';
+    getLogEntryTree,
+    getQueryMap,
+    addSortOrder} from './utils';
 import moment from 'moment';
 
 test('getSearchString owner', () => {
@@ -266,4 +268,31 @@ test('getLogEntryTree', () => {
 
     expect(tree.length).toBe(3);
     expect(tree[0].getChildItems().length).toBe(3);
+});
+
+test('getQueryMap', () => {
+    let query = "a=b&C=D";
+    let map = getQueryMap(query);
+
+    expect(map['a']).toBe('b');
+});
+
+test('addSortOrder', () => {
+
+    let query = null;
+    let queryWithSortOrder = addSortOrder(query, true);
+    expect(queryWithSortOrder).toBe('sort=up');
+    queryWithSortOrder = addSortOrder(query, false);
+    expect(queryWithSortOrder).toBe('sort=down');
+
+    query = "a=b&C=D";
+    queryWithSortOrder = addSortOrder(query, true);
+    expect(queryWithSortOrder).toBe('a=b&C=D&sort=up');
+    queryWithSortOrder = addSortOrder(query, false);
+    expect(queryWithSortOrder).toBe('a=b&C=D&sort=down');
+
+    query = "a=b&sort=up&C=D";
+    queryWithSortOrder = addSortOrder(query, false);
+    expect(queryWithSortOrder).toBe('a=b&C=D&sort=down');
+
 });

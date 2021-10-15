@@ -281,3 +281,49 @@ export function findLogEntryGroup(tree, logEntryGroupId){
     }
     return null;
 }
+
+/**
+ * Courtesy Matthew Daniels: https://gist.github.com/MatthewDaniels/388fa1e0c02613f103f00a504ed58c55
+ * @param {*} query 
+ * @returns 
+ */
+export function getQueryMap(query) {
+    if(typeof query !== 'string') {
+       return null;
+    }
+    
+    var toType = function(a) {
+      return ({}).toString.call(a).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+    }, map = {};
+    
+  // map the hit query into a proper object
+  query.replace(/([^&|?=]+)=?([^&]*)(?:&+|$)/g, function (match, key, value) {
+      if (key in map) {
+          // the key already exists, so we need to check if it is an array, if not, make it an array and add the new value
+          if (toType(map[key]) !== 'array') {
+              // it's not an array - make it an array
+              map[key] = [map[key]];
+          }
+          // push the new value into the array
+          map[key].push(value);
+      } else {
+          // put the value into the map
+          map[key] = value;
+      }
+  });
+  return map;
+}
+
+export function addSortOrder(query, sortAscending){
+    let sort = sortAscending ? 'sort=up' : 'sort=down';
+    if(!query){
+        return sort;
+    }
+
+    let map = getQueryMap(query);
+    delete map['sort'];
+
+    let queryString = Object.keys(map).map(key => key + '=' + map[key]).join('&');
+
+    return queryString + "&" + sort;
+}
