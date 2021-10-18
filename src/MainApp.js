@@ -91,6 +91,7 @@ class MainApp extends Component {
             </Col>
             <Col  xs={{span: 12, order: 1}} sm={{span: 12, order: 1}} md={{span: 12, order: 1}} lg={{span: 6, order: 3}} style={{padding: "2px"}}>
               <LogDetails 
+                userData={this.props.userData}
                 currentLogEntry={this.props.currentLogEntry}
                 setReplyAction={this.props.setReplyAction} />
             </Col>

@@ -106,6 +106,7 @@ class App extends Component{
                                 setCurrentLogEntry={this.setCurrentLogEntry}
                                 currentLogEntry={this.state.currentLogEntry}
                                 setReplyAction={this.setReplyAction}
+                                userData={this.state.userData}
                                 />
                         </Route>
                         <Route path="/edit">
