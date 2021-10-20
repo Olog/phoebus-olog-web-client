@@ -51,10 +51,9 @@ class LogDetails extends Component{
     state = {
         openInfo: false,
         attachmentVisible: false,
-        showGroup: false // Used to toggle single/merged log view
     };
 
-    componentDidMount = () => { 
+    componentDidMount = () => {
         this.remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});
     }
 
@@ -63,7 +62,7 @@ class LogDetails extends Component{
     }
 
     toggleShowMerged = (e) => {
-        this.setState({showGroup: e});
+        this.props.setShowGroup(e);
     }
 
     render(){
@@ -100,16 +99,20 @@ class LogDetails extends Component{
                             <ToggleButton 
                                 size="sm"
                                 type="checkbox"
-                                checked={this.state.showGroup}
+                                checked={this.props.showGroup}
                                 onChange={(e) => this.toggleShowMerged(e.currentTarget.checked)}>Show/hide group
                             </ToggleButton>
                         </ButtonGroup>
                     }
-                    {!this.state.showGroup &&
+                    {!this.props.showGroup &&
                         <LogEntrySingleView currentLogEntry={this.props.currentLogEntry} remarkable={this.remarkable}/>
                     }
-                    {this.state.showGroup &&
-                        <LogEntryGroupView currentLogEntry={this.props.currentLogEntry} remarkable={this.remarkable}/>
+                    {this.props.showGroup &&
+                        <LogEntryGroupView
+                            currentLogEntry={this.props.currentLogEntry}
+                            setLogGroupRecords={this.props.setLogGroupRecords}
+                            logGroupRecords={this.props.logGroupRecords}
+                            remarkable={this.remarkable}/>
                     }
                 </Container>
             }

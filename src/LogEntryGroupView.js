@@ -30,10 +30,6 @@ class LogEntryGroupView extends Component{
         this.search();
     }
 
-    state = {
-        logRecords: []
-    }
-      
     getContent = (source) => {
         return {__html: this.props.remarkable.render(source)};
     }
@@ -43,13 +39,13 @@ class LogEntryGroupView extends Component{
           .then(response => response.json())
           .then(data => {
             let sortedResult = sortLogsDateCreated(data, false);
-            this.setState({logRecords: sortedResult});
+            this.props.setLogGroupRecords(sortedResult);
           });
     }
 
     render(){
 
-        var logGroupItems = this.state.logRecords.map((row, index) => {
+        var logGroupItems = this.props.logGroupRecords.map((row, index) => {
             return(
                 <div key={index} className={`${this.props.currentLogEntry.id === row.id ? "selected-log-entry" : ""}`}>
                     <GroupHeader logEntry={row}/>

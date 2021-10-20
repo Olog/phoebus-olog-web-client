@@ -36,7 +36,9 @@ class MainApp extends Component {
       selectedLogEntryId: 0,
       searchResult: [],
       searchInProgress: false,
-      sortAscending: false
+      sortAscending: false,
+      showGroup: false,
+      logGroupRecords: [],
     };
 
   search = () => {
@@ -56,8 +58,14 @@ class MainApp extends Component {
   }
 
   setCurrentLogEntry = (logEntry) => {
-    this.setState({selectedLogEntryId: logEntry.id, showGroup: false});
-    this.props.setCurrentLogEntry(logEntry);
+      this.setState({selectedLogEntryId: logEntry.id});
+      this.props.setCurrentLogEntry(logEntry);
+      for (var i = 0; i < this.state.logGroupRecords.length; i++) {
+          if (this.state.logGroupRecords[i].id === logEntry.id) {
+              return null;
+          }
+      }
+      this.setState({showGroup: false});
   }
 
   setSearchString = (searchString, performSearch) => {
@@ -66,6 +74,14 @@ class MainApp extends Component {
 
   setSortAscending = (ascending) => {
     this.setState({sortAscending: ascending});
+  }
+
+  setShowGroup = (val) => {
+    this.setState({showGroup: val});
+  }
+
+  setLogGroupRecords = (recs) => {
+    this.setState({logGroupRecords: recs});
   }
 
   render() {
@@ -93,7 +109,11 @@ class MainApp extends Component {
               <LogDetails 
                 userData={this.props.userData}
                 currentLogEntry={this.props.currentLogEntry}
-                setReplyAction={this.props.setReplyAction} />
+                setReplyAction={this.props.setReplyAction}
+                setLogGroupRecords={this.setLogGroupRecords}
+                logGroupRecords={this.state.logGroupRecords}
+                showGroup={this.state.showGroup}
+                setShowGroup={this.setShowGroup} />
             </Col>
           </Row>
         </Container>
