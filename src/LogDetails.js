@@ -80,7 +80,7 @@ class LogDetails extends Component{
                     {customization.log_entry_groups_support && 
                         <Link to="/edit">
                             <Button size="sm" 
-                                    disabled={!this.props.userData.userName}
+                                    disabled={!this.props.userData || !this.props.userData.userName}
                                     style={{marginTop: "10px", marginRight: "5px"}} 
                                     onClick={() => this.props.setReplyAction(true)}>
                                 Reply
