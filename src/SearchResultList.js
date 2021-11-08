@@ -45,6 +45,11 @@ class SearchResultList extends Component{
         this.props.search();
     }
 
+    submit = (event) => {
+        event.preventDefault();
+        this.search(this.props.sortAscending);
+    }
+
     setSearchString = (event) => {
         this.props.setSearchString(event.target.value, false);
     }
@@ -76,7 +81,7 @@ class SearchResultList extends Component{
 
         return(
             <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
-                <Form style={{paddingTop: "5px"}}>
+                <Form style={{paddingTop: "5px"}} onSubmit={(e) => this.submit(e)}>
                     <Form.Row>
                         <Col style={{flexGrow: "0", paddingTop: "7px"}}>
                             <OverlayTrigger trigger="click"

@@ -95,14 +95,10 @@ class MainApp extends Component {
                 setSearchString={this.setSearchString}/>
             </Col>}
             <Col xs={{span: 12, order: 2}} sm={{span: 12, order: 2}} md={{span: 12, order: 2}} lg={{span: 4, order: 2}} style={{padding: "2px"}}>
-              <SearchResultList 
-                logEntryTree={this.state.logEntryTree} 
+              <SearchResultList {...this.state}
                 setCurrentLogEntry={this.setCurrentLogEntry}
-                searchString={this.state.searchString}
                 setSearchString={this.setSearchString}
-                selectedLogEntryId={this.state.selectedLogEntryId}
                 search={this.search}
-                searchInProgress={this.state.searchInProgress}
                 setSortAscending={this.setSortAscending}/> 
             </Col>
             <Col  xs={{span: 12, order: 1}} sm={{span: 12, order: 1}} md={{span: 12, order: 1}} lg={{span: 6, order: 3}} style={{padding: "2px"}}>
