@@ -108,8 +108,8 @@ class LogDetails extends Component{
                         <LogEntrySingleView currentLogEntry={this.props.currentLogEntry} remarkable={this.remarkable}/>
                     }
                     {this.props.showGroup &&
-                        <LogEntryGroupView
-                            currentLogEntry={this.props.currentLogEntry}
+                        <LogEntryGroupView {...this.props}
+                            setCurrentLogEntry={this.props.setCurrentLogEntry}
                             setLogGroupRecords={this.props.setLogGroupRecords}
                             logGroupRecords={this.props.logGroupRecords}
                             remarkable={this.remarkable}/>

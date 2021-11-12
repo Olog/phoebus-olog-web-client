@@ -19,7 +19,7 @@ import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 import { FaPaperclip } from "react-icons/fa";
 import './css/olog.css';
-import { formatFullDateTime } from './utils';
+import { formatFullDateTime, getLogEntryGroupId } from './utils';
 
 class SearchResultItem extends Component{
 
@@ -34,7 +34,7 @@ class SearchResultItem extends Component{
 
     render(){
         return(
-            <div className={`${this.props.childItem ? "child-item" : ""}`}>
+            <div className={`${getLogEntryGroupId(this.props.log.properties) !== null ? "grouped-item" : ""}`}>
             {this.props.log ? 
             <div className={`${this.props.selectedLogEntryId === this.props.log.id ? "list-item selected-log-entry" : "list-item"}`}>
                 <Table size="sm" onClick={() => this.props.setCurrentLogEntry(this.props.log)}>

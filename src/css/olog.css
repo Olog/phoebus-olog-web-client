@@ -141,10 +141,6 @@ button.property-table-button{
     border-width: 1px;
 }
 
-.selected-log-entry{
-    background-color: #c8e0f4;
-}
-
 .search-fields-table tbody>tr>td{
     vertical-align: middle;
     border: none;
@@ -204,14 +200,18 @@ blockquote{
     color: white;
 }
 
-.group-header{
-    font-weight: 200;
-    font-size: 20px;
+.separator{
     padding-top: 5px;
     padding-bottom: 5px;
+    font-weight: 300;
+    font-size: 18px;
+    background-color: #f7f7f7;
 }
 
-.child-item{
+.grouped-item{
     background-color:#e8edee;
-    margin-left: 15px;
+}
+
+.selected-log-entry{
+    background-color: #c8e0f4;
 }

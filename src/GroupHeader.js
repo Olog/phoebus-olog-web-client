@@ -20,14 +20,15 @@
  
  /**
   * Simple component rendering a header item when showing a merged view of 
-  * multiple (grouped) log etries.
+  * multiple (grouped) log entries. When user clicks on the header, the associated
+  * log entry is shown in full, i.e. using the "non-grouped" log entry view.
   * @param {} props 
   * @returns 
   */
  const GroupHeader = (props) => {
  
      return(
-         <div className="group-header">
+         <div className="separator" onClick={() => props.showLog(props.logEntry)}>
              <OlogMoment date={props.logEntry.createdDate}/>, {props.logEntry.owner}, {props.logEntry.title} <span style={{float: "right"}}>{props.logEntry.id}</span>
          </div>
      )
