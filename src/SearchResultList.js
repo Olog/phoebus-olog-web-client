@@ -34,6 +34,10 @@ import Tooltip from 'react-bootstrap/Tooltip';
  */
 class SearchResultList extends Component{
 
+    state = {
+        expandSymbol: ">"
+    }
+
     componentDidMount = () => {
         this.props.search();
     }
@@ -69,6 +73,12 @@ class SearchResultList extends Component{
         </Popover>
       );
 
+    toggleFilters = () => {
+        this.props.toggleFilters();
+        let symbol = this.props.showFilters ? ">" : "<";
+        this.setState({expandSymbol: symbol});
+    }
+
     render(){
 
         var list = this.props.searchResult.map((item, index) => {
@@ -84,6 +94,9 @@ class SearchResultList extends Component{
             <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
                 <Form style={{paddingTop: "5px"}} onSubmit={(e) => this.submit(e)}>
                     <Form.Row>
+                        <Col style={{flexGrow: "0"}}>
+                            <Button size="sm" onClick={() => this.toggleFilters()}>{this.state.expandSymbol}</Button>
+                        </Col>
                         <Col style={{flexGrow: "0", paddingTop: "7px"}}>
                             <OverlayTrigger trigger="click"
                                 overlay={this.popover}

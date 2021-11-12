@@ -23,6 +23,7 @@ import SearchResultList from './SearchResultList';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Collapse from 'react-bootstrap/Collapse';
 
 /**
  * Top level component holding the main UI area components.
@@ -37,6 +38,7 @@ class MainApp extends Component {
       searchInProgress: false,
       sortAscending: false,
       logGroupRecords: [],
+      showFilters: false
     };
 
   search = () => {
@@ -68,22 +70,30 @@ class MainApp extends Component {
     this.setState({logGroupRecords: recs});
   }
 
+  toggleFilters = () => {
+    this.setState({showFilters: !this.state.showFilters});
+  }
+
   render() {
     return (
       <>
         <Container fluid className="full-height">
           <Row className="full-height">
-            {<Col xs={{span: 12, order: 3}} sm={{span: 12, order: 3}} md={{span: 12, order: 3}} lg={{span: 2, order: 1}} style={{padding: "2px"}}>
-              <Filters logbooks={this.props.logbooks} 
-                tags={this.props.tags} 
-                setSearchString={this.setSearchString}/>
-            </Col>}
+            <Collapse in={this.state.showFilters}>
+                <Col xs={{span: 12, order: 3}} sm={{span: 12, order: 3}} md={{span: 12, order: 3}} lg={{span: 2, order: 1}} style={{padding: "2px"}}>
+                  <Filters
+                    logbooks={this.props.logbooks}
+                    tags={this.props.tags}
+                    setSearchString={this.setSearchString}/>
+                </Col>
+            </Collapse>
             <Col xs={{span: 12, order: 2}} sm={{span: 12, order: 2}} md={{span: 12, order: 2}} lg={{span: 4, order: 2}} style={{padding: "2px"}}>
               <SearchResultList {...this.state} {...this.props}
                 setCurrentLogEntry={this.setCurrentLogEntry}
                 setSearchString={this.setSearchString}
                 search={this.search}
-                setSortAscending={this.setSortAscending}/> 
+                setSortAscending={this.setSortAscending}
+                toggleFilters={this.toggleFilters}/>
             </Col>
             <Col  xs={{span: 12, order: 1}} sm={{span: 12, order: 1}} md={{span: 12, order: 1}} lg={{span: 6, order: 3}} style={{padding: "2px"}}>
               <LogDetails {...this.state} {...this.props}
