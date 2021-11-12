@@ -17,7 +17,6 @@
  */
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
-import TreeItem from './TreeItem';
 
  const shortTimeFormat = 'HH:mm';
  const shortDateFormat = 'YYYY-MM-DD';
@@ -210,65 +209,6 @@ export function sortLogsDateCreated(logs, descending){
     else{
         return logs.sort((a, b) => a.createdDate - b.createdDate);
     }
-}
-
-/**
- * Creates a sorted array of log entries from a log entry tree.
- * @param {*} tree 
- */
-export function flattenTree(tree){
-    let logEntries = [];
-
-
-    return logEntries;
-}
-
-/**
- * Reconstructs the tree of log entry items using ascending
- * or descending sort order (created date).
- * @param {*} tree 
- * @param {*} sortAscending true to sort on ascending created date, otherwise
- * sort descending.
- */
-export function sortLogEntryTree(tree, sortAscending){
-
-}
-
-
-export function getLogEntryTree(logEntries, sortAscending){
-    if(!logEntries || logEntries.length === 0){
-        return [];
-    }
-    var tree = [];
-
-    for(var i = 0; i < logEntries.length; i++){
-        var newGroupId = getLogEntryGroupId(logEntries[i].properties);
-        if(!newGroupId){
-            let treeItem = new TreeItem();
-            treeItem.addLogEntry(logEntries[i], sortAscending);
-            tree.push(treeItem);
-        } 
-        else{
-            var potentialTreeItem = findLogEntryGroup(tree, newGroupId);
-            if(!potentialTreeItem){
-                let treeItem = new TreeItem();
-                treeItem.addLogEntry(logEntries[i], sortAscending);
-                tree.push(treeItem);
-            }
-            else{
-                potentialTreeItem.addLogEntry(logEntries[i], sortAscending);
-            }
-        }
-    }
-
-    // Sort array of tree items before returning it.
-    if(sortAscending){
-        return tree.sort((a, b) => a.getParent().createdDate - b.getParent().createdDate);
-    }
-    else{
-        return tree.sort((a, b) => b.getParent().createdDate - a.getParent().createdDate);
-    }
-    
 }
 
 export function findLogEntryGroup(tree, logEntryGroupId){

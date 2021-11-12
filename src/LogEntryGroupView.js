@@ -34,6 +34,10 @@ class LogEntryGroupView extends Component{
         return {__html: this.props.remarkable.render(source)};
     }
 
+    showLog = (log) => {
+        this.props.setCurrentLogEntry(log);
+    }
+
     search = () => {
         fetch(`${process.env.REACT_APP_BASE_URL}/logs?properties=Log Entry Group.id.` + getLogEntryGroupId(this.props.currentLogEntry.properties))
           .then(response => response.json())
@@ -47,9 +51,9 @@ class LogEntryGroupView extends Component{
 
         var logGroupItems = this.props.logGroupRecords.map((row, index) => {
             return(
-                <div key={index} className={`${this.props.currentLogEntry.id === row.id ? "selected-log-entry" : ""}`}>
-                    <GroupHeader logEntry={row}/>
-                    <div style={{paddingTop: "5px", wordWrap: "break-word", borderBottom: "1px solid #e0e0e0"}} 
+                <div key={index}>
+                    <GroupHeader logEntry={row} showLog={this.showLog}/>
+                    <div style={{paddingTop: "5px", wordWrap: "break-word"}}
                                     dangerouslySetInnerHTML={this.getContent(row.source)}/>
                 </div>
             );

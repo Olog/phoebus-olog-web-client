@@ -64,7 +64,8 @@ class LogDetailsDetached extends Component{
             <>
             {!this.state.showError && 
                 <LogDetails currentLogEntry={this.props.currentLogEntry}
-                    setCurrentLogEntry={this.props.setCurrentLogEntry}/>}
+                    setCurrentLogEntry={this.props.setCurrentLogEntry}
+                    setShowGroup={this.props.setShowGroup}/>}
             {this.state.showError &&
                 <h5>Log record id {this.props.match.params.id} not found</h5>}
             </>

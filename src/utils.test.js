@@ -21,7 +21,6 @@ import {formatShortDate,
     removeImageMarkup, 
     getLogEntryGroupId, 
     sortLogsDateCreated,
-    getLogEntryTree,
     getQueryMap,
     addSortOrder} from './utils';
 import moment from 'moment';
@@ -246,28 +245,6 @@ test('getLogEntryGroupMissing', () => {
     }
     result = getLogEntryGroupId(logEntry.properties);
     expect(result).toBeNull();
-});
-
-test('getLogEntryTree', () => {
-    let properties1 = [
-        {name : "Log Entry Group", attributes : [{name : "id", value : "myLogEntryGroupId"}]}
-    ]
-
-    let properties2 = [
-        {name : "Log Entry Group", attributes : [{name : "id", value : "bad"}]}
-    ]
-
-    let logEntry1 = {id: "1", properties: properties1};
-    let logEntry2 = {id: "2", properties: properties1};
-    let logEntry22 = {id: "22", properties: properties1};
-    let logEntry23 = {id: "23", properties: properties1};
-    let logEntry3 = {id: "3", properties: properties2};
-    let logEntry4 = {id: "4", properties: []};
-
-    let tree = getLogEntryTree([logEntry1, logEntry2, logEntry22, logEntry23, logEntry3, logEntry4], false);
-
-    expect(tree.length).toBe(3);
-    expect(tree[0].getChildItems().length).toBe(3);
 });
 
 test('getQueryMap', () => {

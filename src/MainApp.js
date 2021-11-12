@@ -23,7 +23,6 @@ import SearchResultList from './SearchResultList';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {getLogEntryTree} from './utils';
 
 /**
  * Top level component holding the main UI area components.
@@ -37,7 +36,6 @@ class MainApp extends Component {
       searchResult: [],
       searchInProgress: false,
       sortAscending: false,
-      showGroup: false,
       logGroupRecords: [],
     };
 
@@ -47,24 +45,14 @@ class MainApp extends Component {
     fetch(`${process.env.REACT_APP_BASE_URL}/logs?` + this.state.searchString)
       .then(response => {if(response.ok){return response.json();} else {return []}})
       .then(data => {
-        this.setState({searchResult: data}, () => this.constructTree());
+        this.setState({searchResult: data, searchInProgress: false});
       })
       .catch(() => {this.setState({searchInProgress: false}); alert("Olog service off-line?");})});
-  }
-
-  constructTree = () => {
-    let tree = getLogEntryTree(this.state.searchResult, this.state.sortAscending);
-    this.setState({logEntryTree: tree, searchInProgress: false});
   }
 
   setCurrentLogEntry = (logEntry) => {
       this.setState({selectedLogEntryId: logEntry.id});
       this.props.setCurrentLogEntry(logEntry);
-      for (var i = 0; i < this.state.logGroupRecords.length; i++) {
-          if (this.state.logGroupRecords[i].id === logEntry.id) {
-              return null;
-          }
-      }
       this.setState({showGroup: false});
   }
 
@@ -74,10 +62,6 @@ class MainApp extends Component {
 
   setSortAscending = (ascending) => {
     this.setState({sortAscending: ascending});
-  }
-
-  setShowGroup = (val) => {
-    this.setState({showGroup: val});
   }
 
   setLogGroupRecords = (recs) => {
@@ -95,21 +79,18 @@ class MainApp extends Component {
                 setSearchString={this.setSearchString}/>
             </Col>}
             <Col xs={{span: 12, order: 2}} sm={{span: 12, order: 2}} md={{span: 12, order: 2}} lg={{span: 4, order: 2}} style={{padding: "2px"}}>
-              <SearchResultList {...this.state}
+              <SearchResultList {...this.state} {...this.props}
                 setCurrentLogEntry={this.setCurrentLogEntry}
                 setSearchString={this.setSearchString}
                 search={this.search}
                 setSortAscending={this.setSortAscending}/> 
             </Col>
             <Col  xs={{span: 12, order: 1}} sm={{span: 12, order: 1}} md={{span: 12, order: 1}} lg={{span: 6, order: 3}} style={{padding: "2px"}}>
-              <LogDetails 
-                userData={this.props.userData}
-                currentLogEntry={this.props.currentLogEntry}
+              <LogDetails {...this.state} {...this.props}
+                setCurrentLogEntry={this.setCurrentLogEntry}
                 setReplyAction={this.props.setReplyAction}
                 setLogGroupRecords={this.setLogGroupRecords}
-                logGroupRecords={this.state.logGroupRecords}
-                showGroup={this.state.showGroup}
-                setShowGroup={this.setShowGroup} />
+                setShowGroup={this.props.setShowGroup} />
             </Col>
           </Row>
         </Container>

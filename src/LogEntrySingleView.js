@@ -31,8 +31,7 @@ class LogEntrySingleView extends Component{
     state = {
         openInfo: false,
         attachmentVisible: true,
-        propertiesVisible: false,
-        showGroup: false
+        propertiesVisible: false
     };
 
     getContent = (source) => {
