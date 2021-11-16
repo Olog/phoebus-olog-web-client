@@ -94,13 +94,17 @@ export function formatFullDateTime(date){
 }
 
 export function getSearchString(searchCriteria){
-    return constructLogbooksString(searchCriteria.logbooks) 
+    let searchString = constructLogbooksString(searchCriteria.logbooks)
         + constructTagsString(searchCriteria.tags)
         + getTimeRangeString(searchCriteria)
         + getTitleSearchString(searchCriteria)
         + getTextSearchString(searchCriteria)
         + getLevelSearchString(searchCriteria)
         + getAuthorSearchString(searchCriteria);
+    if (searchString.charAt(0) === '&') {
+        searchString = searchString.substring(1);
+    }
+    return searchString;
 }
 
 /**

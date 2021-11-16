@@ -40,19 +40,17 @@ var urlPrefix = '';
  *
  * remarkable.use(imageProcessor, {SetHtmlPreview: true});
  */
-var setHtmlPreview = false;
 
 /**
  * This is an array containing all the attached files structure.
  * Similar to EntryEditor.state.attachedFiles. To set it in the parent file:
  * remarkable.use(imageProcessor, {attachedFiles: this.state.attachedFiles});
  */
-var attachedFiles = [];
 
 /**
  * Returns a Attachment object based on given id.
  */
-export function getFileObject(id){
+export function getFileObject(id, attachedFiles){
     for (var i = 0; i < attachedFiles.length; i++){
         if (attachedFiles[i].id === id) {
             return attachedFiles[i];
@@ -110,14 +108,14 @@ export function matchSizeDefinition(text){
  * @param {*} textNode Contains an image specification, e.g. {width=100 height=100}, but may
  * also contain additional text.
  */
-export function processImageHtmlPreview(imageNode, textNode){
+export function processImageHtmlPreview(imageNode, textNode, attachedFiles){
     // Find the image attachment object index
     var imgId = imageNode.src.split("attachment/");
     var imgTag = null;
     if (imgId.length > 1) {
         imgId = imgId[1];
         // Find the image file object using the image Attachment index
-        var fileObj = getFileObject(imgId);
+        var fileObj = getFileObject(imgId, attachedFiles);
         var imgSrc = null;
         if (fileObj) {
             imgSrc = URL.createObjectURL(fileObj.file);
@@ -161,7 +159,14 @@ export function processImage(imageNode, textNode){
     return [img, leftOver];
 }
 
+/**
+ * Processes image tokens for Log details view or HTML preview based on config fields.
+ * If config.setHtmlPreview is true, it processes image tokens for HTML preview else for 
+ * log details view.
+ */
 const imageProcessor = (md, config) => {
+    var setHtmlPreview = false;
+    var attachedFiles = [];
     if(config){
         if(config.urlPrefix){
             urlPrefix = config.urlPrefix;
@@ -196,7 +201,7 @@ const imageProcessor = (md, config) => {
                         if(i + 1 < token.children.length && token.children[i + 1].type === 'text'){
                             var v = '';
                             if(setHtmlPreview){
-                                v = processImageHtmlPreview(value, token.children[i + 1].content);
+                                v = processImageHtmlPreview(value, token.children[i + 1].content, attachedFiles);
                             }
                             else{
                                 v = processImage(value, token.children[i + 1].content);
