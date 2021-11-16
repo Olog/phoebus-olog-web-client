@@ -35,19 +35,6 @@
 var urlPrefix = '';
 
 /**
- * This is a boolean flag that set to be set if you are prcoessing images for
- * HTML preview. You can set this using:
- *
- * remarkable.use(imageProcessor, {SetHtmlPreview: true});
- */
-
-/**
- * This is an array containing all the attached files structure.
- * Similar to EntryEditor.state.attachedFiles. To set it in the parent file:
- * remarkable.use(imageProcessor, {attachedFiles: this.state.attachedFiles});
- */
-
-/**
  * Returns a Attachment object based on given id.
  */
 export function getFileObject(id, attachedFiles){
