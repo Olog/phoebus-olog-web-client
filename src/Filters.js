@@ -19,13 +19,14 @@ import React, {Component} from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Logbooks from './Logbooks';
 import Tags from './Tags';
-import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import { FaChevronRight, FaChevronDown, FaCalendarAlt } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
-import FormCheck from 'react-bootstrap/FormCheck';
-import {getSearchString} from './utils';
+import {setSearchParam, removeSearchParam, dateToString} from './utils';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import DateTimePicker from 'react-datetime-picker';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -36,27 +37,15 @@ class Filters extends Component{
     state = {
         openLogbooks: false,
         openTags: false,
-        openTimespan: false,
-        openFromTo: false,
-        openOther: false,
-        timeSpan: 1, // default time span item, e.g. "12 hours"
         searchCriteria: {
-            logbooks: [],
-            tags: [],
-            title: "",
-            text: "",
-            level: "",
-            owner: "",
-            startDate: "12 hours",
-            endDate: "now"
+            logbooks: [], // Used by logbooks selector
+            tags: []      // Used by tags selector
           },
         startDate: new Date(), // Used by calendar component
-        endDate: new Date()    // Used by calendar component
+        endDate: new Date(),   // Used by calendar component
+        showSelectStartTime: false,
+        showSelectEndTime: false
     };
-
-    componentDidMount = () => {
-        this.props.setSearchString(getSearchString(this.state.searchCriteria, false));
-    }
 
     /**
      * Add or remove logbook from search criteria.
@@ -73,8 +62,15 @@ class Filters extends Component{
         }
         this.setState({searchCriteria: copy}, 
             () =>  {
-                const searchCriteriaCopy = {...this.state.searchCriteria};
-                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
+                let searchParams = {};
+                let logbooksString = this.state.searchCriteria.logbooks.join(",");
+                if(logbooksString !== ''){
+                    searchParams = setSearchParam(this.props.searchParams, 'logbooks', logbooksString);
+                }
+                else{
+                    searchParams = removeSearchParam(this.props.searchParams, 'logbooks');
+                }
+                this.props.setSearchParams(searchParams);
             });
     }
 
@@ -93,151 +89,88 @@ class Filters extends Component{
         }
         this.setState({searchCriteria: copy}, 
             () =>  {
-                const searchCriteriaCopy = {...this.state.searchCriteria};
-                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
+                 let searchParams = {};
+                 let tagsString = this.state.searchCriteria.tags.join(",");
+                 if(tagsString !== ''){
+                    searchParams = setSearchParam(this.props.searchParams, 'tags', tagsString);
+                 }
+                 else{
+                    searchParams = removeSearchParam(this.props.searchParams, 'tags');
+                 }
+                 this.props.setSearchParams(searchParams);
             });
-    }
-
-    timespanChanged = (event) => {
-        var start;
-        var span = parseInt(event.target.id);
-        switch(span){
-            case 1:
-                start = "12 hours"; 
-                break;
-            case 2:
-                start = "1 day"; 
-                break;
-            case 3:
-            default:
-                start = "3 days";
-                break;
-            case 4:
-                start = "7 days";
-                break;
-        }
-    
-        const copy = {...this.state.searchCriteria};
-        copy.startDate = start; 
-        copy.endDate = "now"; 
-        this.setState({searchCriteria: copy, timeSpan: parseInt(event.target.id)},
-            () =>  {
-                const searchCriteriaCopy = {...this.state.searchCriteria};
-                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
-            });
-    }
-
-    titleChanged = (event) => {
-        const copy = {...this.state.searchCriteria};
-        copy.title = event.target.value;
-        this.setState({searchCriteria: copy},
-            () =>  {
-                const searchCriteriaCopy = {...this.state.searchCriteria};
-                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
-            });
-    }
-
-    textChanged = (event) => {
-        const copy = {...this.state.searchCriteria};
-        copy.text = event.target.value;
-        this.setState({searchCriteria: copy},
-            () =>  {
-                const searchCriteriaCopy = {...this.state.searchCriteria};
-                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
-            });
-    }
-
-    levelChanged = (event) => {
-        const copy = {...this.state.searchCriteria};
-        copy.level = event.target.value;
-        this.setState({searchCriteria: copy},
-            () =>  {
-                const searchCriteriaCopy = {...this.state.searchCriteria};
-                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
-            });
-    }
-
-    authorChanged = (event) => {
-        const copy = {...this.state.searchCriteria};
-        copy.owner = event.target.value;
-        this.setState({searchCriteria: copy},
-            () =>  {
-                const searchCriteriaCopy = {...this.state.searchCriteria};
-                this.props.setSearchString(getSearchString(searchCriteriaCopy), true);
-            });
-    }
-
-    dateToString = (value) => {
-        return value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + 
-               ("0" + value.getDate()).slice(-2) + ' ' + ('0' + value.getHours()).slice(-2) + 
-               ':' + ('0' + value.getMinutes()).slice(-2) + ':' + 
-               ('0' + value.getSeconds()).slice(-2);
     }
 
     setStartDate = (value) => {
-        this.setState(previous => ({
-            searchCriteria: {...this.state.searchCriteria, startDate: this.dateToString(value)},
-            startDate: value
-        }), () =>  {
-            const searchCriteriaCopy = {...this.state.searchCriteria};
-            this.props.setSearchString(getSearchString(searchCriteriaCopy), false);
-        });
+        let start = dateToString(value);
+        let searchParams = setSearchParam(this.props.searchParams, 'start', start);
+        this.props.setSearchParams(searchParams);
+        this.setState({startDate: value}); // This is for the calendar component only
     }
 
     setEndDate = (value) => {
-        this.setState(previous => ({
-            searchCriteria: {...this.state.searchCriteria, endDate: this.dateToString(value)},
-            endDate: value
-        }), () =>  {
-            const searchCriteriaCopy = {...this.state.searchCriteria};
-            this.props.setSearchString(getSearchString(searchCriteriaCopy), false);
-        });
+        let end = dateToString(value);
+        let searchParams = setSearchParam(this.props.searchParams, 'end', end);
+        this.props.setSearchParams(searchParams);
+        this.setState({endDate: value}); // This is for the calendar component only
+    }
+
+    applyAndClose = () => {
+        this.setState({showSelectStartTime: false, showSelectEndTime: false});
+    }
+
+    inputChanged = (event, key) => {
+      let searchParams = {};
+      if(event.target.value !== ''){
+        searchParams = setSearchParam(this.props.searchParams, key, event.target.value);
+      }
+      else{
+        searchParams = removeSearchParam(this.props.searchParams, key);
+      }
+      this.props.setSearchParams(searchParams);
     }
 
     render(){
-
-        let timeSpans = ["12 hours", "1 day", "3 days", "7 days"];
-
         return(
+            <>
             <Container className="grid-item filters full-height" style={{padding: "8px"}}>
                 <Table size="sm" className="search-fields-table">
                     <tbody>
                         <tr>
-                            <td>Title:</td>
-                            <td></td>
+                            <td colSpan="2">Title:</td>
                         </tr>
                         <tr>
-                            <td style={{width: "100%"}}>
+                            <td colSpan="2">
                                 <Form.Control size="sm"
                                     type="text"
-                                    value={this.state.searchCriteria.title}
-                                    onChange={this.titleChanged}></Form.Control>
+                                    value={this.props.searchParams['title'] || ''}
+                                    onChange={(e) => this.inputChanged(e, 'title')}/>
                             </td>
                         </tr>
                         <tr>
-                            <td>Text:</td>
+                            <td colSpan="2">Text:</td>
                         </tr>
                         <tr>
-                            <td>
+                            <td colSpan="2">
                                 <Form.Control size="sm"
                                     type="text"
-                                    value={this.state.searchCriteria.text}
-                                    onChange={this.textChanged}></Form.Control>
+                                    value={this.props.searchParams['text'] || ''}
+                                    onChange={(e) => this.inputChanged(e, 'text')}/>
                             </td>
                         </tr>
                         <tr>
-                            <td>Level:</td>
+                            <td colSpan="2">Level:</td>
                         </tr>
                         <tr>
-                            <td>
+                            <td colSpan="2">
                                 <Form.Control size="sm"
                                     type="text"
-                                    value={this.state.searchCriteria.level}
-                                    onChange={this.levelChanged}></Form.Control>
+                                    value={this.props.searchParams['level'] || ''}
+                                    onChange={(e) => this.inputChanged(e, 'level')}/>
                             </td>
                         </tr>
                         <tr>
-                            <td><Accordion>
+                            <td colSpan="2"><Accordion>
                                 <Accordion.Toggle eventKey="0" onClick={() => this.setState({openLogbooks: !this.state.openLogbooks})}
                                     className="accordion-card-header">
                                     {this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } Logbooks
@@ -251,7 +184,7 @@ class Filters extends Component{
                            </Accordion></td>
                         </tr>
                         <tr>
-                            <td><Accordion>
+                            <td colSpan="2"><Accordion>
                                 <Accordion.Toggle eventKey="0" onClick={() => this.setState({openTags: !this.state.openTags})}
                                      className="accordion-card-header">
                                     {this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } Tags
@@ -264,107 +197,92 @@ class Filters extends Component{
                             </Accordion></td>
                         </tr>
                         <tr>
-                            <td>Author:</td>
+                            <td colSpan="2">Author:</td>
                         </tr>
                         <tr>
-                            <td>
+                            <td colSpan="2">
                                 <Form.Control size="sm"
                                     type="text"
-                                    value={this.state.searchCriteria.owner}
-                                    onChange={this.authorChanged}></Form.Control>
+                                    value={this.props.searchParams['owner'] || ''}
+                                    onChange={(e) => this.inputChanged(e, 'owner')}/>
                             </td>
                         </tr>
                         <tr>
-                            <td>Time:</td>
+                            <td colSpan="2">Start Time:</td>
                         </tr>
                         <tr>
-                            <td>Start Time:</td>
-                        </tr>
-                        <tr>
-                            <td>
-                            <DateTimePicker
-                                onChange={(value) => this.setStartDate(value)}
-                                style={{width:30}}
-                                value={this.state.startDate}
-                                format='y-MM-dd HH:mm'
-                                clearIcon=""
-                                disableClock></DateTimePicker>
+                            <td style={{width: "100%"}}>
+                            <Form.Control size="sm"
+                                type="text"
+                                value={this.props.searchParams['start'] || ''}
+                                onChange={(e) => this.inputChanged(e, 'start')}/>
                             </td>
+                            <td><Button size="sm" onClick={() => this.setState({showSelectStartTime: true})}><FaCalendarAlt/></Button></td>
                         </tr>
                         <tr>
                             <td style={{width: "40px"}}>End Time:</td>
                         </tr>
                         <tr>
-                            <td>
-                            <DateTimePicker
-                                onChange={(value) => this.setEndDate(value)}
-                                value={this.state.endDate}
-                                format='y-MM-dd HH:mm'
-                                clearIcon=""
-                                disableClock></DateTimePicker>
+                            <td style={{width: "100%"}}>
+                            <Form.Control size="sm"
+                                type="text"
+                                value={this.props.searchParams['end'] || ''}
+                                onChange={(e) => this.inputChanged(e, 'end')}/>
                             </td>
+                            <td><Button size="sm" onClick={() => this.setState({showSelectEndTime: true})}><FaCalendarAlt/></Button></td>
                         </tr>
                     </tbody>
                 </Table>
-
-
-                {/*<Accordion>
-                    <Accordion.Toggle eventKey="0" onClick={() => this.setState({openTimespan: !this.state.openTimespan})}
-                        className="accordion-card-header">
-                        {this.state.openTimespan ? <FaChevronDown /> : <FaChevronRight/> } Created since
-                    </Accordion.Toggle>
-                    <Accordion.Collapse eventKey="0">
-                        <ul  className="olog-ul">
-                            {timeSpans.map((timeSpan, index) => (
-                                    <li key={index}>
-                                        <FormCheck>
-                                            <FormCheck.Input type="radio" 
-                                                id={index + 1} // For some reason {index} does not work when index = 0.
-                                                checked={this.state.timeSpan === index + 1}
-                                                onChange={this.timespanChanged}/>
-                                            <FormCheck.Label>{timeSpan}</FormCheck.Label>
-                                        </FormCheck>
-                                    </li>
-                            ))}
-                        </ul>
-                    </Accordion.Collapse>
-                </Accordion>}
-                <Accordion>
-                    <Accordion.Toggle eventKey="0" onClick={() => this.setState({openFromTo: !this.state.openFromTo})}
-                        className="accordion-card-header">
-                        {this.state.openFromTo ? <FaChevronDown /> : <FaChevronRight/> } Created from - to
-                    </Accordion.Toggle>
-                    <Accordion.Collapse eventKey="0">
-                        <Table size="sm" className="search-fields-table">
-                            <tbody>
-                                <tr>
-                                    <td style={{width: "40px"}}>From:</td>
-                                    <td>
-                                    <DateTimePicker
-                                        onChange={(value) => this.setStartDate(value)}
-                                        value={this.state.startDate}
-                                        format='y-MM-dd HH:mm'
-                                        clearIcon=""
-                                        disableClock></DateTimePicker>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style={{width: "40px"}}>To:</td>
-                                    <td>
-                                    <DateTimePicker
-                                        onChange={(value) => this.setEndDate(value)}
-                                        value={this.state.endDate}
-                                        format='y-MM-dd HH:mm'
-                                        clearIcon=""
-                                        disableClock></DateTimePicker>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                       
-                    </Accordion.Collapse>
-                </Accordion>*/}
             </Container>
+            {
+            <Modal show={this.state.showSelectStartTime} onHide={() => this.setState({showSelectStartTime: false})}>
+               <Modal.Header closeButton>
+                   <Modal.Title>Select Start Time</Modal.Title>
+               </Modal.Header>
+               <Modal.Body>
+                <DateTimePicker
+                   onChange={(value) => this.setStartDate(value)}
+                   style={{width:30}}
+                   value={this.state.startDate}
+                   format='y-MM-dd HH:mm'
+                   clearIcon=""
+                   disableClock></DateTimePicker>
+               </Modal.Body>
+               <Modal.Footer>
+               <Button variant="primary" type="submit" onClick={() => this.applyAndClose()}>
+                     Apply
+               </Button>
+               <Button variant="secondary" type="button" onClick={() => this.setState({showSelectStartTime: false})}>
+                     Cancel
+               </Button>
+             </Modal.Footer>
+            </Modal>
+            }
+            {
+            <Modal show={this.state.showSelectEndTime}
+                    onHide={() => this.setState({showSelectEndTime: false})}>
+                <Modal.Header closeButton>
+                   <Modal.Title>Select End Time</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                 <DateTimePicker
+                   onChange={(value) => this.setEndDate(value)}
+                   value={this.state.endDate}
+                   format='y-MM-dd HH:mm'
+                   clearIcon=""
+                   disableClock></DateTimePicker>
+               </Modal.Body>
+               <Modal.Footer>
+                   <Button variant="primary" type="submit" onClick={() => this.applyAndClose()}>
+                         Apply
+                   </Button>
+                   <Button variant="secondary" type="button" onClick={() => this.setState({showSelectEndTime: false})}>
+                         Cancel
+                   </Button>
+               </Modal.Footer>
+            </Modal>
+            }
+            </>
         )
     }
 }

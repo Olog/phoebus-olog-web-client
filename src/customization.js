@@ -37,5 +37,10 @@ export default {
     /**
      * Specifies whether to support grouping of log entries.
      */
-    log_entry_groups_support: true
+    log_entry_groups_support: true,
+
+    /**
+     * Default search params
+     */
+    defaultSearchParams: {start: "12 hours", end: "now"}
 }

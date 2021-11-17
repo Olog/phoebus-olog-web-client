@@ -22,65 +22,6 @@ import { v4 as uuidv4 } from 'uuid';
  const shortDateFormat = 'YYYY-MM-DD';
  const fullDateTime = 'YYYY-MM-DD HH:mm:ss';
 
- function constructLogbooksString(logbooks){ 
-     if(!logbooks || logbooks.length === 0){
-         return "";
-     }
-     var logbooksString = "logbooks=";
-     for(var i = 0; i < logbooks.length - 1; i++){
-         logbooksString += logbooks[i];
-         logbooksString += ",";
-     }
-     logbooksString += logbooks[logbooks.length - 1];
-     return logbooksString;
- }
-
- function constructTagsString(tags){ 
-    if(!tags || tags.length === 0){
-        return "";
-    }
-    var tagsString = "&tags=";
-    for(var i = 0; i < tags.length - 1; i++){
-        tagsString += tags[i];
-        tagsString += ",";
-    }
-    tagsString += tags[tags.length - 1];
-    return tagsString;
-}
-
-function getTitleSearchString(searchCriteria){
-     if(searchCriteria.title && searchCriteria.title !== ""){
-         return "&title=" + searchCriteria.title;
-     }
-     return "";
-}
-
-function getTextSearchString(searchCriteria){
-    if(searchCriteria.text && searchCriteria.text !== ""){
-        return "&desc=" + searchCriteria.text;
-    }
-    return "";
-}
-
-function getLevelSearchString(searchCriteria){
-    if(searchCriteria.level && searchCriteria.level !== ""){
-        return "&level=" + searchCriteria.level;
-    }
-    return "";
-}
-
-function getAuthorSearchString(searchCriteria){
-    if(searchCriteria.owner && searchCriteria.owner !== ""){
-        return "&owner=" + searchCriteria.owner;
-    }
-    return "";
-}
-
-function getTimeRangeString(searchCriteria){
-    return "&start=" + searchCriteria.startDate +
-        "&end=" + searchCriteria.endDate; 
-}
-
 export function formatShortTime(date){
     return moment(date).format(shortTimeFormat);
 }
@@ -91,16 +32,6 @@ export function formatShortDate(date){
 
 export function formatFullDateTime(date){
     return moment(date).format(fullDateTime);
-}
-
-export function getSearchString(searchCriteria){
-    return constructLogbooksString(searchCriteria.logbooks) 
-        + constructTagsString(searchCriteria.tags)
-        + getTimeRangeString(searchCriteria)
-        + getTitleSearchString(searchCriteria)
-        + getTextSearchString(searchCriteria)
-        + getLevelSearchString(searchCriteria)
-        + getAuthorSearchString(searchCriteria);
 }
 
 /**
@@ -223,11 +154,12 @@ export function findLogEntryGroup(tree, logEntryGroupId){
 }
 
 /**
- * Courtesy Matthew Daniels: https://gist.github.com/MatthewDaniels/388fa1e0c02613f103f00a504ed58c55
+ * Courtesy Matthew Daniels: https://gist.github.com/MatthewDaniels/388fa1e0c02613f103f00a504ed58c55.
+ * Constructs a map of search parameters from the specified query string.
  * @param {*} query 
  * @returns 
  */
-export function getQueryMap(query) {
+export function queryStringToSearchParameters(query) {
     if(typeof query !== 'string') {
        return null;
     }
@@ -254,16 +186,36 @@ export function getQueryMap(query) {
   return map;
 }
 
-export function addSortOrder(query, sortAscending){
-    let sort = sortAscending ? 'sort=up' : 'sort=down';
-    if(!query){
-        return sort;
-    }
+/**
+ * Sets or updates a search parameter
+ */
+export function setSearchParam(searchParams, key, value){
+    removeSearchParam(key);
+    searchParams[key] = value;
+    return searchParams;
+}
 
-    let map = getQueryMap(query);
-    delete map['sort'];
+/**
+ * Removes a search parameter, e.g. if user specifies an empty value.
+ */
+export function removeSearchParam(searchParams, key){
+    delete searchParams[key];
+    return searchParams;
+}
 
-    let queryString = Object.keys(map).map(key => key + '=' + map[key]).join('&');
+/**
+ * Constructs a query string from the search parameter map.
+ */
+export function searchParamsToQueryString(map){
+    return Object.keys(map).map(key => key + '=' + map[key]).join('&');
+}
 
-    return queryString + "&" + sort;
+/**
+ * Converts a JavaScript Date object to a string on format yyyy-MM-dd HH:mm:ss.
+ */
+export function dateToString(value){
+    return value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' +
+           ("0" + value.getDate()).slice(-2) + ' ' + ('0' + value.getHours()).slice(-2) +
+           ':' + ('0' + value.getMinutes()).slice(-2) + ':' +
+           ('0' + value.getSeconds()).slice(-2);
 }
