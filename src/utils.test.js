@@ -16,56 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import {formatShortDate, 
-    getSearchString, 
     sortSearchResultByDay, 
     removeImageMarkup, 
     getLogEntryGroupId, 
     sortLogsDateCreated,
-    getQueryMap,
-    addSortOrder} from './utils';
+    queryStringToSearchParameters,
+    setSearchParam,
+    removeSearchParam,
+    dateToString,
+    searchParamsToQueryString} from './utils';
 import moment from 'moment';
-
-test('getSearchString owner', () => {
-    let searchCriteria = {owner: "owner"};
-    expect(getSearchString(searchCriteria)).toContain('owner=owner');
-});
-
-test('getSearchString title', () => {
-    let searchCriteria = {title: "title"};
-    expect(getSearchString(searchCriteria)).toContain('title=title');
-});
-
-test('getSearchString text', () => {
-    let searchCriteria = {text: "text"};
-    expect(getSearchString(searchCriteria)).toContain('desc=text');
-});
-
-test('getSearchString level', () => {
-    let searchCriteria = {level: "level"};
-    expect(getSearchString(searchCriteria)).toContain('level=level');
-    
-});
-
-test('getSearchString logbooks', () => {
-    let searchCriteria = {logbooks: ["logbook1", "logbook2"]};
-    expect(getSearchString(searchCriteria)).toContain('logbooks=logbook1,logbook2');
-});
-
-test('getSearchString tags', () => {
-    let searchCriteria = {tags: ["tag1", "tag2"]};
-    expect(getSearchString(searchCriteria)).toContain('tags=tag1,tag2');
-});
-
-test('getSearchString default time tange', () => {
-    let searchCriteria = {};
-    expect(getSearchString(searchCriteria)).toContain('start=');
-    expect(getSearchString(searchCriteria)).toContain('end=');
-});
-
-test('getSearchString time tange', () => {
-    let searchCriteria = {startDate: '1 hour', endDate: 'now'};
-    expect(getSearchString(searchCriteria)).toContain('start=1 hour&end=now');
-});
 
 test('sortSearchResultByDay', () => {
     let searchResult = [];
@@ -247,29 +207,42 @@ test('getLogEntryGroupMissing', () => {
     expect(result).toBeNull();
 });
 
-test('getQueryMap', () => {
+test('queryStringToSearchParameters', () => {
     let query = "a=b&C=D";
-    let map = getQueryMap(query);
+    let map = queryStringToSearchParameters(query);
 
     expect(map['a']).toBe('b');
 });
 
-test('addSortOrder', () => {
+test('setSearchParam', () => {
+    let map = [];
+    map['a'] = 'A';
 
-    let query = null;
-    let queryWithSortOrder = addSortOrder(query, true);
-    expect(queryWithSortOrder).toBe('sort=up');
-    queryWithSortOrder = addSortOrder(query, false);
-    expect(queryWithSortOrder).toBe('sort=down');
+    map = setSearchParam(map, 'sort', 'up');
+    let query = searchParamsToQueryString(map);
+    expect(query).toBe('a=A&sort=up');
 
-    query = "a=b&C=D";
-    queryWithSortOrder = addSortOrder(query, true);
-    expect(queryWithSortOrder).toBe('a=b&C=D&sort=up');
-    queryWithSortOrder = addSortOrder(query, false);
-    expect(queryWithSortOrder).toBe('a=b&C=D&sort=down');
+    map = [];
+    map['a'] = 'A';
+    map['sort'] = 'up';
 
-    query = "a=b&sort=up&C=D";
-    queryWithSortOrder = addSortOrder(query, false);
-    expect(queryWithSortOrder).toBe('a=b&C=D&sort=down');
-
+    map = setSearchParam(map, 'sort', 'down');
+    query = searchParamsToQueryString(map);
+    expect(query).toBe('a=A&sort=down');
 });
+
+test('removeSearchParam', () => {
+    let map = [];
+    map['a'] = 'A';
+    map['sort'] = 'up';
+
+    map = removeSearchParam(map, 'sort');
+    let query = searchParamsToQueryString(map);
+    expect(query).toBe('a=A');
+});
+
+test('dateToString', () => {
+    let now = new Date();
+    let string = dateToString(now);
+    expect(string.length).toBe(19);
+})

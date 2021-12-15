@@ -25,8 +25,9 @@ import LoadingOverlay from 'react-loading-overlay';
 import { FaArrowUp, FaArrowDown} from "react-icons/fa";
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import {addSortOrder} from './utils';
+import {searchParamsToQueryString, queryStringToSearchParameters} from './utils';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Cookies from 'universal-cookie';
 
 /**
  * Pane showing search query input and a the list of log entries 
@@ -34,24 +35,33 @@ import Tooltip from 'react-bootstrap/Tooltip';
  */
 class SearchResultList extends Component{
 
+    state = {
+        expandSymbol: ">",
+        sortOrder: 'down',
+    }
+
+    cookies = new Cookies();
+
     componentDidMount = () => {
         this.props.search();
     }
 
-    search = (ascending) => {
-        this.props.setSortAscending(ascending);
-        let queryWithSortOrder = addSortOrder(this.props.searchString, ascending);
-        this.props.setSearchString(queryWithSortOrder);
+    search = (sortOrder) => {
+        this.setState({sortOrder: sortOrder}, () => this.props.setSortOrder(this.state.sortOrder));
+        // Set the cookie with a long maxAge. For each new search the expiration date of the
+        // cookie will be updated, so specifying an exact date may not be meaningful.
+        this.cookies.set('searchString', searchParamsToQueryString(this.props.searchParams), {path: '/', maxAge: '100000000'});
         this.props.search();
     }
 
-    submit = (event) => {
+    submit = (event) => {
         event.preventDefault();
-        this.search(this.props.sortAscending);
+        this.search(this.state.sortOrder);
     }
 
     setSearchString = (event) => {
-        this.props.setSearchString(event.target.value, false);
+        let searchParams = queryStringToSearchParameters(event.target.value);
+        this.props.setSearchParams(searchParams);
     }
 
     popover = (
@@ -69,6 +79,12 @@ class SearchResultList extends Component{
         </Popover>
       );
 
+    toggleFilters = () => {
+        this.props.toggleFilters();
+        let symbol = this.props.showFilters ? ">" : "<";
+        this.setState({expandSymbol: symbol});
+    }
+
     render(){
 
         var list = this.props.searchResult.map((item, index) => {
@@ -84,6 +100,9 @@ class SearchResultList extends Component{
             <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
                 <Form style={{paddingTop: "5px"}} onSubmit={(e) => this.submit(e)}>
                     <Form.Row>
+                        <Col style={{flexGrow: "0"}}>
+                            <Button size="sm" onClick={() => this.toggleFilters()}>{this.state.expandSymbol}</Button>
+                        </Col>
                         <Col style={{flexGrow: "0", paddingTop: "7px"}}>
                             <OverlayTrigger trigger="click"
                                 overlay={this.popover}
@@ -94,11 +113,12 @@ class SearchResultList extends Component{
                         </Col>
                         <Col style={{paddingLeft: "0px"}}>
                             <Form.Control size="sm" 
-                                type="input" 
+                                type="input"
+                                disabled={this.props.showFilters}
                                 placeholder="No search string"
-                                value={this.props.searchString}
                                 style={{fontSize: "12px"}}
-                                onChange={this.setSearchString}> 
+                                defaultValue={searchParamsToQueryString(this.props.searchParams)}
+                                onChange={(e) => this.setSearchString(e)}>
                             </Form.Control>
                         </Col>
                         <Col style={{flexGrow: "0",paddingTop: "7px"}}>
@@ -113,7 +133,7 @@ class SearchResultList extends Component{
                                 placement="bottom">
                                     <Button 
                                         size="sm"
-                                        onClick={(e) => this.search(false)}>
+                                        onClick={(e) => this.search('down')}>
                                         <FaArrowDown/>
                                     </Button>
                             </OverlayTrigger>
@@ -127,7 +147,7 @@ class SearchResultList extends Component{
                                     placement="bottom">
                                     <Button 
                                         size="sm"
-                                        onClick={(e) => this.search(true)}>
+                                        onClick={(e) => this.search('up')}>
                                         <FaArrowUp/>
                                     </Button>
                             </OverlayTrigger>

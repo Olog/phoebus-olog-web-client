@@ -26,16 +26,22 @@
     render (){        
         
         var logbooks = this.props.currentLogRecord && this.props.currentLogRecord.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <span key={index}>{row.name}&nbsp;</span>
-            )}
-        )
+            if(index === this.props.currentLogRecord.logbooks.length - 1){
+                return(<span key={index}>{row.name}</span>);
+            }
+            else{
+                return (<span key={index}>{row.name},&nbsp;</span>);
+            }    
+        });
     
         var tags = this.props.currentLogRecord && this.props.currentLogRecord.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <span key={index}>{row.name}&nbsp;</span>
-            )}
-        )    
+            if(index === this.props.currentLogRecord.tags.length - 1){
+                return(<span key={index}>{row.name}</span>);
+            }
+            else{
+                return (<span key={index}>{row.name},&nbsp;</span>);
+            } 
+        });    
         
         return (
             <div className="log-details-meta-data">
