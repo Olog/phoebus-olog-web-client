@@ -1,6 +1,6 @@
 {
   "name": "Olog",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -39,6 +39,7 @@
     "react-perfect-scrollbar": "^1.5.8",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-transition-group": "^4.4.2",
     "remarkable": "^2.0.1"
   },
   "scripts": {
