@@ -19,6 +19,7 @@ import React, {Component} from 'react';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import SearchResultItem from './SearchResultItem';
 import LoadingOverlay from 'react-loading-overlay';
@@ -28,6 +29,9 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import {searchParamsToQueryString, queryStringToSearchParameters} from './utils';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Cookies from 'universal-cookie';
+import Pagination from 'react-bootstrap/Pagination';
+import customization from './customization';
+
 
 /**
  * Pane showing search query input and a the list of log entries 
@@ -83,6 +87,10 @@ class SearchResultList extends Component{
         this.props.toggleFilters();
         let symbol = this.props.showFilters ? ">" : "<";
         this.setState({expandSymbol: symbol});
+    }
+
+    setPageSize = (pageSize) => {
+
     }
 
     render(){
@@ -164,11 +172,43 @@ class SearchResultList extends Component{
                           '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
                         })
                       }}>
-                <div style={{overflowY: 'scroll', height: 'calc(100vh)'}}>
-                    {this.props.searchResult.length > 0 ?
-                        list :
-                        "No search results"}
-                </div>
+                    <div style={{overflowY: 'scroll', height: 'calc(100vh)'}}>
+                        {this.props.searchResult.length > 0 ?
+                            list :
+                            "No search results"}
+                    </div>
+                    <div style={{borderColor: 'rgba(97, 97, 97, 0.5)', borderStyle: 'solid', borderWidth: '1px', marginBottom: '3px'}}>
+                    <Container>
+                           <Row>
+                               <Col style={{marginTop: '10px', paddingRight: '0px'}}>
+                                <Form.Label >Hits Per Page: </Form.Label> 
+                               </Col>
+                               <Col style={{paddingLeft: '0px'}}>
+                                <Form.Control size="sm" 
+                                    type="number"
+                                    style={{fontSize: "12px", marginTop: '6px', width: '60px'}}
+                                    defaultValue={customization.defaultPageSize}
+                                    onChange={(e) => this.setPageSize(e)}/>
+                               </Col>
+                               <Col style={{width: '100%'}}>
+                               </Col>
+                               <Col>
+                                <Pagination style={{marginTop: '5px', marginBottom: '4px'}}> 
+                                    <Pagination.First />
+                                    <Pagination.Prev />
+                                    <Pagination.Item>1</Pagination.Item>
+                                    <Pagination.Item>2</Pagination.Item>
+                                    <Pagination.Item>3</Pagination.Item>
+                                    <Pagination.Item>4</Pagination.Item>
+                                    <Pagination.Item>5</Pagination.Item>
+                                    <Pagination.Next />
+                                    <Pagination.Last />
+                                    </Pagination>
+                                </Col>
+                           </Row>
+                       </Container>
+                    </div>
+                    
                 </LoadingOverlay>
             </Container>
         )

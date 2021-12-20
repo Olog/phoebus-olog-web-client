@@ -42,5 +42,10 @@ export default {
     /**
      * Default search params
      */
-    defaultSearchParams: {start: "12 hours", end: "now"}
+    defaultSearchParams: {start: "12 hours", end: "now"},
+
+    /**
+     * Default page size in search
+     */
+    defaultPageSize: 30
 }
