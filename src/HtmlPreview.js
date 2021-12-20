@@ -37,16 +37,14 @@ class HtmlPreview extends Component{
 
     state = {
         commonmarkSrc: "",
+        innerHtml: {},
     }
 
-    getContent = (source) => {
-        return {__html: this.remarkable.render(source)};
-    }
-
-    reset = (source) => {
+    reset = () => {
+        var source = this.props.getCommonmarkSrc();
         var allAttachedFiles = this.props.getAttachedFiles();
         this.remarkable.use(imageProcessor, {attachedFiles: allAttachedFiles, setHtmlPreview: true});
-        this.setState({commonmarkSrc: source})
+        this.setState({innerHtml:  this.remarkable.render(source)  });
     }
 
     
@@ -54,10 +52,10 @@ class HtmlPreview extends Component{
         return(
             <Modal className="html-preview-modal" size="lg" show={this.props.showHtmlPreview}
                 onHide={() => this.props.setShowHtmlPreview(false)}
-                onShow={() => this.reset(this.props.getCommonmarkSrc())}>
+                onShow={() => this.reset()}>
                 <Modal.Body>
                         <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
-                            dangerouslySetInnerHTML={this.getContent(this.state.commonmarkSrc)}>
+                            dangerouslySetInnerHTML={{ __html: this.state.innerHtml }}>
                         </div>
                 </Modal.Body>
                 <Modal.Footer>

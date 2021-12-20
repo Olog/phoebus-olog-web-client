@@ -35,6 +35,16 @@
 var urlPrefix = '';
 
 /**
+ * This is a array of file objects and their index currently added as
+ * attachment or embedded image. This is used by HTML preview feature
+ * to map image id to its file object.
+ * Client code should add this plugin like so:
+ *
+ * remarkable.use(imageProcessor, {attachedFiles: <attached files array> });
+ */
+var allAttachedFiles = [];
+
+/**
  * Returns a Attachment object based on given id.
  */
 export function getFileObject(id, attachedFiles){
@@ -151,15 +161,15 @@ export function processImage(imageNode, textNode){
  * If config.setHtmlPreview is true, it processes image tokens for HTML preview else for 
  * log details view.
  */
+
 const imageProcessor = (md, config) => {
     var setHtmlPreview = false;
-    var attachedFiles = [];
     if(config){
         if(config.urlPrefix){
             urlPrefix = config.urlPrefix;
         }
         if(config.attachedFiles){
-            attachedFiles = config.attachedFiles;
+            allAttachedFiles = config.attachedFiles;
         }
         if(config.setHtmlPreview){
             setHtmlPreview = config.setHtmlPreview;
@@ -188,7 +198,7 @@ const imageProcessor = (md, config) => {
                         if(i + 1 < token.children.length && token.children[i + 1].type === 'text'){
                             var v = '';
                             if(setHtmlPreview){
-                                v = processImageHtmlPreview(value, token.children[i + 1].content, attachedFiles);
+                                v = processImageHtmlPreview(value, token.children[i + 1].content, allAttachedFiles);
                             }
                             else{
                                 v = processImage(value, token.children[i + 1].content);
@@ -207,6 +217,7 @@ const imageProcessor = (md, config) => {
                 token.children = tmp;
             }
         }
+        allAttachedFiles = [];
     });
  };
 
