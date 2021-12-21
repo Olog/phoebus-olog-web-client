@@ -37,7 +37,10 @@ class MainApp extends Component {
     state = {
           logEntryTree: [],
           selectedLogEntryId: 0,
-          searchResult: [],
+          searchResult: {
+            logs: [],
+            hitCount: 0
+          },
           searchInProgress: false,
           logGroupRecords: [],
           showFilters: false,
@@ -56,14 +59,18 @@ class MainApp extends Component {
         }
     }
 
-    search = () => {
-        this.setState({searchInProgress: true}, () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/logs?` + searchParamsToQueryString(this.state.searchParams))
+    search = (sortOrder, from, size, callback) => {
+    
+        this.setState(previousState => ({searchParams: {...previousState.searchParams, from: from, size: size, sort: sortOrder}, searchInProgress: true}), () => {
+        
+          //this.setState({searchInProgress: true}, () => {
+        fetch(`${process.env.REACT_APP_BASE_URL}/logs/search?` + searchParamsToQueryString(this.state.searchParams))
           .then(response => {if(response.ok){return response.json();} else {return []}})
           .then(data => {
-            this.setState({searchResult: data, searchInProgress: false});
+            this.setState({searchResult: data, searchInProgress: false}, () => callback());
           })
-          .catch(() => {this.setState({searchInProgress: false}); alert("Olog service off-line?");})});
+          .catch(() => {this.setState({searchInProgress: false}); alert("Olog service off-line?");})
+        });
     }
 
     setCurrentLogEntry = (logEntry) => {
@@ -73,8 +80,14 @@ class MainApp extends Component {
     }
 
     setSortOrder = (sortOrder) => {
-        let augmentedSortParams = setSearchParam(this.state.searchParams, 'sort', sortOrder);
-        this.setState({searchParams: augmentedSortParams});
+      console.log("sortOrder");
+      console.log(this.state.searchParams);
+        //let augmentedSearchParams = setSearchParam(this.state.searchParams, 'sort', sortOrder);
+        //this.setState({searchParams: augmentedSearchParams});
+        this.setState(previousState => ({...previousState.searchParams, sort: sortOrder}), () => {
+          console.log("sortOrder2");
+          console.log(this.state.searchParams);
+        });
     }
 
     setLogGroupRecords = (recs) => {

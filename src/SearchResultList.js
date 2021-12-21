@@ -41,21 +41,39 @@ class SearchResultList extends Component{
 
     state = {
         expandSymbol: ">",
-        sortOrder: 'down',
+        pageItems: [],
+        currentPageIndex: 1,
+        pageSize: customization.defaultPageSize,
+        pageCount: 1
     }
 
     cookies = new Cookies();
 
     componentDidMount = () => {
-        this.props.search();
+        this.search("down");
     }
 
     search = (sortOrder) => {
-        this.setState({sortOrder: sortOrder}, () => this.props.setSortOrder(this.state.sortOrder));
+        //this.setState({sortOrder: sortOrder}, () => this.props.setSortOrder(this.state.sortOrder));
         // Set the cookie with a long maxAge. For each new search the expiration date of the
         // cookie will be updated, so specifying an exact date may not be meaningful.
         this.cookies.set('searchString', searchParamsToQueryString(this.props.searchParams), {path: '/', maxAge: '100000000'});
-        this.props.search();
+        this.props.search(sortOrder, (this.state.currentPageIndex - 1) * this.state.pageSize, this.state.pageSize, this.updatePaginationControls);
+        //this.updatePaginationControls();
+    }
+
+    updatePaginationControls = () => {
+        //console.log(this.props.searchResult.hitCount + " " + this.state.pageSize);
+        // Calculate page count
+        this.setState({pageCount: Math.ceil(this.props.searchResult.hitCount / this.state.pageSize), pageItems: []}, () => {
+            console.log("after set state " + this.state.pageCount);
+            let items = [];
+            for(let i = 1; i < this.state.pageCount + 1; i++){
+                items.push(<Pagination.Item key={i} active={i === this.state.currentPageIndex}>{i}</Pagination.Item>)
+            }
+    
+            this.setState({pageItems: [...this.state.pageItems, ...items]});
+        });
     }
 
     submit = (event) => {
@@ -89,13 +107,24 @@ class SearchResultList extends Component{
         this.setState({expandSymbol: symbol});
     }
 
-    setPageSize = (pageSize) => {
-
+    /**
+     * Handles input in hits per page field and rejets any
+     * value < 1 and > 999, i.e. leading zeros are also rejected.
+     */
+    setPageSize = (e) => {
+        const re = /^[0-9\b]{1,3}$/;
+        if (e.target.value === '' || re.test(e.target.value)) {
+            let pageCount = parseInt(e.target.value);
+            if(pageCount === 0){
+                return;
+            }
+            this.setState({pageSize: e.target.value})
+        }   
     }
 
     render(){
 
-        var list = this.props.searchResult.map((item, index) => {
+        var list = this.props.searchResult.logs.map((item, index) => {
             return <SearchResultItem
                         key={index}
                         log={item}
@@ -173,37 +202,35 @@ class SearchResultList extends Component{
                         })
                       }}>
                     <div style={{overflowY: 'scroll', height: 'calc(100vh)'}}>
-                        {this.props.searchResult.length > 0 ?
+                        {this.props.searchResult.logs.length > 0 ?
                             list :
                             "No search results"}
                     </div>
                     <div style={{borderColor: 'rgba(97, 97, 97, 0.5)', borderStyle: 'solid', borderWidth: '1px', marginBottom: '3px'}}>
                     <Container>
                            <Row>
-                               <Col style={{marginTop: '10px', paddingRight: '0px'}}>
-                                <Form.Label >Hits Per Page: </Form.Label> 
+                               <Col style={{marginTop: '10px', paddingRight: '5px'}}>
+                                <Form.Label >Hits per page: </Form.Label> 
                                </Col>
                                <Col style={{paddingLeft: '0px'}}>
                                 <Form.Control size="sm" 
-                                    type="number"
+                                    type="input"
                                     style={{fontSize: "12px", marginTop: '6px', width: '60px'}}
-                                    defaultValue={customization.defaultPageSize}
+                                    value={this.state.pageSize}
                                     onChange={(e) => this.setPageSize(e)}/>
                                </Col>
-                               <Col style={{width: '100%'}}>
-                               </Col>
-                               <Col>
-                                <Pagination style={{marginTop: '5px', marginBottom: '4px'}}> 
-                                    <Pagination.First />
+                               <Col style={{marginTop: '5px', marginBottom: '4px', visibility: this.state.pageCount < 2 ? 'hidden' : 'visible'}}>
+                                <Pagination 
+                                    size='sm'> 
+                                    <Pagination.First disabled={this.state.currentPageIndex >= 1}/>
                                     <Pagination.Prev />
-                                    <Pagination.Item>1</Pagination.Item>
-                                    <Pagination.Item>2</Pagination.Item>
-                                    <Pagination.Item>3</Pagination.Item>
-                                    <Pagination.Item>4</Pagination.Item>
-                                    <Pagination.Item>5</Pagination.Item>
+                                    {this.state.pageItems}
                                     <Pagination.Next />
-                                    <Pagination.Last />
+                                    <Pagination.Last disabled={this.state.currentPageIndex === this.state.pageCount}/>
                                     </Pagination>
+                                </Col>
+                                <Col style={{marginTop: '12px', visibility: this.state.pageCount < 2 ? 'hidden' : 'visible'}}>
+                                    {this.state.currentPageIndex} / {this.state.pageCount}
                                 </Col>
                            </Row>
                        </Container>
