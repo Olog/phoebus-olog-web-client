@@ -490,10 +490,10 @@ class EntryEditor extends Component{
                                     onClick={() => this.setState({showEmbedImageDialog: true})}>
                                 Embed Image
                             </Button>
-                            {/*<Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                            <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
                                     onClick={() => this.setState({showHtmlPreview: true})}>
-                                HTML Preview
-                                </Button>*/}
+                                Preview
+                                </Button>
                         </Form.Row>
                         </Form>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
