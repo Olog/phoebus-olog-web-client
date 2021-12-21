@@ -34,20 +34,6 @@ export function formatFullDateTime(date){
     return moment(date).format(fullDateTime);
 }
 
-export function getSearchString(searchCriteria){
-    let searchString = constructLogbooksString(searchCriteria.logbooks)
-        + constructTagsString(searchCriteria.tags)
-        + getTimeRangeString(searchCriteria)
-        + getTitleSearchString(searchCriteria)
-        + getTextSearchString(searchCriteria)
-        + getLevelSearchString(searchCriteria)
-        + getAuthorSearchString(searchCriteria);
-    if (searchString.charAt(0) === '&') {
-        searchString = searchString.substring(1);
-    }
-    return searchString;
-}
-
 /**
  * Sorts a search result such that log entries with same createdDate are
  * collected into separate arrays. The returned object is an array of such
