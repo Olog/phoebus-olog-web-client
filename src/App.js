@@ -95,6 +95,7 @@ class App extends Component{
         return(
             <>
                 <Router>
+                    
                     <Banner {...this.state}
                             refreshLogbooks={this.refreshLogbooks}
                             refreshTags={this.refreshTags}
@@ -122,6 +123,7 @@ class App extends Component{
                             currentLogEntry={this.state.currentLogEntry}/>}>
                         </Route>
                     </Switch>
+                   
                 </Router>
             </>
         );

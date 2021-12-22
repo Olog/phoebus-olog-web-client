@@ -44,36 +44,56 @@ class SearchResultList extends Component{
         pageItems: [],
         currentPageIndex: 1,
         pageSize: customization.defaultPageSize,
-        pageCount: 1
+        pageCount: 1,
+        sortOrder: "down" // Need to maintain sort order here as pagination buttons trigger search.
     }
 
     cookies = new Cookies();
 
     componentDidMount = () => {
-        this.search("down");
+        this.search();
     }
 
-    search = (sortOrder) => {
-        //this.setState({sortOrder: sortOrder}, () => this.props.setSortOrder(this.state.sortOrder));
-        // Set the cookie with a long maxAge. For each new search the expiration date of the
-        // cookie will be updated, so specifying an exact date may not be meaningful.
-        this.cookies.set('searchString', searchParamsToQueryString(this.props.searchParams), {path: '/', maxAge: '100000000'});
-        this.props.search(sortOrder, (this.state.currentPageIndex - 1) * this.state.pageSize, this.state.pageSize, this.updatePaginationControls);
-        //this.updatePaginationControls();
+    search = () => {
+        this.props.search(this.state.sortOrder, (this.state.currentPageIndex - 1) * this.state.pageSize, this.state.pageSize, this.updatePaginationControls);
     }
 
     updatePaginationControls = () => {
-        //console.log(this.props.searchResult.hitCount + " " + this.state.pageSize);
         // Calculate page count
-        this.setState({pageCount: Math.ceil(this.props.searchResult.hitCount / this.state.pageSize), pageItems: []}, () => {
-            console.log("after set state " + this.state.pageCount);
+        let newPageCount = Math.ceil(this.props.searchResult.hitCount / this.state.pageSize);
+        
+        this.setState({pageCount: newPageCount, pageItems: []}, () => {
             let items = [];
-            for(let i = 1; i < this.state.pageCount + 1; i++){
-                items.push(<Pagination.Item key={i} active={i === this.state.currentPageIndex}>{i}</Pagination.Item>)
+            // Calculate first index to render. This depends on the current page index as well as the
+            // total page count (which might be greater than the maximum number of buttons: 10).
+            let pagesToRender =  Math.min(9, this.state.pageCount - 1);
+            let firstIndex = Math.max(1, this.state.currentPageIndex - pagesToRender);
+            let lastIndex = firstIndex + pagesToRender;
+            for(let i = firstIndex; i <= lastIndex; i++){
+                items.push(<Pagination.Item 
+                    key={i} 
+                    active={i === this.state.currentPageIndex}
+                    onClick={() => this.goToPage(i)}>
+                    {i}
+                </Pagination.Item>)
             }
     
             this.setState({pageItems: [...this.state.pageItems, ...items]});
         });
+    }
+
+    goToPage = (pageNumber) => {
+        this.setState({currentPageIndex: pageNumber}, () => {
+            this.search();
+        });
+    }
+
+    downButtonClicked = () => {
+        this.setState({currentPageIndex: 1, sortOrder: "down"}, () => this.search())
+    }
+
+    upButtonClicked = () => {
+        this.setState({currentPageIndex: 1, sortOrder: "up"}, () => this.search())
     }
 
     submit = (event) => {
@@ -120,6 +140,12 @@ class SearchResultList extends Component{
             }
             this.setState({pageSize: e.target.value})
         }   
+    }
+
+    handleKeyDown = (e) => {
+        if(e.key === 'Enter'){
+            this.setState({currentPageIndex: 1}, () => this.search());
+        }
     }
 
     render(){
@@ -170,7 +196,7 @@ class SearchResultList extends Component{
                                 placement="bottom">
                                     <Button 
                                         size="sm"
-                                        onClick={(e) => this.search('down')}>
+                                        onClick={(e) => this.downButtonClicked()}>
                                         <FaArrowDown/>
                                     </Button>
                             </OverlayTrigger>
@@ -184,7 +210,7 @@ class SearchResultList extends Component{
                                     placement="bottom">
                                     <Button 
                                         size="sm"
-                                        onClick={(e) => this.search('up')}>
+                                        onClick={(e) => this.upButtonClicked()}>
                                         <FaArrowUp/>
                                     </Button>
                             </OverlayTrigger>
@@ -201,41 +227,50 @@ class SearchResultList extends Component{
                           '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
                         })
                       }}>
-                    <div style={{overflowY: 'scroll', height: 'calc(100vh)'}}>
+                    <div style={{overflowY: 'scroll', height: 'calc(80vh)'}} >
                         {this.props.searchResult.logs.length > 0 ?
                             list :
                             "No search results"}
                     </div>
-                    <div style={{borderColor: 'rgba(97, 97, 97, 0.5)', borderStyle: 'solid', borderWidth: '1px', marginBottom: '3px'}}>
-                    <Container>
+                    <div className="pagination-container">
+                        <Container>
                            <Row>
-                               <Col style={{marginTop: '10px', paddingRight: '5px'}}>
+                               <Col style={{padding: '0px', maxWidth: '90px'}}>
                                 <Form.Label >Hits per page: </Form.Label> 
                                </Col>
-                               <Col style={{paddingLeft: '0px'}}>
+                                <Col style={{padding: '0px', maxWidth: '50px'}}>
                                 <Form.Control size="sm" 
                                     type="input"
-                                    style={{fontSize: "12px", marginTop: '6px', width: '60px'}}
                                     value={this.state.pageSize}
-                                    onChange={(e) => this.setPageSize(e)}/>
+                                    onChange={(e) => this.setPageSize(e)}
+                                    onKeyDown={(e) => this.handleKeyDown(e)}/>
                                </Col>
-                               <Col style={{marginTop: '5px', marginBottom: '4px', visibility: this.state.pageCount < 2 ? 'hidden' : 'visible'}}>
-                                <Pagination 
+                            </Row>
+                            <Row style={{visibility: this.state.pageCount < 2 ? 'hidden' : 'visible'}}>
+                               <Col style={{marginTop: '13px', padding: '0px'}}>
+                                <Pagination
                                     size='sm'> 
-                                    <Pagination.First disabled={this.state.currentPageIndex >= 1}/>
-                                    <Pagination.Prev />
+                                    <Pagination.First disabled={this.state.currentPageIndex === 1}
+                                        onClick={() => this.goToPage(1)}
+                                        style={{fontWeight: 'bold'}}>&#124;&lt;</Pagination.First>
+                                    <Pagination.Prev  onClick={() => this.goToPage(this.state.currentPageIndex - 1)}
+                                        disabled={this.state.currentPageIndex === 1}
+                                        style={{fontWeight: 'bold'}} >&lt;</Pagination.Prev>
                                     {this.state.pageItems}
-                                    <Pagination.Next />
-                                    <Pagination.Last disabled={this.state.currentPageIndex === this.state.pageCount}/>
+                                    <Pagination.Next onClick={() => this.goToPage(this.state.currentPageIndex + 1)} 
+                                        disabled={this.state.currentPageIndex === this.state.pageCount}
+                                        style={{fontWeight: 'bold'}}>&gt;</Pagination.Next>
+                                    <Pagination.Last disabled={this.state.currentPageIndex === this.state.pageCount}
+                                        onClick={() => this.goToPage(this.state.pageCount)}
+                                        style={{fontWeight: 'bold'}}>&gt;&#124;</Pagination.Last>
                                     </Pagination>
                                 </Col>
-                                <Col style={{marginTop: '12px', visibility: this.state.pageCount < 2 ? 'hidden' : 'visible'}}>
+                                <Col style={{marginTop: '16px',  padding:'5px', maxWidth: '60px'}}>
                                     {this.state.currentPageIndex} / {this.state.pageCount}
                                 </Col>
                            </Row>
                        </Container>
                     </div>
-                    
                 </LoadingOverlay>
             </Container>
         )

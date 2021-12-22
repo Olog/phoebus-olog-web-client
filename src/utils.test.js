@@ -208,10 +208,12 @@ test('getLogEntryGroupMissing', () => {
 });
 
 test('queryStringToSearchParameters', () => {
-    let query = "a=b&C=D";
+    let query = "start=b&end=D&foo=bar";
     let map = queryStringToSearchParameters(query);
 
-    expect(map['a']).toBe('b');
+    expect(map['start']).toBe('b');
+    // Unsupported query params should be undefined
+    expect(map['foo']).toBeUndefined();
 });
 
 test('setSearchParam', () => {
