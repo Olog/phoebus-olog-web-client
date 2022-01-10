@@ -22,6 +22,8 @@ import { v4 as uuidv4 } from 'uuid';
  const shortDateFormat = 'YYYY-MM-DD';
  const fullDateTime = 'YYYY-MM-DD HH:mm:ss';
 
+ const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties"];
+
 export function formatShortTime(date){
     return moment(date).format(shortTimeFormat);
 }
@@ -155,7 +157,8 @@ export function findLogEntryGroup(tree, logEntryGroupId){
 
 /**
  * Courtesy Matthew Daniels: https://gist.github.com/MatthewDaniels/388fa1e0c02613f103f00a504ed58c55.
- * Constructs a map of search parameters from the specified query string.
+ * Constructs a map of search parameters from the specified query string. Note that some filtering is
+ * applied: unsupported key words are ignored.
  * @param {*} query 
  * @returns 
  */
@@ -170,18 +173,20 @@ export function queryStringToSearchParameters(query) {
     
   // map the hit query into a proper object
   query.replace(/([^&|?=]+)=?([^&]*)(?:&+|$)/g, function (match, key, value) {
-      if (key in map) {
-          // the key already exists, so we need to check if it is an array, if not, make it an array and add the new value
-          if (toType(map[key]) !== 'array') {
-              // it's not an array - make it an array
-              map[key] = [map[key]];
-          }
-          // push the new value into the array
-          map[key].push(value);
-      } else {
-          // put the value into the map
-          map[key] = value;
-      }
+      if(supportedKeys.indexOf(key) > -1){
+        if (key in map) {
+            // the key already exists, so we need to check if it is an array, if not, make it an array and add the new value
+            if (toType(map[key]) !== 'array') {
+                // it's not an array - make it an array
+                map[key] = [map[key]];
+            }
+            // push the new value into the array
+            map[key].push(value);
+        } else {
+            // put the value into the map
+            map[key] = value;
+        }
+      } 
   });
   return map;
 }
@@ -207,6 +212,9 @@ export function removeSearchParam(searchParams, key){
  * Constructs a query string from the search parameter map.
  */
 export function searchParamsToQueryString(map){
+    if(!map){
+        return "";
+    }
     return Object.keys(map).map(key => key + '=' + map[key]).join('&');
 }
 

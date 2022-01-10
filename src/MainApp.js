@@ -25,7 +25,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Collapse from 'react-bootstrap/Collapse';
 import customization from './customization';
-import {queryStringToSearchParameters, setSearchParam, searchParamsToQueryString} from './utils.js';
+import {queryStringToSearchParameters, searchParamsToQueryString} from './utils.js';
 import Cookies from 'universal-cookie';
 
 
@@ -37,7 +37,10 @@ class MainApp extends Component {
     state = {
           logEntryTree: [],
           selectedLogEntryId: 0,
-          searchResult: [],
+          searchResult: {
+            logs: [],
+            hitCount: 0
+          },
           searchInProgress: false,
           logGroupRecords: [],
           showFilters: false,
@@ -46,35 +49,49 @@ class MainApp extends Component {
 
     cookies = new Cookies();
 
-    componentDidMount = () => {
-        let persistedSearchString = this.cookies.get('searchString');
-        if(persistedSearchString){
-            this.setState({searchParams: queryStringToSearchParameters(persistedSearchString)});
-        }
-        else{
-            this.setState({searchParams: customization.defaultSearchParams});
-        }
+    componentDidMount = () =>{
+      
     }
 
-    search = () => {
-        this.setState({searchInProgress: true}, () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/logs?` + searchParamsToQueryString(this.state.searchParams))
-          .then(response => {if(response.ok){return response.json();} else {return []}})
-          .then(data => {
-            this.setState({searchResult: data, searchInProgress: false});
-          })
-          .catch(() => {this.setState({searchInProgress: false}); alert("Olog service off-line?");})});
+    search = (sortOrder, from, size, callback) => {
+      // Check if search parameters have been defined
+      if(Object.values(this.state.searchParams).length === 0){
+        let searchParameters = {};
+        // Read from cookie
+        let searchParamsFromCookie = this.cookies.get('searchString');
+        // If this is empty/undefined, fall back to default search params defined in customization
+        if(!searchParamsFromCookie || searchParamsFromCookie === ''){
+          searchParameters = customization.defaultSearchParams;
+        }
+        else{
+          searchParameters = queryStringToSearchParameters(searchParamsFromCookie);
+        }
+        this.setState({searchParams: searchParameters, searchInProgress: true}, () => {
+          this.doSearch(sortOrder, from, size, callback);
+        });
+      }
+      else{
+        this.doSearch(sortOrder, from, size, callback);
+      }
+    }
+
+    doSearch = (sortOrder, from, size, callback) => {
+      let query = searchParamsToQueryString(this.state.searchParams);
+      this.cookies.set('searchString', query, {path: '/', maxAge: '100000000'});
+      // Append sort, from and size
+      query += "&sort=" + sortOrder + "&from=" + from + "&size=" + size;
+      fetch(`${process.env.REACT_APP_BASE_URL}/logs/search?` + query)
+            .then(response => {if(response.ok){return response.json();} else {return []}})
+            .then(data => {
+              this.setState({searchResult: data, searchInProgress: false}, () => callback());
+            })
+            .catch(() => {this.setState({searchInProgress: false}); alert("Olog service off-line?");})
     }
 
     setCurrentLogEntry = (logEntry) => {
         this.setState({selectedLogEntryId: logEntry.id});
         this.props.setCurrentLogEntry(logEntry);
         this.setState({showGroup: false});
-    }
-
-    setSortOrder = (sortOrder) => {
-        let augmentedSortParams = setSearchParam(this.state.searchParams, 'sort', sortOrder);
-        this.setState({searchParams: augmentedSortParams});
     }
 
     setLogGroupRecords = (recs) => {
@@ -107,8 +124,7 @@ class MainApp extends Component {
                 setCurrentLogEntry={this.setCurrentLogEntry}
                 setSearchParams={this.setSearchParams}
                 search={this.search}
-                toggleFilters={this.toggleFilters}
-                setSortOrder={this.setSortOrder}/>
+                toggleFilters={this.toggleFilters}/>
             </Col>
             <Col  xs={{span: 12, order: 1}} sm={{span: 12, order: 1}} md={{span: 12, order: 1}} lg={{span: this.state.showFilters ? 6 : 8, order: 3}} style={{padding: "2px"}}>
               <LogDetails {...this.state} {...this.props}
