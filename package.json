@@ -3,43 +3,20 @@
   "version": "1.0.3",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@react-native-community/masked-view": "^0.1.10",
-    "@react-navigation/native": "^5.7.3",
-    "@react-navigation/stack": "^5.9.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
     "axios": "^0.21.2",
     "babel-jest": "^24.9.0",
     "bootstrap": "^4.5.0",
-    "i18next": "^19.8.4",
-    "i18next-browser-languagedetector": "^6.0.1",
     "moment": "^2.27.0",
-    "pretty-remarkable": "^1.0.0",
-    "properties-reader": "^2.2.0",
-    "query-string": "^7.0.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.3",
-    "react-cookie": "^4.0.3",
+    "react-cookie": "^4.1.1",
     "react-datetime-picker": "^3.0.4",
     "react-dom": "^16.13.1",
-    "react-grid-layout": "^1.1.1",
-    "react-i18next": "^11.8.5",
     "react-icons": "^3.10.0",
     "react-loading-overlay": "^1.0.1",
-    "react-markdown": "^5.0.2",
     "react-moment": "^0.9.7",
-    "react-native": "^0.64.1",
-    "react-native-gesture-handler": "^1.8.0",
-    "react-native-reanimated": "^1.13.0",
-    "react-native-safe-area-context": "^3.1.7",
-    "react-native-screens": "^2.16.1",
-    "react-navigation": "^4.4.0",
-    "react-perfect-scrollbar": "^1.5.8",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "react-transition-group": "^4.4.2",
     "remarkable": "^2.0.1"
   },
   "scripts": {
@@ -64,10 +41,8 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
     "jest": "^24.9.0",
-    "jest-cli": "^26.6.3",
-    "react-addons-test-utils": "^15.6.2"
+    "jest-cli": "^26.6.3"
   },
   "jest": {
     "transform": {
