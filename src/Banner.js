@@ -17,9 +17,7 @@
  */
 
 import React, { Component} from 'react'
-//import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
-//import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import {Link} from "react-router-dom";
@@ -30,7 +28,7 @@ import LogoutDialog from './LogoutDialog';
 import checkSession from './session-check';
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 import axios from 'axios';
-import {name, version} from '../package.json';
+import packageInfo from '../package.json';
 import Row from 'react-bootstrap/Row';
 
 /**
@@ -102,21 +100,14 @@ class Banner extends Component {
       <>
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">
-            <Row style={{marginLeft: "1px", marginRight: "1px"}}>{name}</Row>
-            <Row style={{marginLeft: "1px", marginRight: "1px"}}><span style={{fontSize: "10px  "}}>v{version}</span></Row>
+            <Row style={{marginLeft: "1px", marginRight: "1px"}}>{packageInfo.name}</Row>
+            <Row style={{marginLeft: "1px", marginRight: "1px"}}><span style={{fontSize: "10px  "}}>v{packageInfo.version}</span></Row>
           </Navbar.Brand>
           <Link to="/edit">
             <Button disabled={!this.props.userData.userName} 
               variant="primary" 
               onClick={() => this.handleNewLogEntry()}>New Log Entry</Button>
           </Link>
-          {/*<Dropdown>
-            <Dropdown.Toggle disabled={!this.props.userData.userName}/>
-            <DropdownMenu alignRight="true">
-              <Dropdown.Item onClick={() => this.setShowAddLogbook(true)}>New Logbook</Dropdown.Item>
-              <Dropdown.Item onClick={() => this.setShowAddTag(true)}>New Tag</Dropdown.Item>
-            </DropdownMenu>
-          </Dropdown>*/}
           <Nav className="justify-content-end" style={{ width: "100%" }}>
             <Button onClick={this.handleClick}>{this.props.userData.userName ? this.props.userData.userName : 'Sign In'}</Button>
           </Nav> 
