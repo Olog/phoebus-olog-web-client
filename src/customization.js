@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-export default {
+let customization = {
     /**
      * The name of the "level" (legacy name) meta data field.
      */
@@ -49,3 +49,5 @@ export default {
      */
     defaultPageSize: 30
 }
+
+export default customization;

@@ -33,12 +33,11 @@ Available:
 * Support for URLs to show single log entry, e.g. http://my.olog.server.com/logs/1234.
 * Support for grouping log entries through a "reply" button. 
 * Basic tree view for search results.
-* Properties editor
+* Properties editor.
+* HTML preview of log entry, including embedded images.
 
 Backlog:
-* Add expand/collapse of parent items in search results tree view.
 * Localization.
-* Adaptations for small screens.
 
 ## Site customization
 
@@ -48,7 +47,7 @@ The file `customization.js` contains customizable items. Please review its conte
 
 In order to develop and test with reasonable effort you will need the proper toolchain:
 
-1) Node JS, install the latest version.
+1) Node JS, install latest (>= 17.x) version.
 2) A text editor capable of syntax highlighting. Visual Studio Code is a good alternative as it comes with good support for React development. There are numerous extensions for VS Code that may enhance the development experience even further.
 3) Optional: a React JS add-on to your browser, which should probably be Chrome or Firefox.
 
@@ -57,7 +56,7 @@ In order to develop and test with reasonable effort you will need the proper too
 Install the toolchain and then:
 
 1) Clone this project and cd to it.
-2) Invoke ``>npm install`` to download dependencies. Various warning messages may be shown (e.g. missing git support on Mac, deprecated versions).
+2) Invoke ``> npm install`` to download dependencies. Various warning messages may be shown (e.g. missing git support on Mac, deprecated versions).
 3) Create a ``.env`` file in the root directory. Add the line:
    ``REACT_APP_BASE_URL='url-to-Olog-ES-service'``.
 4) Launch the Olog-ES backend.
@@ -105,7 +104,6 @@ The below instructions apply to a deployment scenario where a web server hosts t
   
    In this example the Olog-ES backend is deployed on the same host on port 8080.
    
-
 
 
 
