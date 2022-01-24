@@ -32,7 +32,7 @@ Available:
 * Custom dialog for embedding images (from file system) into log entry body.
 * Support for URLs to show single log entry, e.g. http://my.olog.server.com/logs/1234.
 * Support for grouping log entries through a "reply" button. 
-* Basic tree view for search results.
+* List view for search results.
 * Properties editor.
 * HTML preview of log entry, including embedded images.
 
@@ -67,7 +67,7 @@ Install the toolchain and then:
 
 Unit test code can be added in files named ``*.test.js``.
    
-To run tests, invoke ``>npm run test``.
+To run tests, invoke ``>npm run-script test``.
 
 ## Deployment
 
