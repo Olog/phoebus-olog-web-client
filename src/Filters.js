@@ -27,6 +27,7 @@ import Table from 'react-bootstrap/Table';
 import DateTimePicker from 'react-datetime-picker';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import customization from './customization';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -159,7 +160,7 @@ class Filters extends Component{
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="2">Level:</td>
+                            <td colSpan="2">{customization.level}:</td>
                         </tr>
                         <tr>
                             <td colSpan="2">
