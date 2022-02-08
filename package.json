@@ -15,7 +15,8 @@
     "react-moment": "^0.9.7",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.0",
-    "remarkable": "^2.0.1"
+    "remarkable": "^2.0.1",
+    "universal-cookie": "^4.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
