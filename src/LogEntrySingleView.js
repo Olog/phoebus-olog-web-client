@@ -78,11 +78,11 @@ class LogEntrySingleView extends Component{
                     <span style={{float: "right"}}>{this.props.currentLogEntry.id}</span>
                 </div>
                 <LogDetailsMetaData currentLogRecord={this.props.currentLogEntry}/>
-                <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
+                <div style={{paddingTop: "5px", wordWrap: "break-word", fontSize: "16px"}} className="olog-table"
                     dangerouslySetInnerHTML={this.getContent(this.props.currentLogEntry.source)}>
                 </div>
-                <Accordion defaultActiveKey="0">
-                    <Accordion.Toggle as={Card.Header} eventKey="0" 
+                <Accordion defaultActiveKey="0"> 
+                    <Accordion.Toggle as={Card.Header} eventKey="0" style={{padding: "2px"}}
                     onClick={() => this.setState({attachmentVisible: !this.state.attachmentVisible})}>
                     {this.state.attachmentVisible ? <FaChevronDown /> : <FaChevronRight/> } Attachments
                     </Accordion.Toggle>
@@ -93,7 +93,7 @@ class LogEntrySingleView extends Component{
                     </Accordion.Collapse>
                 </Accordion>
                 <Accordion>
-                    <Accordion.Toggle as={Card.Header} eventKey="0" 
+                    <Accordion.Toggle as={Card.Header} eventKey="0" style={{padding: "2px"}}
                         onClick={() => this.setState({propertiesVisible: !this.state.propertiesVisible})}>
                         {this.state.propertiesVisible ? <FaChevronDown /> : <FaChevronRight/> } Properties
                     </Accordion.Toggle>

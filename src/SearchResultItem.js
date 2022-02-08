@@ -40,11 +40,11 @@ class SearchResultItem extends Component{
                 <Table size="sm" onClick={() => this.props.setCurrentLogEntry(this.props.log)}>
                     <tbody>
                         <tr>
-                            <td style={{fontSize: "18px", fontWeight: "200"}}>{this.props.log.owner}</td>
+                            <td style={{fontSize: "18px", fontWeight: "200"}}>{this.props.log.title}</td>
                             <td style={{textAlign: "right"}}>{this.props.log.attachments && this.props.log.attachments.length  !== 0 ? <FaPaperclip/> : ""}</td>
                         </tr>
                         <tr>
-                            <td style={{fontWeight: "600"}}>{this.props.log.title}</td><td style={{textAlign: "right"}}>
+                            <td>{this.props.log.owner}</td><td style={{textAlign: "right"}}>
                                 {formatFullDateTime(this.props.log.createdDate)}</td>
                         </tr>
                         <tr>
