@@ -17,6 +17,7 @@
  */
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import packageInfo from '../package.json';
 
  const shortTimeFormat = 'HH:mm';
  const shortDateFormat = 'YYYY-MM-DD';
@@ -226,4 +227,8 @@ export function dateToString(value){
            ("0" + value.getDate()).slice(-2) + ' ' + ('0' + value.getHours()).slice(-2) +
            ':' + ('0' + value.getMinutes()).slice(-2) + ':' +
            ('0' + value.getSeconds()).slice(-2);
+}
+
+export function getClientInfo(){
+    return "Olog Web " + packageInfo.version + " on " + window.navigator.userAgent;
 }
