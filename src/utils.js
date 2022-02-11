@@ -229,6 +229,6 @@ export function dateToString(value){
            ('0' + value.getSeconds()).slice(-2);
 }
 
-export function getClientInfo(){
-    return "Olog Web " + packageInfo.version + " on " + window.navigator.userAgent;
+export function ologClientInfoHeader() {
+    return {"X-Olog-Client-Info": "Olog Web " + packageInfo.version + " on " + window.navigator.userAgent}
 }
