@@ -35,7 +35,7 @@ import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
 import Selection from './Selection';
 import checkSession from './session-check';
-import { getLogEntryGroupId, newLogEntryGroup, removeImageMarkup } from './utils';
+import { getLogEntryGroupId, newLogEntryGroup, removeImageMarkup, getClientInfo } from './utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from 'react-loading-overlay';
 
@@ -260,7 +260,7 @@ class EntryEditor extends Component{
                             level: this.state.level,
                             description: this.descriptionRef.current.value
                         }
-                        axios.put(`${process.env.REACT_APP_BASE_URL}/logs?markup=commonmark`, logEntry, { withCredentials: true })
+                        axios.put(`${process.env.REACT_APP_BASE_URL}/logs?markup=commonmark`, logEntry, { withCredentials: true, headers: {"X-Olog-Client-Info": getClientInfo()}})
                             .then(res => {
                                 if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
                                     this.submitAttachmentsMulti(res.data.id);
