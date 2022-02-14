@@ -35,7 +35,7 @@ import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
 import Selection from './Selection';
 import checkSession from './session-check';
-import { getLogEntryGroupId, newLogEntryGroup, removeImageMarkup, getClientInfo } from './utils';
+import {removeImageMarkup, ologClientInfoHeader } from './utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from 'react-loading-overlay';
 
@@ -62,17 +62,13 @@ class EntryEditor extends Component{
    
     componentDidMount = () => { 
         // If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
-        // Copy relevant fields to the state of this class, taking into account that a Log Entry Group
+        // Copy relevant fields to the state of this class, taking into account that a Reply
         // may or may not exist in the template.
         if(this.props.replyAction && this.props.currentLogEntry){
             let p = [];
             this.props.currentLogEntry.properties.forEach((property, i) => {
                 p.push(property);
             });
-            if(!getLogEntryGroupId(this.props.currentLogEntry.properties)){
-                let property = newLogEntryGroup();
-                p.push(property);
-            }
             this.setState({
                 selectedLogbooks: this.props.currentLogEntry.logbooks,
                 selectedTags: this.props.currentLogEntry.tags,
@@ -196,34 +192,6 @@ class EntryEditor extends Component{
         }
     }
 
-    updateCurrentLogEntry = () => {
-        const logEntry = {
-            id: this.props.currentLogEntry.id,
-            logbooks: this.props.currentLogEntry.logbooks,
-            tags: this.props.currentLogEntry.logbooks.tags,
-            properties: this.state.selectedProperties,
-            title: this.props.currentLogEntry.title,
-            level: this.props.currentLogEntry.level,
-            description: this.props.currentLogEntry.source,
-            source: null
-        };
-        const { history } = this.props;
-        axios.post(`${process.env.REACT_APP_BASE_URL}/logs/` + this.props.currentLogEntry.id + `?markup=commonmark`, logEntry, { withCredentials: true })
-        .then(res => {
-            this.setState({createInProgress: false});
-            history.push('/');
-        })
-        .catch(error => {
-            if(error.response && (error.response.status === 401 || error.response.status === 403)){
-                alert('You are currently not authorized to create a log entry.')
-            }
-            else if(error.response && (error.response.status >= 500)){
-                alert('Failed to create log entry.')
-            }
-            this.setState({createInProgress: false});
-        });
-    }
-
     selectionsValid = () => {
         this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0});
         return this.state.logbookSelectionValid;
@@ -260,20 +228,16 @@ class EntryEditor extends Component{
                             level: this.state.level,
                             description: this.descriptionRef.current.value
                         }
-                        axios.put(`${process.env.REACT_APP_BASE_URL}/logs?markup=commonmark`, logEntry, { withCredentials: true, headers: {"X-Olog-Client-Info": getClientInfo()}})
+                        let url = this.props.replyAction ? 
+                            `${process.env.REACT_APP_BASE_URL}/logs?markup=commonmark&inReplyTo=` + this.props.currentLogEntry.id :
+                            `${process.env.REACT_APP_BASE_URL}/logs?markup=commonmark`;
+                        axios.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
                             .then(res => {
                                 if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
                                     this.submitAttachmentsMulti(res.data.id);
                                 }
-                                // If the currentLogRecord is defined then user is creating a reply entry. So we need to update the currentLogRecord 
-                                // with the Log Entry Group, but only if the currentLogRecord does not yet contain it.
-                                if(this.props.replyAction  && !getLogEntryGroupId(this.props.currentLogEntry.properties)){    
-                                    this.updateCurrentLogEntry();
-                                }
-                                else{
-                                    this.setState({createInProgress: false});
-                                    history.push('/');
-                                }
+                                this.setState({createInProgress: false});
+                                history.push('/');
                             })
                             .catch(error => {
                                 if(error.response && (error.response.status === 401 || error.response.status === 403)){
@@ -284,7 +248,6 @@ class EntryEditor extends Component{
                                 }
                                 this.setState({createInProgress: false});
                             });
-                        
                     }
                     return;
                 }
