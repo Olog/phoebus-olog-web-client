@@ -53,7 +53,7 @@ class LoginDialog extends Component{
             this.hideLogin();
            }, error => { 
              if(!error.response){
-              this.setState({loginError: "Login failed. Service off-line?"})
+              this.setState({loginError: "Login failed. Unable to connect to service."})
              }
              else if(error.response.status === 401){
               this.setState({loginError: "Login failed, invalid credentials."})

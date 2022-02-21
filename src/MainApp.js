@@ -81,11 +81,26 @@ class MainApp extends Component {
       // Append sort, from and size
       query += "&sort=" + sortOrder + "&from=" + from + "&size=" + size;
       fetch(`${process.env.REACT_APP_BASE_URL}/logs/search?` + query, {headers: ologClientInfoHeader()})
-            .then(response => {if(response.ok){return response.json();} else {return []}})
-            .then(data => {
-              this.setState({searchResult: data, searchInProgress: false}, () => callback());
+            .then(response => {
+              if(response.ok){
+                return response.json();
+              } 
+              else if(response.status === 400){
+                alert("Server returned 'Bad Request'.")
+              }
             })
-            .catch(() => {this.setState({searchInProgress: false}); alert("Olog service off-line?");})
+            .then(data => {
+              if(!data){
+                this.setState({searchInProgress: false});
+              }
+              else{
+                this.setState({searchResult: data, searchInProgress: false}, () => callback());
+              }
+            })
+            .catch(() => {
+              this.setState({searchInProgress: false}); 
+              alert("Unable to connect to service.");
+            });
     }
 
     setCurrentLogEntry = (logEntry) => {
