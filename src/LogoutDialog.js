@@ -45,22 +45,9 @@ class LogoutDialog extends Component{
             this.hideLogout();
           }, error => { 
             if(!error.response){
-              this.setState({loginError: "Logout failed. Service off-line?"})
+              this.setState({loginError: "Logout failed. Unable to connect to service."})
             }
         });
-    
-        // Switch to axios?
-        /*
-        fetch(`${process.env.REACT_APP_BASE_URL}/Olog/logout`)
-        .then(response => {
-            this.setState({logoutError: ""});
-            this.props.setUserData({userName: "", roles: []});
-            this.hideLogout();
-          })
-        .catch(error => {
-          this.setState({logoutError: "Logout failed. Service off-line?"});
-        })
-        */
     }
 
     render(){
