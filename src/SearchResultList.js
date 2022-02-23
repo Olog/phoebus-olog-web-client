@@ -59,6 +59,10 @@ class SearchResultList extends Component{
     }
 
     updatePaginationControls = () => {
+        if(!this.props.searchResult){
+            this.setState({pageCount: 0});
+            return;
+        }
         // Calculate page count
         let newPageCount = Math.ceil(this.props.searchResult.hitCount / this.state.pageSize);
         
@@ -150,7 +154,7 @@ class SearchResultList extends Component{
 
     render(){
 
-        var list = this.props.searchResult.logs.map((item, index) => {
+        var list = this.props.searchResult.logs.length === 0 ? "No search results" : this.props.searchResult.logs.map((item, index) => {
             return <SearchResultItem
                         key={index}
                         log={item}
@@ -227,11 +231,11 @@ class SearchResultList extends Component{
                           '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
                         })
                       }}>
-                    <div style={{overflowY: 'scroll', height: 'calc(80vh)'}} >
-                        {this.props.searchResult.logs.length > 0 ?
-                            list :
-                            "No search results"}
+
+                    <div style={{overflowY: 'scroll', height: 'calc(80vh)'}}>
+                        {list}
                     </div>
+                   
                     <div className="pagination-container">
                         <Container>
                            <Row>
