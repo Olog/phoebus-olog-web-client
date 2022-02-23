@@ -53,7 +53,7 @@ class LogEntryGroupView extends Component{
             return(
                 <div key={index}>
                     <GroupHeader logEntry={row} showLog={this.showLog}/>
-                    <div style={{paddingTop: "5px", wordWrap: "break-word"}}
+                    <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
                                     dangerouslySetInnerHTML={this.getContent(row.source)}/>
                 </div>
             );
