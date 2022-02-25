@@ -25,7 +25,7 @@ import {
 import MainApp from './MainApp';
 import Banner from './Banner';
 import EntryEditor from './EntryEditor';
-import LogDetailsDetached from './LogDetailsDetached';
+//import LogDetailsDetached from './LogDetailsDetached';
 
 /**
  * Entry point component.
@@ -91,6 +91,12 @@ class App extends Component{
         this.setState({showGroup: val});
     }
 
+    hipp = () => {
+        return(
+            <div>Hello World</div>
+        )
+    }
+
     render(){
         return(
             <>
@@ -117,10 +123,16 @@ class App extends Component{
                                 setUserData={this.setUserData}
                                 />
                         </Route>
-                        <Route path="/logs/:id" render={(props) => <LogDetailsDetached {...props} 
+                    
+                        {/*<Route path="/logs/:id" render={(props) => <LogDetailsDetached {...props} 
                             setCurrentLogEntry={this.setCurrentLogEntry}
                             setShowGroup={this.setShowGroup}
                             currentLogEntry={this.state.currentLogEntry}/>}>
+        </Route>*/}
+                        <Route path="/logs/:id" render={(props) => <MainApp {...this.state} {...props} 
+                            setCurrentLogEntry={this.setCurrentLogEntry}
+                            setReplyAction={this.setReplyAction}
+                            setShowGroup={this.setShowGroup}/>}>
                         </Route>
                     </Switch>
                    

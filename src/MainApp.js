@@ -27,7 +27,7 @@ import Collapse from 'react-bootstrap/Collapse';
 import customization from './customization';
 import {queryStringToSearchParameters, searchParamsToQueryString, ologClientInfoHeader} from './utils.js';
 import Cookies from 'universal-cookie';
-
+import { withRouter } from 'react-router-dom';
 
 /**
  * Top level component holding the main UI area components.
@@ -44,14 +44,42 @@ class MainApp extends Component {
           searchInProgress: false,
           logGroupRecords: [],
           showFilters: false,
-          searchParams: {}
+          searchParams: {},
+          showIdNotFound: false
         };
 
     cookies = new Cookies();
 
     componentDidMount = () =>{
-      
+      if(this.props.match && this.props.match.params && this.props.match.params.id > 0){
+        //this.loadLogEntry(this.props.match.params.id);
+      }
     }
+
+    loadLogEntry = (id) => {
+      if(id < 1){
+          return;
+      }
+      this.setState({showIdNotFound: false});
+      fetch(`${process.env.REACT_APP_BASE_URL}/logs/` + id)
+      .then(response => {
+          if(response.ok){
+              return response.json();
+          }
+          else{
+              throw Error("Server returned error.");
+          }
+      })
+      .then(data => {
+        if(data){
+            this.setCurrentLogEntry(data);
+        }
+      })
+      .catch(() => {
+          this.setCurrentLogEntry(null);
+          this.setState({showIdNotFound: true});
+      });
+  }
 
     search = (sortOrder, from, size, callback) => {
       // Check if search parameters have been defined
@@ -104,9 +132,13 @@ class MainApp extends Component {
     }
 
     setCurrentLogEntry = (logEntry) => {
+       if(!logEntry){
+         return;
+       }
         this.setState({selectedLogEntryId: logEntry.id});
         this.props.setCurrentLogEntry(logEntry);
         this.setState({showGroup: false});
+        this.props.history.push('/logs/' + logEntry.id);
     }
 
     setLogGroupRecords = (recs) => {
@@ -142,11 +174,14 @@ class MainApp extends Component {
                 toggleFilters={this.toggleFilters}/>
             </Col>
             <Col  xs={{span: 12, order: 1}} sm={{span: 12, order: 1}} md={{span: 12, order: 1}} lg={{span: this.state.showFilters ? 6 : 8, order: 3}} style={{padding: "2px"}}>
-              <LogDetails {...this.state} {...this.props}
-                setCurrentLogEntry={this.setCurrentLogEntry}
-                setReplyAction={this.props.setReplyAction}
-                setLogGroupRecords={this.setLogGroupRecords}
-                setShowGroup={this.props.setShowGroup} />
+              {!this.state.showIdNotFound && 
+                <LogDetails {...this.state} {...this.props}
+                  setCurrentLogEntry={this.setCurrentLogEntry}
+                  setReplyAction={this.props.setReplyAction}
+                  setLogGroupRecords={this.setLogGroupRecords}
+                  setShowGroup={this.props.setShowGroup} />}
+              {this.state.showIdNotFound &&
+                <h5>Log record id {this.props.match.params.id} not found</h5>}
             </Col>
           </Row>
         </Container>
@@ -155,4 +190,4 @@ class MainApp extends Component {
   }
 }
 
-export default MainApp
+export default withRouter(MainApp);

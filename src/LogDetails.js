@@ -73,9 +73,8 @@ class LogDetails extends Component{
             or if the route is of the type /logs/:id */}
             {this.props.currentLogEntry &&
                 <Container className="grid-item full-height">
-                    {document.baseURI.includes("/logs/") &&
                     <NavigationButtons selectedLogEntryId={this.props.currentLogEntry.id}
-                        setCurrentLogEntry={this.props.setCurrentLogEntry}/>}
+                        setCurrentLogEntry={this.props.setCurrentLogEntry}/>
                     {/* Site may choose to not support log entry groups */}
                     {customization.log_entry_groups_support && 
                         <Link to="/edit">
