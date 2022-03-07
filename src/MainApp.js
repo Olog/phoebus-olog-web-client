@@ -52,7 +52,7 @@ class MainApp extends Component {
 
     componentDidMount = () =>{
       if(this.props.match && this.props.match.params && this.props.match.params.id > 0){
-        //this.loadLogEntry(this.props.match.params.id);
+        this.loadLogEntry(this.props.match.params.id);
       }
     }
 

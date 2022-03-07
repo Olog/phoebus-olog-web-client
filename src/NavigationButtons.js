@@ -43,7 +43,7 @@ class NavigationButtons extends Component {
             }
         })
         .catch(err => {
-            alert("Server encountered error.")
+            alert("Failed to retrieve log entry.")
         });
     }
 
