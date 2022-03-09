@@ -28,6 +28,11 @@ import customization from './customization';
 import {queryStringToSearchParameters, searchParamsToQueryString, ologClientInfoHeader} from './utils.js';
 import Cookies from 'universal-cookie';
 import { withRouter } from 'react-router-dom';
+import { TaskTimer } from 'tasktimer';
+
+// Timer task to handle periodic search
+const timer = new TaskTimer(30000);
+
 
 /**
  * Top level component holding the main UI area components.
@@ -49,8 +54,9 @@ class MainApp extends Component {
         };
 
     cookies = new Cookies();
-
-    componentDidMount = () =>{
+    
+    
+    componentDidMount = () => {
       if(this.props.match && this.props.match.params && this.props.match.params.id > 0){
         this.loadLogEntry(this.props.match.params.id);
       }
@@ -81,7 +87,16 @@ class MainApp extends Component {
       });
   }
 
+  /**
+   * Called when user requests explicit search from UI.
+   * @param {*} sortOrder 
+   * @param {*} from 
+   * @param {*} size 
+   * @param {*} callback 
+   */
     search = (sortOrder, from, size, callback) => {
+      // Stop periodic search
+      timer.reset();
       // Check if search parameters have been defined
       if(Object.values(this.state.searchParams).length === 0){
         let searchParameters = {};
@@ -95,39 +110,53 @@ class MainApp extends Component {
           searchParameters = queryStringToSearchParameters(searchParamsFromCookie);
         }
         this.setState({searchParams: searchParameters, searchInProgress: true}, () => {
-          this.doSearch(sortOrder, from, size, callback);
+          this.doSearch(this.updateQuery(sortOrder, from, size), false, callback);
         });
       }
       else{
-        this.doSearch(sortOrder, from, size, callback);
+        this.setState({searchInProgress: true}, () => {
+          this.doSearch(this.updateQuery(sortOrder, from, size), false, callback);
+        });
       }
     }
 
-    doSearch = (sortOrder, from, size, callback) => {
+    updateQuery = (sortOrder, from, size) => {
       let query = searchParamsToQueryString(this.state.searchParams);
       this.cookies.set('searchString', query, {path: '/', maxAge: '100000000'});
-      // Append sort, from and size
-      query += "&sort=" + sortOrder + "&from=" + from + "&size=" + size;
+      return query += "&sort=" + sortOrder + "&from=" + from + "&size=" + size;
+    }
+
+    /**
+     * Dispatches search request to service
+     * @param {*} query The query string
+     * @param {*} isPeriodicSearch indicates if this is called in a periodic search context or not
+     * @param {*} callback Function called when server response arrives containing matching log entries
+     */
+    doSearch = (query, isPeriodicSearch, callback) => {
       fetch(`${process.env.REACT_APP_BASE_URL}/logs/search?` + query, {headers: ologClientInfoHeader()})
             .then(response => {
+              this.setState({searchInProgress: false}); 
               if(response.ok){
                 return response.json();
               } 
-              else if(response.status === 400){
+              else if(!isPeriodicSearch && response.status === 400){
                 alert("Server returned 'Bad Request'.")
               }
             })
             .then(data => {
-              if(!data){
-                this.setState({searchInProgress: false});
-              }
-              else{
-                this.setState({searchResult: data, searchInProgress: false}, () => callback());
+              if(data){
+                this.setState({searchResult: data}, () => callback());
+                if(!isPeriodicSearch){
+                  timer.add(task => this.doSearch(query, true, callback)).start();
+                }
               }
             })
             .catch(() => {
+              timer.reset();
               this.setState({searchInProgress: false}); 
-              alert("Unable to connect to service.");
+              if(!isPeriodicSearch){
+                alert("Unable to connect to service.");
+              }
             });
     }
 
