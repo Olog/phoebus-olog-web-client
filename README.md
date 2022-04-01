@@ -2,7 +2,7 @@
 
 Note: this is work in progress. 
 
-This project implements a web client for the olog es logbook service. The objective is to provide read, write and search capabilities, though not the full feature set of the CS Studio logbook client, see https://github.com/ControlSystemStudio/phoebus
+This project implements a web client for the Phoebus Olog logbook service. It provides read, write and search capabilities, but not the full feature set of the CS Studio logbook client, see https://github.com/ControlSystemStudio/phoebus
 
 Technology stack:
 * ReactJS (main framework)
@@ -12,7 +12,7 @@ Technology stack:
 * Jest for unit testing
 
 ## Commonmark support
-The client supports markup as defined by the Commonmark specification, see https://commonmark.org/. When creating a log entry the user may optionally use this markup scheme in the description field, which will be processed and converted to HTML elements when the log entry is rendered. 
+Markup as defined by the Commonmark specification is supported, see https://commonmark.org/.
 
 Commonmark cheatsheet: https://commonmark.org/help/
 
@@ -26,7 +26,7 @@ The following extensions are supported:
 Available:
 * Search and read log entries, no authentication required.
 * Display log entry details, including image thumbnails, links to non-image attachments and properties.
-* Login to Olog-ES backend.
+* Login to Phoebus Olog backend.
 * Create new log entry, including attachments. Input is validated.
 * Search criteria: list of logbooks, list of tags, time span, title, description, level and author.
 * Custom dialog for embedding images (from file system) into log entry body.
@@ -48,8 +48,8 @@ The file `customization.js` contains customizable items. Please review its conte
 In order to develop and test with reasonable effort you will need the proper toolchain:
 
 1) Node JS, install latest (>= 17.x) version.
-2) A text editor capable of syntax highlighting. Visual Studio Code is a good alternative as it comes with good support for React development. There are numerous extensions for VS Code that may enhance the development experience even further.
-3) Optional: a React JS add-on to your browser, which should probably be Chrome or Firefox.
+2) A reasonably clever text editor. Visual Studio Code is a good alternative as it comes with some support for React development.
+3) Optional: a React JS add-on to your browser.
 
 ## Development
 
@@ -58,20 +58,20 @@ Install the toolchain and then:
 1) Clone this project and cd to it.
 2) Invoke ``> npm install`` to download dependencies. Various warning messages may be shown (e.g. missing git support on Mac, deprecated versions).
 3) Create a ``.env`` file in the root directory. Add the line:
-   ``REACT_APP_BASE_URL='url-to-Olog-ES-service'``.
-4) Launch the Olog-ES backend.
+   ``REACT_APP_BASE_URL='url-to-Phoebus-Olog-service'``.
+4) Launch the Phoebus Olog backend.
 5) Invoke ``>npm start`` to launch the Node JS development server. Web application available on ``http://localhost:3000``.
 6) Develop.
 
 ### Unit testing
 
-Unit test code can be added in files named ``*.test.js``.
+Unit test code are added in files named ``*.test.js``.
    
 To run tests, invoke ``>npm run-script test``.
 
 ## Deployment
 
-The below instructions apply to a deployment scenario where a web server hosts the (static) web client resources, and at the same time acts as a reverse proxy resolving calls to the Olog-ES backend. 
+The below instructions apply to a deployment scenario where a web server hosts the (static) web client resources, and at the same time acts as a reverse proxy resolving calls to the Phoebus Olog backend (which need not run on the same host).
 
 1) Review the file `customization.js`. It contains a few values defining text resources that might differ between sites. If you need different values, update according to your needs, but please do not commit the changes.
 
@@ -82,7 +82,7 @@ The below instructions apply to a deployment scenario where a web server hosts t
    
    This will generate files in the `build` directory, all of which must be copied to the target web server. Publish the web client resource under the root context, i.e. the URL `http://<host>/` shall resolve to the file `index.html` found in the build output.
    
-3) On the target web server, configure the reverse proxy to map the path /Olog to the Olog-ES backend. On Apache this is done like so (the rewrite rules may not be needed on other type of front end servers):
+3) On the target web server, configure the reverse proxy to map the path /Olog to the Phoebus Olog backend. On Apache this is done like so (the rewrite rules may not be needed on other type of front end servers):
 
   ```
   <VirtualHost *:80>
@@ -102,7 +102,7 @@ The below instructions apply to a deployment scenario where a web server hosts t
   ```
    
   
-   In this example the Olog-ES backend is deployed on the same host on port 8080.
+   In this example the Phoebus Olog backend is deployed on the same host on port 8080. If the 
    
 
 
