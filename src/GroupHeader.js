@@ -29,7 +29,11 @@
  
      return(
          <div className="separator" onClick={() => props.showLog(props.logEntry)}>
-             <OlogMoment date={props.logEntry.createdDate}/>, {props.logEntry.owner}, {props.logEntry.title} <span style={{float: "right"}}>{props.logEntry.id}</span>
+             <OlogMoment date={props.logEntry.createdDate}/>, 
+                {props.logEntry.owner}, 
+                {props.logEntry.title} 
+                <span style={{float: "right"}}>{props.logEntry.id}</span>
+                {props.logEntry.attachments.length > 0 && <div className='attachment-icon'/>}
          </div>
      )
  }
