@@ -40,19 +40,29 @@ class LogEntrySingleView extends Component{
 
     render(){
         var attachments = this.props.currentLogEntry.attachments.map((row, index) => {
+            var url = `${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogEntry.id + "/" + row.filename;
+            
             if(row.fileMetadataDescription.startsWith('image')){
                 return(
                     <ListGroup.Item key={index}>
-                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogEntry.id + "/" + row.filename}>
-                        <Image key={index} src={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogEntry.id + "/" + row.filename} thumbnail/>
-                    </a>
+                    <button style={{border: "none"}}>
+                        <Image key={index} style={{border: "none"}}
+                        onClick={() => {
+                            let w = window.open("", row.filename);
+                            w.document.open();
+                            w.document.write('<html><head><title>' + row.filename + '</title></head>');
+                            w.document.write('<body><p><img src=\'' + url + '\'></p></body></html>');
+                            w.document.close();
+                        }}
+                        src={url} thumbnail/>
+                    </button>
                     </ListGroup.Item>
                 )
             }
             else{
                 return (
                     <ListGroup.Item key={index}>
-                    <a target="_blank" rel="noopener noreferrer" href={`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogEntry.id + "/" + row.filename}>
+                    <a target="_blank" rel="noopener noreferrer" href={url}>
                     {row.filename}
                     </a>
                     </ListGroup.Item>
