@@ -249,3 +249,7 @@ blockquote{
         float: right;
         position: relative;
     }
+
+.form-check-label{
+    padding-top: 2px;
+}

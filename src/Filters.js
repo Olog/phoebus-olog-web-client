@@ -232,6 +232,22 @@ class Filters extends Component{
                             </td>
                             <td><Button size="sm" onClick={() => this.setState({showSelectEndTime: true})}><FaCalendarAlt/></Button></td>
                         </tr>
+                        <tr>
+                            <td><Form.Check style={{paddingTop: "5px"}}
+                                    type='radio'
+                                    checked={this.props.sortOrder === 'down'}
+                                    label='Sort descending on date'
+                                    onChange={(e) => this.props.setSortOrder("down")}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><Form.Check 
+                                    type='radio'
+                                    label='Sort ascending on date'
+                                    checked={this.props.sortOrder === 'up'}
+                                    onChange={(e) => this.props.setSortOrder("up")}/>
+                            </td>
+                        </tr>
                     </tbody>
                 </Table>
             </Container>

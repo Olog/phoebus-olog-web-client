@@ -50,7 +50,8 @@ class MainApp extends Component {
           logGroupRecords: [],
           showFilters: false,
           searchParams: {},
-          showIdNotFound: false
+          showIdNotFound: false,
+          sortOrder: "down" 
         };
 
     cookies = new Cookies();
@@ -182,6 +183,10 @@ class MainApp extends Component {
         this.setState({searchParams: params});
     }
 
+    setSortOrder = (order) => {
+      this.setState({currentPageIndex: 1, sortOrder: order});
+    }
+
   render() {
 
     return (
@@ -192,7 +197,8 @@ class MainApp extends Component {
                 <Col xs={{span: 12, order: 3}} sm={{span: 12, order: 3}} md={{span: 12, order: 3}} lg={{span: 2, order: 1}} style={{padding: "2px"}}>
                   <Filters
                     {...this.state} {...this.props}
-                    setSearchParams={this.setSearchParams}/>
+                    setSearchParams={this.setSearchParams}
+                    setSortOrder={this.setSortOrder}/>
                 </Col>
             </Collapse>
             <Col xs={{span: 12, order: 2}} sm={{span: 12, order: 2}} md={{span: 12, order: 2}} lg={{span: 4, order: 2}} style={{padding: "2px"}}>
