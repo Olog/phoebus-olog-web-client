@@ -248,6 +248,17 @@ class Filters extends Component{
                                     onChange={(e) => this.props.setSortOrder("up")}/>
                             </td>
                         </tr>
+                        <tr>
+                            <td colSpan="2">Attachments:</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">
+                                <Form.Control size="sm"
+                                    type="text"
+                                    value={this.props.searchParams['attachments'] || ''}
+                                    onChange={(e) => this.inputChanged(e, 'attachments')}/>
+                            </td>
+                        </tr>
                     </tbody>
                 </Table>
             </Container>
