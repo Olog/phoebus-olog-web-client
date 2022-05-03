@@ -76,30 +76,25 @@ class Filters extends Component{
     }
 
     /**
-     * Add or remove tag from search criteria.
-     * @param {string} tagName 
-     * @param {boolean} add 
+     * Update tags search criteria, idempotently
+     * @param {array} tags
      */
-    addTagToSearchCriteria = (tagName, add) => {
-        const copy = {...this.state.searchCriteria};
-        if(add){
-            copy.tags.push(tagName);
-        }
-        else{
-            copy.tags = copy.tags.filter(item => item !== tagName);
-        }
-        this.setState({searchCriteria: copy}, 
-            () =>  {
-                 let searchParams = {};
-                 let tagsString = this.state.searchCriteria.tags.join(",");
-                 if(tagsString !== ''){
-                    searchParams = setSearchParam(this.props.searchParams, 'tags', tagsString);
-                 }
-                 else{
-                    searchParams = removeSearchParam(this.props.searchParams, 'tags');
-                 }
-                 this.props.setSearchParams(searchParams);
+    updateTagSearchCriteria = (tags) => {
+        if(tags) {
+            let copy = {...this.state.searchCriteria}
+            copy.tags = tags;
+            this.setState({searchCriteria: copy}, () =>  { 
+                let searchParams = {};
+                let tagsString = this.state.searchCriteria.tags.join(",");
+                if(tagsString !== ''){
+                searchParams = setSearchParam(this.props.searchParams, 'tags', tagsString);
+                }
+                else{
+                searchParams = removeSearchParam(this.props.searchParams, 'tags');
+                }
+                this.props.setSearchParams(searchParams);
             });
+        }
     }
 
     setStartDate = (value) => {
@@ -185,7 +180,10 @@ class Filters extends Component{
                            </Accordion></td>
                         </tr>
                         <tr>
-                            <td colSpan="2"><Accordion>
+                            <td>Tags:</td>
+                        </tr>
+                        <tr>
+                            {/* <td colSpan="2"><Accordion>
                                 <Accordion.Toggle eventKey="0" onClick={() => this.setState({openTags: !this.state.openTags})}
                                      className="accordion-card-header">
                                     {this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } Tags
@@ -195,7 +193,12 @@ class Filters extends Component{
                                         searchCriteria={this.state.searchCriteria}
                                         addTagToSearchCriteria={this.addTagToSearchCriteria}/>
                                 </Accordion.Collapse>
-                            </Accordion></td>
+                            </Accordion></td> */}
+                            <td colSpan="2">
+                                <Tags tags={this.props.tags}
+                                            searchCriteria={this.state.searchCriteria}
+                                            updateTagSearchCriteria={this.updateTagSearchCriteria}/>
+                            </td>
                         </tr>
                         <tr>
                             <td colSpan="2">Author:</td>

@@ -17,32 +17,33 @@
  */
 import React, {Component} from 'react'
 import './css/olog.css';
-import FormCheck from 'react-bootstrap/FormCheck';
+import Select from 'react-select';
 
 class Tags extends Component{
 
-    tagSelectionChanged = (event) => {
-        this.props.addTagToSearchCriteria(event.target.id, event.target.checked);
+    tagSelectionChanged = (selection) => {
+        if(selection) {
+            const tagSelection = Object.values(selection).map(it => it.value);
+            this.props.updateTagSearchCriteria(tagSelection);
+        }
     }
 
     render(){
-        var items = this.props.tags && this.props.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <li  key={index}>
-                    <FormCheck>
-                        <FormCheck.Input type="checkbox" 
-                            id={row.name}
-                            checked={this.props.searchCriteria.tags.includes(row.name)}
-                            onChange={this.tagSelectionChanged}/>
-                        <FormCheck.Label>{row.name}</FormCheck.Label>
-                    </FormCheck>
-                </li>
-            )
-         })
-         
-        return (
-             <ul className="olog-ul">{items}</ul>
-        )
+
+        const options = this.props.tags.map(tag => {
+            return {
+                value: tag.name,
+                label: tag.name
+            }
+        });
+
+        return <Select
+            isMulti
+            name="tags"
+            options={options}
+            onChange={this.tagSelectionChanged}
+        />
+
     }
 }
 
