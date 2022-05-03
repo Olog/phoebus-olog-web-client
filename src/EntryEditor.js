@@ -18,8 +18,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Dropdown from 'react-bootstrap/Dropdown';
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import FormFile from 'react-bootstrap/FormFile';
@@ -33,13 +31,11 @@ import EmbedImageDialog from './EmbedImageDialog';
 import OlogAttachment from './OlogAttachment';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
-import Selection from './Selection';
 import checkSession from './session-check';
 import {removeImageMarkup, ologClientInfoHeader } from './utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from 'react-loading-overlay';
 import Select from 'react-select';
-import { Col } from 'react-bootstrap';
 
 class EntryEditor extends Component{
 
@@ -113,6 +109,13 @@ class EntryEditor extends Component{
         if(selection) {
             const tagSelection = Object.values(selection).map(it => it.value);
             this.setState({selectedTags: tagSelection});
+        }
+    }
+
+    entryTypeSelectionChanged = (selection) => {
+        if(selection) {
+            const level = selection.value;
+            this.setState({level: level});
         }
     }
 
@@ -230,10 +233,6 @@ class EntryEditor extends Component{
         }
     }
 
-    selectLevel = (level) => {
-        this.setState({level: level});
-    }
-
     addProperty = (property) => {
         this.setState({selectedProperties: [...this.state.selectedProperties, property],
             showAddProperty: false});
@@ -293,8 +292,6 @@ class EntryEditor extends Component{
             )
         })
 
-        let levels = customization.levelValues.split(",");
-
         const doUpload = this.props.fileName !== '';
         
         var propertyItems = this.state.selectedProperties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
@@ -317,6 +314,13 @@ class EntryEditor extends Component{
             return {
                 value: tag.name,
                 label: tag.name
+            }
+        });
+
+        const levelOptions = customization.levelValues.map(level => {
+            return {
+                value: level,
+                label: level
             }
         });
 
@@ -362,20 +366,13 @@ class EntryEditor extends Component{
                             />
                         </Form.Row>
                         <Form.Row className="grid-item">
-                            <Dropdown as={ButtonGroup}>
-                                <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                    {customization.level}                                
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                {levels.map((level, index) => (
-                                    <Dropdown.Item eventKey={index}
-                                    style={{fontSize: "12px", paddingBottom: "1px"}}
-                                    key={index}
-                                    onSelect={() => this.selectLevel(level)}>{level}</Dropdown.Item>
-                                ))}
-                                </Dropdown.Menu>
-                            </Dropdown>&nbsp;
-                            {this.state.level && <div className="selection">{this.state.level}</div>}
+                            <Select
+                                name="entryTypes"
+                                options={levelOptions}
+                                onChange={this.entryTypeSelectionChanged}
+                                className="w-100"
+                                placeholder="Select EntryType"
+                            />
                             {(this.state.level === "" || !this.state.level) && 
                                 <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
                         </Form.Row>
