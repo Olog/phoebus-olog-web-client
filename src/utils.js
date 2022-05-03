@@ -23,7 +23,7 @@ import packageInfo from '../package.json';
  const shortDateFormat = 'YYYY-MM-DD';
  const fullDateTime = 'YYYY-MM-DD HH:mm:ss';
 
- const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties"];
+ const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties", "attachments"];
 
 export function formatShortTime(date){
     return moment(date).format(shortTimeFormat);
