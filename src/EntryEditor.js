@@ -101,27 +101,12 @@ class EntryEditor extends Component{
         .then(data => this.setState({availableProperties: data}))
         .catch(() => this.setState({availableProperties: []}));
     }
-    
-    addLogbook = (logbook) => {
-        var present = false;
-        this.state.selectedLogbooks.map(element => {
-            if(element.name === logbook.name){
-                present = true;
-                return null;
-            }
-            return null;
-        });
-        if(!present){
-            this.setState({selectedLogbooks: [...this.state.selectedLogbooks, logbook]},
-                () => this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0}));
-        }
-    }
 
-    removeLogbook = (logbook) => {
-        this.setState({
-                selectedLogbooks: this.state.selectedLogbooks.filter(item => item.name !== logbook.name)},
-                () => this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0})
-        );
+    logbookSelectionChanged = (selection) => {
+        if(selection) {
+            const logbookSelection = Object.values(selection).map(it => it.value);
+            this.setState({selectedLogbooks: logbookSelection});
+        }
     }
 
     tagSelectionChanged = (selection) => {
@@ -302,21 +287,6 @@ class EntryEditor extends Component{
 
     render(){
 
-        var logbookItems = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <Dropdown.Item key={index}  
-                    style={{fontSize: "12px", paddingBottom: "1px"}}
-                    eventKey={index} 
-                    onSelect={() => this.addLogbook(row)}>{row.name}</Dropdown.Item>
-            )
-        });
-
-        var currentLogbookSelection = this.state.selectedLogbooks.map((row, index) => {
-            return(
-                <Selection item={row} key={index} delete={this.removeLogbook}/>
-            )
-        });
-
         var attachments = this.state.attachedFiles.map((file, index) => {
             return(
                 <Attachment key={index} file={file} removeAttachment={this.removeAttachment}/>
@@ -336,7 +306,14 @@ class EntryEditor extends Component{
             )
         })
 
-        const options = this.props.tags.map(tag => {
+        const logbookOptions = this.props.logbooks.map(logbook => {
+            return {
+                value: logbook,
+                label: logbook.name
+            }
+        });
+
+        const tagOptions = this.props.tags.map(tag => {
             return {
                 value: tag.name,
                 label: tag.name
@@ -363,23 +340,20 @@ class EntryEditor extends Component{
                             <Button type="submit" disabled={this.props.userData.userName === "" || this.state.createInProgress}>Create</Button>
                         </Form.Row>
                         <Form.Row className="grid-item">
-                            <Dropdown as={ButtonGroup}>
-                                <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                    Logbooks
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    {logbookItems}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                            &nbsp;{currentLogbookSelection}
-                            {this.state.selectedLogbooks.length === 0 && 
-                                <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
+                            <Select
+                                isMulti
+                                name="logbooks"
+                                options={logbookOptions}
+                                onChange={this.logbookSelectionChanged}
+                                className="w-100"
+                                placeholder="Select Logbook(s)"
+                            />
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Select
                                 isMulti
                                 name="tags"
-                                options={options}
+                                options={tagOptions}
                                 onChange={this.tagSelectionChanged}
                                 className="w-100"
                                 placeholder="Select Tag(s)"
