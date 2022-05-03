@@ -348,6 +348,8 @@ class EntryEditor extends Component{
                                 className="w-100"
                                 placeholder="Select Logbook(s)"
                             />
+                            {this.state.selectedLogbooks.length === 0 && 
+                                <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Select
