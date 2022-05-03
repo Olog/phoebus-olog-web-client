@@ -38,6 +38,8 @@ import checkSession from './session-check';
 import {removeImageMarkup, ologClientInfoHeader } from './utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from 'react-loading-overlay';
+import Select from 'react-select';
+import { Col } from 'react-bootstrap';
 
 class EntryEditor extends Component{
 
@@ -122,23 +124,11 @@ class EntryEditor extends Component{
         );
     }
 
-    addTag = (tag) => {
-        var present = false;
-        this.state.selectedTags.map(element => {
-            if(element.name === tag.name){
-                present = true;
-            }
-            return null;
-        });
-        if(!present){
-            this.setState({selectedTags: [...this.state.selectedTags, tag]});
+    tagSelectionChanged = (selection) => {
+        if(selection) {
+            const tagSelection = Object.values(selection).map(it => it.value);
+            this.setState({selectedTags: tagSelection});
         }
-    }
-
-    removeTag = (tag) => {
-        this.setState({
-                selectedTags: this.state.selectedTags.filter(item => item.name !== tag.name)
-        });
     }
 
     onBrowse = () => {
@@ -321,24 +311,9 @@ class EntryEditor extends Component{
             )
         });
 
-        var tagItems = this.props.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <Dropdown.Item key={index} 
-                    style={{fontSize: "12px", paddingBottom: "1px"}}
-                    eventKey={index}
-                    onSelect={() => this.addTag(row)}>{row.name}</Dropdown.Item>
-            )
-        });
-
         var currentLogbookSelection = this.state.selectedLogbooks.map((row, index) => {
             return(
                 <Selection item={row} key={index} delete={this.removeLogbook}/>
-            )
-        });
-
-        var currentTagSelection = this.state.selectedTags.map((row, index) => {
-            return(
-                <Selection item={row} key={index} delete={this.removeTag}/>
             )
         });
 
@@ -360,6 +335,13 @@ class EntryEditor extends Component{
                     updateAttributeValue={this.updateAttributeValue}/>
             )
         })
+
+        const options = this.props.tags.map(tag => {
+            return {
+                value: tag.name,
+                label: tag.name
+            }
+        });
 
         return(
             <>
@@ -394,15 +376,14 @@ class EntryEditor extends Component{
                                 <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
                         </Form.Row>
                         <Form.Row className="grid-item">
-                            <Dropdown as={ButtonGroup}>
-                                <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                    Tags
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    {tagItems}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                            &nbsp;{currentTagSelection}
+                            <Select
+                                isMulti
+                                name="tags"
+                                options={options}
+                                onChange={this.tagSelectionChanged}
+                                className="w-100"
+                                placeholder="Select Tag(s)"
+                            />
                         </Form.Row>
                         <Form.Row className="grid-item">
                             <Dropdown as={ButtonGroup}>
