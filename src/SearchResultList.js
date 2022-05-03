@@ -23,8 +23,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import SearchResultItem from './SearchResultItem';
 import LoadingOverlay from 'react-loading-overlay';
-import { FaArrowUp, FaArrowDown} from "react-icons/fa";
-import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import {searchParamsToQueryString, queryStringToSearchParameters} from './utils';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -44,8 +42,7 @@ class SearchResultList extends Component{
         pageItems: [],
         currentPageIndex: 1,
         pageSize: customization.defaultPageSize,
-        pageCount: 1,
-        sortOrder: "down" // Need to maintain sort order here as pagination buttons trigger search.
+        pageCount: 1
     }
 
     cookies = new Cookies();
@@ -55,7 +52,9 @@ class SearchResultList extends Component{
     }
 
     search = () => {
-        this.props.search(this.state.sortOrder, (this.state.currentPageIndex - 1) * this.state.pageSize, this.state.pageSize, this.updatePaginationControls);
+        this.setState({currentPageIndex: 1}, () => {
+            this.props.search(this.props.sortOrder, (this.state.currentPageIndex - 1) * this.state.pageSize, this.state.pageSize, this.updatePaginationControls);
+        });
     }
 
     updatePaginationControls = () => {
@@ -92,17 +91,9 @@ class SearchResultList extends Component{
         });
     }
 
-    downButtonClicked = () => {
-        this.setState({currentPageIndex: 1, sortOrder: "down"}, () => this.search())
-    }
-
-    upButtonClicked = () => {
-        this.setState({currentPageIndex: 1, sortOrder: "up"}, () => this.search())
-    }
-
     submit = (event) => {
         event.preventDefault();
-        this.search(this.state.sortOrder);
+        this.search(this.props.sortOrder);
     }
 
     setSearchString = (event) => {
@@ -110,25 +101,14 @@ class SearchResultList extends Component{
         this.props.setSearchParams(searchParams);
     }
 
-    popover = (
-        <Popover id="1">
-          <Popover.Title as="h4">How to specify search string</Popover.Title>
-          <Popover.Content>To define a time span, specify "start" and "end" times. These can be specified in
-                    two different manners:
-                    <ol>
-                        <li>Relative date/time using expressions like <b>12 hours</b>,
-                            <b>1 day</b>, <b>3 weeks</b> or <b>now</b>. The actual timestamp will be calculated
-                            by the log service when the search query is submitted.</li>
-                        <li>Absolute date/time on the format <pre style={{margin: "0px"}}>yyyy-MM-dd HH:mm:ss.SSS</pre> e.g. <b>2020-12-24 15:30:30.000</b>.</li>
-                    </ol>
-            </Popover.Content>
-        </Popover>
-      );
-
     toggleFilters = () => {
         this.props.toggleFilters();
         let symbol = this.props.showFilters ? ">" : "<";
-        this.setState({expandSymbol: symbol});
+        this.setState({expandSymbol: symbol}, () => {
+            if(!this.props.showFilters){ // Invoke search when filters view is collapsed
+                this.search(this.props.sortOrder);
+            }
+        });
     }
 
     /**
@@ -152,6 +132,10 @@ class SearchResultList extends Component{
         }
     }
 
+    showSearchHelp = () => {
+        window.open(`${process.env.REACT_APP_BASE_URL}/SearchHelp_en.html`, '_blank');
+    }
+
     render(){
 
         var list = this.props.searchResult.logs.length === 0 ? "No search results" : this.props.searchResult.logs.map((item, index) => {
@@ -170,54 +154,29 @@ class SearchResultList extends Component{
                         <Col style={{flexGrow: "0"}}>
                             <Button size="sm" onClick={() => this.toggleFilters()}>{this.state.expandSymbol}</Button>
                         </Col>
-                        <Col style={{flexGrow: "0", paddingTop: "7px"}}>
-                            <OverlayTrigger trigger="click"
-                                overlay={this.popover}
-                                rootClose
-                                placement="right">
-                                <Form.Label>Query: </Form.Label>
-                            </OverlayTrigger>
-                        </Col>
                         <Col style={{paddingLeft: "0px"}}>
-                            <Form.Control size="sm" 
-                                type="input"
-                                disabled={this.props.showFilters}
-                                placeholder="No search string"
-                                style={{fontSize: "12px"}}
-                                defaultValue={searchParamsToQueryString(this.props.searchParams)}
-                                onChange={(e) => this.setSearchString(e)}>
-                            </Form.Control>
-                        </Col>
-                        <Col style={{flexGrow: "0",paddingTop: "7px"}}>
-                            <Form.Label>Search: </Form.Label>
-                        </Col>
-                        <Col style={{flexGrow: "0" }}>
-                            <OverlayTrigger delay={{ hide: 450, show: 300 }}
-                                overlay={(props) => (
-                                    <Tooltip {...props}>Search and sort descending on date</Tooltip>
-                                )}
-                                rootClose
-                                placement="bottom">
-                                    <Button 
-                                        size="sm"
-                                        onClick={(e) => this.downButtonClicked()}>
-                                        <FaArrowDown/>
-                                    </Button>
-                            </OverlayTrigger>
-                        </Col>
-                        <Col style={{flexGrow: "0", paddingLeft: "0px", paddingRight: "0px" }}>
-                            <OverlayTrigger delay={{ hide: 450, show: 300 }}
+                        <OverlayTrigger delay={{ hide: 750, show: 300 }}
                                     overlay={(props) => (
-                                        <Tooltip {...props}>Search and sort ascending on date</Tooltip>
+                                        <Tooltip {...props}>Edit and press Enter to search</Tooltip>
                                     )}
                                     rootClose
                                     placement="bottom">
-                                    <Button 
-                                        size="sm"
-                                        onClick={(e) => this.upButtonClicked()}>
-                                        <FaArrowUp/>
-                                    </Button>
+                                <Form.Control size="sm" 
+                                    type="input"
+                                    disabled={this.props.showFilters}
+                                    placeholder="No search string"
+                                    style={{fontSize: "12px"}}
+                                    defaultValue={searchParamsToQueryString(this.props.searchParams)}
+                                    onChange={(e) => this.setSearchString(e)}>
+                                </Form.Control>
                             </OverlayTrigger>
+                        </Col>
+                        <Col style={{flexGrow: "0" }}>
+                            <Button 
+                                size="sm"
+                                onClick={(e) => this.showSearchHelp()}>
+                                Help
+                            </Button>
                         </Col>
                     </Form.Row>
                 </Form>
@@ -247,7 +206,7 @@ class SearchResultList extends Component{
                                     type="input"
                                     value={this.state.pageSize}
                                     onChange={(e) => this.setPageSize(e)}
-                                    onKeyDown={(e) => this.handleKeyDown(e)}/>
+                                    />
                                </Col>
                             </Row>
                             <Row style={{visibility: this.state.pageCount < 2 ? 'hidden' : 'visible'}}>
