@@ -326,7 +326,6 @@ class EntryEditor extends Component{
 
         return(
             <>
-               
                 <LoadingOverlay
                             active={this.state.createInProgress}
                             spinner
@@ -343,7 +342,8 @@ class EntryEditor extends Component{
                             <Form.Label className="new-entry">New Log Entry</Form.Label>
                             <Button type="submit" disabled={this.props.userData.userName === "" || this.state.createInProgress}>Create</Button>
                         </Form.Row>
-                        <Form.Row className="grid-item">
+                        <Form.Row>
+                            <Form.Label>Logbooks:</Form.Label>
                             <Select
                                 isMulti
                                 name="logbooks"
@@ -355,7 +355,8 @@ class EntryEditor extends Component{
                             {this.state.selectedLogbooks.length === 0 && 
                                 <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
                         </Form.Row>
-                        <Form.Row className="grid-item">
+                        <Form.Row>
+                            <Form.Label>Tags:</Form.Label>
                             <Select
                                 isMulti
                                 name="tags"
@@ -365,18 +366,20 @@ class EntryEditor extends Component{
                                 placeholder="Select Tag(s)"
                             />
                         </Form.Row>
-                        <Form.Row className="grid-item">
+                        <Form.Row>
+                            <Form.Label>Entry Types:</Form.Label>
                             <Select
                                 name="entryTypes"
                                 options={levelOptions}
                                 onChange={this.entryTypeSelectionChanged}
                                 className="w-100"
-                                placeholder="Select EntryType"
+                                placeholder="Select Entry Type"
                             />
                             {(this.state.level === "" || !this.state.level) && 
                                 <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
                         </Form.Row>
-                        <Form.Row className="grid-item">
+                        <Form.Row>
+                            <Form.Label>Title:</Form.Label>
                             <Form.Control 
                                 required
                                 type="text" 
@@ -386,7 +389,8 @@ class EntryEditor extends Component{
                                 Please specify a title.
                             </Form.Control.Feedback>
                         </Form.Row>
-                        <Form.Row className="grid-item">
+                        <Form.Row>
+                            <Form.Label>Description:</Form.Label>
                             <Form.Control
                                 as="textarea" 
                                 rows="5" 
@@ -414,6 +418,7 @@ class EntryEditor extends Component{
                         </Form.Row>
                         </Form>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
+                        <Form.Label className="mt-3">Properties:</Form.Label>
                         {<Form.Row className="grid-item">
                             <Form.Group style={{width: "400px"}}>
                                 <Button variant="secondary" size="sm" onClick={() => this.setState({showAddProperty: true})}>
