@@ -79,7 +79,6 @@ class Filters extends Component{
      * @param {array} tags
      */
     updateLogbookSearchCriteria = (logs) => {
-        console.log(logs);
         if(logs) {
             let copy = {...this.state.searchCriteria}
             copy.logs = logs;
