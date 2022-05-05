@@ -16,17 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react';
-import Logbooks from './Logbooks';
-import Tags from './Tags';
+import Logbooks from '../Logbooks/Logbooks';
+import Tags from '../Tags/Tags';
 import { FaCalendarAlt } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
-import {setSearchParam, removeSearchParam, dateToString} from '../utils/utils';
+import {setSearchParam, removeSearchParam, dateToString} from '../../utils/utils';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import DateTimePicker from 'react-datetime-picker';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import customization from '../utils/customization';
+import customization from '../../utils/customization';
 
 /**
  * Component holding search criteria elements, i.e.

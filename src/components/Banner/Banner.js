@@ -22,13 +22,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import {Link} from "react-router-dom";
 import AddLogbookDialog from './AddLogbookDialog';
-import AddTagDialog from './AddTagDialog';
-import LoginDialog from './LoginDialog';
-import LogoutDialog from './LogoutDialog';
-import checkSession from '../api/session-check';
+import AddTagDialog from '../Tags/AddTagDialog';
+import LoginDialog from '../LoginLogout/LoginDialog';
+import LogoutDialog from '../LoginLogout/LogoutDialog';
+import checkSession from '../../api/session-check';
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 import axios from 'axios';
-import packageInfo from '../../package.json';
+import packageInfo from '../../../package.json';
 import Row from 'react-bootstrap/Row';
 
 /**

@@ -17,15 +17,15 @@
  */
 
 import React, { Component } from 'react';
-import Filters from './components/Filters'
-import LogDetails from './components/LogDetails'
-import SearchResultList from './components/SearchResultList';
+import Filters from './Filters/Filters'
+import LogDetails from './LogDetails/LogDetails'
+import SearchResultList from './SearchResult/SearchResultList';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Collapse from 'react-bootstrap/Collapse';
-import customization from './utils/customization';
-import {queryStringToSearchParameters, searchParamsToQueryString, ologClientInfoHeader} from './utils/utils.js';
+import customization from '../utils/customization';
+import {queryStringToSearchParameters, searchParamsToQueryString, ologClientInfoHeader} from '../utils/utils.js';
 import Cookies from 'universal-cookie';
 import { withRouter } from 'react-router-dom';
 import { TaskTimer } from 'tasktimer';
