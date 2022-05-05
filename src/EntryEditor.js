@@ -367,10 +367,11 @@ class EntryEditor extends Component{
                             />
                         </Form.Row>
                         <Form.Row>
-                            <Form.Label>Entry Types:</Form.Label>
+                            <Form.Label>Entry Type:</Form.Label>
                             <Select
                                 name="entryTypes"
                                 options={levelOptions}
+                                defaultInputValue={customization.defaultLevel}
                                 onChange={this.entryTypeSelectionChanged}
                                 className="w-100"
                                 placeholder="Select Entry Type"
