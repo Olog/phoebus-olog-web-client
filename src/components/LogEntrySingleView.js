@@ -21,7 +21,7 @@
  import ListGroup from 'react-bootstrap/ListGroup';
  import Properties from './Properties';
  import LogDetailsMetaData from './LogDetailsMetaData';
- import './css/olog.css';
+ import '../css/olog.css';
  import Accordion from 'react-bootstrap/Accordion';
  import Card from 'react-bootstrap/Card';
  import { FaChevronRight, FaChevronDown } from "react-icons/fa";

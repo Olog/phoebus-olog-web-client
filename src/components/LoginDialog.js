@@ -24,7 +24,7 @@ import Button from 'react-bootstrap/Button';
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 import axios from 'axios'
 
-import './css/olog.css';
+import '../css/olog.css';
 
 class LoginDialog extends Component{
 
