@@ -16,10 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {Component} from 'react';
-import Accordion from 'react-bootstrap/Accordion';
 import Logbooks from './Logbooks';
 import Tags from './Tags';
-import { FaChevronRight, FaChevronDown, FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
 import {setSearchParam, removeSearchParam, dateToString} from './utils';
 import Form from 'react-bootstrap/Form';
@@ -76,30 +75,47 @@ class Filters extends Component{
     }
 
     /**
-     * Add or remove tag from search criteria.
-     * @param {string} tagName 
-     * @param {boolean} add 
+     * Update tags search criteria, idempotently
+     * @param {array} tags
      */
-    addTagToSearchCriteria = (tagName, add) => {
-        const copy = {...this.state.searchCriteria};
-        if(add){
-            copy.tags.push(tagName);
-        }
-        else{
-            copy.tags = copy.tags.filter(item => item !== tagName);
-        }
-        this.setState({searchCriteria: copy}, 
-            () =>  {
-                 let searchParams = {};
-                 let tagsString = this.state.searchCriteria.tags.join(",");
-                 if(tagsString !== ''){
-                    searchParams = setSearchParam(this.props.searchParams, 'tags', tagsString);
-                 }
-                 else{
-                    searchParams = removeSearchParam(this.props.searchParams, 'tags');
-                 }
-                 this.props.setSearchParams(searchParams);
+    updateLogbookSearchCriteria = (logs) => {
+        if(logs) {
+            let copy = {...this.state.searchCriteria}
+            copy.logs = logs;
+            this.setState({searchCriteria: copy}, () =>  { 
+                let searchParams = {};
+                let logsString = this.state.searchCriteria.logs.join(",");
+                if(logsString !== ''){
+                searchParams = setSearchParam(this.props.searchParams, 'logbooks', logsString);
+                }
+                else{
+                searchParams = removeSearchParam(this.props.searchParams, 'logbooks');
+                }
+                this.props.setSearchParams(searchParams);
             });
+        }
+    }
+
+    /**
+     * Update tags search criteria, idempotently
+     * @param {array} tags
+     */
+    updateTagSearchCriteria = (tags) => {
+        if(tags) {
+            let copy = {...this.state.searchCriteria}
+            copy.tags = tags;
+            this.setState({searchCriteria: copy}, () =>  { 
+                let searchParams = {};
+                let tagsString = this.state.searchCriteria.tags.join(",");
+                if(tagsString !== ''){
+                searchParams = setSearchParam(this.props.searchParams, 'tags', tagsString);
+                }
+                else{
+                searchParams = removeSearchParam(this.props.searchParams, 'tags');
+                }
+                this.props.setSearchParams(searchParams);
+            });
+        }
     }
 
     setStartDate = (value) => {
@@ -171,31 +187,25 @@ class Filters extends Component{
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan="2"><Accordion>
-                                <Accordion.Toggle eventKey="0" onClick={() => this.setState({openLogbooks: !this.state.openLogbooks})}
-                                    className="accordion-card-header">
-                                    {this.state.openLogbooks ? <FaChevronDown /> : <FaChevronRight/> } Logbooks
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="0">
-                                   <Logbooks
-                                    logbooks={this.props.logbooks}
-                                    searchCriteria={this.state.searchCriteria}
-                                    addLogbookToSearchCriteria={this.addLogbookToSearchCriteria}/>
-                                </Accordion.Collapse>
-                           </Accordion></td>
+                            <td>Logbooks:</td>
                         </tr>
                         <tr>
-                            <td colSpan="2"><Accordion>
-                                <Accordion.Toggle eventKey="0" onClick={() => this.setState({openTags: !this.state.openTags})}
-                                     className="accordion-card-header">
-                                    {this.state.openTags ? <FaChevronDown /> : <FaChevronRight/> } Tags
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="0">
-                                   <Tags tags={this.props.tags}
-                                        searchCriteria={this.state.searchCriteria}
-                                        addTagToSearchCriteria={this.addTagToSearchCriteria}/>
-                                </Accordion.Collapse>
-                            </Accordion></td>
+                            <td colSpan="2">
+                                <Logbooks
+                                logbooks={this.props.logbooks}
+                                searchCriteria={this.state.searchCriteria}
+                                updateLogbookSearchCriteria={this.updateLogbookSearchCriteria}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tags:</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="2">
+                                <Tags tags={this.props.tags}
+                                            searchCriteria={this.state.searchCriteria}
+                                            updateTagSearchCriteria={this.updateTagSearchCriteria}/>
+                            </td>
                         </tr>
                         <tr>
                             <td colSpan="2">Author:</td>

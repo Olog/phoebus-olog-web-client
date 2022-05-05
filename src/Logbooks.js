@@ -17,7 +17,7 @@
  */
 import React, {Component} from 'react';
 import './css/olog.css';
-import FormCheck from 'react-bootstrap/FormCheck';
+import Select from 'react-select';
 
 /**
  * Component to show list of available logbooks and maintain selection of logbooks
@@ -25,27 +25,29 @@ import FormCheck from 'react-bootstrap/FormCheck';
  */
 class Logbooks extends Component{
 
-    logbookSelectionChanged = (event) => {
-        this.props.addLogbookToSearchCriteria(event.target.id, event.target.checked);
+    logbookSelectionChanged = (selection) => {
+        if(selection) {
+            const logbookSelection = Object.values(selection).map(it => it.value).map(it => it.name);
+            this.props.updateLogbookSearchCriteria(logbookSelection);
+        }
     }
 
     render(){
-        var items = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <li key={index}>
-                    <FormCheck>
-                        <FormCheck.Input type="checkbox" 
-                            id={row.name}
-                            checked={this.props.searchCriteria.logbooks.includes(row.name)}
-                            onChange={this.logbookSelectionChanged}/>
-                        <FormCheck.Label>{row.name}</FormCheck.Label>
-                    </FormCheck>
-                </li>
-            )
-        })       
-        return (
-             <ul className="olog-ul">{items}</ul>
-        )
+
+        const options = this.props.logbooks.map(logbook => {
+            return {
+                value: logbook,
+                label: logbook.name
+            }
+        });
+
+        return <Select
+            isMulti
+            name="logbooks"
+            options={options}
+            onChange={this.logbookSelectionChanged}
+        />
+
     }
 }
 

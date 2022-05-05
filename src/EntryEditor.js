@@ -18,8 +18,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Dropdown from 'react-bootstrap/Dropdown';
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import FormFile from 'react-bootstrap/FormFile';
@@ -33,11 +31,11 @@ import EmbedImageDialog from './EmbedImageDialog';
 import OlogAttachment from './OlogAttachment';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
-import Selection from './Selection';
 import checkSession from './session-check';
 import {removeImageMarkup, ologClientInfoHeader } from './utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from 'react-loading-overlay';
+import Select from 'react-select';
 
 class EntryEditor extends Component{
 
@@ -99,46 +97,26 @@ class EntryEditor extends Component{
         .then(data => this.setState({availableProperties: data}))
         .catch(() => this.setState({availableProperties: []}));
     }
-    
-    addLogbook = (logbook) => {
-        var present = false;
-        this.state.selectedLogbooks.map(element => {
-            if(element.name === logbook.name){
-                present = true;
-                return null;
-            }
-            return null;
-        });
-        if(!present){
-            this.setState({selectedLogbooks: [...this.state.selectedLogbooks, logbook]},
-                () => this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0}));
+
+    logbookSelectionChanged = (selection) => {
+        if(selection) {
+            const logbookSelection = Object.values(selection).map(it => it.value);
+            this.setState({selectedLogbooks: logbookSelection});
         }
     }
 
-    removeLogbook = (logbook) => {
-        this.setState({
-                selectedLogbooks: this.state.selectedLogbooks.filter(item => item.name !== logbook.name)},
-                () => this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0})
-        );
-    }
-
-    addTag = (tag) => {
-        var present = false;
-        this.state.selectedTags.map(element => {
-            if(element.name === tag.name){
-                present = true;
-            }
-            return null;
-        });
-        if(!present){
-            this.setState({selectedTags: [...this.state.selectedTags, tag]});
+    tagSelectionChanged = (selection) => {
+        if(selection) {
+            const tagSelection = Object.values(selection).map(it => it.value);
+            this.setState({selectedTags: tagSelection});
         }
     }
 
-    removeTag = (tag) => {
-        this.setState({
-                selectedTags: this.state.selectedTags.filter(item => item.name !== tag.name)
-        });
+    entryTypeSelectionChanged = (selection) => {
+        if(selection) {
+            const level = selection.value;
+            this.setState({level: level});
+        }
     }
 
     onBrowse = () => {
@@ -255,10 +233,6 @@ class EntryEditor extends Component{
         }
     }
 
-    selectLevel = (level) => {
-        this.setState({level: level});
-    }
-
     addProperty = (property) => {
         this.setState({selectedProperties: [...this.state.selectedProperties, property],
             showAddProperty: false});
@@ -312,43 +286,11 @@ class EntryEditor extends Component{
 
     render(){
 
-        var logbookItems = this.props.logbooks.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <Dropdown.Item key={index}  
-                    style={{fontSize: "12px", paddingBottom: "1px"}}
-                    eventKey={index} 
-                    onSelect={() => this.addLogbook(row)}>{row.name}</Dropdown.Item>
-            )
-        });
-
-        var tagItems = this.props.tags.sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            return (
-                <Dropdown.Item key={index} 
-                    style={{fontSize: "12px", paddingBottom: "1px"}}
-                    eventKey={index}
-                    onSelect={() => this.addTag(row)}>{row.name}</Dropdown.Item>
-            )
-        });
-
-        var currentLogbookSelection = this.state.selectedLogbooks.map((row, index) => {
-            return(
-                <Selection item={row} key={index} delete={this.removeLogbook}/>
-            )
-        });
-
-        var currentTagSelection = this.state.selectedTags.map((row, index) => {
-            return(
-                <Selection item={row} key={index} delete={this.removeTag}/>
-            )
-        });
-
         var attachments = this.state.attachedFiles.map((file, index) => {
             return(
                 <Attachment key={index} file={file} removeAttachment={this.removeAttachment}/>
             )
         })
-
-        let levels = customization.levelValues.split(",");
 
         const doUpload = this.props.fileName !== '';
         
@@ -361,9 +303,29 @@ class EntryEditor extends Component{
             )
         })
 
+        const logbookOptions = this.props.logbooks.map(logbook => {
+            return {
+                value: logbook,
+                label: logbook.name
+            }
+        });
+
+        const tagOptions = this.props.tags.map(tag => {
+            return {
+                value: tag.name,
+                label: tag.name
+            }
+        });
+
+        const levelOptions = customization.levelValues.map(level => {
+            return {
+                value: level,
+                label: level
+            }
+        });
+
         return(
             <>
-               
                 <LoadingOverlay
                             active={this.state.createInProgress}
                             spinner
@@ -380,49 +342,45 @@ class EntryEditor extends Component{
                             <Form.Label className="new-entry">New Log Entry</Form.Label>
                             <Button type="submit" disabled={this.props.userData.userName === "" || this.state.createInProgress}>Create</Button>
                         </Form.Row>
-                        <Form.Row className="grid-item">
-                            <Dropdown as={ButtonGroup}>
-                                <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                    Logbooks
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    {logbookItems}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                            &nbsp;{currentLogbookSelection}
+                        <Form.Row>
+                            <Form.Label>Logbooks:</Form.Label>
+                            <Select
+                                isMulti
+                                name="logbooks"
+                                options={logbookOptions}
+                                onChange={this.logbookSelectionChanged}
+                                className="w-100"
+                                placeholder="Select Logbook(s)"
+                            />
                             {this.state.selectedLogbooks.length === 0 && 
                                 <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
                         </Form.Row>
-                        <Form.Row className="grid-item">
-                            <Dropdown as={ButtonGroup}>
-                                <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                    Tags
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    {tagItems}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                            &nbsp;{currentTagSelection}
+                        <Form.Row>
+                            <Form.Label>Tags:</Form.Label>
+                            <Select
+                                isMulti
+                                name="tags"
+                                options={tagOptions}
+                                onChange={this.tagSelectionChanged}
+                                className="w-100"
+                                placeholder="Select Tag(s)"
+                            />
                         </Form.Row>
-                        <Form.Row className="grid-item">
-                            <Dropdown as={ButtonGroup}>
-                                <Dropdown.Toggle className="selection-dropdown" size="sm" variant="secondary">
-                                    {customization.level}                                
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                {levels.map((level, index) => (
-                                    <Dropdown.Item eventKey={index}
-                                    style={{fontSize: "12px", paddingBottom: "1px"}}
-                                    key={index}
-                                    onSelect={() => this.selectLevel(level)}>{level}</Dropdown.Item>
-                                ))}
-                                </Dropdown.Menu>
-                            </Dropdown>&nbsp;
-                            {this.state.level && <div className="selection">{this.state.level}</div>}
+                        <Form.Row>
+                            <Form.Label>Entry Type:</Form.Label>
+                            <Select
+                                name="entryTypes"
+                                options={levelOptions}
+                                defaultInputValue={customization.defaultLevel}
+                                onChange={this.entryTypeSelectionChanged}
+                                className="w-100"
+                                placeholder="Select Entry Type"
+                            />
                             {(this.state.level === "" || !this.state.level) && 
                                 <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
                         </Form.Row>
-                        <Form.Row className="grid-item">
+                        <Form.Row>
+                            <Form.Label>Title:</Form.Label>
                             <Form.Control 
                                 required
                                 type="text" 
@@ -432,7 +390,8 @@ class EntryEditor extends Component{
                                 Please specify a title.
                             </Form.Control.Feedback>
                         </Form.Row>
-                        <Form.Row className="grid-item">
+                        <Form.Row>
+                            <Form.Label>Description:</Form.Label>
                             <Form.Control
                                 as="textarea" 
                                 rows="5" 
@@ -460,6 +419,7 @@ class EntryEditor extends Component{
                         </Form.Row>
                         </Form>
                         {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
+                        <Form.Label className="mt-3">Properties:</Form.Label>
                         {<Form.Row className="grid-item">
                             <Form.Group style={{width: "400px"}}>
                                 <Button variant="secondary" size="sm" onClick={() => this.setState({showAddProperty: true})}>
