@@ -18,8 +18,8 @@
 import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 import { FaPaperclip } from "react-icons/fa";
-import './css/olog.css';
-import { formatFullDateTime, getLogEntryGroupId } from './utils';
+import '../../css/olog.css';
+import { formatFullDateTime, getLogEntryGroupId } from '../../utils/utils';
 
 class SearchResultItem extends Component{
 

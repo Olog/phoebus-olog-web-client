@@ -23,8 +23,8 @@ import {
   Route
 } from "react-router-dom";
 import MainApp from './MainApp';
-import Banner from './Banner';
-import EntryEditor from './EntryEditor';
+import Banner from './Banner/Banner';
+import EntryEditor from './EntryEditor/EntryEditor';
 
 /**
  * Entry point component.

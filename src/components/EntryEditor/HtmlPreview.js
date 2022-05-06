@@ -20,8 +20,8 @@ import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { Remarkable } from 'remarkable';
-import './css/olog.css';
-import imageProcessor from './image-processor';
+import '../../css/olog.css';
+import imageProcessor from '../../utils/image-processor';
 
 class HtmlPreview extends Component{
 

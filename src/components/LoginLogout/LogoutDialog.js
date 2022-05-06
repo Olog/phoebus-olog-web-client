@@ -20,7 +20,7 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import './css/olog.css';
+import '../../css/olog.css';
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 import axios from 'axios';
 

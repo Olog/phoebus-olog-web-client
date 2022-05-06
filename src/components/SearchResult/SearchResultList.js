@@ -24,11 +24,11 @@ import Col from 'react-bootstrap/Col';
 import SearchResultItem from './SearchResultItem';
 import LoadingOverlay from 'react-loading-overlay';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import {searchParamsToQueryString, queryStringToSearchParameters} from './utils';
+import {searchParamsToQueryString, queryStringToSearchParameters} from '../../utils/utils';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Cookies from 'universal-cookie';
 import Pagination from 'react-bootstrap/Pagination';
-import customization from './customization';
+import customization from '../../utils/customization';
 
 
 /**

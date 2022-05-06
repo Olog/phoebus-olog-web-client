@@ -17,8 +17,8 @@
  */
 
  import React, { Component } from 'react';
- import './css/olog.css';
- import {getLogEntryGroupId, sortLogsDateCreated} from './utils';
+ import '../../css/olog.css';
+ import {getLogEntryGroupId, sortLogsDateCreated} from '../../utils/utils';
  import GroupHeader from './GroupHeader';
  
  /**
