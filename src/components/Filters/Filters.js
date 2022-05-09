@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import Logbooks from '../Logbooks/Logbooks';
 import Tags from '../Tags/Tags';
 import { FaCalendarAlt } from "react-icons/fa";
@@ -32,67 +32,67 @@ import customization from '../../utils/customization';
  * Component holding search criteria elements, i.e.
  * logbooks, tags and time range.
  */
-class Filters extends Component{
+// class Filters extends Component{
+const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setSortOrder}) => {
 
-    state = {
-        openLogbooks: false,
-        openTags: false,
-        searchCriteria: {
-            logbooks: [], // Used by logbooks selector
-            tags: []      // Used by tags selector
-          },
-        startDate: new Date(), // Used by calendar component
-        endDate: new Date(),   // Used by calendar component
-        showSelectStartTime: false,
-        showSelectEndTime: false
-    };
+    // const [openLogbooks, setOpenLogBooks] = useState(false);
+    // const [openTags, setOpenTags] = useState(false);
+    const [searchCriteria, setSearchCriteria] = useState({
+        logbooks: [], // Used by logbooks selector
+        tags: []      // Used by tags selector
+    });
+    const [startDate, _setStartDate] = useState(new Date()); // Used by calendar component
+    const [endDate, _setEndDate] = useState(new Date()); // Used by calendar component
+    const [showSelectStartTime, setShowSelectStartTime] = useState(false);
+    const [showSelectEndTime, setShowSelectEndTime] = useState(false);
+    // state = {
+    //     openLogbooks: false,
+    //     openTags: false,
+    //     searchCriteria: {
+    //         logbooks: [], // Used by logbooks selector
+    //         tags: []      // Used by tags selector
+    //       },
+    //     startDate: new Date(), // Used by calendar component
+    //     endDate: new Date(),   // Used by calendar component
+    //     showSelectStartTime: false,
+    //     showSelectEndTime: false
+    // };
 
-    /**
-     * Add or remove logbook from search criteria.
-     * @param {string} logbookName 
-     * @param {boolean} add 
-     */
-    addLogbookToSearchCriteria = (logbookName, add) => {
-        const copy = {...this.state.searchCriteria};
-        if(add){
-            copy.logbooks.push(logbookName);
+    useEffect(() => {
+        let updatedSearchParams = {};
+        let logbooksString = searchCriteria.logbooks.join(",");
+        console.log("logbooks string")
+        console.log(logbooksString)
+        if(logbooksString !== ''){
+            updatedSearchParams = setSearchParam(searchParams, 'logbooks', logbooksString);
         }
         else{
-            copy.logbooks = copy.logbooks.filter(item => item !== logbookName);
+            updatedSearchParams = removeSearchParam(searchParams, 'logbooks');
         }
-        this.setState({searchCriteria: copy}, 
-            () =>  {
-                let searchParams = {};
-                let logbooksString = this.state.searchCriteria.logbooks.join(",");
-                if(logbooksString !== ''){
-                    searchParams = setSearchParam(this.props.searchParams, 'logbooks', logbooksString);
-                }
-                else{
-                    searchParams = removeSearchParam(this.props.searchParams, 'logbooks');
-                }
-                this.props.setSearchParams(searchParams);
-            });
-    }
+        setSearchParams(updatedSearchParams);
+    }, [searchCriteria.logbooks, searchParams.logbooks, setSearchParams]);
+
+    useEffect(() => {
+        let updatedSearchParams = {};
+        let tagsString = searchCriteria.tags.join(",");
+        if(tagsString !== ''){
+            updatedSearchParams = setSearchParam(searchParams, 'tags', tagsString);
+        }
+        else{
+            updatedSearchParams = removeSearchParam(searchParams, 'tags');
+        }
+        setSearchParams(updatedSearchParams);
+    }, [searchCriteria.tags, searchParams.tags, setSearchParams]);
 
     /**
      * Update tags search criteria, idempotently
      * @param {array} tags
      */
-    updateLogbookSearchCriteria = (logs) => {
+    const updateLogbookSearchCriteria = (logs) => {
         if(logs) {
-            let copy = {...this.state.searchCriteria}
-            copy.logs = logs;
-            this.setState({searchCriteria: copy}, () =>  { 
-                let searchParams = {};
-                let logsString = this.state.searchCriteria.logs.join(",");
-                if(logsString !== ''){
-                searchParams = setSearchParam(this.props.searchParams, 'logbooks', logsString);
-                }
-                else{
-                searchParams = removeSearchParam(this.props.searchParams, 'logbooks');
-                }
-                this.props.setSearchParams(searchParams);
-            });
+            let copy = {...searchCriteria}
+            copy.logbooks = logs;
+            setSearchCriteria(copy);
         }
     }
 
@@ -100,229 +100,241 @@ class Filters extends Component{
      * Update tags search criteria, idempotently
      * @param {array} tags
      */
-    updateTagSearchCriteria = (tags) => {
+    const updateTagSearchCriteria = (tags) => {
         if(tags) {
-            let copy = {...this.state.searchCriteria}
+            let copy = {...searchCriteria}
             copy.tags = tags;
-            this.setState({searchCriteria: copy}, () =>  { 
-                let searchParams = {};
-                let tagsString = this.state.searchCriteria.tags.join(",");
-                if(tagsString !== ''){
-                searchParams = setSearchParam(this.props.searchParams, 'tags', tagsString);
-                }
-                else{
-                searchParams = removeSearchParam(this.props.searchParams, 'tags');
-                }
-                this.props.setSearchParams(searchParams);
-            });
+            // this.setState({searchCriteria: copy}, () =>  { 
+            // setSearchCriteria(copy, () => {
+            //     let searchParams = {};
+            //     let tagsString = searchCriteria.tags.join(",");
+            //     if(tagsString !== ''){
+            //     searchParams = setSearchParam(searchParams, 'tags', tagsString);
+            //     }
+            //     else{
+            //     searchParams = removeSearchParam(searchParams, 'tags');
+            //     }
+            //     setSearchParams(searchParams);
+            // });
+            setSearchCriteria(copy);
         }
     }
 
-    setStartDate = (value) => {
+    const setStartDate = (value) => {
         let start = dateToString(value);
-        let searchParams = setSearchParam(this.props.searchParams, 'start', start);
-        this.props.setSearchParams(searchParams);
-        this.setState({startDate: value}); // This is for the calendar component only
+        let _searchParams = setSearchParam(searchParams, 'start', start);
+        setSearchParams(_searchParams);
+        // this.setState({startDate: value}); 
+        _setStartDate(value); // This is for the calendar component only
     }
 
-    setEndDate = (value) => {
+    const setEndDate = (value) => {
         let end = dateToString(value);
-        let searchParams = setSearchParam(this.props.searchParams, 'end', end);
-        this.props.setSearchParams(searchParams);
-        this.setState({endDate: value}); // This is for the calendar component only
+        let _searchParams = setSearchParam(searchParams, 'end', end);
+        setSearchParams(_searchParams);
+        // this.setState({endDate: value}); 
+        _setEndDate(value); // This is for the calendar component only
     }
 
-    applyAndClose = () => {
-        this.setState({showSelectStartTime: false, showSelectEndTime: false});
+    const applyAndClose = () => {
+        // this.setState({showSelectStartTime: false, showSelectEndTime: false});
+        setShowSelectStartTime(false);
+        setShowSelectEndTime(false);
     }
 
-    inputChanged = (event, key) => {
+    const inputChanged = (event, key) => {
       let searchParams = {};
       if(event.target.value !== ''){
-        searchParams = setSearchParam(this.props.searchParams, key, event.target.value);
+        searchParams = setSearchParam(searchParams, key, event.target.value);
       }
       else{
-        searchParams = removeSearchParam(this.props.searchParams, key);
+        searchParams = removeSearchParam(searchParams, key);
       }
-      this.props.setSearchParams(searchParams);
+      setSearchParams(searchParams);
     }
 
-    render(){
-        return(
-            <>
-            <Container className="grid-item filters full-height" style={{padding: "8px"}}>
-                <Table size="sm" className="search-fields-table">
-                    <tbody>
-                        <tr>
-                            <td colSpan="2">Title:</td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <Form.Control size="sm"
-                                    type="text"
-                                    value={this.props.searchParams['title'] || ''}
-                                    onChange={(e) => this.inputChanged(e, 'title')}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">Text:</td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <Form.Control size="sm"
-                                    type="text"
-                                    value={this.props.searchParams['text'] || ''}
-                                    onChange={(e) => this.inputChanged(e, 'text')}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">{customization.level}:</td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <Form.Control size="sm"
-                                    type="text"
-                                    value={this.props.searchParams['level'] || ''}
-                                    onChange={(e) => this.inputChanged(e, 'level')}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Logbooks:</td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <Logbooks
-                                logbooks={this.props.logbooks}
-                                searchCriteria={this.state.searchCriteria}
-                                updateLogbookSearchCriteria={this.updateLogbookSearchCriteria}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Tags:</td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <Tags tags={this.props.tags}
-                                            searchCriteria={this.state.searchCriteria}
-                                            updateTagSearchCriteria={this.updateTagSearchCriteria}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">Author:</td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <Form.Control size="sm"
-                                    type="text"
-                                    value={this.props.searchParams['owner'] || ''}
-                                    onChange={(e) => this.inputChanged(e, 'owner')}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">Start Time:</td>
-                        </tr>
-                        <tr>
-                            <td style={{width: "100%"}}>
+    
+    return(
+        <>
+        <Container className="grid-item filters full-height" style={{padding: "8px"}}>
+            <Table size="sm" className="search-fields-table">
+                <tbody>
+                    <tr>
+                        <td colSpan="2">Title:</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">
                             <Form.Control size="sm"
                                 type="text"
-                                value={this.props.searchParams['start'] || ''}
-                                onChange={(e) => this.inputChanged(e, 'start')}/>
-                            </td>
-                            <td><Button size="sm" onClick={() => this.setState({showSelectStartTime: true})}><FaCalendarAlt/></Button></td>
-                        </tr>
-                        <tr>
-                            <td style={{width: "40px"}}>End Time:</td>
-                        </tr>
-                        <tr>
-                            <td style={{width: "100%"}}>
+                                value={searchParams['title'] || ''}
+                                onChange={(e) => inputChanged(e, 'title')}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">Text:</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">
                             <Form.Control size="sm"
                                 type="text"
-                                value={this.props.searchParams['end'] || ''}
-                                onChange={(e) => this.inputChanged(e, 'end')}/>
-                            </td>
-                            <td><Button size="sm" onClick={() => this.setState({showSelectEndTime: true})}><FaCalendarAlt/></Button></td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check style={{paddingTop: "5px"}}
-                                    type='radio'
-                                    checked={this.props.sortOrder === 'down'}
-                                    label='Sort descending on date'
-                                    onChange={(e) => this.props.setSortOrder("down")}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check 
-                                    type='radio'
-                                    label='Sort ascending on date'
-                                    checked={this.props.sortOrder === 'up'}
-                                    onChange={(e) => this.props.setSortOrder("up")}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">Attachments:</td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <Form.Control size="sm"
-                                    type="text"
-                                    value={this.props.searchParams['attachments'] || ''}
-                                    onChange={(e) => this.inputChanged(e, 'attachments')}/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </Container>
-            {
-            <Modal show={this.state.showSelectStartTime} onHide={() => this.setState({showSelectStartTime: false})}>
-               <Modal.Header closeButton>
-                   <Modal.Title>Select Start Time</Modal.Title>
-               </Modal.Header>
-               <Modal.Body>
+                                value={searchParams['text'] || ''}
+                                onChange={(e) => inputChanged(e, 'text')}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">{customization.level}:</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">
+                            <Form.Control size="sm"
+                                type="text"
+                                value={searchParams['level'] || ''}
+                                onChange={(e) => inputChanged(e, 'level')}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Logbooks:</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">
+                            <Logbooks
+                            logbooks={logbooks}
+                            searchCriteria={searchCriteria}
+                            updateLogbookSearchCriteria={updateLogbookSearchCriteria}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Tags:</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">
+                            <Tags tags={tags}
+                                        searchCriteria={searchCriteria}
+                                        updateTagSearchCriteria={updateTagSearchCriteria}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">Author:</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">
+                            <Form.Control size="sm"
+                                type="text"
+                                value={searchParams['owner'] || ''}
+                                onChange={(e) => inputChanged(e, 'owner')}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">Start Time:</td>
+                    </tr>
+                    <tr>
+                        <td style={{width: "100%"}}>
+                        <Form.Control size="sm"
+                            type="text"
+                            value={searchParams['start'] || ''}
+                            onChange={(e) => inputChanged(e, 'start')}/>
+                        </td>
+                        {/* <td><Button size="sm" onClick={() => this.setState({showSelectStartTime: true})}><FaCalendarAlt/></Button></td> */}
+                        <td><Button size="sm" onClick={() => setShowSelectStartTime(true)}><FaCalendarAlt/></Button></td>
+                    </tr>
+                    <tr>
+                        <td style={{width: "40px"}}>End Time:</td>
+                    </tr>
+                    <tr>
+                        <td style={{width: "100%"}}>
+                        <Form.Control size="sm"
+                            type="text"
+                            value={searchParams['end'] || ''}
+                            onChange={(e) => inputChanged(e, 'end')}/>
+                        </td>
+                        {/* <td><Button size="sm" onClick={() => this.setState({showSelectEndTime: true})}><FaCalendarAlt/></Button></td> */}
+                        <td><Button size="sm" onClick={() => setShowSelectEndTime(true)}><FaCalendarAlt/></Button></td>
+                    </tr>
+                    <tr>
+                        <td><Form.Check style={{paddingTop: "5px"}}
+                                type='radio'
+                                checked={sortOrder === 'down'}
+                                label='Sort descending on date'
+                                onChange={(e) => setSortOrder("down")}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><Form.Check 
+                                type='radio'
+                                label='Sort ascending on date'
+                                checked={sortOrder === 'up'}
+                                onChange={(e) => setSortOrder("up")}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">Attachments:</td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">
+                            <Form.Control size="sm"
+                                type="text"
+                                value={searchParams['attachments'] || ''}
+                                onChange={(e) => inputChanged(e, 'attachments')}/>
+                        </td>
+                    </tr>
+                </tbody>
+            </Table>
+        </Container>
+        {
+        // <Modal show={showSelectStartTime} onHide={() => this.setState({showSelectStartTime: false})}>
+        <Modal show={showSelectStartTime} onHide={() => setShowSelectStartTime(false)}>
+            <Modal.Header closeButton>
+                <Modal.Title>Select Start Time</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+            <DateTimePicker
+                onChange={(value) => setStartDate(value)}
+                style={{width:30}}
+                value={startDate}
+                format='y-MM-dd HH:mm'
+                clearIcon=""
+                disableClock></DateTimePicker>
+            </Modal.Body>
+            <Modal.Footer>
+            <Button variant="primary" type="submit" onClick={() => applyAndClose()}>
+                    Apply
+            </Button>
+            {/* <Button variant="secondary" type="button" onClick={() => this.setState({showSelectStartTime: false})}> */}
+            <Button variant="secondary" type="button" onClick={() => setShowSelectStartTime(false)}>
+                    Cancel
+            </Button>
+            </Modal.Footer>
+        </Modal>
+        }
+        {
+        <Modal show={showSelectEndTime}
+                // onHide={() => this.setState({showSelectEndTime: false})}
+                onHide={() => showSelectEndTime(false)}
+            >
+            <Modal.Header closeButton>
+                <Modal.Title>Select End Time</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                 <DateTimePicker
-                   onChange={(value) => this.setStartDate(value)}
-                   style={{width:30}}
-                   value={this.state.startDate}
-                   format='y-MM-dd HH:mm'
-                   clearIcon=""
-                   disableClock></DateTimePicker>
-               </Modal.Body>
-               <Modal.Footer>
-               <Button variant="primary" type="submit" onClick={() => this.applyAndClose()}>
-                     Apply
-               </Button>
-               <Button variant="secondary" type="button" onClick={() => this.setState({showSelectStartTime: false})}>
-                     Cancel
-               </Button>
-             </Modal.Footer>
-            </Modal>
-            }
-            {
-            <Modal show={this.state.showSelectEndTime}
-                    onHide={() => this.setState({showSelectEndTime: false})}>
-                <Modal.Header closeButton>
-                   <Modal.Title>Select End Time</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                 <DateTimePicker
-                   onChange={(value) => this.setEndDate(value)}
-                   value={this.state.endDate}
-                   format='y-MM-dd HH:mm'
-                   clearIcon=""
-                   disableClock></DateTimePicker>
-               </Modal.Body>
-               <Modal.Footer>
-                   <Button variant="primary" type="submit" onClick={() => this.applyAndClose()}>
-                         Apply
-                   </Button>
-                   <Button variant="secondary" type="button" onClick={() => this.setState({showSelectEndTime: false})}>
-                         Cancel
-                   </Button>
-               </Modal.Footer>
-            </Modal>
-            }
-            </>
-        )
-    }
+                onChange={(value) => setEndDate(value)}
+                value={endDate}
+                format='y-MM-dd HH:mm'
+                clearIcon=""
+                disableClock></DateTimePicker>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" type="submit" onClick={() => applyAndClose()}>
+                        Apply
+                </Button>
+                {/* <Button variant="secondary" type="button" onClick={() => this.setState({showSelectEndTime: false})}> */}
+                <Button variant="secondary" type="button" onClick={() => setShowSelectEndTime(false)}>
+                        Cancel
+                </Button>
+            </Modal.Footer>
+        </Modal>
+        }
+        </>
+    );
 }
 
 export default Filters;

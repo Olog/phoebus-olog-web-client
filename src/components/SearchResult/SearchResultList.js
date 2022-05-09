@@ -23,12 +23,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import SearchResultItem from './SearchResultItem';
 import LoadingOverlay from 'react-loading-overlay';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import {searchParamsToQueryString, queryStringToSearchParameters} from '../../utils/utils';
-import Tooltip from 'react-bootstrap/Tooltip';
 import Cookies from 'universal-cookie';
 import Pagination from 'react-bootstrap/Pagination';
 import customization from '../../utils/customization';
+import SearchBox from './SearchBox';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import {searchParamsToQueryString, queryStringToSearchParameters} from '../../utils/utils';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 
 /**
@@ -96,10 +97,10 @@ class SearchResultList extends Component{
         this.search(this.props.sortOrder);
     }
 
-    setSearchString = (event) => {
-        let searchParams = queryStringToSearchParameters(event.target.value);
-        this.props.setSearchParams(searchParams);
-    }
+    // setSearchString = (event) => {
+    //     let searchParams = queryStringToSearchParameters(event.target.value);
+    //     this.props.setSearchParams(searchParams);
+    // }
 
     toggleFilters = () => {
         this.props.toggleFilters();
@@ -147,6 +148,9 @@ class SearchResultList extends Component{
                         selectedLogEntryId={this.props.selectedLogEntryId}/>
         });
 
+        console.log("search params in searchResultList:");
+        console.log(this.props.searchParams);
+
         return(
             <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
                 <Form style={{paddingTop: "5px"}} onSubmit={(e) => this.submit(e)}>
@@ -170,6 +174,12 @@ class SearchResultList extends Component{
                                     onChange={(e) => this.setSearchString(e)}>
                                 </Form.Control>
                             </OverlayTrigger>
+                        {/* <SearchBox 
+                            searchParams={this.props.searchParams}
+                            setSearchParams={this.props.setSearchParams}
+                            showFilters={this.props.showFilters}
+                            theprops={this.props}
+                        /> */}
                         </Col>
                         <Col style={{flexGrow: "0" }}>
                             <Button 
