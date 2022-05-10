@@ -27,9 +27,6 @@ import Cookies from 'universal-cookie';
 import Pagination from 'react-bootstrap/Pagination';
 import customization from '../../utils/customization';
 import SearchBox from './SearchBox';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import {searchParamsToQueryString, queryStringToSearchParameters} from '../../utils/utils';
-import Tooltip from 'react-bootstrap/Tooltip';
 
 
 /**
@@ -148,38 +145,38 @@ class SearchResultList extends Component{
                         selectedLogEntryId={this.props.selectedLogEntryId}/>
         });
 
-        console.log("search params in searchResultList:");
-        console.log(this.props.searchParams);
+        // console.log("search params in searchResultList:");
+        // console.log(this.props.searchParams);
 
         return(
-            <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}}>
+            <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}} >
                 <Form style={{paddingTop: "5px"}} onSubmit={(e) => this.submit(e)}>
                     <Form.Row>
                         <Col style={{flexGrow: "0"}}>
                             <Button size="sm" onClick={() => this.toggleFilters()}>{this.state.expandSymbol}</Button>
                         </Col>
                         <Col style={{paddingLeft: "0px"}}>
-                        <OverlayTrigger delay={{ hide: 750, show: 300 }}
-                                    overlay={(props) => (
-                                        <Tooltip {...props}>Edit and press Enter to search</Tooltip>
-                                    )}
-                                    rootClose
-                                    placement="bottom">
-                                <Form.Control size="sm" 
-                                    type="input"
-                                    disabled={this.props.showFilters}
-                                    placeholder="No search string"
-                                    style={{fontSize: "12px"}}
-                                    defaultValue={searchParamsToQueryString(this.props.searchParams)}
-                                    onChange={(e) => this.setSearchString(e)}>
-                                </Form.Control>
-                            </OverlayTrigger>
-                        {/* <SearchBox 
+                        {/* <OverlayTrigger delay={{ hide: 750, show: 300 }}
+                                overlay={(props) => (
+                                    <Tooltip {...props}>Edit and press Enter to search</Tooltip>
+                                )}
+                                rootClose
+                                placement="bottom">
+                            <Form.Control size="sm" 
+                                type="input"
+                                disabled={this.props.showFilters}
+                                placeholder="No search string"
+                                style={{fontSize: "12px"}}
+                                defaultValue={searchParamsToQueryStringOld(this.props.searchParams)}
+                                onChange={(e) => this.setSearchString(e)}>
+                            </Form.Control>
+                        </OverlayTrigger> */}
+                        <SearchBox 
                             searchParams={this.props.searchParams}
                             setSearchParams={this.props.setSearchParams}
                             showFilters={this.props.showFilters}
                             theprops={this.props}
-                        /> */}
+                        />
                         </Col>
                         <Col style={{flexGrow: "0" }}>
                             <Button 

@@ -35,96 +35,15 @@ import customization from '../../utils/customization';
 // class Filters extends Component{
 const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setSortOrder}) => {
 
-    // const [openLogbooks, setOpenLogBooks] = useState(false);
-    // const [openTags, setOpenTags] = useState(false);
-    const [searchCriteria, setSearchCriteria] = useState({
-        logbooks: [], // Used by logbooks selector
-        tags: []      // Used by tags selector
-    });
     const [startDate, _setStartDate] = useState(new Date()); // Used by calendar component
     const [endDate, _setEndDate] = useState(new Date()); // Used by calendar component
     const [showSelectStartTime, setShowSelectStartTime] = useState(false);
     const [showSelectEndTime, setShowSelectEndTime] = useState(false);
-    // state = {
-    //     openLogbooks: false,
-    //     openTags: false,
-    //     searchCriteria: {
-    //         logbooks: [], // Used by logbooks selector
-    //         tags: []      // Used by tags selector
-    //       },
-    //     startDate: new Date(), // Used by calendar component
-    //     endDate: new Date(),   // Used by calendar component
-    //     showSelectStartTime: false,
-    //     showSelectEndTime: false
-    // };
-
-    useEffect(() => {
-        let updatedSearchParams = {};
-        let logbooksString = searchCriteria.logbooks.join(",");
-        console.log("logbooks string")
-        console.log(logbooksString)
-        if(logbooksString !== ''){
-            updatedSearchParams = setSearchParam(searchParams, 'logbooks', logbooksString);
-        }
-        else{
-            updatedSearchParams = removeSearchParam(searchParams, 'logbooks');
-        }
-        setSearchParams(updatedSearchParams);
-    }, [searchCriteria.logbooks, searchParams.logbooks, setSearchParams]);
-
-    useEffect(() => {
-        let updatedSearchParams = {};
-        let tagsString = searchCriteria.tags.join(",");
-        if(tagsString !== ''){
-            updatedSearchParams = setSearchParam(searchParams, 'tags', tagsString);
-        }
-        else{
-            updatedSearchParams = removeSearchParam(searchParams, 'tags');
-        }
-        setSearchParams(updatedSearchParams);
-    }, [searchCriteria.tags, searchParams.tags, setSearchParams]);
-
-    /**
-     * Update tags search criteria, idempotently
-     * @param {array} tags
-     */
-    const updateLogbookSearchCriteria = (logs) => {
-        if(logs) {
-            let copy = {...searchCriteria}
-            copy.logbooks = logs;
-            setSearchCriteria(copy);
-        }
-    }
-
-    /**
-     * Update tags search criteria, idempotently
-     * @param {array} tags
-     */
-    const updateTagSearchCriteria = (tags) => {
-        if(tags) {
-            let copy = {...searchCriteria}
-            copy.tags = tags;
-            // this.setState({searchCriteria: copy}, () =>  { 
-            // setSearchCriteria(copy, () => {
-            //     let searchParams = {};
-            //     let tagsString = searchCriteria.tags.join(",");
-            //     if(tagsString !== ''){
-            //     searchParams = setSearchParam(searchParams, 'tags', tagsString);
-            //     }
-            //     else{
-            //     searchParams = removeSearchParam(searchParams, 'tags');
-            //     }
-            //     setSearchParams(searchParams);
-            // });
-            setSearchCriteria(copy);
-        }
-    }
 
     const setStartDate = (value) => {
         let start = dateToString(value);
         let _searchParams = setSearchParam(searchParams, 'start', start);
         setSearchParams(_searchParams);
-        // this.setState({startDate: value}); 
         _setStartDate(value); // This is for the calendar component only
     }
 
@@ -132,27 +51,35 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
         let end = dateToString(value);
         let _searchParams = setSearchParam(searchParams, 'end', end);
         setSearchParams(_searchParams);
-        // this.setState({endDate: value}); 
         _setEndDate(value); // This is for the calendar component only
     }
 
     const applyAndClose = () => {
-        // this.setState({showSelectStartTime: false, showSelectEndTime: false});
         setShowSelectStartTime(false);
         setShowSelectEndTime(false);
     }
 
+
     const inputChanged = (event, key) => {
-      let searchParams = {};
-      if(event.target.value !== ''){
-        searchParams = setSearchParam(searchParams, key, event.target.value);
-      }
-      else{
-        searchParams = removeSearchParam(searchParams, key);
-      }
-      setSearchParams(searchParams);
+        let copy = {...searchParams};
+        let text = event.target.value;
+        if(text !== '') {
+            copy[key] = text;
+        } else {
+            delete copy[key];
+        }
+        setSearchParams(copy);
     }
 
+    const inputChangedArray = (arr, key) => {
+        let copy = {...searchParams}
+        if(arr) {
+            copy[key] = arr;
+        } else {
+            delete copy[arr];
+        }
+        setSearchParams(copy);
+    }
     
     return(
         <>
@@ -198,9 +125,9 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
                     <tr>
                         <td colSpan="2">
                             <Logbooks
-                            logbooks={logbooks}
-                            searchCriteria={searchCriteria}
-                            updateLogbookSearchCriteria={updateLogbookSearchCriteria}/>
+                                logbooks={logbooks}
+                                searchParams={searchParams}
+                                updateLogbookSearchCriteria={logbooks => {inputChangedArray(logbooks, 'logbooks')}}/>
                         </td>
                     </tr>
                     <tr>
@@ -209,8 +136,8 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
                     <tr>
                         <td colSpan="2">
                             <Tags tags={tags}
-                                        searchCriteria={searchCriteria}
-                                        updateTagSearchCriteria={updateTagSearchCriteria}/>
+                                    searchParams={searchParams}
+                                    updateTagSearchCriteria={tags => {inputChangedArray(tags, 'tags')}}/>
                         </td>
                     </tr>
                     <tr>
@@ -234,7 +161,6 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
                             value={searchParams['start'] || ''}
                             onChange={(e) => inputChanged(e, 'start')}/>
                         </td>
-                        {/* <td><Button size="sm" onClick={() => this.setState({showSelectStartTime: true})}><FaCalendarAlt/></Button></td> */}
                         <td><Button size="sm" onClick={() => setShowSelectStartTime(true)}><FaCalendarAlt/></Button></td>
                     </tr>
                     <tr>
@@ -247,7 +173,6 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
                             value={searchParams['end'] || ''}
                             onChange={(e) => inputChanged(e, 'end')}/>
                         </td>
-                        {/* <td><Button size="sm" onClick={() => this.setState({showSelectEndTime: true})}><FaCalendarAlt/></Button></td> */}
                         <td><Button size="sm" onClick={() => setShowSelectEndTime(true)}><FaCalendarAlt/></Button></td>
                     </tr>
                     <tr>
@@ -281,7 +206,6 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
             </Table>
         </Container>
         {
-        // <Modal show={showSelectStartTime} onHide={() => this.setState({showSelectStartTime: false})}>
         <Modal show={showSelectStartTime} onHide={() => setShowSelectStartTime(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Select Start Time</Modal.Title>
@@ -299,7 +223,6 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
             <Button variant="primary" type="submit" onClick={() => applyAndClose()}>
                     Apply
             </Button>
-            {/* <Button variant="secondary" type="button" onClick={() => this.setState({showSelectStartTime: false})}> */}
             <Button variant="secondary" type="button" onClick={() => setShowSelectStartTime(false)}>
                     Cancel
             </Button>
@@ -308,7 +231,6 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
         }
         {
         <Modal show={showSelectEndTime}
-                // onHide={() => this.setState({showSelectEndTime: false})}
                 onHide={() => showSelectEndTime(false)}
             >
             <Modal.Header closeButton>
@@ -326,7 +248,6 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
                 <Button variant="primary" type="submit" onClick={() => applyAndClose()}>
                         Apply
                 </Button>
-                {/* <Button variant="secondary" type="button" onClick={() => this.setState({showSelectEndTime: false})}> */}
                 <Button variant="secondary" type="button" onClick={() => setShowSelectEndTime(false)}>
                         Cancel
                 </Button>

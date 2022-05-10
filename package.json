@@ -6,6 +6,7 @@
     "axios": "^0.21.2",
     "babel-jest": "^24.9.0",
     "moment": "^2.29.2",
+    "query-string": "^7.1.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.3",
     "react-datetime-picker": "^3.0.4",
