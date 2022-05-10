@@ -156,21 +156,6 @@ class SearchResultList extends Component{
                             <Button size="sm" onClick={() => this.toggleFilters()}>{this.state.expandSymbol}</Button>
                         </Col>
                         <Col style={{paddingLeft: "0px"}}>
-                        {/* <OverlayTrigger delay={{ hide: 750, show: 300 }}
-                                overlay={(props) => (
-                                    <Tooltip {...props}>Edit and press Enter to search</Tooltip>
-                                )}
-                                rootClose
-                                placement="bottom">
-                            <Form.Control size="sm" 
-                                type="input"
-                                disabled={this.props.showFilters}
-                                placeholder="No search string"
-                                style={{fontSize: "12px"}}
-                                defaultValue={searchParamsToQueryStringOld(this.props.searchParams)}
-                                onChange={(e) => this.setSearchString(e)}>
-                            </Form.Control>
-                        </OverlayTrigger> */}
                         <SearchBox 
                             searchParams={this.props.searchParams}
                             setSearchParams={this.props.setSearchParams}
