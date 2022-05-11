@@ -19,11 +19,9 @@ import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import packageInfo from '../../package.json';
 
- const shortTimeFormat = 'HH:mm';
- const shortDateFormat = 'YYYY-MM-DD';
- const fullDateTime = 'YYYY-MM-DD HH:mm:ss';
-
- const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties", "attachments"];
+const shortTimeFormat = 'HH:mm';
+const shortDateFormat = 'YYYY-MM-DD';
+const fullDateTime = 'YYYY-MM-DD HH:mm:ss';
 
 export function formatShortTime(date){
     return moment(date).format(shortTimeFormat);
@@ -155,24 +153,6 @@ export function findLogEntryGroup(tree, logEntryGroupId){
     }
     return null;
 }
-
-/**
- * Sets or updates a search parameter
- */
-export function setSearchParam(searchParams, key, value){
-    removeSearchParam(key);
-    searchParams[key] = value;
-    return searchParams;
-}
-
-/**
- * Removes a search parameter, e.g. if user specifies an empty value.
- */
-export function removeSearchParam(searchParams, key){
-    delete searchParams[key];
-    return searchParams;
-}
-
 
 /**
  * Converts a JavaScript Date object to a string on format yyyy-MM-dd HH:mm:ss.

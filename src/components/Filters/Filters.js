@@ -15,12 +15,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Logbooks from '../Logbooks/Logbooks';
 import Tags from '../Tags/Tags';
 import { FaCalendarAlt } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
-import {setSearchParam, removeSearchParam, dateToString} from '../../utils/utils';
+import {dateToString} from '../../utils/utils';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import DateTimePicker from 'react-datetime-picker';
@@ -32,7 +32,6 @@ import customization from '../../utils/customization';
  * Component holding search criteria elements, i.e.
  * logbooks, tags and time range.
  */
-// class Filters extends Component{
 const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setSortOrder}) => {
 
     const [startDate, _setStartDate] = useState(new Date()); // Used by calendar component
@@ -42,15 +41,13 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
 
     const setStartDate = (value) => {
         let start = dateToString(value);
-        let _searchParams = setSearchParam(searchParams, 'start', start);
-        setSearchParams(_searchParams);
+        setSearchParams({...searchParams, start});
         _setStartDate(value); // This is for the calendar component only
     }
 
     const setEndDate = (value) => {
         let end = dateToString(value);
-        let _searchParams = setSearchParam(searchParams, 'end', end);
-        setSearchParams(_searchParams);
+        setSearchParams({...searchParams, end})
         _setEndDate(value); // This is for the calendar component only
     }
 
@@ -58,7 +55,6 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
         setShowSelectStartTime(false);
         setShowSelectEndTime(false);
     }
-
 
     const inputChanged = (event, key) => {
         let copy = {...searchParams};
@@ -217,7 +213,8 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
                 value={startDate}
                 format='y-MM-dd HH:mm'
                 clearIcon=""
-                disableClock></DateTimePicker>
+                disableClock 
+            />
             </Modal.Body>
             <Modal.Footer>
             <Button variant="primary" type="submit" onClick={() => applyAndClose()}>
