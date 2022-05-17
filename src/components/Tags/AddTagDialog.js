@@ -20,9 +20,7 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-
-// Need axios for back-end access as the "fetch" API does not support CORS cookies.
-import axios from 'axios'
+import ologService from '../../api/olog-service';
 
 class AddTagDialog extends Component{
 
@@ -35,7 +33,7 @@ class AddTagDialog extends Component{
     createTag = () => {
         var name = this.nameRef.current.value;
         // TODO add error handling if request fails.
-       axios.put(`${process.env.REACT_APP_BASE_URL}/tags/` + name, {name: name, state: "Active"}, { withCredentials: true })
+       ologService.put(`/tags/${name}`, {name: name, state: "Active"}, { withCredentials: true })
         .then(res => {
             this.props.setShowAddTag(false);
             this.props.refreshTags();

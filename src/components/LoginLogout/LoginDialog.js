@@ -20,10 +20,7 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-
-// Need axios for back-end access as the "fetch" API does not support CORS cookies.
-import axios from 'axios'
-
+import ologService from '../../api/olog-service';
 import '../../css/olog.css';
 
 class LoginDialog extends Component{
@@ -46,7 +43,7 @@ class LoginDialog extends Component{
         formData.append("username", this.userNameRef.current.value);
         formData.append("password", this.passwordRef.current.value);
        
-        axios.post(`${process.env.REACT_APP_BASE_URL}/login`, formData,  { withCredentials: true })
+        ologService.post('/login', formData,  { withCredentials: true })
          .then(res => {
             this.setState({loginError: ""});
             this.props.setUserData(res.data);
