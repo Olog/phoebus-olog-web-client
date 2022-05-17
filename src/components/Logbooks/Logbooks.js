@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import '../../css/olog.css';
 import Select from 'react-select';
 
@@ -23,32 +23,56 @@ import Select from 'react-select';
  * Component to show list of available logbooks and maintain selection of logbooks
  * to include in a search query.
  */
-class Logbooks extends Component{
+const Logbooks = ({logbooks, searchParams, updateLogbookSearchCriteria}) => {
 
-    logbookSelectionChanged = (selection) => {
-        if(selection) {
-            const logbookSelection = Object.values(selection).map(it => it.value).map(it => it.name);
-            this.props.updateLogbookSearchCriteria(logbookSelection);
+    const [selection, setSelection] = useState([]);
+    const [options, setOptions] = useState([]);
+
+    useEffect(() => {
+        if(logbooks) {
+            setOptions(logbooks.map(logbook => {
+                return {
+                    value: logbook,
+                    label: logbook.name
+                }
+            }));
         }
-    }
+    }, [logbooks]);
 
-    render(){
-
-        const options = this.props.logbooks.map(logbook => {
-            return {
-                value: logbook,
-                label: logbook.name
+    useEffect(() => {
+        
+        // if search params and logbook search params are set, then set selection
+        if(searchParams && searchParams.logbooks) {
+            // push the single string value, or the array of strings
+            const logbooks = [];
+            if(Array.isArray(searchParams.logbooks)) {
+                logbooks.push(...searchParams.logbooks);
+            } else {
+                logbooks.push(searchParams.logbooks);
             }
-        });
+            const newSelection = options.filter(it => logbooks.includes(it.value.name));
+            setSelection(newSelection);
+        } 
+        // else clear the selection
+        else {
+            setSelection([]);
+        }
+    }, [searchParams]);
 
-        return <Select
-            isMulti
-            name="logbooks"
-            options={options}
-            onChange={this.logbookSelectionChanged}
-        />
-
+    const logbookSelectionChanged = (updatedSelection) => {
+        setSelection(updatedSelection);
+        const logbooks = Object.values(updatedSelection).map(it => it.value).map(it => it.name);
+        updateLogbookSearchCriteria(logbooks);
     }
+
+    return <Select
+        isMulti
+        name="logbooks"
+        options={options}
+        onChange={logbookSelectionChanged}
+        value={selection}
+    />
+    
 }
 
 export default Logbooks

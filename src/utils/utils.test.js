@@ -20,11 +20,8 @@ import {formatShortDate,
     removeImageMarkup, 
     getLogEntryGroupId, 
     sortLogsDateCreated,
-    queryStringToSearchParameters,
-    setSearchParam,
-    removeSearchParam,
-    dateToString,
-    searchParamsToQueryString} from './utils';
+    dateToString} from './utils';
+import { queryStringToSearchParameters, searchParamsToQueryString } from './searchParams';
 import moment from 'moment';
 
 test('sortSearchResultByDay', () => {
@@ -214,33 +211,6 @@ test('queryStringToSearchParameters', () => {
     expect(map['start']).toBe('b');
     // Unsupported query params should be undefined
     expect(map['foo']).toBeUndefined();
-});
-
-test('setSearchParam', () => {
-    let map = [];
-    map['a'] = 'A';
-
-    map = setSearchParam(map, 'sort', 'up');
-    let query = searchParamsToQueryString(map);
-    expect(query).toBe('a=A&sort=up');
-
-    map = [];
-    map['a'] = 'A';
-    map['sort'] = 'up';
-
-    map = setSearchParam(map, 'sort', 'down');
-    query = searchParamsToQueryString(map);
-    expect(query).toBe('a=A&sort=down');
-});
-
-test('removeSearchParam', () => {
-    let map = [];
-    map['a'] = 'A';
-    map['sort'] = 'up';
-
-    map = removeSearchParam(map, 'sort');
-    let query = searchParamsToQueryString(map);
-    expect(query).toBe('a=A');
 });
 
 test('dateToString', () => {

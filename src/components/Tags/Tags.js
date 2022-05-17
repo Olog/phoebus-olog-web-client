@@ -15,36 +15,60 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react'
+import React, {useState, useEffect} from 'react'
 import '../../css/olog.css';
 import Select from 'react-select';
 
-class Tags extends Component{
+const Tags = ({tags, searchParams, updateTagSearchCriteria}) => {
 
-    tagSelectionChanged = (selection) => {
-        if(selection) {
-            const tagSelection = Object.values(selection).map(it => it.value);
-            this.props.updateTagSearchCriteria(tagSelection);
+    const [selection, setSelection] = useState([]);
+    const [options, setOptions] = useState([]);
+
+    useEffect(() => {
+        if(tags) {
+            setOptions(tags.map(tag => {
+                return {
+                    value: tag,
+                    label: tag.name
+                }
+            }));
         }
-    }
+    }, [tags]);
 
-    render(){
-
-        const options = this.props.tags.map(tag => {
-            return {
-                value: tag.name,
-                label: tag.name
+    useEffect(() => {
+        
+        // if search params and tag search params are set, then set selection
+        if(searchParams && searchParams.tags) {
+            // push the single string value, or the array of strings
+            const tags = [];
+            if(Array.isArray(searchParams.tags)) {
+                tags.push(...searchParams.tags);
+            } else {
+                tags.push(searchParams.tags);
             }
-        });
+            const newSelection = options.filter(it => tags.includes(it.value.name));
+            setSelection(newSelection);
+        } 
+        // else clear the selection
+        else {
+            setSelection([]);
+        }
+    }, [searchParams]);
 
-        return <Select
-            isMulti
-            name="tags"
-            options={options}
-            onChange={this.tagSelectionChanged}
-        />
-
+    const tagSelectionChanged = (updatedSelection) => {
+        setSelection(updatedSelection);
+        const tags = Object.values(updatedSelection).map(it => it.value).map(it => it.name);
+        updateTagSearchCriteria(tags);
     }
+
+    return <Select
+        isMulti
+        name="tags"
+        options={options}
+        onChange={tagSelectionChanged}
+        value={selection}
+    />
+    
 }
 
 export default Tags;

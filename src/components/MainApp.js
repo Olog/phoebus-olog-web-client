@@ -25,7 +25,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Collapse from 'react-bootstrap/Collapse';
 import customization from '../utils/customization';
-import {queryStringToSearchParameters, searchParamsToQueryString, ologClientInfoHeader} from '../utils/utils.js';
+import {ologClientInfoHeader} from '../utils/utils.js';
+import {queryStringToSearchParameters, searchParamsToQueryString} from '../utils/searchParams';
 import Cookies from 'universal-cookie';
 import { withRouter } from 'react-router-dom';
 import { TaskTimer } from 'tasktimer';
@@ -41,26 +42,26 @@ class MainApp extends Component {
 
     state = {
           logEntryTree: [],
-          selectedLogEntryId: 0,
-          searchResult: {
+          selectedLogEntryId: 0,    // current log entry being displayed
+          searchResult: {           // results from search for logs
             logs: [],
             hitCount: 0
           },
           searchInProgress: false,
           logGroupRecords: [],
-          showFilters: false,
-          searchParams: {},
+          showFilters: false,       // whether to show the Filters component or not
+          searchParams: {},         // start, end, logbooks, tags, etc.
           showIdNotFound: false,
           sortOrder: "down" 
         };
 
     cookies = new Cookies();
     
-    
     componentDidMount = () => {
       if(this.props.match && this.props.match.params && this.props.match.params.id > 0){
         this.loadLogEntry(this.props.match.params.id);
       }
+      
     }
 
     loadLogEntry = (id) => {
@@ -188,6 +189,9 @@ class MainApp extends Component {
     }
 
   render() {
+    
+    // console.log("search params mainApp:");
+    // console.log(this.state.searchParams);
 
     return (
       <>
@@ -196,17 +200,27 @@ class MainApp extends Component {
             <Collapse in={this.state.showFilters}>
                 <Col xs={{span: 12, order: 3}} sm={{span: 12, order: 3}} md={{span: 12, order: 3}} lg={{span: 2, order: 1}} style={{padding: "2px"}}>
                   <Filters
-                    {...this.state} {...this.props}
+                    logbooks={this.props.logbooks}
+                    tags={this.props.tags}
+                    searchParams={this.state.searchParams}
                     setSearchParams={this.setSearchParams}
+                    sortOrder={this.state.sortOrder}
                     setSortOrder={this.setSortOrder}/>
                 </Col>
             </Collapse>
             <Col xs={{span: 12, order: 2}} sm={{span: 12, order: 2}} md={{span: 12, order: 2}} lg={{span: 4, order: 2}} style={{padding: "2px"}}>
-              <SearchResultList {...this.state} {...this.props}
-                setCurrentLogEntry={this.setCurrentLogEntry}
+              <SearchResultList
+                searchParams = {this.state.searchParams}
                 setSearchParams={this.setSearchParams}
                 search={this.search}
-                toggleFilters={this.toggleFilters}/>
+                searchInProgress={this.state.searchInProgress}
+                searchResult={this.state.searchResult}
+                sortOrder={this.state.sortOrder}
+                setCurrentLogEntry={this.setCurrentLogEntry}
+                selectedLogEntryId={this.state.selectedLogEntryId}
+                toggleFilters={this.toggleFilters}
+                showFilters={this.state.showFilters}
+              />
             </Col>
             <Col  xs={{span: 12, order: 1}} sm={{span: 12, order: 1}} md={{span: 12, order: 1}} lg={{span: this.state.showFilters ? 6 : 8, order: 3}} style={{padding: "2px"}}>
               {!this.state.showIdNotFound && 
