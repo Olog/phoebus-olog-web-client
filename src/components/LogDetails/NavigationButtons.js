@@ -21,30 +21,25 @@ import { withRouter } from 'react-router-dom';
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import ologService from '../../api/olog-service';
 
 class NavigationButtons extends Component {
 
     step = (amount) => {
         const {history} = this.props;
         let id = this.props.selectedLogEntryId + amount;
-        fetch(`${process.env.REACT_APP_BASE_URL}/logs/` + id)
-        .then(response => {
-            if(response.ok){
-                return response.json();
-            }
-            else if(response.status === 404){
-                alert("Unable to step further.");
-            }
-        })
-        .then(data => {
-            if(data){
-                history.push('/logs/' + data.id);
-                this.props.setCurrentLogEntry(data);
-            }
-        })
-        .catch(err => {
-            alert("Failed to retrieve log entry.")
-        });
+        
+        ologService.get(`/logs/${id}`)
+            .then(res => {
+                history.push('/logs/' + res.data.id);
+                this.props.setCurrentLogEntry(res.data);
+            })
+            .catch(err => {
+                if(err.response && err.response.status == 404) {
+                    alert("Unable to step further.");
+                }
+                console.error("Failed to fetch log entry.", err);
+            })
     }
 
     render (){

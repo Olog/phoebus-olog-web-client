@@ -92,10 +92,12 @@ class EntryEditor extends Component{
     }
 
     getAvailableProperties = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/properties`)
-        .then(response => response.json())
-        .then(data => this.setState({availableProperties: data}))
-        .catch(() => this.setState({availableProperties: []}));
+        ologService.get("/properties")
+            .then(res =>  this.setState({availableProperties: res.data}))
+            .catch(e => {
+                console.error("Could not fetch properties", e);
+                this.setState({availableProperties: []});
+            })
     }
 
     logbookSelectionChanged = (selection) => {
