@@ -31,7 +31,7 @@ import EmbedImageDialog from './EmbedImageDialog';
 import OlogAttachment from './OlogAttachment';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
-import checkSession from '../../api/session-check';
+import { checkSession } from '../../api/olog-service.js';
 import {removeImageMarkup, ologClientInfoHeader } from '../../utils/utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from 'react-loading-overlay';

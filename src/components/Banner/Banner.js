@@ -25,7 +25,7 @@ import AddLogbookDialog from './AddLogbookDialog';
 import AddTagDialog from '../Tags/AddTagDialog';
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
-import checkSession from '../../api/session-check';
+import { checkSession } from '../../api/olog-service';
 import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
 import Row from 'react-bootstrap/Row';
@@ -52,10 +52,11 @@ class Banner extends Component {
             if(res.status === 200 && res.data){ 
                 this.props.setUserData(res.data);
             }
-            else if(res.status === 404){
-              this.props.setUserData({userName: "", roles: []});
-            }
-        }).catch(err => {/** TODO: handle connection error */});
+        }).catch(err => {
+          if(err.response && err.response.status === 404){
+            this.props.setUserData({userName: "", roles: []});
+          }
+        });
   } 
 
 
