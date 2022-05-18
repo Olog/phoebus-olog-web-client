@@ -35,7 +35,7 @@ class NavigationButtons extends Component {
                 this.props.setCurrentLogEntry(res.data);
             })
             .catch(err => {
-                if(err.response && err.response.status == 404) {
+                if(err.response && err.response.status === 404) {
                     alert("Unable to step further.");
                 }
                 console.error("Failed to fetch log entry.", err);
