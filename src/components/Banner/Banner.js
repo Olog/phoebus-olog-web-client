@@ -25,9 +25,8 @@ import AddLogbookDialog from './AddLogbookDialog';
 import AddTagDialog from '../Tags/AddTagDialog';
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
-import checkSession from '../../api/session-check';
-// Need axios for back-end access as the "fetch" API does not support CORS cookies.
-import axios from 'axios';
+import { checkSession } from '../../api/olog-service';
+import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
 import Row from 'react-bootstrap/Row';
 
@@ -46,17 +45,18 @@ class Banner extends Component {
 
     // Try to get user data from back-end.
     // If server returns user data with non-null userName, there is a valid session.
-    axios.get(`${process.env.REACT_APP_BASE_URL}/user`, { withCredentials: true })
+    ologService.get('/user', { withCredentials: true })
         .then(res => {
             // As long as there is a session cookie, the response SHOULD contain
             // user data. Check for status just in case...
             if(res.status === 200 && res.data){ 
                 this.props.setUserData(res.data);
             }
-            else if(res.status === 404){
-              this.props.setUserData({userName: "", roles: []});
-            }
-        }).catch(err => {/** TODO: handle connection error */});
+        }).catch(err => {
+          if(err.response && err.response.status === 404){
+            this.props.setUserData({userName: "", roles: []});
+          }
+        });
   } 
 
 

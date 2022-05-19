@@ -30,10 +30,10 @@ import {queryStringToSearchParameters, searchParamsToQueryString} from '../utils
 import Cookies from 'universal-cookie';
 import { withRouter } from 'react-router-dom';
 import { TaskTimer } from 'tasktimer';
+import ologService from '../api/olog-service';
 
 // Timer task to handle periodic search
 const timer = new TaskTimer(30000);
-
 
 /**
  * Top level component holding the main UI area components.
@@ -69,24 +69,15 @@ class MainApp extends Component {
           return;
       }
       this.setState({showIdNotFound: false});
-      fetch(`${process.env.REACT_APP_BASE_URL}/logs/` + id)
-      .then(response => {
-          if(response.ok){
-              return response.json();
-          }
-          else{
-              throw Error("Server returned error.");
-          }
-      })
-      .then(data => {
-        if(data){
-            this.setCurrentLogEntry(data);
-        }
-      })
-      .catch(() => {
+      ologService.get(`/logs/${id}`)
+        .then(res => {
+          this.setCurrentLogEntry(res.data);
+        })
+        .catch(e => {
+          console.error(`Could not find log id ${id}`, e);
           this.setCurrentLogEntry(null);
           this.setState({showIdNotFound: true});
-      });
+        })
   }
 
   /**
@@ -135,37 +126,33 @@ class MainApp extends Component {
      * @param {*} callback Function called when server response arrives containing matching log entries
      */
     doSearch = (query, isPeriodicSearch, callback) => {
-      fetch(`${process.env.REACT_APP_BASE_URL}/logs/search?` + query, {headers: ologClientInfoHeader()})
-            .then(response => {
-              this.setState({searchInProgress: false}); 
-              if(response.ok){
-                return response.json();
-              } 
-              else if(!isPeriodicSearch && response.status === 400){
-                alert("Server returned 'Bad Request'.")
-              }
-            })
-            .then(data => {
-              if(data){
-                this.setState({searchResult: data}, () => callback());
-                if(!isPeriodicSearch){
-                  timer.add(task => this.doSearch(query, true, callback)).start();
-                }
-              }
-            })
-            .catch(() => {
-              timer.reset();
-              this.setState({searchInProgress: false}); 
-              if(!isPeriodicSearch){
-                alert("Unable to connect to service.");
-              }
-            });
+      ologService.get(`/logs/search?${query}`, {headers: ologClientInfoHeader()})
+        .then(res => {
+          this.setState({searchInProgress: false});
+          if(res.data){
+            this.setState({searchResult: res.data}, () => callback());
+            if(!isPeriodicSearch){
+              timer.add(task => this.doSearch(query, true, callback)).start();
+            }
+          }
+        })
+        .catch(err => {
+          if(!err.response) {
+            alert("Unable to connect to service to perform search.");
+          }
+          if(err.response && !isPeriodicSearch && err.response.status === 400) {
+            alert(`Server returned 'Bad Request' while performing search with query '${query}'`);
+          }
+          timer.reset();
+          this.setState({searchInProgress: false}); 
+        });
+
     }
 
     setCurrentLogEntry = (logEntry) => {
-       if(!logEntry){
-         return;
-       }
+        if(!logEntry){
+          return;
+        }
         this.setState({selectedLogEntryId: logEntry.id});
         this.props.setCurrentLogEntry(logEntry);
         this.setState({showGroup: false});

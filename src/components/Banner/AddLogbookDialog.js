@@ -20,9 +20,7 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-
-// Need axios for back-end access as the "fetch" API does not support CORS cookies.
-import axios from 'axios'
+import ologService from '../../api/olog-service';
 
 class AddLogbookDialog extends Component{
 
@@ -35,7 +33,7 @@ class AddLogbookDialog extends Component{
     createLogbook = () => {
         var name = this.nameRef.current.value;
         // TODO add error handling if request fails.
-       axios.put(`${process.env.REACT_APP_BASE_URL}/logbooks/` + name, {name: name, state: "Active"}, { withCredentials: true })
+       ologService.put(`logbooks/${name}` + name, {name: name, state: "Active"}, { withCredentials: true })
         .then(res => {
             this.props.setShowAddLogbook(false);
             this.props.refreshLogbooks();

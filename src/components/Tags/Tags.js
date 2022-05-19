@@ -53,7 +53,7 @@ const Tags = ({tags, searchParams, updateTagSearchCriteria}) => {
         else {
             setSelection([]);
         }
-    }, [searchParams]);
+    }, [searchParams, options]);
 
     const tagSelectionChanged = (updatedSelection) => {
         setSelection(updatedSelection);

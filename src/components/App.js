@@ -25,6 +25,7 @@ import {
 import MainApp from './MainApp';
 import Banner from './Banner/Banner';
 import EntryEditor from './EntryEditor/EntryEditor';
+import ologService from '../api/olog-service';
 
 /**
  * Entry point component.
@@ -49,21 +50,21 @@ class App extends Component{
     }
 
     refreshLogbooks = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/logbooks`)
-        .then(response => {if(response.ok){return response.json();} else throw Error("Unable to fetch logbooks");})
-        .then(data => this.setState({logbooks: data}))
-        .catch(() => this.setState({logbooks: []}));
+        ologService.get('/logbooks')
+        .then(res => this.setState({logbooks: res.data}))
+        .catch((e) => {
+            console.error("Unable to fetch logbooks", e);
+            this.setState({logbooks: []});
+        });
     }
     
     refreshTags = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/tags`)
-        .then(response => {if(response.ok){return response.json();} else throw Error("Unable to fetch tags");})
-        .then(data => {
-          if(data){
-              this.setState({tags: data});
-          }
-        })
-        .catch(() => this.setState({tags: []}));
+        ologService.get('/tags')
+            .then(res => this.setState({tags: res.data}))
+            .catch((e) => {
+                console.error("Unable to fetch tags", e);
+                this.setState({tags: []})
+            });
     }
 
     setUserData = (userData) => {

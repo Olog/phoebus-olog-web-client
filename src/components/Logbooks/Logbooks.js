@@ -57,7 +57,7 @@ const Logbooks = ({logbooks, searchParams, updateLogbookSearchCriteria}) => {
         else {
             setSelection([]);
         }
-    }, [searchParams]);
+    }, [searchParams, options]);
 
     const logbookSelectionChanged = (updatedSelection) => {
         setSelection(updatedSelection);

@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import axios from 'axios';
+import ologService from '../../api/olog-service.js';
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/esm/Container';
@@ -31,7 +31,7 @@ import EmbedImageDialog from './EmbedImageDialog';
 import OlogAttachment from './OlogAttachment';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
-import checkSession from '../../api/session-check';
+import { checkSession } from '../../api/olog-service.js';
 import {removeImageMarkup, ologClientInfoHeader } from '../../utils/utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from 'react-loading-overlay';
@@ -92,10 +92,12 @@ class EntryEditor extends Component{
     }
 
     getAvailableProperties = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/properties`)
-        .then(response => response.json())
-        .then(data => this.setState({availableProperties: data}))
-        .catch(() => this.setState({availableProperties: []}));
+        ologService.get("/properties")
+            .then(res =>  this.setState({availableProperties: res.data}))
+            .catch(e => {
+                console.error("Could not fetch properties", e);
+                this.setState({availableProperties: []});
+            })
     }
 
     logbookSelectionChanged = (selection) => {
@@ -158,7 +160,7 @@ class EntryEditor extends Component{
             formData.append('file', this.state.attachedFiles[i].file);
             formData.append('id', this.state.attachedFiles[i].id);
             formData.append('filename', this.state.attachedFiles[i].file.name);
-            await axios.post(`${process.env.REACT_APP_BASE_URL}/logs/attachments/` + id, 
+            await ologService.post(`/logs/attachments/${id}`, 
                 formData,
                 {
                     headers: {
@@ -207,9 +209,9 @@ class EntryEditor extends Component{
                             description: this.descriptionRef.current.value
                         }
                         let url = this.props.replyAction ? 
-                            `${process.env.REACT_APP_BASE_URL}/logs?markup=commonmark&inReplyTo=` + this.props.currentLogEntry.id :
-                            `${process.env.REACT_APP_BASE_URL}/logs?markup=commonmark`;
-                        axios.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
+                            `/logs?markup=commonmark&inReplyTo=${this.props.currentLogEntry.id}` :
+                            `/logs?markup=commonmark`;
+                        ologService.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
                             .then(res => {
                                 if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
                                     this.submitAttachmentsMulti(res.data.id);

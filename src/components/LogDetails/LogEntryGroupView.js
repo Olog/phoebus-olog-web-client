@@ -17,6 +17,7 @@
  */
 
  import React, { Component } from 'react';
+import ologService from '../../api/olog-service';
  import '../../css/olog.css';
  import {getLogEntryGroupId, sortLogsDateCreated} from '../../utils/utils';
  import GroupHeader from './GroupHeader';
@@ -39,12 +40,12 @@ class LogEntryGroupView extends Component{
     }
 
     search = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}/logs?properties=Log Entry Group.id.` + getLogEntryGroupId(this.props.currentLogEntry.properties))
-          .then(response => response.json())
-          .then(data => {
-            let sortedResult = sortLogsDateCreated(data, false);
-            this.props.setLogGroupRecords(sortedResult);
-          });
+        ologService.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(this.props.currentLogEntry.properties)}`)
+            .then(res => {
+                let sortedResult = sortLogsDateCreated(res.data, false);
+                this.props.setLogGroupRecords(sortedResult);
+            })
+            .catch(e => console.error("Could not fetch logs by group", e));
     }
 
     render(){
