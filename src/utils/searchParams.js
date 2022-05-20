@@ -18,7 +18,7 @@
 
 import queryString from 'query-string';
 
-const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties", "attachments", "text"];
+const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties", "attachments"];
 
 const options = {
     arrayFormat: "comma",

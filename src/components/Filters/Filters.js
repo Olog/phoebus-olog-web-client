@@ -100,8 +100,8 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
                         <td colSpan="2">
                             <Form.Control size="sm"
                                 type="text"
-                                value={searchParams['text'] || ''}
-                                onChange={(e) => inputChanged(e, 'text')}/>
+                                value={searchParams['desc'] || ''}
+                                onChange={(e) => inputChanged(e, 'desc')}/>
                         </td>
                     </tr>
                     <tr>
