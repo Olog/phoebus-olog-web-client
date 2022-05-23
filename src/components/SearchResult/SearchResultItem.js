@@ -15,15 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 import { FaPaperclip } from "react-icons/fa";
 import '../../css/olog.css';
 import { formatFullDateTime, getLogEntryGroupId } from '../../utils/utils';
 
-class SearchResultItem extends Component{
+const SearchResultItem = ({log, currentLogEntry, setCurrentLogEntry}) => {
 
-    formatDescription = (description) => {
+    const formatDescription = (description) => {
         let length = 75;
         if(!description){
             return "";
@@ -32,32 +31,39 @@ class SearchResultItem extends Component{
         return description.substring(0, length) + ellipsis;
     }
 
-    render(){
-        return(
-            <div className={`${getLogEntryGroupId(this.props.log.properties) !== null ? "grouped-item" : ""}`}>
-            {this.props.log ? 
-            <div className={`${this.props.selectedLogEntryId === this.props.log.id ? "list-item selected-log-entry" : "list-item"}`}>
-                <Table size="sm" onClick={() => this.props.setCurrentLogEntry(this.props.log)}>
-                    <tbody>
-                        <tr>
-                            <td style={{fontSize: "18px", fontWeight: "200"}}>{this.props.log.title}</td>
-                            <td style={{textAlign: "right"}}>{this.props.log.attachments && this.props.log.attachments.length  !== 0 ? <FaPaperclip/> : ""}</td>
-                        </tr>
-                        <tr>
-                            <td>{this.props.log.owner}</td><td style={{textAlign: "right"}}>
-                                {formatFullDateTime(this.props.log.createdDate)}</td>
-                        </tr>
-                        <tr>
-                            <td>{this.formatDescription(this.props.log.description)}</td>
-                            <td style={{textAlign: "right"}}>{this.props.log.id}</td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </div>
-            : ""}
-            </div>
-        )
+    const renderLog = () => {
+        if(!log) {
+            return "";
+        } else {
+            return (
+                <div className={`${currentLogEntry.id === log.id ? "list-item selected-log-entry" : "list-item"}`}>
+                    <Table size="sm" onClick={() => setCurrentLogEntry(log)}>
+                        <tbody>
+                            <tr>
+                                <td style={{fontSize: "18px", fontWeight: "200"}}>{log.title}</td>
+                                <td style={{textAlign: "right"}}>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip/> : ""}</td>
+                            </tr>
+                            <tr>
+                                <td>{log.owner}</td><td style={{textAlign: "right"}}>
+                                    {formatFullDateTime(log.createdDate)}</td>
+                            </tr>
+                            <tr>
+                                <td>{formatDescription(log.description)}</td>
+                                <td style={{textAlign: "right"}}>{log.id}</td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </div>
+            );
+        }
     }
+
+    return(
+        <div className={`${getLogEntryGroupId(log.properties) !== null ? "grouped-item" : ""}`}>
+            {renderLog()}
+        </div>
+    )
+    
 }
 
 export default SearchResultItem;

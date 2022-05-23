@@ -32,7 +32,7 @@ import customization from '../../utils/customization';
  * Component holding search criteria elements, i.e.
  * logbooks, tags and time range.
  */
-const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setSortOrder}) => {
+const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParams, setSearchPageParams}) => {
 
     const [startDate, _setStartDate] = useState(new Date()); // Used by calendar component
     const [endDate, _setEndDate] = useState(new Date()); // Used by calendar component
@@ -75,6 +75,10 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
             delete copy[arr];
         }
         setSearchParams(copy);
+    }
+
+    const updateSortOrder = (sortOrder) => {
+        setSearchPageParams({...searchPageParams, sortOrder})
     }
     
     return(
@@ -174,17 +178,17 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, sortOrder, setS
                     <tr>
                         <td><Form.Check style={{paddingTop: "5px"}}
                                 type='radio'
-                                checked={sortOrder === 'down'}
+                                checked={searchPageParams.sortOrder === 'down'}
                                 label='Sort descending on date'
-                                onChange={(e) => setSortOrder("down")}/>
+                                onChange={(e) => updateSortOrder("down")}/>
                         </td>
                     </tr>
                     <tr>
                         <td><Form.Check 
                                 type='radio'
                                 label='Sort ascending on date'
-                                checked={sortOrder === 'up'}
-                                onChange={(e) => setSortOrder("up")}/>
+                                checked={searchPageParams.sortOrder === 'up'}
+                                onChange={(e) => updateSortOrder("up")}/>
                         </td>
                     </tr>
                     <tr>

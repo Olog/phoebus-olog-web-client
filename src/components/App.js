@@ -25,6 +25,7 @@ import {
 import MainApp from './MainApp';
 import Banner from './Banner/Banner';
 import EntryEditor from './EntryEditor/EntryEditor';
+import LogEntriesViewer from './LogEntry/LogEntriesViewer';
 import ologService from '../api/olog-service';
 
 /**
@@ -36,7 +37,7 @@ class App extends Component{
         userData: {userName: "", roles: []},
         logbooks: [],
         tags: [],
-        currentLogEntry: null, // This is the log entry selected by the user and shown in the detailed log view.
+        // currentLogEntry: null, // This is the log entry selected by the user and shown in the detailed log view.
         replyAction: false,
         showLogin: false,
         showLogout: false,
@@ -71,9 +72,9 @@ class App extends Component{
         this.setState({userData: userData});
     }
 
-    setCurrentLogEntry = (logEntry) => {
-        this.setState({currentLogEntry: logEntry, showGroup: false});
-    }
+    // setCurrentLogEntry = (logEntry) => {
+    //     this.setState({currentLogEntry: logEntry, showGroup: false});
+    // }
 
     setReplyAction = (reply) => {
         this.setState({replyAction: reply});
@@ -110,23 +111,20 @@ class App extends Component{
                             setUserData={this.setUserData}
                             setReplyAction={this.setReplyAction}/>
                     <Switch>
-                        <Route exact path="/">
-                            <MainApp {...this.state}
-                                setCurrentLogEntry={this.setCurrentLogEntry}
-                                setReplyAction={this.setReplyAction}
-                                setShowGroup={this.setShowGroup}
-                                />
+                        <Route exact path={["/", "/logs/:id"]}>
+                            <LogEntriesViewer {...{
+                                tags: this.state.tags, 
+                                logbooks: this.state.logbooks,
+                                userData: this.state.userData,
+                                setReplyAction: this.setReplyAction, 
+                                showGroup: this.state.showGroup, setShowGroup: this.setShowGroup}}
+                            />
                         </Route>
                         <Route path="/edit">
                             <EntryEditor {...this.state}
                                 setShowLogin={this.setShowLogin}
                                 setUserData={this.setUserData}
                                 />
-                        </Route>
-                        <Route path="/logs/:id" render={(props) => <MainApp {...this.state} {...props} 
-                            setCurrentLogEntry={this.setCurrentLogEntry}
-                            setReplyAction={this.setReplyAction}
-                            setShowGroup={this.setShowGroup}/>}>
                         </Route>
                     </Switch>
                    
