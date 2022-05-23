@@ -36,8 +36,11 @@ const SearchResultItem = ({log, currentLogEntry, setCurrentLogEntry}) => {
             return "";
         } else {
             return (
-                <div className={`${currentLogEntry.id === log.id ? "list-item selected-log-entry" : "list-item"}`}>
-                    <Table size="sm" onClick={() => setCurrentLogEntry(log)}>
+                <div 
+                    className={`${currentLogEntry && currentLogEntry.id === log.id ? "list-item selected-log-entry" : "list-item"}`}
+                    onClick={() => setCurrentLogEntry(log)}
+                >
+                    <Table size="sm" >
                         <tbody>
                             <tr>
                                 <td style={{fontSize: "18px", fontWeight: "200"}}>{log.title}</td>

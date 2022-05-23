@@ -24,7 +24,6 @@ import Col from 'react-bootstrap/Col';
 import SearchResultItem from './SearchResultItem';
 import LoadingOverlay from 'react-loading-overlay';
 import Pagination from 'react-bootstrap/Pagination';
-import customization from '../../utils/customization';
 import SearchBox from './SearchBox';
 
 
@@ -32,7 +31,6 @@ import SearchBox from './SearchBox';
  * Pane showing search query input and a the list of log entries 
  * matching the query. 
  */
-// class SearchResultList extends Component{
 const SearchResultList = ({
     searchParams, setSearchParams,
     searchPageParams, setSearchPageParams,
@@ -41,109 +39,36 @@ const SearchResultList = ({
     currentLogEntry, setCurrentLogEntry,
     showFilters, setShowFilters}) => {
 
-    // const [expandSymbol, setExpandSymbol] = useState(">");
-    // const [pageItems, setPageItems] = useState([]);
-    // const [currentPageIndex, setCurrentPageIndex] = useState(1);
-    // const [pageSize, _setPageSize] = useState(customization.defaultPageSize);
     const [pageCount, setPageCount] = useState(0);
-
-    // Search on first render of component
-    // useEffect(() => search, []);
-
-    // const search = () => {
-    //     setCurrentPageIndex(1);
-    // }
-
-    // useEffect(() => {
-    //     search(sortOrder, (currentPageIndex - 1) * pageSize, pageSize, updatePaginationControls)
-    // }, [currentPageIndex, pageSize, sortOrder]);
-
-    // const updatePaginationControls = () => {
-    //     if(!searchResult){
-    //         setPageCount(0);
-    //         return;
-    //     }
-    //     // Calculate page count
-    //     let newPageCount = Math.ceil(searchResult.hitCount / pageSize);
-    //     setPageCount(newPageCount);
-    //     setPageItems([]);
-    // }
+    const [currentPageIndex, setCurrentPageIndex] = useState(1);
 
     useEffect(() => {
         if(!searchResults){
             setPageCount(0);
             return;
         }
-        // Calculate page count
         let newPageCount = Math.ceil(searchResults.hitCount / searchPageParams.size);
         setPageCount(newPageCount);
     }, [searchResults])
 
-    // useEffect(() => {
-    //     let items = [];
-    //         // Calculate first index to render. This depends on the current page index as well as the
-    //         // total page count (which might be greater than the maximum number of buttons: 10).
-    //         let pagesToRender =  Math.min(9, pageCount - 1);
-    //         let firstIndex = Math.max(1, currentPageIndex - pagesToRender);
-    //         let lastIndex = firstIndex + pagesToRender;
-    //         for(let i = firstIndex; i <= lastIndex; i++){
-    //             items.push(<Pagination.Item 
-    //                 key={i} 
-    //                 active={i === currentPageIndex}
-    //                 onClick={() => goToPage(i)}>
-    //                 {i}
-    //             </Pagination.Item>)
-    //         }
-    //         setPageItems([...pageItems, ...items])
-
-    // }, [pageCount, pageItems, currentPageIndex]);
-
-    const renderPaginationItems = () => {
-        let items = [];
-            // Calculate first index to render. This depends on the current page index as well as the
-            // total page count (which might be greater than the maximum number of buttons: 10).
-            let pagesToRender =  Math.min(9, pageCount - 1);
-            let firstIndex = Math.max(1, searchPageParams.page - pagesToRender);
-            let lastIndex = firstIndex + pagesToRender;
-            for(let i = firstIndex; i <= lastIndex; i++){
-                items.push(<Pagination.Item 
-                    key={i} 
-                    active={i === searchPageParams.page}
-                    onClick={() => goToPage(i)}>
-                    {i}
-                </Pagination.Item>)
-            }
-            return items;
-    }
+    useEffect(() => {
+        const from = (currentPageIndex-1) * searchPageParams.size;
+        setSearchPageParams({...searchPageParams, from});
+    }, [currentPageIndex]);
 
     const goToPage = (pageNumber) => {
-        // setCurrentPageIndex(pageNumber);
-        setSearchPageParams({...searchPageParams, page: pageNumber})
+        if(pageNumber > 0) {
+            setCurrentPageIndex(pageNumber)
+        };
     }
-
-    // useEffect(() => search, [pageNumber]);
 
     const submit = (event) => {
         event.preventDefault();
-        // search(sortOrder);
     }
 
     const toggleFilters = () => {
         setShowFilters(!showFilters)
-        // let symbol = showFilters ? ">" : "<";
-        // setExpandSymbol(symbol);
     }
-
-    // useEffect(() => {
-    //     let symbol = showFilters ? ">" : "<";
-    //     setExpandSymbol(symbol);
-    // }, [showFilters])
-
-    // useEffect(() => {
-    //     if(!showFilters){ // Invoke search when filters view is collapsed
-    //         search(sortOrder);
-    //     }
-    // }, [showFilters, sortOrder]);
 
     /**
      * Handles input in hits per page field and rejets any
@@ -156,18 +81,33 @@ const SearchResultList = ({
             if(pageCount === 0){
                 return;
             }
-            // _setPageSize(e.target.value);
             setSearchPageParams({...searchPageParams, size: e.target.value})
         } 
-    }
-
-    // useEffect(() => search, [currentPageIndex]);    
+    } 
 
     const showSearchHelp = () => {
         window.open(`${process.env.REACT_APP_BASE_URL}/SearchHelp_en.html`, '_blank');
     }
 
-    const resultList = searchResults.logs.length === 0 ? "No search results" : searchResults.logs.map((item, index) => {
+    const renderPaginationItems = () => {
+        let items = [];
+        // Calculate first index to render. This depends on the current page index as well as the
+        // total page count (which might be greater than the maximum number of buttons: 10).
+        let pagesToRender =  Math.min(9, pageCount - 1);
+        let firstIndex = Math.max(1, currentPageIndex - pagesToRender);
+        let lastIndex = firstIndex + pagesToRender;
+        for(let i = firstIndex; i <= lastIndex; i++){
+            items.push(<Pagination.Item 
+                key={i} 
+                active={i === currentPageIndex}
+                onClick={() => goToPage(i)}>
+                {i}
+            </Pagination.Item>)
+        }
+        return items;
+    }
+    
+    const renderedSearchResults = searchResults.logs.length === 0 ? "No search results" : searchResults.logs.map((item, index) => {
         return <SearchResultItem
                     key={index}
                     log={item}
@@ -209,9 +149,8 @@ const SearchResultList = ({
                     }}>
 
                 <div style={{overflowY: 'scroll', height: 'calc(80vh)'}}>
-                    {resultList}
+                    {renderedSearchResults}
                 </div>
-                
                 <div className="pagination-container">
                     <Container>
                         <Row>
@@ -230,27 +169,28 @@ const SearchResultList = ({
                             <Col style={{marginTop: '13px', padding: '0px'}}>
                             <Pagination
                                 size='sm'> 
-                                <Pagination.First disabled={searchPageParams.page === 1}
+                                <Pagination.First disabled={currentPageIndex === 1}
                                     onClick={() => goToPage(1)}
                                     style={{fontWeight: 'bold'}}>&#124;&lt;</Pagination.First>
-                                <Pagination.Prev  onClick={() => goToPage(searchPageParams.page - 1)}
-                                    disabled={searchPageParams.page === 1}
+                                <Pagination.Prev  onClick={() => goToPage(currentPageIndex - 1)}
+                                    disabled={currentPageIndex === 1}
                                     style={{fontWeight: 'bold'}} >&lt;</Pagination.Prev>
                                 {renderPaginationItems()}
-                                <Pagination.Next onClick={() => goToPage(searchPageParams.page + 1)} 
-                                    disabled={searchPageParams.page === pageCount}
+                                <Pagination.Next onClick={() => goToPage(currentPageIndex + 1)} 
+                                    disabled={currentPageIndex === pageCount}
                                     style={{fontWeight: 'bold'}}>&gt;</Pagination.Next>
-                                <Pagination.Last disabled={searchPageParams.page === pageCount}
+                                <Pagination.Last disabled={currentPageIndex === pageCount}
                                     onClick={() => goToPage(pageCount)}
                                     style={{fontWeight: 'bold'}}>&gt;&#124;</Pagination.Last>
                                 </Pagination>
                             </Col>
                             <Col style={{marginTop: '16px',  padding:'5px', maxWidth: '60px'}}>
-                                {searchPageParams.page} / {pageCount}
+                                {currentPageIndex} / {pageCount}
                             </Col>
                         </Row>
                     </Container>
                 </div>
+                
             </LoadingOverlay>
         </Container>
     )

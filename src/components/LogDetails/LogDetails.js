@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Remarkable } from 'remarkable';
 import imageProcessor from '../../utils/image-processor';
@@ -39,7 +39,7 @@ import NavigationButtons from './NavigationButtons';
 // class LogDetails extends Component{
 const LogDetails = ({showGroup, setShowGroup, currentLogEntry, setCurrentLogEntry, logGroupRecords, setLogGroupRecords, userData, setReplyAction}) => {
 
-    const remarkable = new Remarkable('full', {
+    const remarkable = useMemo(() => new Remarkable('full', {
         html:         false,        // Enable HTML tags in source
         xhtmlOut:     false,        // Use '/' to close single tags (<br />)
         breaks:       false,        // Convert '\n' in paragraphs into <br>
@@ -47,26 +47,11 @@ const LogDetails = ({showGroup, setShowGroup, currentLogEntry, setCurrentLogEntr
         linkTarget:   '',           // set target to open link in
         // Enable some language-neutral replacements + quotes beautification
         typographer:  false,
-      });
-    
-    // state = {
-    //     openInfo: false,
-    //     attachmentVisible: false,
-    // };
-    const [openInfo, setOpenInfo] = useState(false);
-    const [attachmentVisible, setAttachmentVisible] = useState(false);
-
-    // componentDidMount = () => {
-    //     this.remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});
-    // }
+    }), []);
 
     useEffect(() => {
         remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});
-    }, []);
-
-    const getContent = (source) => {
-        return {__html: remarkable.render(source)};
-    }
+    }, [remarkable]);
 
     const toggleShowMerged = (e) => {
         setShowGroup(e);

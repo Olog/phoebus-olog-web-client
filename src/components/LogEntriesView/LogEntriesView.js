@@ -1,4 +1,3 @@
-
 /**
  * Copyright (C) 2020 European Spallation Source ERIC.
  * <p>
@@ -30,8 +29,9 @@ import SearchResultList from '../SearchResult/SearchResultList';
 import customization from '../../utils/customization';
 import { searchParamsToQueryString } from '../../utils/searchParams';
 import { ologClientInfoHeader } from '../../utils/utils';
+import { TaskTimer } from 'tasktimer';
 
-const LogEntriesViewer = ({
+const LogEntriesView = ({
     tags, 
     logbooks, 
     userData,
@@ -39,15 +39,16 @@ const LogEntriesViewer = ({
     showGroup, setShowGroup
 }) => {
 
+    const timer = new TaskTimer(customization.defaultSearchFrequency);
     const [currentLogEntry, setCurrentLogEntry] = useState(null);
     const [showFilters, setShowFilters] = useState(true);
     const [searchPageParams, setSearchPageParams] = useState({
         sortOrder: "down",
-        page: 1,
+        from: 1,
         size: customization.defaultPageSize
     });
     const [searchParams, setSearchParams] = useState({});
-    const [searchResults, setSearchResults] = useState({           // results from search for logs
+    const [searchResults, setSearchResults] = useState({
         logs: [],
         hitCount: 0
     });
@@ -55,6 +56,18 @@ const LogEntriesViewer = ({
     const [logGroupRecords, setLogGroupRecords] = useState([]);
 
     const {id: logId } = useParams();
+
+    // on initial render, add task to perform search periodically
+    useEffect(() => {
+        timer.add(search);
+        timer.start();
+
+        // Cleanup timer when component will unmount
+        return () => {
+            timer.reset();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // if viewing a specific log entry, then retrieve it
     useEffect(() => {
@@ -72,14 +85,9 @@ const LogEntriesViewer = ({
 
     const search = () => {
         
-        const query = searchParamsToQueryString(searchParams);
+        const query = searchParamsToQueryString({...searchParams, ...searchPageParams});
         setSearchInProgress(true);
 
-        console.log("performing search with:")
-        console.log(searchParams);
-        console.log(searchPageParams);
-        console.log(query);
-        
         ologService.get(`/logs/search?${query}`, {headers: ologClientInfoHeader()})
         .then(res => {
             if(res.data){
@@ -101,9 +109,28 @@ const LogEntriesViewer = ({
 
     };
 
+    // when page params (size, from, etc) change,
+    // then immediately search
     useEffect(() => {
         search();
-    }, [searchParams, searchPageParams])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchPageParams])
+    
+    // when search params (title, tags, etc) change,
+    // call search with debounce to avoid e.g. 
+    // every keypress causing a network call/search
+    useEffect(() => {
+        // Add debounce to search calls when search params
+        // and searchPageParams are changed, so that e.g. 
+        // every keystroke doesn't trigger a search call
+        const debounceTimeoutId = setTimeout(() => {
+            search();
+        }, 300);
+        return () => {
+            clearTimeout(debounceTimeoutId);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams])
 
     const renderLogEntryDetails = () => {
         
@@ -156,7 +183,6 @@ const LogEntriesViewer = ({
                             currentLogEntry, setCurrentLogEntry,
                             showFilters, setShowFilters
                         }}/>
-                        {/* <div>Search Results Here</div> */}
                     </Col>
                     <Col  
                         xs={{span: 12, order: 1}} 
@@ -174,4 +200,4 @@ const LogEntriesViewer = ({
 
 }
 
-export default LogEntriesViewer
+export default LogEntriesView

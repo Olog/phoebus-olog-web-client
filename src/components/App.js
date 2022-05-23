@@ -22,10 +22,9 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import MainApp from './MainApp';
 import Banner from './Banner/Banner';
 import EntryEditor from './EntryEditor/EntryEditor';
-import LogEntriesViewer from './LogEntry/LogEntriesViewer';
+import LogEntriesView from './LogEntriesView/LogEntriesView';
 import ologService from '../api/olog-service';
 
 /**
@@ -72,10 +71,6 @@ class App extends Component{
         this.setState({userData: userData});
     }
 
-    // setCurrentLogEntry = (logEntry) => {
-    //     this.setState({currentLogEntry: logEntry, showGroup: false});
-    // }
-
     setReplyAction = (reply) => {
         this.setState({replyAction: reply});
     }
@@ -112,7 +107,7 @@ class App extends Component{
                             setReplyAction={this.setReplyAction}/>
                     <Switch>
                         <Route exact path={["/", "/logs/:id"]}>
-                            <LogEntriesViewer {...{
+                            <LogEntriesView {...{
                                 tags: this.state.tags, 
                                 logbooks: this.state.logbooks,
                                 userData: this.state.userData,
