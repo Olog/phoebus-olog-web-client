@@ -36,7 +36,6 @@ class App extends Component{
         userData: {userName: "", roles: []},
         logbooks: [],
         tags: [],
-        // currentLogEntry: null, // This is the log entry selected by the user and shown in the detailed log view.
         replyAction: false,
         showLogin: false,
         showLogout: false,

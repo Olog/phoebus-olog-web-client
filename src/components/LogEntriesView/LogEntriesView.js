@@ -98,7 +98,6 @@ const LogEntriesView = ({
           if(!err.response) {
             alert("Unable to connect to service to perform search.");
           }
-        //   if(err.response && !isPeriodicSearch && err.response.status === 400) {
           if(err.response && err.response.status === 400) {
             alert(`Server returned 'Bad Request' while performing search with query '${query}'`);
           }
