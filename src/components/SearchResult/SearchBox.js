@@ -24,7 +24,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import {searchParamsToQueryString, queryStringToSearchParameters} from '../../utils/searchParams';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-const SearchBox = ({searchParams, setSearchParams, showFilters, theprops}) => {
+const SearchBox = ({searchParams, setSearchParams, showFilters}) => {
 
     const [searchString, setSearchString] = useState("");
 
