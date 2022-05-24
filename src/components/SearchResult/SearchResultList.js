@@ -49,11 +49,12 @@ const SearchResultList = ({
         }
         let newPageCount = Math.ceil(searchResults.hitCount / searchPageParams.size);
         setPageCount(newPageCount);
-    }, [searchResults])
+    }, [searchResults, searchPageParams.size])
 
     useEffect(() => {
         const from = (currentPageIndex-1) * searchPageParams.size;
         setSearchPageParams({...searchPageParams, from});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPageIndex]);
 
     const goToPage = (pageNumber) => {
