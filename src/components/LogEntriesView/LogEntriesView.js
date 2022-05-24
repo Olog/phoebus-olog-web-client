@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import ologService from '../../api/olog-service';
 import Container from 'react-bootstrap/Container'
@@ -30,6 +30,7 @@ import customization from '../../utils/customization';
 import { searchParamsToQueryString } from '../../utils/searchParams';
 import { ologClientInfoHeader } from '../../utils/utils';
 import { TaskTimer } from 'tasktimer';
+import Cookies from 'universal-cookie';
 
 const LogEntriesView = ({
     tags, 
@@ -39,15 +40,16 @@ const LogEntriesView = ({
     showGroup, setShowGroup
 }) => {
 
-    const timer = new TaskTimer(customization.defaultSearchFrequency);
+    const timerRef = useRef(new TaskTimer(customization.defaultSearchFrequency));
+    const cookies = useMemo(() => new Cookies(), []);
     const [currentLogEntry, setCurrentLogEntry] = useState(null);
-    const [showFilters, setShowFilters] = useState(true);
+    const [showFilters, setShowFilters] = useState(false);
     const [searchPageParams, setSearchPageParams] = useState({
         sortOrder: "down",
-        from: 1,
+        from: 0,
         size: customization.defaultPageSize
     });
-    const [searchParams, setSearchParams] = useState({});
+    const [searchParams, setSearchParams] = useState({...customization.defaultSearchParams});
     const [searchResults, setSearchResults] = useState({
         logs: [],
         hitCount: 0
@@ -57,17 +59,45 @@ const LogEntriesView = ({
 
     const {id: logId } = useParams();
 
+    // on initial render, restore search states from cookies if present
+    useEffect(() => {
+        let searchParamsFromCookie = cookies.get(customization.searchParamsCookie);
+        if(searchParamsFromCookie){
+            setSearchParams(searchParamsFromCookie);
+        }
+        let searchPageParamsFromCookie = cookies.get(customization.searchPageParamsCookie);
+        if(searchPageParamsFromCookie){
+            setSearchPageParams(searchPageParamsFromCookie);
+        }
+    }, [cookies]);
+
     // on initial render, add task to perform search periodically
     useEffect(() => {
-        timer.add(search);
-        timer.start();
+        timerRef.current.add(search);
+        timerRef.current.start();
 
         // Cleanup timer when component will unmount
         return () => {
-            timer.reset();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            timerRef.current.reset();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // On changes to search or paging params, search and
+    // reset the timers
+    useEffect(() => {
+        triggerSearch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [searchPageParams, searchParams]);
+    }, [searchPageParams]);
+
+    useEffect(() => {
+        if(!showFilters) {
+            triggerSearch();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showFilters]);
 
     // if viewing a specific log entry, then retrieve it
     useEffect(() => {
@@ -84,7 +114,12 @@ const LogEntriesView = ({
     }, [logId])
 
     const search = () => {
-        
+
+        // save current search params to cookies
+        cookies.set(customization.searchParamsCookie, searchParams, {path: '/', maxAge: '100000000'});
+        cookies.set(customization.searchPageParamsCookie, searchPageParams, {path: '/', maxAge: '100000000'});
+
+        // search
         const query = searchParamsToQueryString({...searchParams, ...searchPageParams});
         setSearchInProgress(true);
 
@@ -98,7 +133,6 @@ const LogEntriesView = ({
           if(!err.response) {
             alert("Unable to connect to service to perform search.");
           }
-        //   if(err.response && !isPeriodicSearch && err.response.status === 400) {
           if(err.response && err.response.status === 400) {
             alert(`Server returned 'Bad Request' while performing search with query '${query}'`);
           }
@@ -109,28 +143,11 @@ const LogEntriesView = ({
 
     };
 
-    // when page params (size, from, etc) change,
-    // then immediately search
-    useEffect(() => {
+    const triggerSearch = () => {
+        timerRef.current.reset();
+        timerRef.current.add(search).start();
         search();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchPageParams])
-    
-    // when search params (title, tags, etc) change,
-    // call search with debounce to avoid e.g. 
-    // every keypress causing a network call/search
-    useEffect(() => {
-        // Add debounce to search calls when search params
-        // and searchPageParams are changed, so that e.g. 
-        // every keystroke doesn't trigger a search call
-        const debounceTimeoutId = setTimeout(() => {
-            search();
-        }, 300);
-        return () => {
-            clearTimeout(debounceTimeoutId);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams])
+    }
 
     const renderLogEntryDetails = () => {
         
@@ -169,7 +186,8 @@ const LogEntriesView = ({
                                     logbooks,
                                     tags,
                                     searchParams, setSearchParams,
-                                    searchPageParams, setSearchPageParams
+                                    searchPageParams, setSearchPageParams,
+                                    triggerSearch
                                 }}
                             />
                         </Col>
@@ -181,7 +199,8 @@ const LogEntriesView = ({
                             searchResults,
                             searchInProgress,
                             currentLogEntry, setCurrentLogEntry,
-                            showFilters, setShowFilters
+                            showFilters, setShowFilters,
+                            triggerSearch
                         }}/>
                     </Col>
                     <Col  

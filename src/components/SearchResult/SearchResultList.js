@@ -37,7 +37,9 @@ const SearchResultList = ({
     searchResults,
     searchInProgress,
     currentLogEntry, setCurrentLogEntry,
-    showFilters, setShowFilters}) => {
+    showFilters, setShowFilters,
+    triggerSearch
+}) => {
 
     const [pageCount, setPageCount] = useState(0);
     const [currentPageIndex, setCurrentPageIndex] = useState(1);
@@ -49,11 +51,12 @@ const SearchResultList = ({
         }
         let newPageCount = Math.ceil(searchResults.hitCount / searchPageParams.size);
         setPageCount(newPageCount);
-    }, [searchResults])
+    }, [searchResults, searchPageParams.size])
 
     useEffect(() => {
         const from = (currentPageIndex-1) * searchPageParams.size;
         setSearchPageParams({...searchPageParams, from});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPageIndex]);
 
     const goToPage = (pageNumber) => {
@@ -64,6 +67,7 @@ const SearchResultList = ({
 
     const submit = (event) => {
         event.preventDefault();
+        triggerSearch();
     }
 
     const toggleFilters = () => {
