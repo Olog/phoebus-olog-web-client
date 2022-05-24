@@ -87,11 +87,17 @@ const LogEntriesView = ({
     // On changes to search or paging params, search and
     // reset the timers
     useEffect(() => {
-        timerRef.current.reset();
-        timerRef.current.add(search).start();
-        search();
+        triggerSearch();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchPageParams, searchParams]);
+    // }, [searchPageParams, searchParams]);
+    }, [searchPageParams]);
+
+    useEffect(() => {
+        if(!showFilters) {
+            triggerSearch();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showFilters]);
 
     // if viewing a specific log entry, then retrieve it
     useEffect(() => {
@@ -137,6 +143,12 @@ const LogEntriesView = ({
 
     };
 
+    const triggerSearch = () => {
+        timerRef.current.reset();
+        timerRef.current.add(search).start();
+        search();
+    }
+
     const renderLogEntryDetails = () => {
         
         if(currentLogEntry) {
@@ -174,7 +186,8 @@ const LogEntriesView = ({
                                     logbooks,
                                     tags,
                                     searchParams, setSearchParams,
-                                    searchPageParams, setSearchPageParams
+                                    searchPageParams, setSearchPageParams,
+                                    triggerSearch
                                 }}
                             />
                         </Col>
@@ -186,7 +199,8 @@ const LogEntriesView = ({
                             searchResults,
                             searchInProgress,
                             currentLogEntry, setCurrentLogEntry,
-                            showFilters, setShowFilters
+                            showFilters, setShowFilters,
+                            triggerSearch
                         }}/>
                     </Col>
                     <Col  

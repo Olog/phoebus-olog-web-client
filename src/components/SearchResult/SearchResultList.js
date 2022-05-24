@@ -37,7 +37,9 @@ const SearchResultList = ({
     searchResults,
     searchInProgress,
     currentLogEntry, setCurrentLogEntry,
-    showFilters, setShowFilters}) => {
+    showFilters, setShowFilters,
+    triggerSearch
+}) => {
 
     const [pageCount, setPageCount] = useState(0);
     const [currentPageIndex, setCurrentPageIndex] = useState(1);
@@ -65,6 +67,7 @@ const SearchResultList = ({
 
     const submit = (event) => {
         event.preventDefault();
+        triggerSearch();
     }
 
     const toggleFilters = () => {
