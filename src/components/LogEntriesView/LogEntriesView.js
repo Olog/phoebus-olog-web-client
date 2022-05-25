@@ -45,7 +45,7 @@ const LogEntriesView = ({
     const cookies = useMemo(() => new Cookies(), []);
     const [showFilters, setShowFilters] = useState(false);
     const [searchPageParams, setSearchPageParams] = useState({
-        sortOrder: "down",
+        sort: "down",
         from: 0,
         size: customization.defaultPageSize
     });
