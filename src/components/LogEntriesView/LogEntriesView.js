@@ -54,13 +54,22 @@ const LogEntriesView = ({
         logs: [],
         hitCount: 0
     });
+    const [stateLoaded, setStateLoaded] = useState(false);
     const [searchInProgress, setSearchInProgress] = useState(false);
     const [logGroupRecords, setLogGroupRecords] = useState([]);
 
     const {id: logId } = useParams();
 
+    useEffect(() => {
+        console.log("------")
+        console.log("Render")
+        console.log(searchParams)
+        console.log(searchPageParams)
+    });
+
     // on initial render, restore search states from cookies if present
     useEffect(() => {
+        console.log("initializing params from cookies")
         let searchParamsFromCookie = cookies.get(customization.searchParamsCookie);
         if(searchParamsFromCookie){
             setSearchParams(searchParamsFromCookie);
@@ -69,6 +78,7 @@ const LogEntriesView = ({
         if(searchPageParamsFromCookie){
             setSearchPageParams(searchPageParamsFromCookie);
         }
+        setStateLoaded(true);
     }, [cookies]);
 
     // on initial render, add task to perform search periodically
@@ -87,10 +97,12 @@ const LogEntriesView = ({
     // On changes to search or paging params, search and
     // reset the timers
     useEffect(() => {
-        triggerSearch();
+        if(stateLoaded) {
+            triggerSearch();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [searchPageParams, searchParams]);
-    }, [searchPageParams]);
+    }, [searchPageParams, stateLoaded]);
 
     useEffect(() => {
         if(!showFilters) {
@@ -115,31 +127,41 @@ const LogEntriesView = ({
 
     const search = () => {
 
-        // save current search params to cookies
-        cookies.set(customization.searchParamsCookie, searchParams, {path: '/', maxAge: '100000000'});
-        cookies.set(customization.searchPageParamsCookie, searchPageParams, {path: '/', maxAge: '100000000'});
+        if(stateLoaded) {
+           
+            // save current search params to cookies
+            cookies.set(customization.searchParamsCookie, searchParams, {path: '/', maxAge: '100000000'});
+            cookies.set(customization.searchPageParamsCookie, searchPageParams, {path: '/', maxAge: '100000000'});
+    
+            // perform the search
+            const query = searchParamsToQueryString({...searchParams, ...searchPageParams});
+            setSearchInProgress(true);
+    
+            ologService.get(`/logs/search?${query}`, {headers: ologClientInfoHeader()})
+            .then(res => {
+                if(res.data){
+                    setSearchResults(res.data);
+                }
+            })
+            .catch(err => {
+                // If an error occurs, then reset the timer so it doesn't continue to bother the user
+                timerRef.current.reset();
+    
+                // If there was no response at all, then we couldn't connect to the service
+                if(!err.response) {
+                    alert("Unable to connect to service to perform search.");
+                }
+    
+                // If the service responded, and it's a 400, then the query was invalid
+                if(err.response && err.response.status === 400) {
+                    alert(`Server returned 'Bad Request' while performing search with query '${query}'`);
+                }
+            })
+            .finally(() => {
+                setSearchInProgress(false);
+            })
 
-        // search
-        const query = searchParamsToQueryString({...searchParams, ...searchPageParams});
-        setSearchInProgress(true);
-
-        ologService.get(`/logs/search?${query}`, {headers: ologClientInfoHeader()})
-        .then(res => {
-            if(res.data){
-                setSearchResults(res.data);
-            }
-        })
-        .catch(err => {
-          if(!err.response) {
-            alert("Unable to connect to service to perform search.");
-          }
-          if(err.response && err.response.status === 400) {
-            alert(`Server returned 'Bad Request' while performing search with query '${query}'`);
-          }
-        })
-        .finally(() => {
-            setSearchInProgress(false);
-        })
+        }
 
     };
 
