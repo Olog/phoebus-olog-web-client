@@ -37,12 +37,12 @@ const LogEntriesView = ({
     logbooks, 
     userData,
     setReplyAction, 
-    showGroup, setShowGroup
+    showGroup, setShowGroup,
+    currentLogEntry, setCurrentLogEntry
 }) => {
 
     const timerRef = useRef(new TaskTimer(customization.defaultSearchFrequency));
     const cookies = useMemo(() => new Cookies(), []);
-    const [currentLogEntry, setCurrentLogEntry] = useState(null);
     const [showFilters, setShowFilters] = useState(false);
     const [searchPageParams, setSearchPageParams] = useState({
         sortOrder: "down",
@@ -60,16 +60,8 @@ const LogEntriesView = ({
 
     const {id: logId } = useParams();
 
-    useEffect(() => {
-        console.log("------")
-        console.log("Render")
-        console.log(searchParams)
-        console.log(searchPageParams)
-    });
-
     // on initial render, restore search states from cookies if present
     useEffect(() => {
-        console.log("initializing params from cookies")
         let searchParamsFromCookie = cookies.get(customization.searchParamsCookie);
         if(searchParamsFromCookie){
             setSearchParams(searchParamsFromCookie);

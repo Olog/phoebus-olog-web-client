@@ -71,7 +71,7 @@ class EntryEditor extends Component{
                 selectedLogbooks: this.props.currentLogEntry.logbooks,
                 selectedTags: this.props.currentLogEntry.tags,
                 level: customization.defaultLevel,
-                selectedProperties: p
+                // selectedProperties: p
             });
             this.titleRef.current.value = this.props.currentLogEntry.title;
         }
@@ -286,6 +286,32 @@ class EntryEditor extends Component{
         this.setState({selectedProperties: copyOfSelectedProperties});
     }
 
+    asLogbookSelections = (logbooks) => {
+        if(logbooks) {
+            return logbooks.map(logbook => {
+                return {
+                    value: logbook,
+                    label: logbook.name
+                }
+            })
+        } else {
+            return []
+        }
+    }
+
+    asTagSelections = (tags) => {
+        if(tags) {
+            return tags.map(tag => {
+                return {
+                    value: tag,
+                    label: tag.name
+                }
+            })
+        } else {
+            return []
+        }
+    }
+
     render(){
 
         var attachments = this.state.attachedFiles.map((file, index) => {
@@ -304,20 +330,6 @@ class EntryEditor extends Component{
                     updateAttributeValue={this.updateAttributeValue}/>
             )
         })
-
-        const logbookOptions = this.props.logbooks.map(logbook => {
-            return {
-                value: logbook,
-                label: logbook.name
-            }
-        });
-
-        const tagOptions = this.props.tags.map(tag => {
-            return {
-                value: tag.name,
-                label: tag.name
-            }
-        });
 
         const levelOptions = customization.levelValues.map(level => {
             return {
@@ -342,15 +354,16 @@ class EntryEditor extends Component{
                     <Form noValidate validated={this.state.validated} onSubmit={this.submit}>
                         <Form.Row>
                             <Form.Label className="new-entry">New Log Entry</Form.Label>
-                            <Button type="submit" disabled={this.props.userData.userName === "" || this.state.createInProgress}>Create</Button>
+                            <Button type="submit" disabled={this.props.userData.userName === "" || this.state.createInProgress}>Submit</Button>
                         </Form.Row>
                         <Form.Row>
                             <Form.Label>Logbooks:</Form.Label>
                             <Select
                                 isMulti
                                 name="logbooks"
-                                options={logbookOptions}
+                                options={this.asLogbookSelections(this.props.logbooks.filter(avail => !this.state.selectedLogbooks.find(sel => sel.name === avail.name)))}
                                 onChange={this.logbookSelectionChanged}
+                                value={this.asLogbookSelections(this.state.selectedLogbooks)}
                                 className="w-100"
                                 placeholder="Select Logbook(s)"
                             />
@@ -362,8 +375,9 @@ class EntryEditor extends Component{
                             <Select
                                 isMulti
                                 name="tags"
-                                options={tagOptions}
+                                options={this.asTagSelections(this.props.tags.filter(avail => !this.state.selectedTags.find(sel => sel.name === avail.name)))}
                                 onChange={this.tagSelectionChanged}
+                                value={this.asTagSelections(this.state.selectedTags)}
                                 className="w-100"
                                 placeholder="Select Tag(s)"
                             />
