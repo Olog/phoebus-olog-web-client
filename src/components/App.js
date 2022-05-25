@@ -88,8 +88,6 @@ class App extends Component{
     }
 
     setCurrentLogEntry = (val) => {
-        console.log("setting log entry to: ");
-        console.log(val);
         this.setState({currentLogEntry: val})
     }
 

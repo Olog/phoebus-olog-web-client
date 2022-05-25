@@ -77,8 +77,8 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
         setSearchParams(copy);
     }
 
-    const updateSortOrder = (sortOrder) => {
-        setSearchPageParams({...searchPageParams, sortOrder})
+    const updateSort = (sort) => {
+        setSearchPageParams({...searchPageParams, sort})
     }
     
     return(
@@ -178,17 +178,17 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
                     <tr>
                         <td><Form.Check style={{paddingTop: "5px"}}
                                 type='radio'
-                                checked={searchPageParams.sortOrder === 'down'}
+                                checked={searchPageParams.sort === 'down'}
                                 label='Sort descending on date'
-                                onChange={(e) => updateSortOrder("down")}/>
+                                onChange={(e) => updateSort("down")}/>
                         </td>
                     </tr>
                     <tr>
                         <td><Form.Check 
                                 type='radio'
                                 label='Sort ascending on date'
-                                checked={searchPageParams.sortOrder === 'up'}
-                                onChange={(e) => updateSortOrder("up")}/>
+                                checked={searchPageParams.sort === 'up'}
+                                onChange={(e) => updateSort("up")}/>
                         </td>
                     </tr>
                     <tr>
