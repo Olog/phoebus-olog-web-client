@@ -39,7 +39,8 @@ class App extends Component{
         replyAction: false,
         showLogin: false,
         showLogout: false,
-        showGroup: false
+        showGroup: false,
+        currentLogEntry: null
     }
 
     componentDidMount() {
@@ -86,6 +87,12 @@ class App extends Component{
         this.setState({showGroup: val});
     }
 
+    setCurrentLogEntry = (val) => {
+        console.log("setting log entry to: ");
+        console.log(val);
+        this.setState({currentLogEntry: val})
+    }
+
     hipp = () => {
         return(
             <div>Hello World</div>
@@ -111,8 +118,9 @@ class App extends Component{
                                 logbooks: this.state.logbooks,
                                 userData: this.state.userData,
                                 setReplyAction: this.setReplyAction, 
-                                showGroup: this.state.showGroup, setShowGroup: this.setShowGroup}}
-                            />
+                                showGroup: this.state.showGroup, setShowGroup: this.setShowGroup,
+                                currentLogEntry: this.state.currentLogEntry, setCurrentLogEntry: this.setCurrentLogEntry
+                            }}/>
                         </Route>
                         <Route path="/edit">
                             <EntryEditor {...this.state}
