@@ -56,7 +56,22 @@ let customization = {
     /**
      * Default page size in search
      */
-    defaultPageSize: 30
+    defaultPageSize: 30,
+
+    /**
+     * Default frequency of background search, in milliseconds
+     */
+    defaultSearchFrequency: 30000,
+
+    /**
+     * Name of the cookie that stores the current search string
+     */
+    searchParamsCookie: 'searchParams',
+
+    /**
+     * Name of the cookie that stores the current search string
+     */
+    searchPageParamsCookie: 'searchPageParams'
 }
 
 export default customization;
