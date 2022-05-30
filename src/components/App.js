@@ -64,6 +64,10 @@ const App = () => {
         refreshTags();
     }, [refreshLogbooks, refreshTags]);
 
+    useEffect(() => {
+        setShowGroup(false);
+    }, [currentLogEntry])
+
     return(
         <>
             <Router>

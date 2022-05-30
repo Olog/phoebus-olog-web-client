@@ -52,7 +52,7 @@ class LogEntryGroupView extends Component{
 
         var logGroupItems = this.props.logGroupRecords.map((row, index) => {
             return(
-                <div key={index}>
+                <div key={index} style={{cursor: 'pointer'}}>
                     <GroupHeader logEntry={row} showLog={this.showLog}/>
                     <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
                                     dangerouslySetInnerHTML={this.getContent(row.source)}/>
