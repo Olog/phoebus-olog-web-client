@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { Component } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -30,108 +30,77 @@ import ologService from '../api/olog-service';
 /**
  * Entry point component.
  */
-class App extends Component{
+const App = () => {
 
-    state = {
-        userData: {userName: "", roles: []},
-        logbooks: [],
-        tags: [],
-        replyAction: false,
-        showLogin: false,
-        showLogout: false,
-        showGroup: false,
-        currentLogEntry: null
-    }
+    const [userData, setUserData] = useState({userName: "", roles: []});
+    const [logbooks, setLogbooks] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [replyAction, setReplyAction] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+    const [showLogout, setShowLogout] = useState(false);
+    const [showGroup, setShowGroup] = useState(false);
+    const [currentLogEntry, setCurrentLogEntry] = useState(null);
 
-    componentDidMount() {
-        // Logbooks and tags are public to read
-        this.refreshLogbooks();
-        this.refreshTags();
-    }
-
-    refreshLogbooks = () => {
+    const refreshLogbooks = useCallback(() => {
         ologService.get('/logbooks')
-        .then(res => this.setState({logbooks: res.data}))
+        .then(res => setLogbooks(res.data))
         .catch((e) => {
             console.error("Unable to fetch logbooks", e);
-            this.setState({logbooks: []});
+            setLogbooks([]);
         });
-    }
+    }, []);
     
-    refreshTags = () => {
+    const refreshTags = useCallback(() => {
         ologService.get('/tags')
-            .then(res => this.setState({tags: res.data}))
+            .then(res => setTags(res.data))
             .catch((e) => {
                 console.error("Unable to fetch tags", e);
-                this.setState({tags: []})
+                setTags([]);
             });
-    }
+    }, []);
 
-    setUserData = (userData) => {
-        this.setState({userData: userData});
-    }
+    useEffect(() => {
+        refreshLogbooks();
+        refreshTags();
+    }, [refreshLogbooks, refreshTags]);
 
-    setReplyAction = (reply) => {
-        this.setState({replyAction: reply});
-    }
-
-    setShowLogin = (show) => {
-        this.setState({showLogin: show});
-    } 
-    
-    setShowLogout = (show) => {
-        this.setState({showLogout: show});
-    }
-
-    setShowGroup = (val) => {
-        this.setState({showGroup: val});
-    }
-
-    setCurrentLogEntry = (val) => {
-        this.setState({currentLogEntry: val})
-    }
-
-    hipp = () => {
-        return(
-            <div>Hello World</div>
-        )
-    }
-
-    render(){
-        return(
-            <>
-                <Router>
-                    
-                    <Banner {...this.state}
-                            refreshLogbooks={this.refreshLogbooks}
-                            refreshTags={this.refreshTags}
-                            setShowLogin={this.setShowLogin}
-                            setShowLogout={this.setShowLogout}
-                            setUserData={this.setUserData}
-                            setReplyAction={this.setReplyAction}/>
-                    <Switch>
-                        <Route exact path={["/", "/logs/:id"]}>
-                            <LogEntriesView {...{
-                                tags: this.state.tags, 
-                                logbooks: this.state.logbooks,
-                                userData: this.state.userData,
-                                setReplyAction: this.setReplyAction, 
-                                showGroup: this.state.showGroup, setShowGroup: this.setShowGroup,
-                                currentLogEntry: this.state.currentLogEntry, setCurrentLogEntry: this.setCurrentLogEntry
-                            }}/>
-                        </Route>
-                        <Route path="/edit">
-                            <EntryEditor {...this.state}
-                                setShowLogin={this.setShowLogin}
-                                setUserData={this.setUserData}
-                                />
-                        </Route>
-                    </Switch>
-                   
-                </Router>
-            </>
-        );
-    }
+    return(
+        <>
+            <Router>
+                <Banner {...{
+                    refreshLogbooks,
+                    refreshTags,
+                    showLogin, setShowLogin,
+                    showLogout, setShowLogout,
+                    userData, setUserData,
+                    setReplyAction
+                }}/>
+                <Switch>
+                    <Route exact path={["/", "/logs/:id"]}>
+                        <LogEntriesView {...{
+                            tags, 
+                            logbooks,
+                            userData,
+                            setReplyAction, 
+                            showGroup, setShowGroup,
+                            currentLogEntry, setCurrentLogEntry
+                        }}/>
+                    </Route>
+                    <Route path="/edit">
+                        <EntryEditor {...{
+                            tags,
+                            logbooks,
+                            replyAction,
+                            setShowLogin,
+                            userData, setUserData,
+                            currentLogEntry
+                        }}/>
+                    </Route>
+                </Switch>
+                
+            </Router>
+        </>
+    );
 }
 
 export default App;

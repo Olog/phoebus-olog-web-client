@@ -37,8 +37,7 @@ const SearchResultList = ({
     searchResults,
     searchInProgress,
     currentLogEntry, setCurrentLogEntry,
-    showFilters, setShowFilters,
-    triggerSearch
+    showFilters, setShowFilters
 }) => {
 
     const [pageCount, setPageCount] = useState(0);
@@ -65,9 +64,12 @@ const SearchResultList = ({
         };
     }
 
+    // prevent default to e.g. prevent page reload
+    // do NOT trigger search here, as the SearchBox
+    // component already triggers this by updating 
+    // the searchParams state.
     const submit = (event) => {
         event.preventDefault();
-        triggerSearch();
     }
 
     const toggleFilters = () => {
