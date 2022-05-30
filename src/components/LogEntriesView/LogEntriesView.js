@@ -138,8 +138,15 @@ const LogEntriesView = ({
             triggerSearch();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [searchPageParams, searchParams]);
     }, [searchPageParams, stateLoaded, triggerSearch]);
+
+    // On changes to search params, reset the page to zero
+    useEffect(() => {
+        setSearchPageParams({...searchPageParams, from: 0})
+        // Ignore warning about missing dependency; we do *not* want
+        // to update searchPageParams when searchPageParams changes...
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams]);
 
     // if viewing a specific log entry, then retrieve it
     useEffect(() => {

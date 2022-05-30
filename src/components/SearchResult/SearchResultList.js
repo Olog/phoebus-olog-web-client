@@ -48,6 +48,9 @@ const SearchResultList = ({
             setPageCount(0);
             return;
         }
+        if(searchPageParams.from === 0) {
+            setCurrentPageIndex(1);
+        }
         let newPageCount = Math.ceil(searchResults.hitCount / searchPageParams.size);
         setPageCount(newPageCount);
     }, [searchResults, searchPageParams.size])
