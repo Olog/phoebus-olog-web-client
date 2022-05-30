@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import {useState, useEffect, useRef, useMemo } from 'react';
+import {useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import ologService from '../../api/olog-service';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Collapse from 'react-bootstrap/Collapse';
-import Filters from '../Filters/Filters';
 import LogDetails from '../LogDetails/LogDetails';
 import SearchResultList from '../SearchResult/SearchResultList';
 import customization from '../../utils/customization';
@@ -31,6 +29,7 @@ import { searchParamsToQueryString } from '../../utils/searchParams';
 import { ologClientInfoHeader } from '../../utils/utils';
 import { TaskTimer } from 'tasktimer';
 import Cookies from 'universal-cookie';
+import CollapsibleFilters from '../Filters/CollapsibleFilters';
 
 const LogEntriesView = ({
     tags, 
@@ -44,12 +43,12 @@ const LogEntriesView = ({
     const timerRef = useRef(new TaskTimer(customization.defaultSearchFrequency));
     const cookies = useMemo(() => new Cookies(), []);
     const [showFilters, setShowFilters] = useState(false);
+    const [searchParams, setSearchParams] = useState({...customization.defaultSearchParams});
     const [searchPageParams, setSearchPageParams] = useState({
         sort: "down",
         from: 0,
         size: customization.defaultPageSize
     });
-    const [searchParams, setSearchParams] = useState({...customization.defaultSearchParams});
     const [searchResults, setSearchResults] = useState({
         logs: [],
         hitCount: 0
@@ -60,64 +59,7 @@ const LogEntriesView = ({
 
     const {id: logId } = useParams();
 
-    // on initial render, restore search states from cookies if present
-    useEffect(() => {
-        let searchParamsFromCookie = cookies.get(customization.searchParamsCookie);
-        if(searchParamsFromCookie){
-            setSearchParams(searchParamsFromCookie);
-        }
-        let searchPageParamsFromCookie = cookies.get(customization.searchPageParamsCookie);
-        if(searchPageParamsFromCookie){
-            setSearchPageParams(searchPageParamsFromCookie);
-        }
-        setStateLoaded(true);
-    }, [cookies]);
-
-    // on initial render, add task to perform search periodically
-    useEffect(() => {
-        timerRef.current.add(search);
-        timerRef.current.start();
-
-        // Cleanup timer when component will unmount
-        return () => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            timerRef.current.reset();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // On changes to search or paging params, search and
-    // reset the timers
-    useEffect(() => {
-        if(stateLoaded) {
-            triggerSearch();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [searchPageParams, searchParams]);
-    }, [searchPageParams, stateLoaded]);
-
-    useEffect(() => {
-        if(!showFilters) {
-            triggerSearch();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showFilters]);
-
-    // if viewing a specific log entry, then retrieve it
-    useEffect(() => {
-        if(logId > 0) {
-            ologService.get(`/logs/${logId}`)
-            .then(res => {
-                setCurrentLogEntry(res.data);
-            })
-            .catch(e => {
-                console.error(`Could not find log id ${logId}`, e);
-                setCurrentLogEntry(null);
-            })
-        }
-    }, [logId])
-
-    const search = () => {
+    const search = useCallback(() => {
 
         if(stateLoaded) {
            
@@ -155,13 +97,70 @@ const LogEntriesView = ({
 
         }
 
-    };
+    }, [searchParams, searchPageParams, timerRef, cookies, stateLoaded]);
 
-    const triggerSearch = () => {
+    const triggerSearch = useCallback(() => {
         timerRef.current.reset();
-        timerRef.current.add(search).start();
+        timerRef.current.add(() => search()).start();
         search();
-    }
+    }, [timerRef, search]);
+
+    // on initial render, restore search states from cookies if present
+    useEffect(() => {
+        let searchParamsFromCookie = cookies.get(customization.searchParamsCookie);
+        if(searchParamsFromCookie){
+            setSearchParams(searchParamsFromCookie);
+        }
+        let searchPageParamsFromCookie = cookies.get(customization.searchPageParamsCookie);
+        if(searchPageParamsFromCookie){
+            setSearchPageParams(searchPageParamsFromCookie);
+        }
+        setStateLoaded(true);
+    }, [cookies]);
+
+    // on initial render, add task to perform search periodically
+    useEffect(() => {
+        timerRef.current.add(search);
+        timerRef.current.start();
+
+        // Cleanup timer when component will unmount
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            timerRef.current.reset();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // On changes to search or paging params, search and
+    // reset the timers
+    useEffect(() => {
+        if(stateLoaded) {
+            triggerSearch();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchPageParams, stateLoaded, triggerSearch]);
+
+    // On changes to search params, reset the page to zero
+    useEffect(() => {
+        setSearchPageParams({...searchPageParams, from: 0})
+        // Ignore warning about missing dependency; we do *not* want
+        // to update searchPageParams when searchPageParams changes...
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams]);
+
+    // if viewing a specific log entry, then retrieve it
+    useEffect(() => {
+        if(logId > 0) {
+            ologService.get(`/logs/${logId}`)
+            .then(res => {
+                setCurrentLogEntry(res.data);
+            })
+            .catch(e => {
+                console.error(`Could not find log id ${logId}`, e);
+                setCurrentLogEntry(null);
+            })
+        }
+    }, [logId, setCurrentLogEntry])
 
     const renderLogEntryDetails = () => {
         
@@ -193,19 +192,13 @@ const LogEntriesView = ({
         <>
             <Container fluid className="full-height">
                 <Row className="full-height">
-                    <Collapse in={showFilters}>
-                        <Col xs={{span: 12, order: 3}} sm={{span: 12, order: 3}} md={{span: 12, order: 3}} lg={{span: 2, order: 1}} style={{padding: "2px"}}>
-                            <Filters
-                                {...{
-                                    logbooks,
-                                    tags,
-                                    searchParams, setSearchParams,
-                                    searchPageParams, setSearchPageParams,
-                                    triggerSearch
-                                }}
-                            />
-                        </Col>
-                    </Collapse>
+                    <CollapsibleFilters {...{
+                        logbooks,
+                        tags,
+                        showFilters,
+                        searchParams, setSearchParams,
+                        searchPageParams, setSearchPageParams
+                    }}/>
                     <Col xs={{span: 12, order: 2}} sm={{span: 12, order: 2}} md={{span: 12, order: 2}} lg={{span: 4, order: 2}} style={{padding: "2px"}}>
                         <SearchResultList {...{
                             searchParams, setSearchParams,
