@@ -37,7 +37,14 @@ import NavigationButtons from './NavigationButtons';
  * present. Other types of attachments are rendered as links.
  */
 // class LogDetails extends Component{
-const LogDetails = ({showGroup, setShowGroup, currentLogEntry, setCurrentLogEntry, logGroupRecords, setLogGroupRecords, userData, setReplyAction}) => {
+const LogDetails = ({
+    showGroup, setShowGroup, 
+    currentLogEntry, setCurrentLogEntry, 
+    logGroupRecords, setLogGroupRecords, 
+    userData, 
+    setReplyAction,
+    searchResults
+}) => {
 
     const remarkable = useMemo(() => new Remarkable('full', {
         html:         false,        // Enable HTML tags in source
@@ -64,8 +71,10 @@ const LogDetails = ({showGroup, setShowGroup, currentLogEntry, setCurrentLogEntr
         or if the route is of the type /logs/:id */}
         {currentLogEntry &&
             <Container className="grid-item full-height">
-                <NavigationButtons selectedLogEntryId={currentLogEntry.id}
-                    setCurrentLogEntry={setCurrentLogEntry}/>
+                <NavigationButtons {...{
+                    currentLogEntry, setCurrentLogEntry,
+                    searchResults
+                }}/>
                 {/* Site may choose to not support log entry groups */}
                 {customization.log_entry_groups_support && 
                     <Link to="/edit">
