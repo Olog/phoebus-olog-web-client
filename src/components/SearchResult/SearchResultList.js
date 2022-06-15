@@ -126,7 +126,7 @@ const SearchResultList = ({
     });
 
     return(
-        <Container className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}} >
+        <div className="grid-item full-height" style={{paddingLeft: "5px", paddingRight: "5px"}} >
             <Form style={{paddingTop: "5px"}} onSubmit={(e) => submit(e)}>
                 <Form.Row>
                     <Col style={{flexGrow: "0"}}>
@@ -201,7 +201,7 @@ const SearchResultList = ({
                 </div>
                 
             </LoadingOverlay>
-        </Container>
+        </div>
     )
 }
 

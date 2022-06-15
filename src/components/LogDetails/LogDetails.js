@@ -63,7 +63,7 @@ const LogDetails = ({showGroup, setShowGroup, currentLogEntry, setCurrentLogEntr
         {/* Render only if currentLogRecord is defined, i.e. when user has selected from search result list,
         or if the route is of the type /logs/:id */}
         {currentLogEntry &&
-            <Container className="grid-item full-height">
+            <div className="grid-item full-height w-100 px-2" >
                 <NavigationButtons selectedLogEntryId={currentLogEntry.id}
                     setCurrentLogEntry={setCurrentLogEntry}/>
                 {/* Site may choose to not support log entry groups */}
@@ -107,7 +107,7 @@ const LogDetails = ({showGroup, setShowGroup, currentLogEntry, setCurrentLogEntr
                         remarkable
                     }}/>
                 }
-            </Container>
+            </div>
         }
         </>
     )
