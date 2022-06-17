@@ -27,17 +27,29 @@ import DateTimePicker from 'react-datetime-picker';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import customization from '../../utils/customization';
+import { useEffect } from 'react';
 
 /**
  * Component holding search criteria elements, i.e.
  * logbooks, tags and time range.
  */
-const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParams, setSearchPageParams}) => {
+const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParams, setSearchPageParams, submitSearchParams}) => {
 
     const [startDate, _setStartDate] = useState(new Date()); // Used by calendar component
     const [endDate, _setEndDate] = useState(new Date()); // Used by calendar component
     const [showSelectStartTime, setShowSelectStartTime] = useState(false);
     const [showSelectEndTime, setShowSelectEndTime] = useState(false);
+    const [triggerSubmit, setTriggerSubmit] = useState(false); 
+
+    // Instead of triggering submit of search parameters directly from a field change
+    // function as a side effect (bad practice, which ofc generates warnings), instead
+    // set the triggerSubmit state to true and then submit the search parameters from useEffect.
+    useEffect(() => {
+        if(triggerSubmit) {
+            setTriggerSubmit(false);
+            submitSearchParams();
+        }
+    }, [triggerSubmit]);
 
     const setStartDate = (value) => {
         let start = dateToString(value);
@@ -54,6 +66,7 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
     const applyAndClose = () => {
         setShowSelectStartTime(false);
         setShowSelectEndTime(false);
+        submitSearchParams();
     }
 
     const inputChanged = (event, key) => {
@@ -75,15 +88,23 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
             delete copy[arr];
         }
         setSearchParams(copy);
+        setTriggerSubmit(true);
     }
 
     const updateSort = (sort) => {
         setSearchPageParams({...searchPageParams, sort})
+        setTriggerSubmit(true);
+    }
+
+    const onKeyDown = (e) => {
+        if(e.key === 'Enter') {
+            setTriggerSubmit(true);
+        }
     }
     
     return(
         <>
-        <Container className="grid-item filters full-height" style={{padding: "8px"}}>
+        <Container className="grid-item filters full-height" style={{padding: "8px"}} onKeyDown={onKeyDown} >
             <Table size="sm" className="search-fields-table">
                 <tbody>
                     <tr>
