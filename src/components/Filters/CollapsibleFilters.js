@@ -31,20 +31,22 @@ const CollapsibleFilters = ({logbooks, tags, showFilters, searchParams, setSearc
         setTempSearchPageParams(searchPageParams);
     }, [searchParams, searchPageParams])
 
-    const onFiltersCollapsed = () => {
+    const submitSearchParams = () => {
         setSearchParams(tempSearchParams);
         setSearchPageParams(tempSearchPageParams);
     }
 
     return (
-        <Collapse in={showFilters} onExiting={onFiltersCollapsed} className="p-1">
+
+        <Collapse in={showFilters} onExiting={submitSearchParams} className="p-1">
             <Col xs={{span: 12, order: 3}} lg={{span: 2, order: 1}} >
                 <Filters
                     {...{
                         logbooks,
                         tags,
                         searchParams: tempSearchParams, setSearchParams: setTempSearchParams,
-                        searchPageParams: tempSearchPageParams, setSearchPageParams: setTempSearchPageParams
+                        searchPageParams: tempSearchPageParams, setSearchPageParams: setTempSearchPageParams,
+                        submitSearchParams: submitSearchParams
                     }}
                 />
             </Col>
