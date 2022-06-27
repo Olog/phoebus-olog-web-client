@@ -16,52 +16,47 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useEffect } from "react";
+import { Form, Col, Button } from "react-bootstrap"
+import SearchBoxInput from "./SearchBoxInput"
 
-import {useState} from 'react';
-import Form from 'react-bootstrap/Form';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import {searchParamsToQueryString, queryStringToSearchParameters} from '../../utils/searchParams';
-import Tooltip from 'react-bootstrap/Tooltip';
-
-const SearchBox = ({searchParams, setSearchParams, showFilters}) => {
-
-    const [searchString, setSearchString] = useState("");
-
-    useEffect(() => {
-        if(searchParams) {
-            setSearchString(searchParamsToQueryString(searchParams));
-        }
-    }, [searchParams]);
-
-    const onChange = (event) => {
-        setSearchString(event.target.value);
-    };
-
-    const onKeyDown = (event) => {
-        if(event.key === 'Enter') {
-            setSearchParams(queryStringToSearchParameters(searchString));
-        }
+const SearchBox = ({searchParams, setSearchParams, showFilters, setShowFilters}) => {
+    
+    const toggleFilters = () => {
+        setShowFilters(!showFilters)
     }
 
+    const showSearchHelp = () => {
+        window.open(`${process.env.REACT_APP_BASE_URL}/SearchHelp_en.html`, '_blank');
+    }
+
+    // prevent default to e.g. prevent page reload
+    // do NOT trigger search here, as the SearchBox
+    // component already triggers this by updating 
+    // the searchParams state.
+    const submit = (event) => {
+        event.preventDefault();
+    }
+    
     return (
-        <OverlayTrigger delay={{ hide: 750, show: 300 }}
-                overlay={(props) => (
-                    <Tooltip {...props}>Edit and press Enter to search</Tooltip>
-                )}
-                rootClose
-                placement="bottom">
-            <Form.Control size="sm" 
-                type="input"
-                disabled={showFilters}
-                placeholder="No search string"
-                style={{fontSize: "12px"}}
-                value={searchString}
-                onChange={(e) => onChange(e)}
-                onKeyDown={onKeyDown}
-            >
-            </Form.Control>
-        </OverlayTrigger>
+        < Form style={{paddingTop: "5px"}} onSubmit={(e) => submit(e)}>
+            <Form.Row>
+                <Col style={{flexGrow: "0"}}>
+                    <Button size="sm" onClick={() => toggleFilters()}>{showFilters ? ">" : "<"}</Button>
+                </Col>
+                <Col style={{paddingLeft: "0px"}}>
+                <SearchBoxInput
+                    {...{searchParams, setSearchParams, showFilters}}
+                />
+                </Col>
+                <Col style={{flexGrow: "0" }}>
+                    <Button 
+                        size="sm"
+                        onClick={(e) => showSearchHelp()}>
+                        Help
+                    </Button>
+                </Col>
+            </Form.Row>
+        </Form>
     );
 }
 

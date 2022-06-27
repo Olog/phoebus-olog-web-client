@@ -37,8 +37,8 @@ const CollapsibleFilters = ({logbooks, tags, showFilters, searchParams, setSearc
     }
 
     return (
-        <Collapse in={showFilters} onExiting={onFiltersCollapsed}>
-            <Col xs={{span: 12, order: 3}} sm={{span: 12, order: 3}} md={{span: 12, order: 3}} lg={{span: 2, order: 1}} style={{padding: "2px"}}>
+        <Collapse in={showFilters} onExiting={onFiltersCollapsed} className="p-1">
+            <Col xs={{span: 12, order: 3}} lg={{span: 2, order: 1}} >
                 <Filters
                     {...{
                         logbooks,
