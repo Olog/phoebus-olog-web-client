@@ -39,7 +39,7 @@ const SearchResultList = ({
 }) => {
 
     const [pageCount, setPageCount] = useState(0);
-    const [currentPageIndex, setCurrentPageIndex] = useState(1);
+    const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
     useEffect(() => {
         if(!searchResults){
@@ -47,20 +47,20 @@ const SearchResultList = ({
             return;
         }
         if(searchPageParams.from === 0) {
-            setCurrentPageIndex(1);
+            setCurrentPageIndex(0);
         }
         let newPageCount = Math.ceil(searchResults.hitCount / searchPageParams.size);
         setPageCount(newPageCount);
     }, [searchResults, searchPageParams.size, searchPageParams.from])
 
     useEffect(() => {
-        const from = (currentPageIndex-1) * searchPageParams.size;
+        const from = currentPageIndex * searchPageParams.size;
         setSearchPageParams({...searchPageParams, from});
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPageIndex]);
 
     const goToPage = (pageNumber) => {
-        if(pageNumber > 0) {
+        if(pageNumber >= 0) {
             setCurrentPageIndex(pageNumber)
         };
     }
