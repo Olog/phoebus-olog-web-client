@@ -39,22 +39,11 @@ const NavigationButtons = ({
     };
 
     useEffect(() => {
-        console.log({
-            currentLogEntry, searchResults, previousLogEntry, nextLogEntry
-        })
-    })
-
-    useEffect(() => {
         // Get the index of the current log entry; note findIndex returns -1 if no result
         // This should only happen when navigating to a log entry directly, without searching first
         // todo: clear search results if navigating directly
         const currentIndex = searchResults?.logs?.findIndex(item => item.id === currentLogEntry.id);
         if(currentIndex >= 0) {
-            console.log({
-                currentIndex, 
-                prev: searchResults.logs[currentIndex - 1],
-                next: searchResults.logs[currentIndex + 1]
-            })
             setPreviousLogEntry(searchResults.logs[currentIndex - 1]);
             setNextLogEntry(searchResults.logs[currentIndex + 1]);
         }
