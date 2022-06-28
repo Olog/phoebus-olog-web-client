@@ -17,17 +17,23 @@
  */
 
 import { Pagination, Container, Row, Col, Form } from "react-bootstrap";
+import { useMediaQuery } from 'react-responsive';
 
 const PaginationBar = ({pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}) => {
 
-    const MAX_PAGINATION_ITEMS = 6;
+    const isMobile = useMediaQuery({ query: '(max-width: 539px)' })
+
+    let maxPaginationItems = 6;
+    if(isMobile) {
+        maxPaginationItems = 3;
+    }
 
     const renderPaginationItems = () => {
 
-        let paginationPage = Math.floor(currentPageIndex / MAX_PAGINATION_ITEMS);
+        let paginationPage = Math.floor(currentPageIndex / maxPaginationItems);
 
-        let firstIndex = paginationPage * MAX_PAGINATION_ITEMS;
-        let pagesToRender = Math.min(pageCount - firstIndex, MAX_PAGINATION_ITEMS);
+        let firstIndex = paginationPage * maxPaginationItems;
+        let pagesToRender = Math.min(pageCount - firstIndex, maxPaginationItems);
         let lastIndex = firstIndex + (pagesToRender);
 
         let items = [];

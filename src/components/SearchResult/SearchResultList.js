@@ -24,7 +24,6 @@ import LoadingOverlay from 'react-loading-overlay';
 import SearchBox from './SearchBox';
 import PaginationBar from './PaginationBar';
 
-
 /**
  * Pane showing search query input and a the list of log entries 
  * matching the query. 
