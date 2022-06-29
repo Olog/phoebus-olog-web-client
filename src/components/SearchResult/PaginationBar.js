@@ -53,7 +53,7 @@ const PaginationBar = ({pageCount, currentPageIndex, goToPage, searchPageParams,
             <Row className="p-2">
                 <Col className="d-flex align-items-center justify-content-between p-0 pr-1" >
                     <Col className="d-flex align-items-center p-0 pr-1" xs='auto' >
-                        <Form.Label className="inline-block align-middle m-0 text-nowrap" >Hits per page:</Form.Label> 
+                        <Form.Label className="inline-block align-middle m-0 mr-2 text-nowrap" >Hits per page:</Form.Label> 
                         <Col style={{padding: '0px', maxWidth: '40px'}}>
                             <Form.Control size="sm" 
                                 type="input"
