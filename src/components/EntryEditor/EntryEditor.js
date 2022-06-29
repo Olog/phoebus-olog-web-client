@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import ologService from '../../api/olog-service.js';
-import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import FormFile from 'react-bootstrap/FormFile';
 import Modal from 'react-bootstrap/Modal';
 import { FaPlus } from 'react-icons/fa';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Attachment from '../Attachment/Attachment.js';
 import customization from '../../utils/customization';
@@ -36,115 +35,121 @@ import {removeImageMarkup, ologClientInfoHeader } from '../../utils/utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from 'react-loading-overlay';
 import Select from 'react-select';
+import { useState } from 'react';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 
-class EntryEditor extends Component{
+const EntryEditor = ({
+    tags,
+    logbooks,
+    replyAction,
+    userData, setUserData,
+    currentLogEntry
+}) => {
 
-    state = {
-        selectedLogbooks: [],
-        selectedTags: [],
-        level: customization.defaultLevel,
-        attachedFiles: [],
-        validated: false,
-        selectedProperties: [],
-        showAddProperty: false,
-        showEmbedImageDialog: false,
-        logEntryGroupProperty: null,
-        availableProperties: [],
-        showHtmlPreview: false,
-        createInProgress: false
-    }
+    const [selectedLogbooks, setSelectedLogbooks] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [level, setLevel] = useState(customization.defaultLevel);
+    const [attachedFiles, setAttachedFiles] = useState([]);
+    const [validated, setValidated] = useState(false);
+    const [selectedProperties, setSelectedProperties] = useState([]);
+    const [showAddProperty, setShowAddProperty] = useState(false);
+    const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
+    const [availableProperties, setAvailableProperties] = useState([]);
+    const [showHtmlPreview, setShowHtmlPreview] = useState(false);
+    const [createInProgress, setCreateInProgress] = useState(false);
 
-    fileInputRef = React.createRef();
-    titleRef = React.createRef();
-    descriptionRef = React.createRef();
-   
-    componentDidMount = () => { 
+    const fileInputRef = useRef();
+    const titleRef = useRef();
+    const descriptionRef = useRef();
+
+    const history = useHistory();
+
+    useEffect(() => {
+
         // If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
         // Copy relevant fields to the state of this class, taking into account that a Reply
         // may or may not exist in the template.
-        if(this.props.replyAction && this.props.currentLogEntry){
-            let p = [];
-            this.props.currentLogEntry.properties.forEach((property, i) => {
-                p.push(property);
-            });
-            this.setState({
-                selectedLogbooks: this.props.currentLogEntry.logbooks,
-                selectedTags: this.props.currentLogEntry.tags,
-                level: customization.defaultLevel,
-                // selectedProperties: p
-            });
-            this.titleRef.current.value = this.props.currentLogEntry.title;
+        if(replyAction && currentLogEntry){
+            console.log({currentLogEntry, logbooks: currentLogEntry.logbooks})
+            setSelectedLogbooks(currentLogEntry.logbooks);
+            setSelectedTags(currentLogEntry.tags);
+            setLevel(customization.defaultLevel);
+            titleRef.current.value = currentLogEntry.title;
         }
 
-        this.getAvailableProperties();
-    }
+        getAvailableProperties();
 
-    componentDidUpdate = (nextProps, nextState) => {
-        // The below will ensure that when user has selected Reply and then New Log Entry,
-        // the entry being edited does not contain any copied data.
-        if(nextProps.replyAction !== this.props.replyAction){
-            this.setState({selectedLogbooks: [], 
-                selectedTags: [], 
-                level: customization.defaultLevel, 
-                selectedProperties: []});
-            this.titleRef.current.value = "";
+    }, [replyAction, currentLogEntry]);
+
+    // The below will ensure that when user has selected Reply and then New Log Entry,
+    // the entry being edited does not contain any copied data.
+    useEffect(() => {
+
+        if(!replyAction) {
+            setSelectedLogbooks([]);
+            setSelectedTags([]);
+            setLevel(customization.defaultLevel);
+            setSelectedProperties([]);
+            titleRef.current.value = "";
         }
-    }
+        
+    }, [replyAction])
 
-    getAvailableProperties = () => {
+    const getAvailableProperties = () => {
         ologService.get("/properties")
-            .then(res =>  this.setState({availableProperties: res.data}))
+            .then(res =>  setAvailableProperties(res.data))
             .catch(e => {
                 console.error("Could not fetch properties", e);
-                this.setState({availableProperties: []});
+                setAvailableProperties([]);
             })
     }
 
-    logbookSelectionChanged = (selection) => {
+    const logbookSelectionChanged = (selection) => {
         if(selection) {
             const logbookSelection = Object.values(selection).map(it => it.value);
-            this.setState({selectedLogbooks: logbookSelection});
+            setSelectedLogbooks(logbookSelection)
         }
     }
 
-    tagSelectionChanged = (selection) => {
+    const tagSelectionChanged = (selection) => {
         if(selection) {
             const tagSelection = Object.values(selection).map(it => it.value);
-            this.setState({selectedTags: tagSelection});
+            setSelectedTags(tagSelection);
         }
     }
 
-    entryTypeSelectionChanged = (selection) => {
+    const entryTypeSelectionChanged = (selection) => {
         if(selection) {
             const level = selection.value;
-            this.setState({level: level});
+            setLevel(level);
         }
     }
 
-    onBrowse = () => {
-        this.fileInputRef.current.click();
+    const onBrowse = () => {
+        fileInputRef.current.click();
     }
     
-    onFileChanged = (event) => {
+    const onFileChanged = (event) => {
         if(event.target.files){
             let a = [];
-            for(var i = 0; i < event.target.files.length; i++){
+            for(let i = 0; i < event.target.files.length; i++){
                 a[i] = new OlogAttachment(event.target.files[i], uuidv4());
             }
-            this.setState({attachedFiles: [...this.state.attachedFiles, ...a]});
+            setAttachedFiles([...attachedFiles, ...a])
         }
-        this.fileInputRef.current.value = null;
+        fileInputRef.current.value = null;
     }
 
     /**
      * Removes attachment and - where applicable - updates the body/description.
      * @param {*} file 
      */
-    removeAttachment = (file) => {
-        this.setState({attachedFiles: this.state.attachedFiles.filter(item => item.file !== file.file)});
-        if(this.descriptionRef.current.value.indexOf(file.id) > -1){  // Find potential markup referencing the attachment
-            let updatedDescription = removeImageMarkup(this.descriptionRef.current.value, file.id);
-            this.descriptionRef.current.value = updatedDescription;
+    const removeAttachment = (file) => {
+        setAttachedFiles(attachedFiles.filter(item => item.file !== file.file));
+        if(descriptionRef.current.value.indexOf(file.id) > -1){  // Find potential markup referencing the attachment
+            let updatedDescription = removeImageMarkup(descriptionRef.current.value, file.id);
+            descriptionRef.current.value = updatedDescription;
         }
     }
 
@@ -154,12 +159,12 @@ class EntryEditor extends Component{
      * @param {*} id 
      * @returns 
      */
-    submitAttachmentsMulti = async (id) => {
-        for (var i = 0; i < this.state.attachedFiles.length; i++) {
+    const submitAttachmentsMulti = async (id) => {
+        for (let i = 0; i < attachedFiles.length; i++) {
             let formData = new FormData();
-            formData.append('file', this.state.attachedFiles[i].file);
-            formData.append('id', this.state.attachedFiles[i].id);
-            formData.append('filename', this.state.attachedFiles[i].file.name);
+            formData.append('file', attachedFiles[i].file);
+            formData.append('id', attachedFiles[i].id);
+            formData.append('filename', attachedFiles[i].file.name);
             await ologService.post(`/logs/attachments/${id}`, 
                 formData,
                 {
@@ -172,51 +177,44 @@ class EntryEditor extends Component{
         }
     }
 
-    selectionsValid = () => {
-        this.setState({logbookSelectionValid: this.state.selectedLogbooks.length > 0});
-        return this.state.logbookSelectionValid;
-    }
-
-
-    submit = (event) => {
+    const submit = (event) => {
         const checkValidity = event.currentTarget.checkValidity();
         event.preventDefault();
         var promise = checkSession();
         if(!promise){
-            this.props.setUserData({});
-            this.setState({createInProgress: false});
+            setUserData({});
+            setCreateInProgress(false);
             return;
         }
         else{
             promise.then(data => {
                 if(!data){
-                    this.props.setUserData({});
-                    this.setState({createInProgress: false});
+                    setUserData({});
+                    setCreateInProgress(false);
                     return;
                 }
                 else{
-                    const selectionsAreValid = this.state.selectedLogbooks.length > 0 && this.state.level !== null;
-                    this.setState({validated: true});
+                    const selectionsAreValid = selectedLogbooks.length > 0 && level !== null;
+                    setValidated(true);
                     if (checkValidity && selectionsAreValid){
-                        this.setState({createInProgress: true});
-                        const { history } = this.props;
+                        setCreateInProgress(true);
                         const logEntry = {
-                            logbooks: this.state.selectedLogbooks,
-                            tags: this.state.selectedTags,
-                            properties: this.state.selectedProperties,
-                            title: this.titleRef.current.value,
-                            level: this.state.level,
-                            description: this.descriptionRef.current.value
+                            logbooks: selectedLogbooks,
+                            tags: selectedTags,
+                            properties: selectedProperties,
+                            title: titleRef.current.value,
+                            level: level,
+                            description: descriptionRef.current.value
                         }
-                        let url = this.props.replyAction ? 
-                            `/logs?markup=commonmark&inReplyTo=${this.props.currentLogEntry.id}` :
+                        let url = replyAction ? 
+                            `/logs?markup=commonmark&inReplyTo=${currentLogEntry.id}` :
                             `/logs?markup=commonmark`;
                         ologService.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
                             .then(res => {
-                                if(this.state.attachedFiles.length > 0){ // No need to call backend if there are no attachments.
-                                    this.submitAttachmentsMulti(res.data.id);
+                                if(attachedFiles.length > 0){ // No need to call backend if there are no attachments.
+                                    submitAttachmentsMulti(res.data.id);
                                 }
-                                this.setState({createInProgress: false});
+                                setCreateInProgress(false);
                                 history.push('/');
                             })
                             .catch(error => {
@@ -226,7 +224,7 @@ class EntryEditor extends Component{
                                 else if(error.response && (error.response.status >= 500)){
                                     alert('Failed to create log entry.')
                                 }
-                                this.setState({createInProgress: false});
+                                setCreateInProgress(false);
                             });
                     }
                     return;
@@ -235,39 +233,31 @@ class EntryEditor extends Component{
         }
     }
 
-    addProperty = (property) => {
-        this.setState({selectedProperties: [...this.state.selectedProperties, property],
-            showAddProperty: false});
+    const addProperty = (property) => {
+        setSelectedProperties([...selectedProperties, property]);
+        setShowAddProperty(false);
     }
 
-    setShowEmbeddImageDialog = (show) => {
-        this.setState({showEmbedImageDialog: show});
+    const getCommonmarkSrc = () => {
+        return descriptionRef.current.value;
     }
 
-    setShowHtmlPreview = (show) => {
-        this.setState({showHtmlPreview: show});
+    const getAttachedFiles = () => {
+        return attachedFiles;
     }
 
-    getCommonmarkSrc = () => {
-        return this.descriptionRef.current.value;
+    const removeProperty = (key) => {
+        let properties = [...selectedProperties].filter(property => property.name !== key);
+        setSelectedProperties(properties);
     }
 
-    getAttachedFiles = () => {
-        return this.state.attachedFiles;
-    }
-
-    removeProperty = (key) => {
-        let properties = [...this.state.selectedProperties].filter(property => property.name !== key);
-        this.setState({selectedProperties: properties});
-    }
-
-    addEmbeddedImage = (file, width, height) => {
-        this.setState({showEmbedImageDialog: false});
+    const addEmbeddedImage = (file, width, height) => {
+        setShowEmbedImageDialog(false);
         const id = uuidv4();
         var imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
-        this.descriptionRef.current.value += imageMarkup;
+        descriptionRef.current.value += imageMarkup;
         const ologAttachment = new OlogAttachment(file, id);
-        this.setState({attachedFiles: [...this.state.attachedFiles, ologAttachment]});
+        setAttachedFiles([...attachedFiles, ologAttachment]);
     }
 
     /**
@@ -276,17 +266,17 @@ class EntryEditor extends Component{
      * @param {*} attribute 
      * @param {*} attributeValue 
      */
-    updateAttributeValue = (property, attribute, attributeValue) => {
-        let copyOfSelectedProperties = [...this.state.selectedProperties];
+     const updateAttributeValue = (property, attribute, attributeValue) => {
+        let copyOfSelectedProperties = [...selectedProperties];
         let propertyIndex = copyOfSelectedProperties.indexOf(property);
         let copyOfProperty = copyOfSelectedProperties[propertyIndex];
         let attributeIndex = copyOfProperty.attributes.indexOf(attribute);
         let copyOfAttribute = copyOfProperty.attributes[attributeIndex];
         copyOfAttribute.value = attributeValue;
-        this.setState({selectedProperties: copyOfSelectedProperties});
+        setSelectedProperties(copyOfSelectedProperties);
     }
 
-    asLogbookSelections = (logbooks) => {
+    const asLogbookSelections = (logbooks) => {
         if(logbooks) {
             return logbooks.map(logbook => {
                 return {
@@ -299,7 +289,7 @@ class EntryEditor extends Component{
         }
     }
 
-    asTagSelections = (tags) => {
+    const asTagSelections = (tags) => {
         if(tags) {
             return tags.map(tag => {
                 return {
@@ -312,165 +302,162 @@ class EntryEditor extends Component{
         }
     }
 
-    render(){
-
-        var attachments = this.state.attachedFiles.map((file, index) => {
-            return(
-                <Attachment key={index} file={file} removeAttachment={this.removeAttachment}/>
-            )
-        })
-
-        const doUpload = this.props.fileName !== '';
-        
-        var propertyItems = this.state.selectedProperties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
-            return (
-                <PropertyEditor key={index}
-                    property={property}
-                    removeProperty={this.removeProperty}
-                    updateAttributeValue={this.updateAttributeValue}/>
-            )
-        })
-
-        const levelOptions = customization.levelValues.map(level => {
-            return {
-                value: level,
-                label: level
-            }
-        });
-
+    const attachments = attachedFiles.map((file, index) => {
         return(
-            <>
-                <LoadingOverlay
-                            active={this.state.createInProgress}
-                            spinner
-                            styles={{
-                                overlay: (base) => ({
-                                ...base,
-                                background: 'rgba(97, 97, 97, 0.3)',
-                                '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
-                                })
-                            }}>
-                <Container fluid className="full-height">
-                    <Form noValidate validated={this.state.validated} onSubmit={this.submit}>
-                        <Form.Row>
-                            <Form.Label className="new-entry">New Log Entry</Form.Label>
-                            <Button type="submit" disabled={this.props.userData.userName === "" || this.state.createInProgress}>Submit</Button>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Label>Logbooks:</Form.Label>
-                            <Select
-                                isMulti
-                                name="logbooks"
-                                options={this.asLogbookSelections(this.props.logbooks.filter(avail => !this.state.selectedLogbooks.find(sel => sel.name === avail.name)))}
-                                onChange={this.logbookSelectionChanged}
-                                value={this.asLogbookSelections(this.state.selectedLogbooks)}
-                                className="w-100"
-                                placeholder="Select Logbook(s)"
-                            />
-                            {this.state.selectedLogbooks.length === 0 && 
-                                <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Label>Tags:</Form.Label>
-                            <Select
-                                isMulti
-                                name="tags"
-                                options={this.asTagSelections(this.props.tags.filter(avail => !this.state.selectedTags.find(sel => sel.name === avail.name)))}
-                                onChange={this.tagSelectionChanged}
-                                value={this.asTagSelections(this.state.selectedTags)}
-                                className="w-100"
-                                placeholder="Select Tag(s)"
-                            />
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Label>Entry Type:</Form.Label>
-                            <Select
-                                name="entryTypes"
-                                options={levelOptions}
-                                defaultInputValue={customization.defaultLevel}
-                                onChange={this.entryTypeSelectionChanged}
-                                className="w-100"
-                                placeholder="Select Entry Type"
-                            />
-                            {(this.state.level === "" || !this.state.level) && 
-                                <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Label>Title:</Form.Label>
-                            <Form.Control 
-                                required
-                                type="text" 
-                                placeholder="Title" 
-                                ref={this.titleRef}/>
-                            <Form.Control.Feedback type="invalid">
-                                Please specify a title.
-                            </Form.Control.Feedback>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Label>Description:</Form.Label>
-                            <Form.Control
-                                as="textarea" 
-                                rows="5" 
-                                placeholder="Description"
-                                ref={this.descriptionRef}/>
-                        </Form.Row>
-                        <Form.Row>
-                            <Button variant="secondary" size="sm"
-                                    onClick={ doUpload && this.props.onUploadStarted ? this.props.onUploadStarted : this.onBrowse }>
-                                <span><FaPlus className="add-button"/></span>Add Attachments
-                            </Button>
-                            <FormFile.Input
-                                    hidden
-                                    multiple
-                                    ref={ this.fileInputRef }
-                                    onChange={ this.onFileChanged } />
-                            <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                    onClick={() => this.setState({showEmbedImageDialog: true})}>
-                                Embed Image
-                            </Button>
-                            <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                    onClick={() => this.setState({showHtmlPreview: true})}>
-                                Preview
-                                </Button>
-                        </Form.Row>
-                        </Form>
-                        {this.state.attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
-                        <Form.Label className="mt-3">Properties:</Form.Label>
-                        {<Form.Row className="grid-item">
-                            <Form.Group style={{width: "400px"}}>
-                                <Button variant="secondary" size="sm" onClick={() => this.setState({showAddProperty: true})}>
-                                    <span><FaPlus className="add-button"/></span>Add Property
-                                </Button>
-                                {propertyItems}              
-                            </Form.Group>
-                        </Form.Row>}
-                        </Container>
-                    </LoadingOverlay>
-                
-                {
-                <Modal show={this.state.showAddProperty} onHide={() => this.setState({showAddProperty: false})}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add Property</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <PropertySelector 
-                            availableProperties={this.state.availableProperties} 
-                            selectedProperties={this.state.selectedProperties}
-                            addProperty={this.addProperty}/>
-                    </Modal.Body>
-                </Modal>
-                }
-                <EmbedImageDialog showEmbedImageDialog={this.state.showEmbedImageDialog} 
-                    setShowEmbedImageDialog={this.setShowEmbeddImageDialog}
-                    addEmbeddedImage={this.addEmbeddedImage}/>
-
-                <HtmlPreview showHtmlPreview={this.state.showHtmlPreview}
-                    setShowHtmlPreview={this.setShowHtmlPreview}
-                    getCommonmarkSrc={this.getCommonmarkSrc}
-                    getAttachedFiles={this.getAttachedFiles}/>
-            </>
+            <Attachment key={index} file={file} removeAttachment={removeAttachment}/>
         )
-    }
+    })
+    
+    const propertyItems = selectedProperties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
+        return (
+            <PropertyEditor key={index}
+                property={property}
+                removeProperty={removeProperty}
+                updateAttributeValue={updateAttributeValue}/>
+        )
+    })
+
+    const levelOptions = customization.levelValues.map(level => {
+        return {
+            value: level,
+            label: level
+        }
+    });
+
+    console.log({replyAction}); 
+
+    return(
+        <>
+            <LoadingOverlay
+                        active={createInProgress}
+                        spinner
+                        styles={{
+                            overlay: (base) => ({
+                            ...base,
+                            background: 'rgba(97, 97, 97, 0.3)',
+                            '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
+                            })
+                        }}>
+            <Container fluid className="full-height">
+                <Form noValidate validated={validated} onSubmit={submit}>
+                    <Form.Row>
+                        <Form.Label className="new-entry">New Log Entry</Form.Label>
+                        <Button type="submit" disabled={userData.userName === "" || createInProgress}>Submit</Button>
+                    </Form.Row>
+                    <Form.Row>
+                        <Form.Label>Logbooks:</Form.Label>
+                        <Select
+                            isMulti
+                            name="logbooks"
+                            options={asLogbookSelections(logbooks.filter(avail => !selectedLogbooks.find(sel => sel.name === avail.name)))}
+                            onChange={logbookSelectionChanged}
+                            value={asLogbookSelections(selectedLogbooks)}
+                            className="w-100"
+                            placeholder="Select Logbook(s)"
+                        />
+                        {selectedLogbooks.length === 0 && 
+                            <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
+                    </Form.Row>
+                    <Form.Row>
+                        <Form.Label>Tags:</Form.Label>
+                        <Select
+                            isMulti
+                            name="tags"
+                            options={asTagSelections(tags.filter(avail => !selectedTags.find(sel => sel.name === avail.name)))}
+                            onChange={tagSelectionChanged}
+                            value={asTagSelections(selectedTags)}
+                            className="w-100"
+                            placeholder="Select Tag(s)"
+                        />
+                    </Form.Row>
+                    <Form.Row>
+                        <Form.Label>Entry Type:</Form.Label>
+                        <Select
+                            name="entryTypes"
+                            options={levelOptions}
+                            defaultInputValue={customization.defaultLevel}
+                            onChange={entryTypeSelectionChanged}
+                            className="w-100"
+                            placeholder="Select Entry Type"
+                        />
+                        {(level === "" || !level) && 
+                            <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
+                    </Form.Row>
+                    <Form.Row>
+                        <Form.Label>Title:</Form.Label>
+                        <Form.Control 
+                            required
+                            type="text" 
+                            placeholder="Title" 
+                            ref={titleRef}/>
+                        <Form.Control.Feedback type="invalid">
+                            Please specify a title.
+                        </Form.Control.Feedback>
+                    </Form.Row>
+                    <Form.Row>
+                        <Form.Label>Description:</Form.Label>
+                        <Form.Control
+                            as="textarea" 
+                            rows="5" 
+                            placeholder="Description"
+                            ref={descriptionRef}/>
+                    </Form.Row>
+                    <Form.Row>
+                        <Button variant="secondary" size="sm" onClick={ onBrowse }>
+                            <span><FaPlus className="add-button"/></span>Add Attachments
+                        </Button>
+                        <FormFile.Input
+                                hidden
+                                multiple
+                                ref={ fileInputRef }
+                                onChange={ onFileChanged } />
+                        <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                onClick={() => setShowEmbedImageDialog(true)}>
+                            Embed Image
+                        </Button>
+                        <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                onClick={() => setShowHtmlPreview(true)}>
+                            Preview
+                            </Button>
+                    </Form.Row>
+                    </Form>
+                    {attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
+                    <Form.Label className="mt-3">Properties:</Form.Label>
+                    {<Form.Row className="grid-item">
+                        <Form.Group style={{width: "400px"}}>
+                            <Button variant="secondary" size="sm" onClick={() => setShowAddProperty(true)}>
+                                <span><FaPlus className="add-button"/></span>Add Property
+                            </Button>
+                            {propertyItems}              
+                        </Form.Group>
+                    </Form.Row>}
+                    </Container>
+                </LoadingOverlay>
+            
+            {
+            <Modal show={showAddProperty} onHide={() => setShowAddProperty(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add Property</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <PropertySelector 
+                        availableProperties={availableProperties} 
+                        selectedProperties={selectedProperties}
+                        addProperty={addProperty}/>
+                </Modal.Body>
+            </Modal>
+            }
+            <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
+                setShowEmbedImageDialog={setShowEmbedImageDialog}
+                addEmbeddedImage={addEmbeddedImage}/>
+
+            <HtmlPreview showHtmlPreview={showHtmlPreview}
+                setShowHtmlPreview={setShowHtmlPreview}
+                getCommonmarkSrc={getCommonmarkSrc}
+                getAttachedFiles={getAttachedFiles}/>
+        </>
+    );
+
 }
 
-export default withRouter(EntryEditor);
+export default EntryEditor;

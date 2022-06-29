@@ -101,7 +101,6 @@ const App = () => {
                                         tags,
                                         logbooks,
                                         replyAction,
-                                        setShowLogin,
                                         userData, setUserData,
                                         currentLogEntry
                                     }}/>
