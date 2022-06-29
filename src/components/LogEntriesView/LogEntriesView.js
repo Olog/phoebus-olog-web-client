@@ -75,6 +75,7 @@ const LogEntriesView = ({
             .then(res => {
                 if(res.data){
                     setSearchResults(res.data);
+                    setCurrentLogEntry(res.data.logs[0]);
                 }
             })
             .catch(err => {
@@ -171,7 +172,8 @@ const LogEntriesView = ({
                     currentLogEntry, setCurrentLogEntry, 
                     logGroupRecords, setLogGroupRecords, 
                     userData, 
-                    setReplyAction
+                    setReplyAction,
+                    searchResults
                 }}/>
             );
         } else {
