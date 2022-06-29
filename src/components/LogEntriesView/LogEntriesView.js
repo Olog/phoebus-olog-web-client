@@ -191,39 +191,35 @@ const LogEntriesView = ({
     };
 
     return (
-        <>
-            <Container fluid className="full-height">
-                <Row className="full-height">
-                    <CollapsibleFilters {...{
-                        logbooks,
-                        tags,
-                        showFilters,
+        <Container fluid className="h-100">
+            <Row className="h-100">
+                <CollapsibleFilters {...{
+                    logbooks,
+                    tags,
+                    showFilters,
+                    searchParams, setSearchParams,
+                    searchPageParams, setSearchPageParams
+                }}/>
+                <Col xs={{span: '12', order: 2}} lg={{span: 4, order: 2}} className="h-100 p-1">
+                    <SearchResultList {...{
                         searchParams, setSearchParams,
-                        searchPageParams, setSearchPageParams
+                        searchPageParams, setSearchPageParams,
+                        searchResults,
+                        searchInProgress,
+                        currentLogEntry, setCurrentLogEntry,
+                        showFilters, setShowFilters,
+                        triggerSearch
                     }}/>
-                    <Col xs={{span: 12, order: 2}} sm={{span: 12, order: 2}} md={{span: 12, order: 2}} lg={{span: 4, order: 2}} style={{padding: "2px"}}>
-                        <SearchResultList {...{
-                            searchParams, setSearchParams,
-                            searchPageParams, setSearchPageParams,
-                            searchResults,
-                            searchInProgress,
-                            currentLogEntry, setCurrentLogEntry,
-                            showFilters, setShowFilters,
-                            triggerSearch
-                        }}/>
-                    </Col>
-                    <Col  
-                        xs={{span: 12, order: 1}} 
-                        sm={{span: 12, order: 1}} 
-                        md={{span: 12, order: 1}} 
-                        lg={{span: showFilters ? 6 : 8, order: 3}} 
-                        style={{padding: "2px"}} 
-                    >
-                        {renderLogEntryDetails()}
-                    </Col>
-                </Row>
-            </Container>
-        </>
+                </Col>
+                <Col  
+                    xs={{span: 12, order: 1}} 
+                    lg={{span: showFilters ? 6 : 8, order: 3}} 
+                    className="p-1"
+                >
+                    {renderLogEntryDetails()}
+                </Col>
+            </Row>
+        </Container>
     );
 
 }

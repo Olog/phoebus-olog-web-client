@@ -98,7 +98,7 @@ class Banner extends Component {
   render(){
     return (
       <>
-        <Navbar bg="dark" variant="dark">
+        <Navbar bg="dark" variant="dark" >
           <Navbar.Brand href="/">
             <Row style={{marginLeft: "1px", marginRight: "1px"}}>{packageInfo.name}</Row>
             <Row style={{marginLeft: "1px", marginRight: "1px"}}><span style={{fontSize: "10px  "}}>v{packageInfo.version}</span></Row>
