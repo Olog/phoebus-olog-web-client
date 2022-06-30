@@ -20,7 +20,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import SearchResultItem from './SearchResultItem';
-import LoadingOverlay from 'react-loading-overlay';
+import LoadingOverlay from '../LoadingOverlay/LoadingOverlay';
 import SearchBox from './SearchBox';
 import PaginationBar from './PaginationBar';
 
@@ -97,15 +97,6 @@ const SearchResultList = ({
                 <Col >
                     <LoadingOverlay
                         active={searchInProgress}
-                        spinner
-                        styles={{
-                            overlay: (base) => ({
-                                ...base,
-                                background: 'rgba(97, 97, 97, 0.3)',
-                                '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
-                            })
-                        }}
-                        className='h-100'
                     >
                         <Row noGutters className='h-100 flex-column'>
                             <Col xs='auto' lg={{span: null, order: 3}}>
