@@ -1,0 +1,23 @@
+#loading-overlay--container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+#loading-overlay--overlay {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(97, 97, 97, 0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading-overlay--children {
+    height: 100%;
+    width: 100%;
+}

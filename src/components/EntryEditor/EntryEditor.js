@@ -33,7 +33,7 @@ import PropertySelector from './PropertySelector';
 import { checkSession } from '../../api/olog-service.js';
 import {removeImageMarkup, ologClientInfoHeader } from '../../utils/utils';
 import HtmlPreview from './HtmlPreview';
-import LoadingOverlay from 'react-loading-overlay';
+import LoadingOverlay from '../LoadingOverlay/LoadingOverlay';
 import Select from 'react-select';
 import { useState } from 'react';
 import { useRef } from 'react';
@@ -329,15 +329,8 @@ const EntryEditor = ({
     return(
         <>
             <LoadingOverlay
-                        active={createInProgress}
-                        spinner
-                        styles={{
-                            overlay: (base) => ({
-                            ...base,
-                            background: 'rgba(97, 97, 97, 0.3)',
-                            '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
-                            })
-                        }}>
+                active={createInProgress}
+            >
             <Container fluid className="full-height">
                 <Form noValidate validated={validated} onSubmit={submit}>
                     <Form.Row>
@@ -431,8 +424,8 @@ const EntryEditor = ({
                             {propertyItems}              
                         </Form.Group>
                     </Form.Row>}
-                    </Container>
-                </LoadingOverlay>
+                </Container>
+            </LoadingOverlay>
             
             {
             <Modal show={showAddProperty} onHide={() => setShowAddProperty(false)}>
