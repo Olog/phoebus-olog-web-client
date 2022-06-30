@@ -93,23 +93,30 @@ const SearchResultList = ({
             <Row noGutters className='h-100 flex-column'>
                 <Col sm='auto' >
                     <SearchBox {...{searchParams, setSearchParams, showFilters, setShowFilters}} />
-                </Col>    
-                <Col xs='auto' lg={{span: null, order: 3}}>
-                    <PaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
                 </Col>
-                <Col style={{overflowY: 'scroll'}} className="border-top border-bottom" >
+                <Col >
                     <LoadingOverlay
-                    active={searchInProgress}
-                    spinner
-                    styles={{
-                        overlay: (base) => ({
-                            ...base,
-                            background: 'rgba(97, 97, 97, 0.3)',
-                            '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
-                        })
-                        }}>
-                            {renderedSearchResults}
-                        </LoadingOverlay>
+                        active={searchInProgress}
+                        spinner
+                        styles={{
+                            overlay: (base) => ({
+                                ...base,
+                                background: 'rgba(97, 97, 97, 0.3)',
+                                '& svg circle': {stroke: 'rgba(19, 68, 83, 0.9) !important'}
+                            })
+                        }}
+                        className='h-100'
+                    >
+                        <Row noGutters className='h-100 flex-column'>
+                            <Col xs='auto' lg={{span: null, order: 3}}>
+                                <PaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
+                            </Col>
+                            <Col style={{overflowY: 'scroll'}} className="border-top border-bottom" >
+                                {renderedSearchResults}
+                                
+                            </Col>  
+                        </Row>
+                    </LoadingOverlay>
                 </Col>
             </Row>
         </Container>
