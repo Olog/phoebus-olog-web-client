@@ -22,7 +22,7 @@ import Form from 'react-bootstrap/Form';
 import FormFile from 'react-bootstrap/FormFile';
 import Modal from 'react-bootstrap/Modal';
 import { FaPlus } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Attachment from '../Attachment/Attachment.js';
 import customization from '../../utils/customization';
@@ -63,7 +63,7 @@ const EntryEditor = ({
     const titleRef = useRef();
     const descriptionRef = useRef();
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -71,7 +71,6 @@ const EntryEditor = ({
         // Copy relevant fields to the state of this class, taking into account that a Reply
         // may or may not exist in the template.
         if(replyAction && currentLogEntry){
-            console.log({currentLogEntry, logbooks: currentLogEntry.logbooks})
             setSelectedLogbooks(currentLogEntry.logbooks);
             setSelectedTags(currentLogEntry.tags);
             setLevel(customization.defaultLevel);
@@ -215,7 +214,7 @@ const EntryEditor = ({
                                     submitAttachmentsMulti(res.data.id);
                                 }
                                 setCreateInProgress(false);
-                                history.push('/');
+                                navigate('/');
                             })
                             .catch(error => {
                                 if(error.response && (error.response.status === 401 || error.response.status === 403)){
@@ -323,8 +322,6 @@ const EntryEditor = ({
             label: level
         }
     });
-
-    console.log({replyAction}); 
 
     return(
         <>

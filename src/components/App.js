@@ -18,9 +18,9 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route
+  BrowserRouter,
+  Route,
+  Routes
 } from "react-router-dom";
 import Banner from './Banner/Banner';
 import EntryEditor from './EntryEditor/EntryEditor';
@@ -71,7 +71,7 @@ const App = () => {
 
     return(
         <>
-            <Router>
+            <BrowserRouter>
                 <Container fluid className='h-100 p-0'>
                     <Row noGutters className='h-100 flex-column'>
                         <Col sm={'auto'}>
@@ -85,8 +85,8 @@ const App = () => {
                             }}/>
                         </Col>
                         <Col>      
-                            <Switch>
-                                <Route exact path={["/", "/logs/:id"]}>
+                            <Routes>
+                                <Route exact path="/" element={
                                     <LogEntriesView {...{
                                         tags, 
                                         logbooks,
@@ -95,8 +95,18 @@ const App = () => {
                                         showGroup, setShowGroup,
                                         currentLogEntry, setCurrentLogEntry
                                     }}/>
-                                </Route>
-                                <Route path="/edit">
+                                } />
+                                <Route exact path="/logs/:id" element={
+                                    <LogEntriesView {...{
+                                        tags, 
+                                        logbooks,
+                                        userData,
+                                        setReplyAction, 
+                                        showGroup, setShowGroup,
+                                        currentLogEntry, setCurrentLogEntry
+                                    }}/>
+                                } />
+                                <Route path="/edit" element={
                                     <EntryEditor {...{
                                         tags,
                                         logbooks,
@@ -104,12 +114,12 @@ const App = () => {
                                         userData, setUserData,
                                         currentLogEntry
                                     }}/>
-                                </Route>
-                            </Switch>
+                                } />
+                            </Routes>
                         </Col>
                     </Row>
                 </Container>
-            </Router>
+            </BrowserRouter>
         </>
     );
 }
