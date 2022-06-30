@@ -97,7 +97,7 @@ const LogEntriesView = ({
             })
 
         }
-
+        // eslint-disable-next-line
     }, [searchParams, searchPageParams, timerRef, cookies, stateLoaded]);
 
     const triggerSearch = useCallback(() => {
