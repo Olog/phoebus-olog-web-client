@@ -15,60 +15,76 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import { withRouter } from 'react-router-dom';
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import ologService from '../../api/olog-service';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
-class NavigationButtons extends Component {
+const NavigationButtons = ({
+    currentLogEntry, setCurrentLogEntry,
+    searchResults
+}) => { 
 
-    step = (amount) => {
-        const {history} = this.props;
-        let id = this.props.selectedLogEntryId + amount;
-        
-        ologService.get(`/logs/${id}`)
-            .then(res => {
-                history.push('/logs/' + res.data.id);
-                this.props.setCurrentLogEntry(res.data);
-            })
-            .catch(err => {
-                if(err.response && err.response.status === 404) {
-                    alert("Unable to step further.");
-                }
-                console.error("Failed to fetch log entry.", err);
-            })
-    }
+    const history = useHistory();
+    const [previousLogEntry, setPreviousLogEntry] = useState();
+    const [nextLogEntry, setNextLogEntry] = useState();
 
-    render (){
-        return (
-            <>
-                <OverlayTrigger delay={{ hide: 450, show: 300 }}
-                     overlay={(props) => (
-                        <Tooltip {...props}>Previous log entry</Tooltip>
-                    )}
-                    rootClose
-                    placement="bottom">
-                    <Button size="sm" 
-                        style={{marginTop: "10px", marginRight: "5px"}}
-                        onClick={() => this.step(-1)}><FaArrowLeft/></Button>
-                </OverlayTrigger>
-                <OverlayTrigger delay={{ hide: 450, show: 300 }}
-                     overlay={(props) => (
-                        <Tooltip {...props}>Next log entry</Tooltip>
-                    )}
-                    rootClose
-                    placement="bottom">
-                    <Button size="sm" 
-                        style={{marginTop: "10px", marginRight: "10px"}}
-                        onClick={() => this.step(1)}><FaArrowRight/></Button>
-                </OverlayTrigger>
-            </>
-        )
-    }
+    const navigateToLogEntry = (logEntry) => {
+        if(logEntry) {
+            setCurrentLogEntry(logEntry);
+            history.push('/logs/' + logEntry.id);
+        }
+    };
+
+    useEffect(() => {
+        // Get the index of the current log entry; note findIndex returns -1 if no result
+        // This should only happen when navigating to a log entry directly, without searching first
+        // todo: clear search results if navigating directly
+        const currentIndex = searchResults?.logs?.findIndex(item => item.id === currentLogEntry.id);
+        if(currentIndex >= 0) {
+            setPreviousLogEntry(searchResults.logs[currentIndex - 1]);
+            setNextLogEntry(searchResults.logs[currentIndex + 1]);
+        }
+    }, [currentLogEntry, searchResults]);
+
+    return (
+        <>
+            <OverlayTrigger delay={{ hide: 450, show: 300 }}
+                    overlay={(props) => (
+                    <Tooltip {...props}>Previous log entry</Tooltip>
+                )}
+                rootClose
+                placement="bottom">
+                <Button 
+                    size="sm" 
+                    style={{marginTop: "10px", marginRight: "5px"}}
+                    disabled={!previousLogEntry}
+                    onClick={() => navigateToLogEntry(previousLogEntry)}
+                >
+                    <FaArrowLeft/>
+                </Button>
+            </OverlayTrigger>
+            <OverlayTrigger delay={{ hide: 450, show: 300 }}
+                    overlay={(props) => (
+                    <Tooltip {...props}>Next log entry</Tooltip>
+                )}
+                rootClose
+                placement="bottom">
+                <Button 
+                    size="sm" 
+                    style={{marginTop: "10px", marginRight: "10px"}}
+                    disabled={!nextLogEntry}
+                    onClick={() => navigateToLogEntry(nextLogEntry)}
+                >
+                    <FaArrowRight/>
+                </Button>
+            </OverlayTrigger>
+        </>
+    )
+
 }
 
-export default withRouter(NavigationButtons);
+export default NavigationButtons;
 

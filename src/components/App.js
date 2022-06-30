@@ -26,6 +26,7 @@ import Banner from './Banner/Banner';
 import EntryEditor from './EntryEditor/EntryEditor';
 import LogEntriesView from './LogEntriesView/LogEntriesView';
 import ologService from '../api/olog-service';
+import { Col, Container, Row } from 'react-bootstrap';
 
 /**
  * Entry point component.
@@ -71,37 +72,43 @@ const App = () => {
     return(
         <>
             <Router>
-                <Banner {...{
-                    refreshLogbooks,
-                    refreshTags,
-                    showLogin, setShowLogin,
-                    showLogout, setShowLogout,
-                    userData, setUserData,
-                    setReplyAction
-                }}/>
-                <Switch>
-                    <Route exact path={["/", "/logs/:id"]}>
-                        <LogEntriesView {...{
-                            tags, 
-                            logbooks,
-                            userData,
-                            setReplyAction, 
-                            showGroup, setShowGroup,
-                            currentLogEntry, setCurrentLogEntry
-                        }}/>
-                    </Route>
-                    <Route path="/edit">
-                        <EntryEditor {...{
-                            tags,
-                            logbooks,
-                            replyAction,
-                            setShowLogin,
-                            userData, setUserData,
-                            currentLogEntry
-                        }}/>
-                    </Route>
-                </Switch>
-                
+                <Container fluid className='h-100 p-0'>
+                    <Row noGutters className='h-100 flex-column'>
+                        <Col sm={'auto'}>
+                            <Banner {...{
+                                refreshLogbooks,
+                                refreshTags,
+                                showLogin, setShowLogin,
+                                showLogout, setShowLogout,
+                                userData, setUserData,
+                                setReplyAction
+                            }}/>
+                        </Col>
+                        <Col>      
+                            <Switch>
+                                <Route exact path={["/", "/logs/:id"]}>
+                                    <LogEntriesView {...{
+                                        tags, 
+                                        logbooks,
+                                        userData,
+                                        setReplyAction, 
+                                        showGroup, setShowGroup,
+                                        currentLogEntry, setCurrentLogEntry
+                                    }}/>
+                                </Route>
+                                <Route path="/edit">
+                                    <EntryEditor {...{
+                                        tags,
+                                        logbooks,
+                                        replyAction,
+                                        userData, setUserData,
+                                        currentLogEntry
+                                    }}/>
+                                </Route>
+                            </Switch>
+                        </Col>
+                    </Row>
+                </Container>
             </Router>
         </>
     );
