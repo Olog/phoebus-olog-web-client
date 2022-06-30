@@ -3,32 +3,39 @@
   "version": "1.0.6",
   "private": true,
   "dependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.2.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-scripts": "5.0.1",
     "axios": "^0.21.2",
     "babel-jest": "^24.9.0",
     "moment": "^2.29.2",
     "query-string": "^7.1.1",
-    "react": "^16.13.1",
     "react-bootstrap": "^1.4.3",
     "react-datetime-picker": "^3.0.4",
-    "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
-    "react-moment": "^0.9.7",
+    "react-moment": "^1.1.2",
     "react-responsive": "^9.0.0-beta.10",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.0",
     "react-select": "^5.3.0",
     "remarkable": "^2.0.1",
     "tasktimer": "^3.0.0",
-    "universal-cookie": "^4.0.4"
+    "universal-cookie": "^4.0.4",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --verbose",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -41,14 +48,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "jest": "^27.4.7",
-    "jest-cli": "^26.6.3"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    }
   }
 }

@@ -17,7 +17,7 @@
  */
 import ologService from '../../api/olog-service.js';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/esm/Container';
+import { Container } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormFile from 'react-bootstrap/FormFile';
 import Modal from 'react-bootstrap/Modal';

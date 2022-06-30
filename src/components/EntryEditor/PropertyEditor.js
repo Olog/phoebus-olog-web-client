@@ -19,7 +19,7 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import {BsXCircle} from 'react-icons/bs';
-import Table from 'react-bootstrap/esm/Table';
+import { Table } from 'react-bootstrap';
 
 class PropertyEditor extends Component{
 
