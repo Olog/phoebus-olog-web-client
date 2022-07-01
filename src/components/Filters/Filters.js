@@ -49,6 +49,7 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
             setTriggerSubmit(false);
             submitSearchParams();
         }
+        // eslint-disable-next-line
     }, [triggerSubmit]);
 
     const setStartDate = (value) => {
