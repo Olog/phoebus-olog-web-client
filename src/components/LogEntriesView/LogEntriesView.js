@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import {useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import {useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import ologService from '../../api/olog-service';
 import Container from 'react-bootstrap/Container'
@@ -28,10 +28,8 @@ import customization from '../../utils/customization';
 import { searchParamsToQueryString } from '../../utils/searchParams';
 import { ologClientInfoHeader } from '../../utils/utils';
 import { TaskTimer } from 'tasktimer';
-import Cookies from 'universal-cookie';
 import CollapsibleFilters from '../Filters/CollapsibleFilters';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSearchParams } from '../../features/searchParamsReducer';
 import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 
 const LogEntriesView = ({
@@ -44,7 +42,6 @@ const LogEntriesView = ({
 }) => {
 
     const timerRef = useRef(new TaskTimer(customization.defaultSearchFrequency));
-    const cookies = useMemo(() => new Cookies(), []);
     const [showFilters, setShowFilters] = useState(false);
     
     const dispatch = useDispatch();
@@ -54,7 +51,6 @@ const LogEntriesView = ({
         logs: [],
         hitCount: 0
     });
-    const [stateLoaded, setStateLoaded] = useState(false);
     const [searchInProgress, setSearchInProgress] = useState(false);
     const [logGroupRecords, setLogGroupRecords] = useState([]);
 
@@ -62,63 +58,43 @@ const LogEntriesView = ({
 
     const search = useCallback(() => {
 
-        if(stateLoaded) {
-           
-            // save current search params to cookies
-            cookies.set(customization.searchParamsCookie, searchParams, {path: '/', maxAge: '100000000'});
-            cookies.set(customization.searchPageParamsCookie, searchPageParams, {path: '/', maxAge: '100000000'});
-    
-            // perform the search
-            const query = searchParamsToQueryString({...searchParams, ...searchPageParams});
-            setSearchInProgress(true);
-    
-            ologService.get(`/logs/search?${query}`, {headers: ologClientInfoHeader()})
-            .then(res => {
-                if(res.data){
-                    setSearchResults(res.data);
-                    setCurrentLogEntry(res.data.logs[0]);
-                }
-            })
-            .catch(err => {
-                // If an error occurs, then reset the timer so it doesn't continue to bother the user
-                timerRef.current.reset();
-    
-                // If there was no response at all, then we couldn't connect to the service
-                if(!err.response) {
-                    alert("Unable to connect to service to perform search.");
-                }
-    
-                // If the service responded, and it's a 400, then the query was invalid
-                if(err.response && err.response.status === 400) {
-                    alert(`Server returned 'Bad Request' while performing search with query '${query}'`);
-                }
-            })
-            .finally(() => {
-                setSearchInProgress(false);
-            })
+        // perform the search
+        const query = searchParamsToQueryString({...searchParams, ...searchPageParams});
+        setSearchInProgress(true);
 
-        }
+        ologService.get(`/logs/search?${query}`, {headers: ologClientInfoHeader()})
+        .then(res => {
+            if(res.data){
+                setSearchResults(res.data);
+                setCurrentLogEntry(res.data.logs[0]);
+            }
+        })
+        .catch(err => {
+            // If an error occurs, then reset the timer so it doesn't continue to bother the user
+            timerRef.current.reset();
+
+            // If there was no response at all, then we couldn't connect to the service
+            if(!err.response) {
+                alert("Unable to connect to service to perform search.");
+            }
+
+            // If the service responded, and it's a 400, then the query was invalid
+            if(err.response && err.response.status === 400) {
+                alert(`Server returned 'Bad Request' while performing search with query '${query}'`);
+            }
+        })
+        .finally(() => {
+            setSearchInProgress(false);
+        })
+
         // eslint-disable-next-line
-    }, [searchParams, searchPageParams, timerRef, cookies, stateLoaded]);
+    }, [searchParams, searchPageParams, timerRef]);
 
     const triggerSearch = useCallback(() => {
         timerRef.current.reset();
         timerRef.current.add(() => search()).start();
         search();
     }, [timerRef, search]);
-
-    // on initial render, restore search states from cookies if present
-    useEffect(() => {
-        let searchParamsFromCookie = cookies.get(customization.searchParamsCookie);
-        if(searchParamsFromCookie){
-            dispatch(updateSearchParams(searchParamsFromCookie))
-        }
-        let searchPageParamsFromCookie = cookies.get(customization.searchPageParamsCookie);
-        if(searchPageParamsFromCookie){
-            dispatch(updateSearchPageParams(searchPageParamsFromCookie));
-        }
-        setStateLoaded(true);
-    }, [cookies, dispatch]);
 
     // on initial render, add task to perform search periodically
     useEffect(() => {
@@ -136,11 +112,9 @@ const LogEntriesView = ({
     // On changes to search or paging params, search and
     // reset the timers
     useEffect(() => {
-        if(stateLoaded) {
-            triggerSearch();
-        }
+        triggerSearch();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchPageParams, stateLoaded, triggerSearch]);
+    }, [searchPageParams, triggerSearch]);
 
     // On changes to search params, reset the page to zero
     useEffect(() => {
