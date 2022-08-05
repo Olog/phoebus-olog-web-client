@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import {useState, useEffect, useRef, useCallback } from 'react';
+import {useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ologService from '../../api/olog-service';
 import Container from 'react-bootstrap/Container'
@@ -25,12 +25,10 @@ import Col from 'react-bootstrap/Col';
 import LogDetails from '../LogDetails/LogDetails';
 import SearchResultList from '../SearchResult/SearchResultList';
 import customization from '../../utils/customization';
-import { searchParamsToQueryString } from '../../utils/searchParams';
-import { ologClientInfoHeader } from '../../utils/utils';
-import { TaskTimer } from 'tasktimer';
 import CollapsibleFilters from '../Filters/CollapsibleFilters';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
+import { useSearchLogsQuery } from '../../services/ologApi';
 
 const LogEntriesView = ({
     tags, 
@@ -41,80 +39,26 @@ const LogEntriesView = ({
     currentLogEntry, setCurrentLogEntry
 }) => {
 
-    const timerRef = useRef(new TaskTimer(customization.defaultSearchFrequency));
     const [showFilters, setShowFilters] = useState(false);
     
     const dispatch = useDispatch();
     const searchParams = useSelector(state => state.searchParams);
     const searchPageParams = useSelector(state => state.searchPageParams);
-    const [searchResults, setSearchResults] = useState({
-        logs: [],
-        hitCount: 0
-    });
-    const [searchInProgress, setSearchInProgress] = useState(false);
+    const { 
+        data: searchResults={
+            logs: [],
+            hitCount: 0
+        },
+        error, 
+        isLoading: searchInProgress 
+    } = useSearchLogsQuery({searchParams, searchPageParams}, {pollingInterval: customization.defaultSearchFrequency});
+    if(error) {
+        console.log("An error occurred while fetching search results", error);
+    }
+
     const [logGroupRecords, setLogGroupRecords] = useState([]);
 
     const {id: logId } = useParams();
-
-    const search = useCallback(() => {
-
-        // perform the search
-        const query = searchParamsToQueryString({...searchParams, ...searchPageParams});
-        setSearchInProgress(true);
-
-        ologService.get(`/logs/search?${query}`, {headers: ologClientInfoHeader()})
-        .then(res => {
-            if(res.data){
-                setSearchResults(res.data);
-                setCurrentLogEntry(res.data.logs[0]);
-            }
-        })
-        .catch(err => {
-            // If an error occurs, then reset the timer so it doesn't continue to bother the user
-            timerRef.current.reset();
-
-            // If there was no response at all, then we couldn't connect to the service
-            if(!err.response) {
-                alert("Unable to connect to service to perform search.");
-            }
-
-            // If the service responded, and it's a 400, then the query was invalid
-            if(err.response && err.response.status === 400) {
-                alert(`Server returned 'Bad Request' while performing search with query '${query}'`);
-            }
-        })
-        .finally(() => {
-            setSearchInProgress(false);
-        })
-
-        // eslint-disable-next-line
-    }, [searchParams, searchPageParams, timerRef]);
-
-    const triggerSearch = useCallback(() => {
-        timerRef.current.reset();
-        timerRef.current.add(() => search()).start();
-        search();
-    }, [timerRef, search]);
-
-    // on initial render, add task to perform search periodically
-    useEffect(() => {
-        timerRef.current.add(search);
-        timerRef.current.start();
-
-        // Cleanup timer when component will unmount
-        return () => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            timerRef.current.reset();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // On changes to search or paging params, search and
-    // reset the timers
-    useEffect(() => {
-        triggerSearch();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchPageParams, triggerSearch]);
 
     // On changes to search params, reset the page to zero
     useEffect(() => {
@@ -182,8 +126,7 @@ const LogEntriesView = ({
                         searchResults,
                         searchInProgress,
                         currentLogEntry, setCurrentLogEntry,
-                        showFilters, setShowFilters,
-                        triggerSearch
+                        showFilters, setShowFilters
                     }}/>
                 </Col>
                 <Col  
