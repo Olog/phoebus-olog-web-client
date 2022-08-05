@@ -22,8 +22,9 @@ import Filters from '../Filters/Filters';
 import Col from 'react-bootstrap/Col';
 import { useDispatch } from 'react-redux';
 import { updateSearchParams } from '../../features/searchParamsReducer';
+import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 
-const CollapsibleFilters = ({logbooks, tags, showFilters, searchParams, searchPageParams, setSearchPageParams}) => {
+const CollapsibleFilters = ({logbooks, tags, showFilters, searchParams, searchPageParams}) => {
 
     const [tempSearchParams, setTempSearchParams] = useState({...searchParams});
     const [tempSearchPageParams, setTempSearchPageParams] = useState({...searchPageParams});
@@ -35,9 +36,8 @@ const CollapsibleFilters = ({logbooks, tags, showFilters, searchParams, searchPa
     }, [searchParams, searchPageParams])
 
     const submitSearchParams = () => {
-        // setSearchParams(tempSearchParams);
         dispatch(updateSearchParams(tempSearchParams));
-        setSearchPageParams(tempSearchPageParams);
+        dispatch(updateSearchPageParams(tempSearchPageParams));
     }
 
     return (

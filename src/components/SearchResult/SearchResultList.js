@@ -23,6 +23,8 @@ import SearchResultItem from './SearchResultItem';
 import LoadingOverlay from '../LoadingOverlay/LoadingOverlay';
 import SearchBox from './SearchBox';
 import PaginationBar from './PaginationBar';
+import { useDispatch } from 'react-redux';
+import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 
 /**
  * Pane showing search query input and a the list of log entries 
@@ -30,7 +32,7 @@ import PaginationBar from './PaginationBar';
  */
 const SearchResultList = ({
     searchParams,
-    searchPageParams, setSearchPageParams,
+    searchPageParams,
     searchResults,
     searchInProgress,
     currentLogEntry, setCurrentLogEntry,
@@ -39,6 +41,7 @@ const SearchResultList = ({
 
     const [pageCount, setPageCount] = useState(0);
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if(!searchResults){
@@ -54,7 +57,7 @@ const SearchResultList = ({
 
     useEffect(() => {
         const from = currentPageIndex * searchPageParams.size;
-        setSearchPageParams({...searchPageParams, from});
+        dispatch(updateSearchPageParams({...searchPageParams, from}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPageIndex]);
 
@@ -75,7 +78,7 @@ const SearchResultList = ({
             if(pageCount === 0){
                 return;
             }
-            setSearchPageParams({...searchPageParams, size: e.target.value})
+            dispatch(updateSearchPageParams({...searchPageParams, size: e.target.value}))
         } 
     }
     

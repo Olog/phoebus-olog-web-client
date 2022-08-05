@@ -32,6 +32,7 @@ import Cookies from 'universal-cookie';
 import CollapsibleFilters from '../Filters/CollapsibleFilters';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchParams } from '../../features/searchParamsReducer';
+import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 
 const LogEntriesView = ({
     tags, 
@@ -45,14 +46,10 @@ const LogEntriesView = ({
     const timerRef = useRef(new TaskTimer(customization.defaultSearchFrequency));
     const cookies = useMemo(() => new Cookies(), []);
     const [showFilters, setShowFilters] = useState(false);
-    const searchParams = useSelector(state => state.searchParams);
+    
     const dispatch = useDispatch();
-
-    const [searchPageParams, setSearchPageParams] = useState({
-        sort: "down",
-        from: 0,
-        size: customization.defaultPageSize
-    });
+    const searchParams = useSelector(state => state.searchParams);
+    const searchPageParams = useSelector(state => state.searchPageParams);
     const [searchResults, setSearchResults] = useState({
         logs: [],
         hitCount: 0
@@ -118,10 +115,10 @@ const LogEntriesView = ({
         }
         let searchPageParamsFromCookie = cookies.get(customization.searchPageParamsCookie);
         if(searchPageParamsFromCookie){
-            setSearchPageParams(searchPageParamsFromCookie);
+            dispatch(updateSearchPageParams(searchPageParamsFromCookie));
         }
         setStateLoaded(true);
-    }, [cookies]);
+    }, [cookies, dispatch]);
 
     // on initial render, add task to perform search periodically
     useEffect(() => {
@@ -147,7 +144,7 @@ const LogEntriesView = ({
 
     // On changes to search params, reset the page to zero
     useEffect(() => {
-        setSearchPageParams({...searchPageParams, from: 0})
+        dispatch(updateSearchPageParams({...searchPageParams, from: 0}))
         // Ignore warning about missing dependency; we do *not* want
         // to update searchPageParams when searchPageParams changes...
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -202,12 +199,12 @@ const LogEntriesView = ({
                     tags,
                     showFilters,
                     searchParams,
-                    searchPageParams, setSearchPageParams
+                    searchPageParams
                 }}/>
                 <Col xs={{span: '12', order: 2}} lg={{span: 4, order: 2}} className="h-100 p-1">
                     <SearchResultList {...{
                         searchParams,
-                        searchPageParams, setSearchPageParams,
+                        searchPageParams,
                         searchResults,
                         searchInProgress,
                         currentLogEntry, setCurrentLogEntry,
