@@ -23,10 +23,13 @@ import Form from 'react-bootstrap/Form';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import {searchParamsToQueryString, queryStringToSearchParameters} from '../../utils/searchParams';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { useDispatch } from "react-redux";
+import { updateSearchParams } from "../../features/searchParamsReducer";
 
-const SearchBoxInput = ({searchParams, setSearchParams, showFilters}) => {
+const SearchBoxInput = ({searchParams, showFilters}) => {
 
     const [searchString, setSearchString] = useState("");
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if(searchParams) {
@@ -40,7 +43,7 @@ const SearchBoxInput = ({searchParams, setSearchParams, showFilters}) => {
 
     const onKeyDown = (event) => {
         if(event.key === 'Enter') {
-            setSearchParams(queryStringToSearchParameters(searchString));
+            dispatch(updateSearchParams(queryStringToSearchParameters(searchString)));
         }
     }
 

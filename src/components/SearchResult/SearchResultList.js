@@ -29,7 +29,7 @@ import PaginationBar from './PaginationBar';
  * matching the query. 
  */
 const SearchResultList = ({
-    searchParams, setSearchParams,
+    searchParams,
     searchPageParams, setSearchPageParams,
     searchResults,
     searchInProgress,
@@ -92,7 +92,7 @@ const SearchResultList = ({
         <Container fluid className="grid-item h-100 p-0" >
             <Row noGutters className='h-100 flex-column'>
                 <Col sm='auto' >
-                    <SearchBox {...{searchParams, setSearchParams, showFilters, setShowFilters}} />
+                    <SearchBox {...{searchParams, showFilters, setShowFilters}} />
                 </Col>
                 <Col >
                     <LoadingOverlay

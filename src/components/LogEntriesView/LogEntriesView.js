@@ -30,6 +30,8 @@ import { ologClientInfoHeader } from '../../utils/utils';
 import { TaskTimer } from 'tasktimer';
 import Cookies from 'universal-cookie';
 import CollapsibleFilters from '../Filters/CollapsibleFilters';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateSearchParams } from '../../features/searchParamsReducer';
 
 const LogEntriesView = ({
     tags, 
@@ -43,7 +45,9 @@ const LogEntriesView = ({
     const timerRef = useRef(new TaskTimer(customization.defaultSearchFrequency));
     const cookies = useMemo(() => new Cookies(), []);
     const [showFilters, setShowFilters] = useState(false);
-    const [searchParams, setSearchParams] = useState({...customization.defaultSearchParams});
+    const searchParams = useSelector(state => state.searchParams);
+    const dispatch = useDispatch();
+
     const [searchPageParams, setSearchPageParams] = useState({
         sort: "down",
         from: 0,
@@ -110,7 +114,7 @@ const LogEntriesView = ({
     useEffect(() => {
         let searchParamsFromCookie = cookies.get(customization.searchParamsCookie);
         if(searchParamsFromCookie){
-            setSearchParams(searchParamsFromCookie);
+            dispatch(updateSearchParams(searchParamsFromCookie))
         }
         let searchPageParamsFromCookie = cookies.get(customization.searchPageParamsCookie);
         if(searchPageParamsFromCookie){
@@ -197,12 +201,12 @@ const LogEntriesView = ({
                     logbooks,
                     tags,
                     showFilters,
-                    searchParams, setSearchParams,
+                    searchParams,
                     searchPageParams, setSearchPageParams
                 }}/>
                 <Col xs={{span: '12', order: 2}} lg={{span: 4, order: 2}} className="h-100 p-1">
                     <SearchResultList {...{
-                        searchParams, setSearchParams,
+                        searchParams,
                         searchPageParams, setSearchPageParams,
                         searchResults,
                         searchInProgress,
