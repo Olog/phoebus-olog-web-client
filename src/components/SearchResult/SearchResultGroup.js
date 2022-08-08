@@ -34,7 +34,6 @@ class SearchResultGroup extends Component{
                         childItem={true}
                         key={index} 
                         log={row} 
-                        setCurrentLogEntry={this.props.setCurrentLogEntry}
                         selectedLogEntryId={this.props.selectedLogEntryId}/>
                 )
             });
@@ -45,7 +44,6 @@ class SearchResultGroup extends Component{
                             childItem={false}
                             key={this.props.logEntries.getParent().id} 
                             log={this.props.logEntries.getParent()} 
-                            setCurrentLogEntry={this.props.setCurrentLogEntry}
                             selectedLogEntryId={this.props.selectedLogEntryId}/>
                 <ListGroup className="olog-ul">{childItems}</ListGroup>
             

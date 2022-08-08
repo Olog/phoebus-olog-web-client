@@ -38,13 +38,13 @@ import Select from 'react-select';
 import { useState } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const EntryEditor = ({
     tags,
     logbooks,
     replyAction,
-    userData, setUserData,
-    currentLogEntry
+    userData, setUserData
 }) => {
 
     const [selectedLogbooks, setSelectedLogbooks] = useState([]);
@@ -58,6 +58,7 @@ const EntryEditor = ({
     const [availableProperties, setAvailableProperties] = useState([]);
     const [showHtmlPreview, setShowHtmlPreview] = useState(false);
     const [createInProgress, setCreateInProgress] = useState(false);
+    const currentLogEntry = useSelector(state => state.currentLogEntry);
 
     const fileInputRef = useRef();
     const titleRef = useRef();

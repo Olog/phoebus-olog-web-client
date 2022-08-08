@@ -17,10 +17,14 @@
  */
 import Table from 'react-bootstrap/Table';
 import { FaPaperclip } from "react-icons/fa";
+import { useDispatch } from 'react-redux';
 import '../../css/olog.css';
+import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
 import { formatFullDateTime, getLogEntryGroupId } from '../../utils/utils';
 
-const SearchResultItem = ({log, currentLogEntry, setCurrentLogEntry}) => {
+const SearchResultItem = ({log, currentLogEntry}) => {
+
+    const dispatch = useDispatch();
 
     const formatDescription = (description) => {
         let length = 75;
@@ -38,7 +42,7 @@ const SearchResultItem = ({log, currentLogEntry, setCurrentLogEntry}) => {
             return (
                 <div 
                     className={`${currentLogEntry && currentLogEntry.id === log.id ? "list-item selected-log-entry" : "list-item"}`}
-                    onClick={() => setCurrentLogEntry(log)}
+                    onClick={() => dispatch(updateCurrentLogEntry(log))}
                 >
                     <Table size="sm" >
                         <tbody>

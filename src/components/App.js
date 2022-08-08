@@ -27,6 +27,7 @@ import EntryEditor from './EntryEditor/EntryEditor';
 import LogEntriesView from './LogEntriesView/LogEntriesView';
 import ologService from '../api/olog-service';
 import { Col, Container, Row } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 
 /**
  * Entry point component.
@@ -40,7 +41,7 @@ const App = () => {
     const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
     const [showGroup, setShowGroup] = useState(false);
-    const [currentLogEntry, setCurrentLogEntry] = useState(null);
+    const currentLogEntry = useSelector(state => state.currentLogEntry);
 
     const refreshLogbooks = useCallback(() => {
         ologService.get('/logbooks')
@@ -65,6 +66,7 @@ const App = () => {
         refreshTags();
     }, [refreshLogbooks, refreshTags]);
 
+    // todo: move showGroup to reducer, and trigger this via extraReducers in currentLogEntryReducer
     useEffect(() => {
         setShowGroup(false);
     }, [currentLogEntry])
@@ -93,7 +95,7 @@ const App = () => {
                                         userData,
                                         setReplyAction, 
                                         showGroup, setShowGroup,
-                                        currentLogEntry, setCurrentLogEntry
+                                        currentLogEntry
                                     }}/>
                                 } />
                                 <Route exact path="/logs/:id" element={
@@ -103,7 +105,7 @@ const App = () => {
                                         userData,
                                         setReplyAction, 
                                         showGroup, setShowGroup,
-                                        currentLogEntry, setCurrentLogEntry
+                                        currentLogEntry
                                     }}/>
                                 } />
                                 <Route path="/edit" element={
@@ -111,8 +113,7 @@ const App = () => {
                                         tags,
                                         logbooks,
                                         replyAction,
-                                        userData, setUserData,
-                                        currentLogEntry
+                                        userData, setUserData
                                     }}/>
                                 } />
                             </Routes>

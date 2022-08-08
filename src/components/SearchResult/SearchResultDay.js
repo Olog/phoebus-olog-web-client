@@ -32,7 +32,6 @@ class SearchResultDay extends Component{
                 <SearchResultItem  
                     key={index} 
                     log={row} 
-                    setCurrentLogEntry={this.props.setCurrentLogEntry}
                     selectedLogEntryId={this.props.selectedLogEntryId}/>
             )
         })

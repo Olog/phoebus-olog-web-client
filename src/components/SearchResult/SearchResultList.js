@@ -35,7 +35,7 @@ const SearchResultList = ({
     searchPageParams,
     searchResults,
     searchInProgress,
-    currentLogEntry, setCurrentLogEntry,
+    currentLogEntry,
     showFilters, setShowFilters
 }) => {
 
@@ -63,7 +63,7 @@ const SearchResultList = ({
 
     const goToPage = (pageNumber) => {
         if(pageNumber >= 0) {
-            setCurrentPageIndex(pageNumber)
+            setCurrentPageIndex(pageNumber);
         };
     }
 
@@ -87,7 +87,6 @@ const SearchResultList = ({
                     key={index}
                     log={item}
                     currentLogEntry={currentLogEntry}
-                    setCurrentLogEntry={setCurrentLogEntry}
                 />
     });
 

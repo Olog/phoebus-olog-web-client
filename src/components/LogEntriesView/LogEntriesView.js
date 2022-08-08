@@ -29,6 +29,7 @@ import CollapsibleFilters from '../Filters/CollapsibleFilters';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 import { useSearchLogsQuery } from '../../services/ologApi';
+import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
 
 const LogEntriesView = ({
     tags, 
@@ -36,7 +37,7 @@ const LogEntriesView = ({
     userData,
     setReplyAction, 
     showGroup, setShowGroup,
-    currentLogEntry, setCurrentLogEntry
+    currentLogEntry
 }) => {
 
     const [showFilters, setShowFilters] = useState(false);
@@ -73,14 +74,14 @@ const LogEntriesView = ({
         if(logId > 0) {
             ologService.get(`/logs/${logId}`)
             .then(res => {
-                setCurrentLogEntry(res.data);
+                dispatch(updateCurrentLogEntry(res.data));
             })
             .catch(e => {
                 console.error(`Could not find log id ${logId}`, e);
-                setCurrentLogEntry(null);
+                dispatch(updateCurrentLogEntry(null));
             })
         }
-    }, [logId, setCurrentLogEntry])
+    }, [logId, dispatch])
 
     const renderLogEntryDetails = () => {
         
@@ -88,7 +89,7 @@ const LogEntriesView = ({
             return (
                 <LogDetails {...{
                     showGroup, setShowGroup, 
-                    currentLogEntry, setCurrentLogEntry, 
+                    currentLogEntry, 
                     logGroupRecords, setLogGroupRecords, 
                     userData, 
                     setReplyAction,
@@ -125,7 +126,7 @@ const LogEntriesView = ({
                         searchPageParams,
                         searchResults,
                         searchInProgress,
-                        currentLogEntry, setCurrentLogEntry,
+                        currentLogEntry,
                         showFilters, setShowFilters
                     }}/>
                 </Col>

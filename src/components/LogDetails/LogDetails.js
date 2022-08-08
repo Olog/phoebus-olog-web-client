@@ -39,7 +39,7 @@ import NavigationButtons from './NavigationButtons';
 // class LogDetails extends Component{
 const LogDetails = ({
     showGroup, setShowGroup, 
-    currentLogEntry, setCurrentLogEntry, 
+    currentLogEntry,
     logGroupRecords, setLogGroupRecords, 
     userData, 
     setReplyAction,
@@ -72,7 +72,7 @@ const LogDetails = ({
         {currentLogEntry &&
             <Container className="grid-item full-height">
                 <NavigationButtons {...{
-                    currentLogEntry, setCurrentLogEntry,
+                    currentLogEntry,
                     searchResults
                 }}/>
                 {/* Site may choose to not support log entry groups */}
@@ -109,7 +109,7 @@ const LogDetails = ({
                 {showGroup &&
                     <LogEntryGroupView {...{
                         showGroup, setShowGroup, 
-                        currentLogEntry, setCurrentLogEntry, 
+                        currentLogEntry,
                         userData, 
                         setReplyAction, 
                         logGroupRecords, setLogGroupRecords, 
