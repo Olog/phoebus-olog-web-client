@@ -40,7 +40,6 @@ const App = () => {
     const [replyAction, setReplyAction] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
-    const [showGroup, setShowGroup] = useState(false);
     const currentLogEntry = useSelector(state => state.currentLogEntry);
 
     const refreshLogbooks = useCallback(() => {
@@ -64,12 +63,7 @@ const App = () => {
     useEffect(() => {
         refreshLogbooks();
         refreshTags();
-    }, [refreshLogbooks, refreshTags]);
-
-    // todo: move showGroup to reducer, and trigger this via extraReducers in currentLogEntryReducer
-    useEffect(() => {
-        setShowGroup(false);
-    }, [currentLogEntry])
+    }, [refreshLogbooks, refreshTags]);    
 
     return(
         <>
@@ -94,7 +88,6 @@ const App = () => {
                                         logbooks,
                                         userData,
                                         setReplyAction, 
-                                        showGroup, setShowGroup,
                                         currentLogEntry
                                     }}/>
                                 } />
@@ -104,7 +97,6 @@ const App = () => {
                                         logbooks,
                                         userData,
                                         setReplyAction, 
-                                        showGroup, setShowGroup,
                                         currentLogEntry
                                     }}/>
                                 } />

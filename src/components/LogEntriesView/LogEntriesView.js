@@ -36,11 +36,11 @@ const LogEntriesView = ({
     logbooks, 
     userData,
     setReplyAction, 
-    showGroup, setShowGroup,
     currentLogEntry
 }) => {
 
     const [showFilters, setShowFilters] = useState(false);
+    const [showGroup, setShowGroup] = useState(false);
     
     const dispatch = useDispatch();
     const searchParams = useSelector(state => state.searchParams);
@@ -82,6 +82,11 @@ const LogEntriesView = ({
             })
         }
     }, [logId, dispatch])
+
+    // 
+    useEffect(() => {
+        setShowGroup(false);
+    }, [currentLogEntry])
 
     const renderLogEntryDetails = () => {
         
