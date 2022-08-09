@@ -54,7 +54,7 @@ const LogEntriesView = ({
         isLoading: searchInProgress 
     } = useSearchLogsQuery({searchParams, searchPageParams}, {pollingInterval: customization.defaultSearchFrequency});
     if(error) {
-        console.log("An error occurred while fetching search results", error);
+        console.error("An error occurred while fetching search results", error);
     }
 
     const [logGroupRecords, setLogGroupRecords] = useState([]);

@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter,
   Route,
@@ -25,9 +25,9 @@ import {
 import Banner from './Banner/Banner';
 import EntryEditor from './EntryEditor/EntryEditor';
 import LogEntriesView from './LogEntriesView/LogEntriesView';
-import ologService from '../api/olog-service';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { useGetLogbooksQuery, useGetTagsQuery } from '../services/ologApi';
 
 /**
  * Entry point component.
@@ -35,35 +35,19 @@ import { useSelector } from 'react-redux';
 const App = () => {
 
     const [userData, setUserData] = useState({userName: "", roles: []});
-    const [logbooks, setLogbooks] = useState([]);
-    const [tags, setTags] = useState([]);
+    const {data: tags = [], error: tagsError} = useGetTagsQuery();
+    const {data: logbooks = [], error: logbooksError} = useGetLogbooksQuery();
     const [replyAction, setReplyAction] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
     const currentLogEntry = useSelector(state => state.currentLogEntry);
 
-    const refreshLogbooks = useCallback(() => {
-        ologService.get('/logbooks')
-        .then(res => setLogbooks(res.data))
-        .catch((e) => {
-            console.error("Unable to fetch logbooks", e);
-            setLogbooks([]);
-        });
-    }, []);
-    
-    const refreshTags = useCallback(() => {
-        ologService.get('/tags')
-            .then(res => setTags(res.data))
-            .catch((e) => {
-                console.error("Unable to fetch tags", e);
-                setTags([]);
-            });
-    }, []);
-
-    useEffect(() => {
-        refreshLogbooks();
-        refreshTags();
-    }, [refreshLogbooks, refreshTags]);    
+    if(tagsError) {
+        console.error("Unable to fetch tags", tagsError);
+    }
+    if(logbooksError) {
+        console.error("Unable to fetch tags", logbooksError);
+    }
 
     return(
         <>
@@ -72,8 +56,6 @@ const App = () => {
                     <Row noGutters className='h-100 flex-column'>
                         <Col sm={'auto'}>
                             <Banner {...{
-                                refreshLogbooks,
-                                refreshTags,
                                 showLogin, setShowLogin,
                                 showLogout, setShowLogout,
                                 userData, setUserData,
