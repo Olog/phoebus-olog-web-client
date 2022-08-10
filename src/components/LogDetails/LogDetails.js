@@ -70,7 +70,7 @@ const LogDetails = ({
         {/* Render only if currentLogRecord is defined, i.e. when user has selected from search result list,
         or if the route is of the type /logs/:id */}
         {currentLogEntry &&
-            <Container className="grid-item full-height">
+            <Container className="grid-item full-height" fluid >
                 <NavigationButtons {...{
                     currentLogEntry,
                     searchResults
