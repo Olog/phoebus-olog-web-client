@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 import { useSearchLogsQuery } from '../../services/ologApi';
 import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
+import ErrorBanner from '../ErrorBanner/ErrorBanner';
 
 const LogEntriesView = ({
     tags, 
@@ -50,11 +51,11 @@ const LogEntriesView = ({
             logs: [],
             hitCount: 0
         },
-        error, 
+        error: searchResultError, 
         isLoading: searchInProgress 
     } = useSearchLogsQuery({searchParams, searchPageParams}, {pollingInterval: customization.defaultSearchFrequency});
-    if(error) {
-        console.error("An error occurred while fetching search results", error);
+    if(searchResultError) {
+        console.error("An error occurred while fetching search results", searchResultError);
     }
 
     const [logGroupRecords, setLogGroupRecords] = useState([]);
@@ -117,6 +118,11 @@ const LogEntriesView = ({
 
     return (
         <Container fluid className="h-100">
+            {searchResultError && 
+                <Row>
+                    <ErrorBanner title="Search Error" error={searchResultError} />
+                </Row>
+            }
             <Row className="h-100">
                 <CollapsibleFilters {...{
                     logbooks,
