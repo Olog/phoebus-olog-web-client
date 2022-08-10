@@ -20,21 +20,21 @@ import Button from 'react-bootstrap/Button';
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useNavigate } from 'react-router-dom';
 
 const NavigationButtons = ({
     currentLogEntry, setCurrentLogEntry,
     searchResults
 }) => { 
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const [previousLogEntry, setPreviousLogEntry] = useState();
     const [nextLogEntry, setNextLogEntry] = useState();
 
     const navigateToLogEntry = (logEntry) => {
         if(logEntry) {
             setCurrentLogEntry(logEntry);
-            history.push('/logs/' + logEntry.id);
+            navigate('/logs/' + logEntry.id);
         }
     };
 
