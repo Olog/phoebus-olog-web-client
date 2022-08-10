@@ -30,7 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 import { useSearchLogsQuery } from '../../services/ologApi';
 import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
-import ErrorBanner from '../ErrorBanner/ErrorBanner';
+import ServiceErrorBanner from '../ErrorBanner/ServiceErrorBanner';
 
 const LogEntriesView = ({
     tags, 
@@ -120,7 +120,7 @@ const LogEntriesView = ({
         <Container fluid className="h-100">
             {searchResultError && 
                 <Row>
-                    <ErrorBanner title="Search Error" error={searchResultError} />
+                    <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError} />
                 </Row>
             }
             <Row className="h-100">

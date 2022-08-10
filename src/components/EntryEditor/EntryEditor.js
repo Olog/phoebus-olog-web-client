@@ -56,7 +56,7 @@ const EntryEditor = ({
     const [selectedProperties, setSelectedProperties] = useState([]);
     const [showAddProperty, setShowAddProperty] = useState(false);
     const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
-    const {data: availableProperties, error: propertiesError} = useGetPropertiesQuery();
+    const {data: availableProperties} = useGetPropertiesQuery();
     const [showHtmlPreview, setShowHtmlPreview] = useState(false);
     const [createInProgress, setCreateInProgress] = useState(false);
     const currentLogEntry = useSelector(state => state.currentLogEntry);

@@ -1,13 +1,13 @@
 import { Alert } from "react-bootstrap";
 
-const ErrorBanner = ({title, error}) => {
+const ServiceErrorBanner = ({title, error, serviceName="underlying"}) => {
 
     let message = "An unhandled error occured";
     let variant = "danger";
     
     if(error.status === 'FETCH_ERROR') {
         variant = "warning";
-        message = "Could not reach the underlying service";
+        message = `Could not reach the ${serviceName} service`;
         console.warn(message, error);
     } else {
         console.error(message, error);
@@ -22,4 +22,4 @@ const ErrorBanner = ({title, error}) => {
 
 }
 
-export default ErrorBanner;
+export default ServiceErrorBanner;
