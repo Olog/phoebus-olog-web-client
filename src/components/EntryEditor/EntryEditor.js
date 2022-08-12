@@ -38,13 +38,14 @@ import Select from 'react-select';
 import { useState } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useGetPropertiesQuery } from '../../services/ologApi.js';
 
 const EntryEditor = ({
     tags,
     logbooks,
     replyAction,
-    userData, setUserData,
-    currentLogEntry
+    userData, setUserData
 }) => {
 
     const [selectedLogbooks, setSelectedLogbooks] = useState([]);
@@ -55,9 +56,10 @@ const EntryEditor = ({
     const [selectedProperties, setSelectedProperties] = useState([]);
     const [showAddProperty, setShowAddProperty] = useState(false);
     const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
-    const [availableProperties, setAvailableProperties] = useState([]);
+    const {data: availableProperties} = useGetPropertiesQuery();
     const [showHtmlPreview, setShowHtmlPreview] = useState(false);
     const [createInProgress, setCreateInProgress] = useState(false);
+    const currentLogEntry = useSelector(state => state.currentLogEntry);
 
     const fileInputRef = useRef();
     const titleRef = useRef();
@@ -77,8 +79,6 @@ const EntryEditor = ({
             titleRef.current.value = currentLogEntry.title;
         }
 
-        getAvailableProperties();
-
     }, [replyAction, currentLogEntry]);
 
     // The below will ensure that when user has selected Reply and then New Log Entry,
@@ -94,15 +94,6 @@ const EntryEditor = ({
         }
         
     }, [replyAction])
-
-    const getAvailableProperties = () => {
-        ologService.get("/properties")
-            .then(res =>  setAvailableProperties(res.data))
-            .catch(e => {
-                console.error("Could not fetch properties", e);
-                setAvailableProperties([]);
-            })
-    }
 
     const logbookSelectionChanged = (selection) => {
         if(selection) {

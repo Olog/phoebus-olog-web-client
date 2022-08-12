@@ -16,56 +16,53 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
- import React, { Component } from 'react';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import ologService from '../../api/olog-service';
- import '../../css/olog.css';
- import {getLogEntryGroupId, sortLogsDateCreated} from '../../utils/utils';
- import GroupHeader from './GroupHeader';
+import '../../css/olog.css';
+import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
+import {getLogEntryGroupId, sortLogsDateCreated} from '../../utils/utils';
+import GroupHeader from './GroupHeader';
  
  /**
  * Merged view of all log entries 
  */
-class LogEntryGroupView extends Component{
+const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLogGroupRecords}) => {
 
-    componentDidMount = () => {
-        this.search();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        ologService.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(currentLogEntry.properties)}`)
+        .then(res => {
+            let sortedResult = sortLogsDateCreated(res.data, false);
+            setLogGroupRecords(sortedResult);
+        })
+        .catch(e => console.error("Could not fetch logs by group", e));
+    });
+
+    const getContent = (source) => {
+        return {__html: remarkable.render(source)};
     }
 
-    getContent = (source) => {
-        return {__html: this.props.remarkable.render(source)};
+    const showLog = (log) => {
+        dispatch(updateCurrentLogEntry(log));
     }
 
-    showLog = (log) => {
-        this.props.setCurrentLogEntry(log);
-    }
-
-    search = () => {
-        ologService.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(this.props.currentLogEntry.properties)}`)
-            .then(res => {
-                let sortedResult = sortLogsDateCreated(res.data, false);
-                this.props.setLogGroupRecords(sortedResult);
-            })
-            .catch(e => console.error("Could not fetch logs by group", e));
-    }
-
-    render(){
-
-        var logGroupItems = this.props.logGroupRecords.map((row, index) => {
-            return(
-                <div key={index} style={{cursor: 'pointer'}}>
-                    <GroupHeader logEntry={row} showLog={this.showLog}/>
-                    <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
-                                    dangerouslySetInnerHTML={this.getContent(row.source)}/>
-                </div>
-            );
-        });
-    
+    const logGroupItems = logGroupRecords.map((row, index) => {
         return(
-            <>
-                {logGroupItems}
-            </>
+            <div key={index} style={{cursor: 'pointer'}}>
+                <GroupHeader logEntry={row} showLog={showLog}/>
+                <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
+                                dangerouslySetInnerHTML={getContent(row.source)}/>
+            </div>
         );
-    }
+    });
+
+    return(
+        <>
+            {logGroupItems}
+        </>
+    );
     
 }
 

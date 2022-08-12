@@ -83,10 +83,10 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
 
     const inputChangedArray = (arr, key) => {
         let copy = {...searchParams}
-        if(arr) {
+        if(arr && arr.length > 0) {
             copy[key] = arr;
         } else {
-            delete copy[arr];
+            delete copy[key];
         }
         setSearchParams(copy);
         setTriggerSubmit(true);
