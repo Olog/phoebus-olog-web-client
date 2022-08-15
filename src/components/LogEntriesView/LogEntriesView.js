@@ -115,9 +115,7 @@ const LogEntriesView = ({
             
         }
     };
-
-    console.log({searchInProgress, searchResults});
-
+    
     return (
         <Container fluid className="h-100">
             {searchResultError && 
