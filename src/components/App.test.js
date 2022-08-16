@@ -2,6 +2,7 @@ import { server } from '../mocks/server';
 import { rest } from 'msw';
 import { renderWithProviders } from '../utils/test-utils';
 import App from './App';
+import { fireEvent } from '@testing-library/react';
 
 it('renders without crashing', async () => {
     renderWithProviders(<App />);
@@ -75,3 +76,64 @@ it("displays username and allows creating log entries when signed in", async () 
     expect(await findByText(/New Log Entry/i)).toBeEnabled();
 
 });
+
+it("allows user to manually enter search terms", async () => {
+
+    // Given app is rendered with default search results
+    const {findByText, findByDisplayValue} = renderWithProviders(<App />);
+    expect(await findByText("example entry")).toBeInTheDocument();
+
+    // When user hits enter
+    fireEvent.keyDown(
+        await findByDisplayValue(/start=12/),
+        {key: 'Enter', code: 'Enter'}
+    );
+
+    // Then those search results are still there / unchanged
+    expect(await findByText("example entry")).toBeInTheDocument();
+
+    // When user locates text search bar,
+    // enters new search terms,
+    // and presses enter
+    // (and we expect different results from the server)
+    server.use(
+        rest.get('*/logs/search', (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    hitCount: 1,
+                    logs: [
+                        {
+                            "id": 45,
+                            "owner": "jones",
+                            "source": "hmmm",
+                            "description": "hmmm",
+                            "title": "hmmm title",
+                            "level": "Normal",
+                            "state": "Active",
+                            "createdDate": 1656599929021,
+                            "modifyDate": null,
+                            "events": null,
+                            "logbooks": [],
+                            "tags": [],
+                            "properties": [],
+                            "attachments": []
+                        }
+                    ]
+                })
+            );
+        })
+    )
+    fireEvent.input(
+        await findByDisplayValue(/start=12/),
+        {target: { value: 'start=987654321' }}
+    )
+    fireEvent.keyDown(
+        await findByDisplayValue(/start=987654321/),
+        {key: 'Enter', code: 'Enter'}
+    );
+
+    // then the results are updated
+    expect(await findByText("hmmm title")).toBeInTheDocument();
+
+});
+
