@@ -41,7 +41,7 @@ const SearchBox = ({searchParams, showFilters, setShowFilters}) => {
         < Form style={{paddingTop: "5px"}} onSubmit={(e) => submit(e)}>
             <Form.Row>
                 <Col style={{flexGrow: "0"}}>
-                    <Button size="sm" onClick={() => toggleFilters()}>{showFilters ? ">" : "<"}</Button>
+                    <Button size="sm" onClick={() => toggleFilters()} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</Button>
                 </Col>
                 <Col style={{paddingLeft: "0px"}}>
                 <SearchBoxInput
