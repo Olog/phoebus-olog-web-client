@@ -40,5 +40,39 @@ export const defaultHandlers = [
                 ]
             })
         );
+    }),
+    rest.get('*/tags', (req, res, ctx) => {
+        return res(
+            ctx.json([
+                {
+                    "name": "bar",
+                    "state": "Active"
+                },
+                {
+                    "name": "baz",
+                    "state": "Active"
+                },
+                {
+                    "name": "foo",
+                    "state": "Active"
+                }
+            ])
+        )
+    }),
+    rest.get('*/logbooks', (req, res, ctx) => {
+        return res(
+            ctx.json([
+                {
+                    "name": "controls",
+                    "owner": null,
+                    "state": "Active"
+                },
+                {
+                    "name": "operations",
+                    "owner": "olog-logs",
+                    "state": "Active"
+                }
+            ])
+        )
     })
 ];

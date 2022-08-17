@@ -137,3 +137,53 @@ it("allows user to manually enter search terms", async () => {
 
 });
 
+it("allows user to search with search filter bar", async () => {
+
+    // Given app is rendered with default search results
+    const {findByText, findByLabelText, findByTestId} = renderWithProviders(<App />);
+    expect(await findByText("example entry")).toBeInTheDocument();
+
+    // When user opens the filter bar, updates the query, and closes it
+    // (and we expect different results from the server)
+    server.use(
+        rest.get('*/logs/search', (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    hitCount: 1,
+                    logs: [
+                        {
+                            "id": 45,
+                            "owner": "jones",
+                            "source": "hmmm",
+                            "description": "hmmm",
+                            "title": "hmmm title",
+                            "level": "Normal",
+                            "state": "Active",
+                            "createdDate": 1656599929021,
+                            "modifyDate": null,
+                            "events": null,
+                            "logbooks": [],
+                            "tags": [],
+                            "properties": [],
+                            "attachments": []
+                        }
+                    ]
+                })
+            );
+        })
+    )
+    fireEvent.click(
+        await findByLabelText(/Show Search Filters/i)
+    )
+    fireEvent.input(
+        await findByTestId('title-input'),
+        {target: {value: 'some value'}}
+    )
+    fireEvent.click(
+        await findByLabelText(/Show Search Filters/i)
+    )
+
+    // then the results are updated
+    expect(await findByText("hmmm title")).toBeInTheDocument();
+
+});
