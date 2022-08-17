@@ -21,8 +21,6 @@ import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import {Link} from "react-router-dom";
-import AddLogbookDialog from './AddLogbookDialog';
-import AddTagDialog from '../Tags/AddTagDialog';
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
 import { checkSession } from '../../api/olog-service';
@@ -121,13 +119,6 @@ class Banner extends Component {
                         setShowLogout={this.props.setShowLogout} 
                         logoutDialogVisible={this.props.showLogout}/>
 
-        <AddLogbookDialog addLogbookDialogVisible={this.state.showAddLogbook} 
-                        setShowAddLogbook={this.setShowAddLogbook} 
-                        refreshLogbooks={this.props.refreshLogbooks}/>
-
-        <AddTagDialog addTagDialogVisible={this.state.showAddTag} 
-                setShowAddTag={this.setShowAddTag} 
-                refreshTags={this.props.refreshTags}/>
       </>
     )
   }

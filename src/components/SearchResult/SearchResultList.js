@@ -23,22 +23,25 @@ import SearchResultItem from './SearchResultItem';
 import LoadingOverlay from '../LoadingOverlay/LoadingOverlay';
 import SearchBox from './SearchBox';
 import PaginationBar from './PaginationBar';
+import { useDispatch } from 'react-redux';
+import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 
 /**
  * Pane showing search query input and a the list of log entries 
  * matching the query. 
  */
 const SearchResultList = ({
-    searchParams, setSearchParams,
-    searchPageParams, setSearchPageParams,
+    searchParams,
+    searchPageParams,
     searchResults,
     searchInProgress,
-    currentLogEntry, setCurrentLogEntry,
+    currentLogEntry,
     showFilters, setShowFilters
 }) => {
 
     const [pageCount, setPageCount] = useState(0);
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if(!searchResults){
@@ -54,13 +57,13 @@ const SearchResultList = ({
 
     useEffect(() => {
         const from = currentPageIndex * searchPageParams.size;
-        setSearchPageParams({...searchPageParams, from});
+        dispatch(updateSearchPageParams({...searchPageParams, from}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPageIndex]);
 
     const goToPage = (pageNumber) => {
         if(pageNumber >= 0) {
-            setCurrentPageIndex(pageNumber)
+            setCurrentPageIndex(pageNumber);
         };
     }
 
@@ -75,7 +78,7 @@ const SearchResultList = ({
             if(pageCount === 0){
                 return;
             }
-            setSearchPageParams({...searchPageParams, size: e.target.value})
+            dispatch(updateSearchPageParams({...searchPageParams, size: e.target.value}))
         } 
     }
     
@@ -84,7 +87,6 @@ const SearchResultList = ({
                     key={index}
                     log={item}
                     currentLogEntry={currentLogEntry}
-                    setCurrentLogEntry={setCurrentLogEntry}
                 />
     });
 
@@ -92,7 +94,7 @@ const SearchResultList = ({
         <Container fluid className="grid-item h-100 p-0" >
             <Row noGutters className='h-100 flex-column'>
                 <Col sm='auto' >
-                    <SearchBox {...{searchParams, setSearchParams, showFilters, setShowFilters}} />
+                    <SearchBox {...{searchParams, showFilters, setShowFilters}} />
                 </Col>
                 <Col >
                     <LoadingOverlay

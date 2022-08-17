@@ -19,7 +19,7 @@
 import { Form, Col, Button } from "react-bootstrap"
 import SearchBoxInput from "./SearchBoxInput"
 
-const SearchBox = ({searchParams, setSearchParams, showFilters, setShowFilters}) => {
+const SearchBox = ({searchParams, showFilters, setShowFilters}) => {
     
     const toggleFilters = () => {
         setShowFilters(!showFilters)
@@ -45,7 +45,7 @@ const SearchBox = ({searchParams, setSearchParams, showFilters, setShowFilters})
                 </Col>
                 <Col style={{paddingLeft: "0px"}}>
                 <SearchBoxInput
-                    {...{searchParams, setSearchParams, showFilters}}
+                    {...{searchParams, showFilters}}
                 />
                 </Col>
                 <Col style={{flexGrow: "0" }}>
