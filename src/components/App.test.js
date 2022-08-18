@@ -3,6 +3,7 @@ import { rest } from 'msw';
 import { renderWithProviders } from '../utils/test-utils';
 import App from './App';
 import { fireEvent } from '@testing-library/react';
+import selectEvent from 'react-select-event';
 
 it('renders without crashing', async () => {
     renderWithProviders(<App />);
@@ -182,6 +183,100 @@ it("allows user to search with search filter bar", async () => {
     fireEvent.click(
         await findByLabelText(/Show Search Filters/i)
     )
+
+    // then the results are updated
+    expect(await findByText("hmmm title")).toBeInTheDocument();
+
+});
+
+it("updates search results instantly from the search filter bar for tags", async () => {
+
+    // Given app is rendered with default search results
+    const {findByText, findByLabelText} = renderWithProviders(<App />);
+    expect(await findByText("example entry")).toBeInTheDocument();
+
+    // When user opens the filter bar, updates the query, and closes it
+    // (and we expect different results from the server)
+    server.use(
+        rest.get('*/logs/search', (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    hitCount: 1,
+                    logs: [
+                        {
+                            "id": 45,
+                            "owner": "jones",
+                            "source": "hmmm",
+                            "description": "hmmm",
+                            "title": "hmmm title",
+                            "level": "Normal",
+                            "state": "Active",
+                            "createdDate": 1656599929021,
+                            "modifyDate": null,
+                            "events": null,
+                            "logbooks": [],
+                            "tags": [],
+                            "properties": [],
+                            "attachments": []
+                        }
+                    ]
+                })
+            );
+        })
+    )
+    fireEvent.click(
+        await findByLabelText(/Show Search Filters/i)
+    )
+    // fireEvent.input(
+    //     await findByLabelText(/Tags/i),
+    //     {target: {value: {value: 'foo'} }}
+    // )
+    await selectEvent.select(await findByLabelText(/Tags/i), ['foo']);
+
+    // then the results are updated
+    expect(await findByText("hmmm title")).toBeInTheDocument();
+
+});
+
+it("updates search results instantly from the search filter bar for logbooks", async () => {
+
+    // Given app is rendered with default search results
+    const {findByText, findByLabelText} = renderWithProviders(<App />);
+    expect(await findByText("example entry")).toBeInTheDocument();
+
+    // When user opens the filter bar, updates the query, and closes it
+    // (and we expect different results from the server)
+    server.use(
+        rest.get('*/logs/search', (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    hitCount: 1,
+                    logs: [
+                        {
+                            "id": 45,
+                            "owner": "jones",
+                            "source": "hmmm",
+                            "description": "hmmm",
+                            "title": "hmmm title",
+                            "level": "Normal",
+                            "state": "Active",
+                            "createdDate": 1656599929021,
+                            "modifyDate": null,
+                            "events": null,
+                            "logbooks": [],
+                            "tags": [],
+                            "properties": [],
+                            "attachments": []
+                        }
+                    ]
+                })
+            );
+        })
+    )
+    fireEvent.click(
+        await findByLabelText(/Show Search Filters/i)
+    )
+    await selectEvent.select(await findByLabelText(/Logbooks/i), ['controls']);
 
     // then the results are updated
     expect(await findByText("hmmm title")).toBeInTheDocument();

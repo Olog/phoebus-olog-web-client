@@ -127,6 +127,7 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
                     logbooks={logbooks}
                     searchParams={searchParams}
                     updateLogbookSearchCriteria={logbooks => {inputChangedArray(logbooks, 'logbooks')}}
+                    inputId='logbooks'
                 />
             </Form.Group>
             <Form.Group controlId='tags'>
@@ -134,6 +135,7 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
                 <Tags tags={tags}
                     searchParams={searchParams}
                     updateTagSearchCriteria={tags => {inputChangedArray(tags, 'tags')}}
+                    inputId='tags'
                 />
             </Form.Group>
             <Form.Group controlId='author'>
