@@ -110,6 +110,7 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
                 <Form.Control size="sm"
                     type="text"
                     value={searchParams['title'] || ''}
+                    onChange={(e) => inputChanged(e, 'title')}
                 />
             </Form.Group>
             <Form.Group controlId='text'>

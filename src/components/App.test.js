@@ -140,7 +140,7 @@ it("allows user to manually enter search terms", async () => {
 it("allows user to search with search filter bar", async () => {
 
     // Given app is rendered with default search results
-    const {findByText, findByLabelText, findByTestId} = renderWithProviders(<App />);
+    const {findByText, findByLabelText} = renderWithProviders(<App />);
     expect(await findByText("example entry")).toBeInTheDocument();
 
     // When user opens the filter bar, updates the query, and closes it
@@ -176,7 +176,7 @@ it("allows user to search with search filter bar", async () => {
         await findByLabelText(/Show Search Filters/i)
     )
     fireEvent.input(
-        await findByTestId('title-input'),
+        await findByLabelText(/Title/i),
         {target: {value: 'some value'}}
     )
     fireEvent.click(
