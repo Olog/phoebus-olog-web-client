@@ -227,10 +227,7 @@ it("updates search results instantly from the search filter bar for tags", async
     fireEvent.click(
         await findByLabelText(/Show Search Filters/i)
     )
-    // fireEvent.input(
-    //     await findByLabelText(/Tags/i),
-    //     {target: {value: {value: 'foo'} }}
-    // )
+    // unfortunately, atm this is react-select dependent
     await selectEvent.select(await findByLabelText(/Tags/i), ['foo']);
 
     // then the results are updated
@@ -276,6 +273,7 @@ it("updates search results instantly from the search filter bar for logbooks", a
     fireEvent.click(
         await findByLabelText(/Show Search Filters/i)
     )
+    // unfortunately, atm this is react-select dependent
     await selectEvent.select(await findByLabelText(/Logbooks/i), ['controls']);
 
     // then the results are updated
