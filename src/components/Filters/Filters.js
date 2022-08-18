@@ -22,11 +22,9 @@ import { FaCalendarAlt } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
 import {dateToString} from '../../utils/utils';
 import Form from 'react-bootstrap/Form';
-import Table from 'react-bootstrap/Table';
 import DateTimePicker from 'react-datetime-picker';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import customization from '../../utils/customization';
 import { useEffect } from 'react';
 import { InputGroup } from 'react-bootstrap';
 
