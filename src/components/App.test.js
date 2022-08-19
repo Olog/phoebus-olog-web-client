@@ -93,39 +93,17 @@ it("allows user to manually enter search terms", async () => {
     // Then those search results are still there / unchanged
     expect(await findByText("example entry")).toBeInTheDocument();
 
+    // And given the server will respond with new search results
+    givenServerRespondsWithSearchRequest({
+        title: 'hmmm title',
+        requestPredicate: (req) => req.url.searchParams.get('start') === '987654321'
+    });
+
     // When user locates text search bar,
     // enters new search terms,
     // and presses enter
-    // (and we expect different results from the server)
-    server.use(
-        rest.get('*/logs/search', (req, res, ctx) => {
-            return res(
-                ctx.json({
-                    hitCount: 1,
-                    logs: [
-                        {
-                            "id": 45,
-                            "owner": "jones",
-                            "source": "hmmm",
-                            "description": "hmmm",
-                            "title": "hmmm title",
-                            "level": "Normal",
-                            "state": "Active",
-                            "createdDate": 1656599929021,
-                            "modifyDate": null,
-                            "events": null,
-                            "logbooks": [],
-                            "tags": [],
-                            "properties": [],
-                            "attachments": []
-                        }
-                    ]
-                })
-            );
-        })
-    )
     fireEvent.input(
-        await findByDisplayValue(/start=12/),
+        await findByDisplayValue(/start=/),
         {target: { value: 'start=987654321' }}
     )
     fireEvent.keyDown(
@@ -144,35 +122,13 @@ it("allows user to search with search filter bar", async () => {
     const {findByText, findByLabelText} = renderWithProviders(<App />);
     expect(await findByText("example entry")).toBeInTheDocument();
 
+    // And given the server will respond with updated search results
+    givenServerRespondsWithSearchRequest({
+        title: 'hmmm title',
+        requestPredicate: (req) => req.url.searchParams.get('title') === 'some value'
+    });
+
     // When user opens the filter bar, updates the query, and closes it
-    // (and we expect different results from the server)
-    server.use(
-        rest.get('*/logs/search', (req, res, ctx) => {
-            return res(
-                ctx.json({
-                    hitCount: 1,
-                    logs: [
-                        {
-                            "id": 45,
-                            "owner": "jones",
-                            "source": "hmmm",
-                            "description": "hmmm",
-                            "title": "hmmm title",
-                            "level": "Normal",
-                            "state": "Active",
-                            "createdDate": 1656599929021,
-                            "modifyDate": null,
-                            "events": null,
-                            "logbooks": [],
-                            "tags": [],
-                            "properties": [],
-                            "attachments": []
-                        }
-                    ]
-                })
-            );
-        })
-    )
     fireEvent.click(
         await findByLabelText(/Show Search Filters/i)
     )
@@ -195,35 +151,13 @@ it("updates search results instantly from the search filter bar for tags", async
     const {findByText, findByLabelText} = renderWithProviders(<App />);
     expect(await findByText("example entry")).toBeInTheDocument();
 
+    // Given the server responds with updated search results
+    givenServerRespondsWithSearchRequest({
+        title: 'hmmm title',
+        requestPredicate: (req) => req.url.searchParams.get('tags') === 'foo'
+    });
+
     // When user opens the filter bar, updates the query, and closes it
-    // (and we expect different results from the server)
-    server.use(
-        rest.get('*/logs/search', (req, res, ctx) => {
-            return res(
-                ctx.json({
-                    hitCount: 1,
-                    logs: [
-                        {
-                            "id": 45,
-                            "owner": "jones",
-                            "source": "hmmm",
-                            "description": "hmmm",
-                            "title": "hmmm title",
-                            "level": "Normal",
-                            "state": "Active",
-                            "createdDate": 1656599929021,
-                            "modifyDate": null,
-                            "events": null,
-                            "logbooks": [],
-                            "tags": [],
-                            "properties": [],
-                            "attachments": []
-                        }
-                    ]
-                })
-            );
-        })
-    )
     fireEvent.click(
         await findByLabelText(/Show Search Filters/i)
     )
@@ -241,35 +175,13 @@ it("updates search results instantly from the search filter bar for logbooks", a
     const {findByText, findByLabelText} = renderWithProviders(<App />);
     expect(await findByText("example entry")).toBeInTheDocument();
 
-    // When user opens the filter bar, updates the query, and closes it
+    // When user opens the filter bar, and updates the query without closing it
     // (and we expect different results from the server)
-    server.use(
-        rest.get('*/logs/search', (req, res, ctx) => {
-            return res(
-                ctx.json({
-                    hitCount: 1,
-                    logs: [
-                        {
-                            "id": 45,
-                            "owner": "jones",
-                            "source": "hmmm",
-                            "description": "hmmm",
-                            "title": "hmmm title",
-                            "level": "Normal",
-                            "state": "Active",
-                            "createdDate": 1656599929021,
-                            "modifyDate": null,
-                            "events": null,
-                            "logbooks": [],
-                            "tags": [],
-                            "properties": [],
-                            "attachments": []
-                        }
-                    ]
-                })
-            );
-        })
-    )
+    givenServerRespondsWithSearchRequest({
+        title: 'hmmm title',
+        requestPredicate: (req) => req.url.searchParams.get('logbooks') === 'controls'
+    });
+    
     fireEvent.click(
         await findByLabelText(/Show Search Filters/i)
     )
@@ -280,3 +192,45 @@ it("updates search results instantly from the search filter bar for logbooks", a
     expect(await findByText("hmmm title")).toBeInTheDocument();
 
 });
+
+// Utility test function that will setup the server to respond to the request
+// with a log entry having the desired `title` is the `requestPredicate` is true
+// otherwise will respond with empty search results
+const givenServerRespondsWithSearchRequest = ({title, requestPredicate}) => {
+    server.use(
+        rest.get('*/logs/search', (req, res, ctx) => {
+            if(requestPredicate(req)) {
+                return res(
+                    ctx.json({
+                        hitCount: 1,
+                        logs: [
+                            {
+                                "id": 45,
+                                "owner": "jones",
+                                "source": title + " description",
+                                "description": title + " description",
+                                "title": title,
+                                "level": "Normal",
+                                "state": "Active",
+                                "createdDate": 1656599929021,
+                                "modifyDate": null,
+                                "events": null,
+                                "logbooks": [],
+                                "tags": [],
+                                "properties": [],
+                                "attachments": []
+                            }
+                        ]
+                    })
+                );
+            } else {
+                return res(
+                    ctx.json({
+                        hitCount: 0,
+                        logs: []
+                    })
+                );
+            }
+        })
+    )
+}
