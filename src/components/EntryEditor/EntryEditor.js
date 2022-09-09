@@ -326,62 +326,75 @@ const EntryEditor = ({
                         <Button type="submit" disabled={userData.userName === "" || createInProgress}>Submit</Button>
                     </Form.Row>
                     <Form.Row>
-                        <Form.Label>Logbooks:</Form.Label>
-                        <Select
-                            isMulti
-                            name="logbooks"
-                            options={asLogbookSelections(logbooks.filter(avail => !selectedLogbooks.find(sel => sel.name === avail.name)))}
-                            onChange={logbookSelectionChanged}
-                            value={asLogbookSelections(selectedLogbooks)}
-                            className="w-100"
-                            placeholder="Select Logbook(s)"
-                        />
-                        {selectedLogbooks.length === 0 && 
-                            <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
+                        <Form.Group controlId='logbooks' className='w-100'>
+                            <Form.Label>Logbooks:</Form.Label>
+                            <Select
+                                isMulti
+                                name="logbooks"
+                                options={asLogbookSelections(logbooks.filter(avail => !selectedLogbooks.find(sel => sel.name === avail.name)))}
+                                onChange={logbookSelectionChanged}
+                                value={asLogbookSelections(selectedLogbooks)}
+                                className="w-100"
+                                placeholder="Select Logbook(s)"
+                                inputId='logbooks'
+                            />
+                            {selectedLogbooks.length === 0 && 
+                                <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
+                        </Form.Group>
                     </Form.Row>
                     <Form.Row>
-                        <Form.Label>Tags:</Form.Label>
-                        <Select
-                            isMulti
-                            name="tags"
-                            options={asTagSelections(tags.filter(avail => !selectedTags.find(sel => sel.name === avail.name)))}
-                            onChange={tagSelectionChanged}
-                            value={asTagSelections(selectedTags)}
-                            className="w-100"
-                            placeholder="Select Tag(s)"
-                        />
+                        <Form.Group controlId='tags' className='w-100'>
+                            <Form.Label>Tags:</Form.Label>
+                            <Select
+                                isMulti
+                                name="tags"
+                                inputId="tags"
+                                options={asTagSelections(tags.filter(avail => !selectedTags.find(sel => sel.name === avail.name)))}
+                                onChange={tagSelectionChanged}
+                                value={asTagSelections(selectedTags)}
+                                className="w-100"
+                                placeholder="Select Tag(s)"
+                            />
+                        </Form.Group>
                     </Form.Row>
                     <Form.Row>
-                        <Form.Label>Entry Type:</Form.Label>
-                        <Select
-                            name="entryTypes"
-                            options={levelOptions}
-                            defaultInputValue={customization.defaultLevel}
-                            onChange={entryTypeSelectionChanged}
-                            className="w-100"
-                            placeholder="Select Entry Type"
-                        />
-                        {(level === "" || !level) && 
-                            <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
+                        <Form.Group controlId='entryTypes' className='w-100'>
+                            <Form.Label>Entry Type:</Form.Label>
+                            <Select
+                                name="entryTypes"
+                                inputId="entryTypes"
+                                options={levelOptions}
+                                defaultInputValue={customization.defaultLevel}
+                                onChange={entryTypeSelectionChanged}
+                                className="w-100"
+                                placeholder="Select Entry Type"
+                            />
+                            {(level === "" || !level) && 
+                                <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
+                        </Form.Group>
                     </Form.Row>
                     <Form.Row>
-                        <Form.Label>Title:</Form.Label>
-                        <Form.Control 
-                            required
-                            type="text" 
-                            placeholder="Title" 
-                            ref={titleRef}/>
-                        <Form.Control.Feedback type="invalid">
-                            Please specify a title.
-                        </Form.Control.Feedback>
+                        <Form.Group controlId='title' className='w-100'>
+                            <Form.Label>Title:</Form.Label>
+                            <Form.Control 
+                                required
+                                type="text" 
+                                placeholder="Title" 
+                                ref={titleRef}/>
+                            <Form.Control.Feedback type="invalid">
+                                Please specify a title.
+                            </Form.Control.Feedback>
+                        </Form.Group>
                     </Form.Row>
                     <Form.Row>
-                        <Form.Label>Description:</Form.Label>
-                        <Form.Control
-                            as="textarea" 
-                            rows="5" 
-                            placeholder="Description"
-                            ref={descriptionRef}/>
+                        <Form.Group controlId='description' className='w-100'>    
+                            <Form.Label>Description:</Form.Label>
+                            <Form.Control
+                                as="textarea" 
+                                rows="5" 
+                                placeholder="Description"
+                                ref={descriptionRef}/>
+                        </Form.Group>
                     </Form.Row>
                     <Form.Row>
                         <Button variant="secondary" size="sm" onClick={ onBrowse }>

@@ -19,7 +19,7 @@ import React, {useState, useEffect} from 'react'
 import '../../css/olog.css';
 import Select from 'react-select';
 
-const Tags = ({tags, searchParams, updateTagSearchCriteria}) => {
+const Tags = ({tags, searchParams, updateTagSearchCriteria, inputId}) => {
 
     const [selection, setSelection] = useState([]);
     const [options, setOptions] = useState([]);
@@ -63,7 +63,8 @@ const Tags = ({tags, searchParams, updateTagSearchCriteria}) => {
 
     return <Select
         isMulti
-        name="tags"
+        name={inputId}
+        inputId={inputId}
         options={options}
         onChange={tagSelectionChanged}
         value={selection}

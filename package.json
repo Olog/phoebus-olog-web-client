@@ -51,6 +51,7 @@
     ]
   },
   "devDependencies": {
-    "msw": "^0.44.2"
+    "msw": "^0.44.2",
+    "react-select-event": "^5.5.1"
   }
 }
