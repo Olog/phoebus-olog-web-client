@@ -23,7 +23,7 @@ import Select from 'react-select';
  * Component to show list of available logbooks and maintain selection of logbooks
  * to include in a search query.
  */
-const Logbooks = ({logbooks, searchParams, updateLogbookSearchCriteria}) => {
+const Logbooks = ({logbooks, searchParams, updateLogbookSearchCriteria, inputId}) => {
 
     const [selection, setSelection] = useState([]);
     const [options, setOptions] = useState([]);
@@ -67,7 +67,8 @@ const Logbooks = ({logbooks, searchParams, updateLogbookSearchCriteria}) => {
 
     return <Select
         isMulti
-        name="logbooks"
+        name={inputId}
+        inputId={inputId}
         options={options}
         onChange={logbookSelectionChanged}
         value={selection}
