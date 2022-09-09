@@ -115,7 +115,7 @@ const LogEntriesView = ({
             
         }
     };
-
+    
     return (
         <Container fluid className="h-100">
             {searchResultError && 

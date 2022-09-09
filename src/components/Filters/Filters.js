@@ -106,6 +106,7 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
     return(
         <>
         <Container className="grid-item filters full-height" style={{padding: "8px"}} onKeyDown={onKeyDown} >
+            {/* TODO: Make this a container, not a table...or at least, make sure labels correspond with inputs using for attribute */}
             <Table size="sm" className="search-fields-table">
                 <tbody>
                     <tr>
@@ -114,6 +115,7 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
                     <tr>
                         <td colSpan="2">
                             <Form.Control size="sm"
+                                data-testid='title-input' // TODO: remove this once above label issue/refactor done; bad!
                                 type="text"
                                 value={searchParams['title'] || ''}
                                 onChange={(e) => inputChanged(e, 'title')}/>
