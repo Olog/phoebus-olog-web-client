@@ -40,6 +40,7 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetPropertiesQuery } from '../../services/ologApi.js';
+import MultiSelect from '../Input/MultiSelect.js';
 
 const EntryEditor = ({
     tags,
@@ -266,32 +267,6 @@ const EntryEditor = ({
         setSelectedProperties(copyOfSelectedProperties);
     }
 
-    const asLogbookSelections = (logbooks) => {
-        if(logbooks) {
-            return logbooks.map(logbook => {
-                return {
-                    value: logbook,
-                    label: logbook.name
-                }
-            })
-        } else {
-            return []
-        }
-    }
-
-    const asTagSelections = (tags) => {
-        if(tags) {
-            return tags.map(tag => {
-                return {
-                    value: tag,
-                    label: tag.name
-                }
-            })
-        } else {
-            return []
-        }
-    }
-
     const attachments = attachedFiles.map((file, index) => {
         return(
             <Attachment key={index} file={file} removeAttachment={removeAttachment}/>
@@ -328,15 +303,17 @@ const EntryEditor = ({
                     <Form.Row>
                         <Form.Group controlId='logbooks' className='w-100'>
                             <Form.Label>Logbooks:</Form.Label>
-                            <Select
-                                isMulti
-                                name="logbooks"
-                                options={asLogbookSelections(logbooks.filter(avail => !selectedLogbooks.find(sel => sel.name === avail.name)))}
-                                onChange={logbookSelectionChanged}
-                                value={asLogbookSelections(selectedLogbooks)}
+                            <MultiSelect
+                                inputId='logbooks'
+                                options={logbooks.map(it => (
+                                    {label: it.name, value: it}
+                                ))}
+                                selection={selectedLogbooks.map(it => (
+                                    {label: it.name, value: it}
+                                ))}
+                                onSelectionChanged={logbookSelectionChanged}
                                 className="w-100"
                                 placeholder="Select Logbook(s)"
-                                inputId='logbooks'
                             />
                             {selectedLogbooks.length === 0 && 
                                 <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
@@ -345,13 +322,15 @@ const EntryEditor = ({
                     <Form.Row>
                         <Form.Group controlId='tags' className='w-100'>
                             <Form.Label>Tags:</Form.Label>
-                            <Select
-                                isMulti
-                                name="tags"
-                                inputId="tags"
-                                options={asTagSelections(tags.filter(avail => !selectedTags.find(sel => sel.name === avail.name)))}
-                                onChange={tagSelectionChanged}
-                                value={asTagSelections(selectedTags)}
+                            <MultiSelect
+                                inputId='tags'
+                                options={tags.map(it => (
+                                    {label: it.name, value: it}
+                                ))}
+                                selection={selectedTags.map(it => (
+                                    {label: it.name, value: it}
+                                ))}
+                                onSelectionChanged={tagSelectionChanged}
                                 className="w-100"
                                 placeholder="Select Tag(s)"
                             />

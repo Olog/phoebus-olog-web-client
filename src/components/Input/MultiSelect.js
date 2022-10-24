@@ -1,17 +1,7 @@
-import React, {useEffect, useState} from 'react';
 import '../../css/olog.css';
 import Select from 'react-select';
 
-const MultiSelect = ({inputId, selection=[], options=[], onSelectionChanged, isMulti=true}) => {
-
-    // const [remainingOptions, setRemainingOptions] = useState([]);
-
-    // // Initialize or update the remaining options
-    // useEffect(() => {
-    //     setRemainingOptions();
-    // }, [remainingOptions, options, selection]);
-
-    console.log({selection, options})
+const MultiSelect = ({inputId, selection=[], options=[], onSelectionChanged, isMulti=true, className, placeholder}) => {
 
     return <Select
         isMulti={isMulti}
@@ -22,9 +12,10 @@ const MultiSelect = ({inputId, selection=[], options=[], onSelectionChanged, isM
         )}
         onChange={onSelectionChanged}
         value={selection}
+        className={className}
+        placeholder={placeholder}
     />
     
 }
-
 
 export default MultiSelect;
