@@ -49,6 +49,7 @@ var allAttachedFiles = [];
  */
 export function getFileObject(id, attachedFiles){
     for (var i = 0; i < attachedFiles.length; i++){
+        console.log({match: id, file: attachedFiles[i]})
         if (attachedFiles[i].id === id) {
             return attachedFiles[i];
         }
