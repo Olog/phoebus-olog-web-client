@@ -51,10 +51,15 @@ const EntryEditor = ({
      userData, setUserData
  }) => {
 
-    const { register, control, handleSubmit, watch, formState: { errors }, getValues, setValue } = useForm();
+    const { control, handleSubmit, getValues, setValue } = useForm();
     const { fields: attachments, remove: removeAttachment, append: appendAttachment } = useFieldArray({
         control,
         name: 'attachments',
+        keyName: 'reactHookFormId' // default is 'id', which would override OlogAttachment#id
+    })
+    const { fields: properties, remove: removeProperty, append: appendProperty, update: updateProperty } = useFieldArray({
+        control,
+        name: 'properties',
         keyName: 'reactHookFormId' // default is 'id', which would override OlogAttachment#id
     })
     // File input HTML element ref allows us to hide
@@ -65,13 +70,9 @@ const EntryEditor = ({
     const [showHtmlPreview, setShowHtmlPreview] = useState(false);
     const [showAddProperty, setShowAddProperty] = useState(false);
     const {data: availableProperties} = useGetPropertiesQuery();
-    const [selectedProperties, setSelectedProperties] = useState([]);
+    const currentLogEntry = useSelector(state => state.currentLogEntry);
 
-    const onSubmit = (data) => {
-        console.log(data);
-    }
-
-    console.log({attachments})
+    const navigate = useNavigate();
 
     /**
      * Appends an attachment object to the attachments form field
@@ -101,15 +102,117 @@ const EntryEditor = ({
     }
 
     /**
+     * Update a property value and its attributes
+     * @param {*} property to update
+     * @param {*} attribute property attribute to update
+     * @param {*} attributeValue value of attribute to update to
+     */
+     const updateAttributeValue = (index, property, attribute, attributeValue) => {
+        let copyOfProperty = {...property};
+        let attributeIndex = copyOfProperty.attributes.indexOf(attribute);
+        let copyOfAttribute = copyOfProperty.attributes[attributeIndex];
+        copyOfAttribute.value = attributeValue;
+        updateProperty(index, copyOfProperty);
+    }
+
+    /**
+     * Uploading multiple attachments must be done in a synchronous manner. Using axios.all()
+     * will upload only a single attachment, not sure why...
+     * @param {*} id 
+     * @returns 
+     */
+     const submitAttachmentsMulti = async (id) => {
+        for (let i = 0; i < attachments.length; i++) {
+            let formData = new FormData();
+            formData.append('file', attachments[i].file);
+            formData.append('id', attachments[i].id);
+            formData.append('filename', attachments[i].file.name);
+            await ologService.post(`/logs/attachments/${id}`, 
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Accept': 'application/json'
+                    },
+                    withCredentials: true
+                });
+        }
+    }
+
+    const onSubmit = (formData) => {
+        
+        console.log({formData})
+
+        const promise = checkSession();
+        if(!promise){
+            setUserData({});
+            setCreateInProgress(false);
+            return;
+        }
+        else{
+            promise.then(data => {
+                if(!data){
+                    setUserData({});
+                    setCreateInProgress(false);
+                    return;
+                }
+                else{
+                    setCreateInProgress(true);
+                    const logEntry = {
+                        logbooks: formData.logbooks,
+                        tags: formData.tags,
+                        properties: formData.properties,
+                        title: formData.title,
+                        level: formData.entryType.value,
+                        description: formData.description
+                    }
+                    let url = replyAction ? 
+                        `/logs?markup=commonmark&inReplyTo=${currentLogEntry.id}` :
+                        `/logs?markup=commonmark`;
+                    ologService.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
+                        .then(res => {
+                            if(attachments.length > 0){ // No need to call backend if there are no attachments.
+                                submitAttachmentsMulti(res.data.id);
+                            }
+                            setCreateInProgress(false);
+                            navigate('/');
+                        })
+                        .catch(error => {
+                            if(error.response && (error.response.status === 401 || error.response.status === 403)){
+                                alert('You are currently not authorized to create a log entry.')
+                            }
+                            else if(error.response && (error.response.status >= 500)){
+                                alert('Failed to create log entry.')
+                            }
+                            setCreateInProgress(false);
+                        });
+                    return;
+                }
+            });
+        }
+    }
+
+    /**
      * If attachments are present, creates a wrapper containing an array of Attachment components
      */
-    const renderedAttachments = attachments.length > 0 ? 
-        <Form.Row className="grid-item">
+    const renderedAttachments = attachments.length > 0 
+        ? <Form.Row className="grid-item">
             {attachments.map((attachment, index) => {
                 return <Attachment key={index} attachment={attachment} removeAttachment={() => removeAttachment(index)}/>
             })}
         </Form.Row> 
         : null;
+
+    const renderedProperties = properties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
+        console.log({index, property})
+        return (
+            <PropertyEditor key={index}
+                index={index}
+                property={property}
+                removeProperty={removeProperty}
+                updateAttributeValue={updateAttributeValue}/>
+        );
+    })
 
     return (
         <>
@@ -251,7 +354,7 @@ const EntryEditor = ({
                             </Form.Group>
                         </Form.Row>
                         <Form.Row>
-                            {/* file inputs are uncontrolled, especially in this case where the user can upload many attachments */}
+                            {/* note file inputs are uncontrolled, especially in this case where the user can upload many attachments */}
                             <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click() }>
                                     <span><FaPlus className="add-button"/></span>Add Attachments
                             </Button>
@@ -273,9 +376,18 @@ const EntryEditor = ({
                         </Form.Row>
                     </Form>
                     { renderedAttachments }
+                    <Form.Label className="mt-3">Properties:</Form.Label>
+                    {<Form.Row className="grid-item">
+                        <Form.Group style={{width: "400px"}}>
+                            <Button variant="secondary" size="sm" onClick={() => setShowAddProperty(true)}>
+                                <span><FaPlus className="add-button"/></span>Add Property
+                            </Button>
+                            {renderedProperties}              
+                        </Form.Group>
+                    </Form.Row>}
                 </Container>
             </LoadingOverlay>
-            {/* {
+            {
                 <Modal show={showAddProperty} onHide={() => setShowAddProperty(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Add Property</Modal.Title>
@@ -283,11 +395,11 @@ const EntryEditor = ({
                     <Modal.Body>
                         <PropertySelector 
                             availableProperties={availableProperties} 
-                            selectedProperties={selectedProperties}
-                            addProperty={addProperty}/>
+                            selectedProperties={properties}
+                            addProperty={appendProperty}/>
                     </Modal.Body>
                 </Modal>
-            } */}
+            }
             <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
                 setShowEmbedImageDialog={setShowEmbedImageDialog}
                 addEmbeddedImage={addEmbeddedImage}/>

@@ -43,7 +43,6 @@ class HtmlPreview extends Component{
     reset = () => {
         var source = this.props.getCommonmarkSrc();
         var allAttachedFiles = this.props.getAttachedFiles();
-        console.log({allAttachedFiles})
         this.remarkable.use(imageProcessor, {attachedFiles: allAttachedFiles, setHtmlPreview: true});
         this.setState({innerHtml:  this.remarkable.render(source)  });
     }
