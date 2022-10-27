@@ -15,34 +15,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- import ologService from '../../api/olog-service.js';
- import Button from 'react-bootstrap/Button';
- import { Container } from 'react-bootstrap';
- import Form from 'react-bootstrap/Form';
- import FormFile from 'react-bootstrap/FormFile';
- import Modal from 'react-bootstrap/Modal';
- import { FaPlus } from 'react-icons/fa';
- import { useNavigate } from 'react-router-dom';
- import { v4 as uuidv4 } from 'uuid';
- import Attachment from '../Attachment/Attachment.js';
- import customization from '../../utils/customization';
- import EmbedImageDialog from './EmbedImageDialog';
- import OlogAttachment from './OlogAttachment';
- import PropertyEditor from './PropertyEditor';
- import PropertySelector from './PropertySelector';
- import { checkSession } from '../../api/olog-service.js';
- import {removeImageMarkup, ologClientInfoHeader } from '../../utils/utils';
- import HtmlPreview from './HtmlPreview';
- import LoadingOverlay from '../LoadingOverlay/LoadingOverlay';
- import Select from 'react-select';
- import { useState } from 'react';
- import { useRef } from 'react';
- import { useEffect } from 'react';
- import { useSelector } from 'react-redux';
- import { useGetPropertiesQuery } from '../../services/ologApi.js';
- import MultiSelect from '../Input/MultiSelect.js';
- import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import Input from 'react-select';
+import ologService from '../../api/olog-service.js';
+import Button from 'react-bootstrap/Button';
+import { Container } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+import FormFile from 'react-bootstrap/FormFile';
+import Modal from 'react-bootstrap/Modal';
+import { FaPlus } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import Attachment from '../Attachment/Attachment.js';
+import customization from '../../utils/customization';
+import EmbedImageDialog from './EmbedImageDialog';
+import OlogAttachment from './OlogAttachment';
+import PropertyEditor from './PropertyEditor';
+import PropertySelector from './PropertySelector';
+import { checkSession } from '../../api/olog-service.js';
+import {removeImageMarkup, ologClientInfoHeader } from '../../utils/utils';
+import HtmlPreview from './HtmlPreview';
+import LoadingOverlay from '../LoadingOverlay/LoadingOverlay';
+import Select from 'react-select';
+import { useState } from 'react';
+import { useRef } from 'react';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useGetPropertiesQuery } from '../../services/ologApi.js';
+import MultiSelect from '../Input/MultiSelect.js';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 const EntryEditor = ({
      tags,
@@ -75,22 +74,72 @@ const EntryEditor = ({
     const navigate = useNavigate();
 
     /**
+     * If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
+     * Copy relevant fields to the state of this class EXCEPT FOR entryType/level.
+     * May or may not exist in the template.
+     */
+    useEffect(() => {
+        
+        if(replyAction && currentLogEntry){
+            console.log('Replying')
+            setValue('logbooks', currentLogEntry.logbooks)
+            setValue('tags', currentLogEntry.tags);
+            setValue('entryType', customization.defaultLevel);
+            setValue('title', currentLogEntry.title);
+        }
+
+    }, [replyAction, currentLogEntry]);
+
+    /**
+     * Ensure that when user has selected Reply and then New Log Entry,
+     * the entry being edited does not contain any copied data.
+     */
+    useEffect(() => {
+
+        if(!replyAction) {
+            setValue('logbooks', [])
+            setValue('tags', []);
+            setValue('entryType', customization.defaultLevel);
+            setValue('properties', [])
+            setValue('title', '');
+        }
+        
+    }, [replyAction])
+
+
+    /**
      * Appends an attachment object to the attachments form field
      * @param {*} event 
      */
     const onFileChanged = (event) => {
-        
         if(event.target.files){
-            
             // note event.target.files is a FileList, not an array! But we can convert it
             Array.from(event.target.files).forEach(file => {
                 appendAttachment(new OlogAttachment(file, uuidv4()));
             });
-            
-        } 
-      
+        }
+    }
+
+    /**
+     * When an attachment is removed, update the internal state
+     * and also remove any embeds found in the description
+     */
+    const onAttachmentRemoved = (attachment, index) => {
+        
+        let description = getValues('description') || '';
+        if(description.indexOf(attachment.id) > -1){  // Find potential markup referencing the attachment
+            let updatedDescription = removeImageMarkup(description, attachment.id);
+            setValue('description', updatedDescription);
+        }
+        removeAttachment(index);
     }
     
+    /**
+     * Inserts image markup into the description field
+     * @param {*} file 
+     * @param {*} width 
+     * @param {*} height 
+     */
     const addEmbeddedImage = (file, width, height) => {
         setShowEmbedImageDialog(false);
         const id = uuidv4();
@@ -140,8 +189,6 @@ const EntryEditor = ({
     }
 
     const onSubmit = (formData) => {
-        
-        console.log({formData})
 
         const promise = checkSession();
         if(!promise){
@@ -198,13 +245,12 @@ const EntryEditor = ({
     const renderedAttachments = attachments.length > 0 
         ? <Form.Row className="grid-item">
             {attachments.map((attachment, index) => {
-                return <Attachment key={index} attachment={attachment} removeAttachment={() => removeAttachment(index)}/>
+                return <Attachment key={index} attachment={attachment} removeAttachment={() => onAttachmentRemoved(attachment, index)}/>
             })}
         </Form.Row> 
         : null;
 
     const renderedProperties = properties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
-        console.log({index, property})
         return (
             <PropertyEditor key={index}
                 index={index}
@@ -284,29 +330,38 @@ const EntryEditor = ({
                             </Form.Group>
                         </Form.Row>
                         <Form.Row>
-                            <Form.Group controlId='entryTypes' className='w-100'>
+                            <Form.Group controlId='entryType' className='w-100'>
                                 <Form.Label>Entry Type:</Form.Label>
+                                {/* 
+                                    EntryType is a string value, however there
+                                    are many possible values to pick from so it
+                                    is presented as a select input.
+                                */}
                                 <Controller 
                                     name='entryType'
                                     control={control}
                                     defaultValue={customization.defaultLevel}
                                     rules={{required: true}}
-                                    render={({field, fieldState}) =>
-                                        <>
+                                    render={({field, fieldState}) =>{
+                                        console.log({field})
+                                        return (<>
                                             <Select
                                                 name={field.name}
                                                 inputId={field.name}
                                                 options={customization.levelValues.map(it => (
                                                     { value: it, label: it }
                                                 ))}
-                                                defaultInputValue={customization.defaultLevel}
-                                                onChange={field.onChange}
+                                                onChange={it => field.onChange(it.value)}
+                                                value={
+                                                    { value: field.value, label: field.value }
+                                                }
                                                 className="w-100"
                                                 placeholder="Select Entry Type"
                                             />
                                             {fieldState.error && 
                                                 <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
-                                        </>
+                                        </>)
+                                    }
                                 }/>
                             </Form.Group>
                         </Form.Row>
@@ -340,15 +395,22 @@ const EntryEditor = ({
                                 <Controller 
                                     name='description'
                                     control={control}
-                                    render={({field})=>
-                                        <Form.Control
-                                            onChange={field.onChange} 
-                                            value={field.value} 
-                                            ref={field.ref}
-                                            as="textarea" 
-                                            rows="5" 
-                                            placeholder="Description"
-                                        />
+                                    rules={{required: true}}
+                                    render={({field, fieldState})=>
+                                        <>
+                                            <Form.Control
+                                                onChange={field.onChange} 
+                                                value={field.value} 
+                                                ref={field.ref}
+                                                as="textarea" 
+                                                rows="5" 
+                                                placeholder="Description"
+                                                isInvalid={fieldState.error}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please include a description.
+                                            </Form.Control.Feedback>
+                                        </>
                                 }/>
                                 
                             </Form.Group>
