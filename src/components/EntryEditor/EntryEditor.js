@@ -42,6 +42,7 @@ import { useSelector } from 'react-redux';
 import { useGetPropertiesQuery } from '../../services/ologApi.js';
 import MultiSelect from '../Input/MultiSelect.js';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import useFormPersist from 'react-hook-form-persist'
 
 const EntryEditor = ({
      tags,
@@ -50,7 +51,7 @@ const EntryEditor = ({
      userData, setUserData
  }) => {
 
-    const { control, handleSubmit, getValues, setValue } = useForm();
+    const { control, handleSubmit, getValues, setValue, watch } = useForm();
     const { fields: attachments, remove: removeAttachment, append: appendAttachment } = useFieldArray({
         control,
         name: 'attachments',
@@ -81,31 +82,25 @@ const EntryEditor = ({
     useEffect(() => {
         
         if(replyAction && currentLogEntry){
-            console.log('Replying')
+            console.log("replying")
+            clearFormData();
             setValue('logbooks', currentLogEntry.logbooks)
             setValue('tags', currentLogEntry.tags);
             setValue('entryType', customization.defaultLevel);
             setValue('title', currentLogEntry.title);
         }
 
-    }, [replyAction, currentLogEntry]);
+    }, [replyAction, currentLogEntry, setValue]);
 
     /**
-     * Ensure that when user has selected Reply and then New Log Entry,
-     * the entry being edited does not contain any copied data.
+     * Save/restore form data
      */
-    useEffect(() => {
-
-        if(!replyAction) {
-            setValue('logbooks', [])
-            setValue('tags', []);
-            setValue('entryType', customization.defaultLevel);
-            setValue('properties', [])
-            setValue('title', '');
-        }
-        
-    }, [replyAction])
-
+    const {clear: clearFormData } = useFormPersist( 'entryEditorFormData', {
+        watch,
+        setValue,
+        storage: window.localStorage,
+        exclude: 'attachments' // serializing files is unsupported due to security risks
+    });
 
     /**
      * Appends an attachment object to the attachments form field
@@ -222,6 +217,7 @@ const EntryEditor = ({
                                 submitAttachmentsMulti(res.data.id);
                             }
                             setCreateInProgress(false);
+                            clearFormData();
                             navigate('/');
                         })
                         .catch(error => {
@@ -342,9 +338,8 @@ const EntryEditor = ({
                                     control={control}
                                     defaultValue={customization.defaultLevel}
                                     rules={{required: true}}
-                                    render={({field, fieldState}) =>{
-                                        console.log({field})
-                                        return (<>
+                                    render={({field, fieldState}) =>
+                                        <>
                                             <Select
                                                 name={field.name}
                                                 inputId={field.name}
@@ -360,8 +355,7 @@ const EntryEditor = ({
                                             />
                                             {fieldState.error && 
                                                 <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
-                                        </>)
-                                    }
+                                        </>
                                 }/>
                             </Form.Group>
                         </Form.Row>
@@ -412,7 +406,6 @@ const EntryEditor = ({
                                             </Form.Control.Feedback>
                                         </>
                                 }/>
-                                
                             </Form.Group>
                         </Form.Row>
                         <Form.Row>

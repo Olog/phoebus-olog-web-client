@@ -15,14 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, {Component} from 'react';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import { FaRegFile } from "react-icons/fa";
 
 const Attachment = ({attachment, removeAttachment}) => {
 
-    if(attachment.file.type.toLowerCase().startsWith("image")){
+    if(attachment?.file?.type?.toLowerCase()?.startsWith("image")){
         return(
             <div className="attachment">
                 <Button variant="danger" onClick={() => removeAttachment(attachment.file)}>Remove</Button>

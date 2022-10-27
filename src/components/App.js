@@ -28,7 +28,6 @@ import LogEntriesView from './LogEntriesView/LogEntriesView';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useGetLogbooksQuery, useGetTagsQuery } from '../services/ologApi';
-import EntryEditorOld from './EntryEditor/EntryEditorOld';
 
 /**
  * Entry point component.
