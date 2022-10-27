@@ -75,6 +75,16 @@ const EntryEditor = ({
     const navigate = useNavigate();
 
     /**
+     * Save/restore form data
+     */
+     const {clear: clearFormData } = useFormPersist( 'entryEditorFormData', {
+        watch,
+        setValue,
+        storage: window.localStorage,
+        exclude: 'attachments' // serializing files is unsupported due to security risks
+    });
+    
+    /**
      * If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
      * Copy relevant fields to the state of this class EXCEPT FOR entryType/level.
      * May or may not exist in the template.
@@ -90,17 +100,7 @@ const EntryEditor = ({
             setValue('title', currentLogEntry.title);
         }
 
-    }, [replyAction, currentLogEntry, setValue]);
-
-    /**
-     * Save/restore form data
-     */
-    const {clear: clearFormData } = useFormPersist( 'entryEditorFormData', {
-        watch,
-        setValue,
-        storage: window.localStorage,
-        exclude: 'attachments' // serializing files is unsupported due to security risks
-    });
+    }, [replyAction, currentLogEntry, setValue, clearFormData]);
 
     /**
      * Appends an attachment object to the attachments form field
