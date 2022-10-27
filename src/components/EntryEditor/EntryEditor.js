@@ -49,7 +49,7 @@ const EntryEditor = ({
      logbooks,
      replyAction,
      userData, setUserData
- }) => {
+    }) => {
 
     const { control, handleSubmit, getValues, setValue, watch } = useForm();
     const { fields: attachments, remove: removeAttachment, append: appendAttachment } = useFieldArray({
@@ -77,7 +77,7 @@ const EntryEditor = ({
     /**
      * Save/restore form data
      */
-     const {clear: clearFormData } = useFormPersist( 'entryEditorFormData', {
+    const {clear: clearFormData } = useFormPersist( 'entryEditorFormData', {
         watch,
         setValue,
         storage: window.localStorage,
@@ -92,7 +92,6 @@ const EntryEditor = ({
     useEffect(() => {
         
         if(replyAction && currentLogEntry){
-            console.log("replying")
             clearFormData();
             setValue('logbooks', currentLogEntry.logbooks)
             setValue('tags', currentLogEntry.tags);
