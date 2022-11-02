@@ -42,7 +42,7 @@ const CollapsibleFilters = ({logbooks, tags, showFilters, searchParams, searchPa
 
     return (
 
-        <Collapse in={showFilters} onExiting={submitSearchParams} className="p-1">
+        <Collapse in={showFilters} className="p-1">
             <Col xs={{span: 12, order: 3}} lg={{span: 2, order: 1}} >
                 <Filters
                     {...{
