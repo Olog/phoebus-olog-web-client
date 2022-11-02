@@ -36,23 +36,23 @@ import Col from 'react-bootstrap/Col';
  * Component holding search criteria elements, i.e.
  * logbooks, tags and time range.
  */
-const Filters = ({showFilters, logbooks, tags, searchParams: masterSearchParams, searchPageParams: masterSearchPageParams}) => {
+const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) => {
 
-    const [searchParams, setSearchParams] = useState({...masterSearchParams});
-    const [searchPageParams, setSearchPageParams] = useState({...masterSearchPageParams});
+    const [tempSearchParams, setTempSearchParams] = useState({...searchParams});
+    const [tempSearchPageParams, setTempSearchPageParams] = useState({...searchPageParams});
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setSearchParams(masterSearchParams);
-        setSearchPageParams(masterSearchPageParams);
-    }, [masterSearchParams, masterSearchPageParams])
+        setTempSearchParams(searchParams);
+        setTempSearchPageParams(searchPageParams);
+    }, [searchParams, searchPageParams])
 
     const submitSearchParams = () => {
-        dispatch(updateSearchParamsAction(searchParams));
-        dispatch(updateSearchPageParamsAction(searchPageParams));
+        dispatch(updateSearchParamsAction(tempSearchParams));
+        dispatch(updateSearchPageParamsAction(tempSearchPageParams));
     }
 
-    const { control, handleSubmit, getValues, setValue } = useForm({defaultValues: {...searchParams}});
+    const { control, handleSubmit, getValues, setValue } = useForm({defaultValues: {...tempSearchParams}});
 
     const [triggerSubmit, setTriggerSubmit] = useState(false);
     const [showSelectStartTime, setShowSelectStartTime] = useState(false);
@@ -74,7 +74,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams: masterSearchParams,
         delete data.sort
 
         // Update the search params and trigger submit
-        setSearchParams({...data});
+        setTempSearchParams({...data});
         setTriggerSubmit(true);
     }
 
@@ -89,8 +89,8 @@ const Filters = ({showFilters, logbooks, tags, searchParams: masterSearchParams,
     }
 
     const updateSearchParams = (key, value, submit=true) => {
-        const updatedParams = {...searchParams, [key]: value}
-        setSearchParams(updatedParams);
+        const updatedParams = {...tempSearchParams, [key]: value}
+        setTempSearchParams(updatedParams);
         if(submit) {
             // better to only trigger re-render if true
             setTriggerSubmit(true);
@@ -99,7 +99,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams: masterSearchParams,
 
     const updateSearchPageParams = (key, value, submit=true) => {
         const updatedParams = {...searchPageParams, [key]: value}
-        setSearchPageParams(updatedParams);
+        setTempSearchPageParams(updatedParams);
         if(submit) {
             // better to only trigger re-render if true
             setTriggerSubmit(true);
@@ -198,7 +198,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams: masterSearchParams,
                             <Controller 
                                 name='owner'
                                 control={control}
-                                defaultValue={searchParams.owner || ''}
+                                defaultValue={tempSearchParams.owner || ''}
                                 render={({field}) => 
                                     <Form.Control size="sm"
                                         onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', false)} 
@@ -284,7 +284,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams: masterSearchParams,
                             <Controller 
                                 name='attachments'
                                 control={control}
-                                defaultValue={searchParams.attachments || ''}
+                                defaultValue={tempSearchParams.attachments || ''}
                                 render={({field}) =>
                                     <Form.Control size="sm"
                                         onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', false)} 
