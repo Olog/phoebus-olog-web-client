@@ -26,12 +26,31 @@ import { InputGroup } from 'react-bootstrap';
 import DateSelectorModal from './DateSelectorModal';
 import MultiSelect from '../Input/MultiSelect';
 import { Controller, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { updateSearchParams as updateSearchParamsAction } from '../../features/searchParamsReducer';
+import { updateSearchPageParams as updateSearchPageParamsAction } from '../../features/searchPageParamsReducer';
+import Collapse from 'react-bootstrap/Collapse';
+import Col from 'react-bootstrap/Col';
 
 /**
  * Component holding search criteria elements, i.e.
  * logbooks, tags and time range.
  */
-const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParams, setSearchPageParams, submitSearchParams}) => {
+const Filters = ({showFilters, logbooks, tags, searchParams: masterSearchParams, searchPageParams: masterSearchPageParams}) => {
+
+    const [searchParams, setSearchParams] = useState({...masterSearchParams});
+    const [searchPageParams, setSearchPageParams] = useState({...masterSearchPageParams});
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        setSearchParams(masterSearchParams);
+        setSearchPageParams(masterSearchPageParams);
+    }, [masterSearchParams, masterSearchPageParams])
+
+    const submitSearchParams = () => {
+        dispatch(updateSearchParamsAction(searchParams));
+        dispatch(updateSearchPageParamsAction(searchPageParams));
+    }
 
     const { control, handleSubmit, getValues, setValue } = useForm({defaultValues: {...searchParams}});
 
@@ -96,234 +115,238 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
     }
 
     return(
-        <>
-            <Container className="grid-item filters full-height" style={{padding: "8px"}} >
-                <Form onSubmit={handleSubmit(onSubmit)}>
-                    {/* Hidden button handles submit-on-enter automatically */}
-                    <Button type='submit' hidden >Submit</Button>
-                    <Form.Group controlId='title'>
-                        <Form.Label>Title:</Form.Label>
-                        <Controller 
-                            name='title'
-                            control={control}
-                            defaultValue=''
-                            render={({field}) => 
-                                <Form.Control size="sm"
-                                    onChange={field.onChange} 
-                                    value={field.value} 
-                                    ref={field.ref}
-                                    type="text" 
-                                    placeholder="Title" 
-                                />
-                            }
-                        />
-                    </Form.Group>
-                    <Form.Group controlId='description'>
-                        <Form.Label>Text</Form.Label>
-                        <Controller 
-                            name='desc'
-                            control={control}
-                            defaultValue=''
-                            render={({field}) => 
-                                <Form.Control size="sm"
-                                    onChange={field.onChange} 
-                                    value={field.value} 
-                                    ref={field.ref}
-                                    type="text" 
-                                    placeholder="Description" 
-                                />
-                            }
-                        />
-                    </Form.Group>
-                    <Form.Group controlId='logbooks'>
-                        <Form.Label>Logbooks</Form.Label>
-                        <Controller 
-                            name='logbooks'
-                            control={control}
-                            defaultValue={[]}
-                            render={({field})=>
-                                <MultiSelect
-                                    inputId={field.name}
-                                    options={logbooks.map(it => (
-                                        {label: it.name, value: it}
-                                    ))}
-                                    selection={field.value.map(it => (
-                                        {label: it, value: it}
-                                    ))}
-                                    onSelectionChanged={selection => onSearchParamFieldValueChanged(field, selection.map(it => it.label))}
-                                />
-                        }/>
-                    </Form.Group>
-                    <Form.Group controlId='tags'>
-                        <Form.Label>Tags</Form.Label>
-                        <Controller 
-                            name='tags'
-                            control={control}
-                            defaultValue={[]}
-                            render={({field})=>
-                                <MultiSelect
-                                    inputId={field.name}
-                                    options={tags.map(it => (
-                                        {label: it.name, value: it}
-                                    ))}
-                                    selection={field.value.map(it => (
-                                        {label: it, value: it}
-                                    ))}
-                                    onSelectionChanged={selection => onSearchParamFieldValueChanged(field, selection.map(it => it.label))}
-                                />
-                        }/>
-                    </Form.Group>
-                    <Form.Group controlId='owner'>
-                        <Form.Label>Author</Form.Label>
-                        <Controller 
-                            name='owner'
-                            control={control}
-                            defaultValue={searchParams.owner || ''}
-                            render={({field}) => 
-                                <Form.Control size="sm"
-                                    onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', false)} 
-                                    value={field.value} 
-                                    ref={field.ref}
-                                    type="text" 
-                                    placeholder="Author" 
-                                />
-                            }
-                        />
-                    </Form.Group>
-                    <Form.Group controlId='start'>
-                        <Form.Label>Start Time</Form.Label>
-                        <InputGroup>
+        <Collapse in={showFilters} onExiting={handleSubmit(onSubmit)} className="p-1" >
+            <Col xs={{span: 12, order: 3}} lg={{span: 2, order: 1}} >
+                <Container className="grid-item filters full-height" style={{padding: "8px"}} >
+                    <Form onSubmit={handleSubmit(onSubmit)}>
+                        {/* Hidden button handles submit-on-enter automatically */}
+                        <Button type='submit' hidden >Submit</Button>
+                        <Form.Group controlId='title'>
+                            <Form.Label>Title:</Form.Label>
                             <Controller 
-                                name='start'
+                                name='title'
                                 control={control}
                                 defaultValue=''
-                                render={({field}) =>
-                                    <>
-                                        <Form.Control size="sm"
-                                            type="text"
-                                            value={field.value}
-                                            ref={field.ref}
-                                            onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', true)}
-                                        />
-                                        <InputGroup.Append>
-                                            <Button size="sm" onClick={() => setShowSelectStartTime(true)}><FaCalendarAlt/></Button>
-                                        </InputGroup.Append>
-                                    </>
-                            }/>
-                        </InputGroup>
-                    </Form.Group>
-                    <Form.Group controlId='end'>
-                        <Form.Label>End Time</Form.Label>
-                        <InputGroup>
+                                render={({field}) => 
+                                    <Form.Control size="sm"
+                                        onChange={field.onChange} 
+                                        value={field.value} 
+                                        ref={field.ref}
+                                        type="text" 
+                                        placeholder="Title" 
+                                    />
+                                }
+                            />
+                        </Form.Group>
+                        <Form.Group controlId='description'>
+                            <Form.Label>Text</Form.Label>
                             <Controller 
-                                name='end'
+                                name='desc'
                                 control={control}
                                 defaultValue=''
+                                render={({field}) => 
+                                    <Form.Control size="sm"
+                                        onChange={field.onChange} 
+                                        value={field.value} 
+                                        ref={field.ref}
+                                        type="text" 
+                                        placeholder="Description" 
+                                    />
+                                }
+                            />
+                        </Form.Group>
+                        <Form.Group controlId='logbooks'>
+                            <Form.Label>Logbooks</Form.Label>
+                            <Controller 
+                                name='logbooks'
+                                control={control}
+                                defaultValue={[]}
+                                render={({field})=>
+                                    <MultiSelect
+                                        inputId={field.name}
+                                        options={logbooks.map(it => (
+                                            {label: it.name, value: it}
+                                        ))}
+                                        selection={field.value.map(it => (
+                                            {label: it, value: it}
+                                        ))}
+                                        onSelectionChanged={selection => onSearchParamFieldValueChanged(field, selection.map(it => it.label))}
+                                    />
+                            }/>
+                        </Form.Group>
+                        <Form.Group controlId='tags'>
+                            <Form.Label>Tags</Form.Label>
+                            <Controller 
+                                name='tags'
+                                control={control}
+                                defaultValue={[]}
+                                render={({field})=>
+                                    <MultiSelect
+                                        inputId={field.name}
+                                        options={tags.map(it => (
+                                            {label: it.name, value: it}
+                                        ))}
+                                        selection={field.value.map(it => (
+                                            {label: it, value: it}
+                                        ))}
+                                        onSelectionChanged={selection => onSearchParamFieldValueChanged(field, selection.map(it => it.label))}
+                                    />
+                            }/>
+                        </Form.Group>
+                        <Form.Group controlId='owner'>
+                            <Form.Label>Author</Form.Label>
+                            <Controller 
+                                name='owner'
+                                control={control}
+                                defaultValue={searchParams.owner || ''}
+                                render={({field}) => 
+                                    <Form.Control size="sm"
+                                        onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', false)} 
+                                        value={field.value} 
+                                        ref={field.ref}
+                                        type="text" 
+                                        placeholder="Author" 
+                                    />
+                                }
+                            />
+                        </Form.Group>
+                        <Form.Group controlId='start'>
+                            <Form.Label>Start Time</Form.Label>
+                            <InputGroup>
+                                <Controller 
+                                    name='start'
+                                    control={control}
+                                    defaultValue=''
+                                    render={({field}) =>
+                                        <>
+                                            <Form.Control size="sm"
+                                                type="text"
+                                                value={field.value}
+                                                ref={field.ref}
+                                                onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', true)}
+                                            />
+                                            <InputGroup.Append>
+                                                <Button size="sm" onClick={() => setShowSelectStartTime(true)}><FaCalendarAlt/></Button>
+                                            </InputGroup.Append>
+                                        </>
+                                }/>
+                            </InputGroup>
+                        </Form.Group>
+                        <Form.Group controlId='end'>
+                            <Form.Label>End Time</Form.Label>
+                            <InputGroup>
+                                <Controller 
+                                    name='end'
+                                    control={control}
+                                    defaultValue=''
+                                    render={({field}) =>
+                                        <>
+                                            <Form.Control size="sm"
+                                                type="text"
+                                                value={field.value}
+                                                ref={field.ref}
+                                                onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', true)}
+                                            />
+                                            <InputGroup.Append>
+                                                <Button size="sm" onClick={() => setShowSelectEndTime(true)}><FaCalendarAlt/></Button>
+                                            </InputGroup.Append>
+                                        </>
+                                }/>
+                            </InputGroup>
+                        </Form.Group>
+                        <Form.Group controlId='sort'>
+                            <Controller 
+                                name='sort'
+                                control={control}
+                                defaultValue={searchPageParams.sort || ''}
                                 render={({field}) =>
                                     <>
-                                        <Form.Control size="sm"
-                                            type="text"
-                                            value={field.value}
-                                            ref={field.ref}
-                                            onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', true)}
+                                        <Form.Check style={{paddingTop: "5px"}}
+                                            type='radio'
+                                            id='sortDescending'
+                                            checked={field.value === 'down'}
+                                            label='Sort descending on date'
+                                            onChange={() => onSearchPageParamFieldValueChanged(field, 'down', true)}
                                         />
-                                        <InputGroup.Append>
-                                            <Button size="sm" onClick={() => setShowSelectEndTime(true)}><FaCalendarAlt/></Button>
-                                        </InputGroup.Append>
+                                        <Form.Check 
+                                            type='radio'
+                                            id='sortAscending'
+                                            label='Sort ascending on date'
+                                            checked={field.value === 'up'}
+                                            onChange={(e) => onSearchPageParamFieldValueChanged(field, 'up', true)}
+                                        />
                                     </>
                             }/>
-                        </InputGroup>
-                    </Form.Group>
-                    <Form.Group controlId='sort'>
-                        <Controller 
-                            name='sort'
-                            control={control}
-                            defaultValue={searchPageParams.sort || ''}
-                            render={({field}) =>
-                                <>
-                                    <Form.Check style={{paddingTop: "5px"}}
-                                        type='radio'
-                                        id='sortDescending'
-                                        checked={field.value === 'down'}
-                                        label='Sort descending on date'
-                                        onChange={() => onSearchPageParamFieldValueChanged(field, 'down', true)}
+                            
+                        </Form.Group>
+                        <Form.Group controlId='attachments'>
+                            <Form.Label>Attachments</Form.Label>
+                            <Controller 
+                                name='attachments'
+                                control={control}
+                                defaultValue={searchParams.attachments || ''}
+                                render={({field}) =>
+                                    <Form.Control size="sm"
+                                        onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', false)} 
+                                        value={field.value} 
+                                        ref={field.ref}
+                                        type="text"
+                                        placeholder='Attachments'
                                     />
-                                    <Form.Check 
-                                        type='radio'
-                                        id='sortAscending'
-                                        label='Sort ascending on date'
-                                        checked={field.value === 'up'}
-                                        onChange={(e) => onSearchPageParamFieldValueChanged(field, 'up', true)}
-                                    />
-                                </>
-                        }/>
-                        
-                    </Form.Group>
-                    <Form.Group controlId='attachments'>
-                        <Form.Label>Attachments</Form.Label>
-                        <Controller 
-                            name='attachments'
-                            control={control}
-                            render={({field}) =>
-                                <Form.Control size="sm"
-                                    type="text"
-                                    onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', false)} 
-                                    value={field.value} 
-                                    ref={field.ref}
-                                />
-                        }/>
-                    </Form.Group>
-                </Form>
-            </Container>
-            {
-                <DateSelectorModal 
-                    rules={{
-                        validate: {
-                            timeParadox: val => {
-                                const endDateString = getValues('end');
-                                if(endDateString === '') {
-                                    return true;
-                                } else {
-                                    return val <= toDate(endDateString) || 'Start date cannot come after end date'
+                            }/>
+                        </Form.Group>
+                    </Form>
+                </Container>
+                {
+                    <DateSelectorModal 
+                        rules={{
+                            validate: {
+                                timeParadox: val => {
+                                    const endDateString = getValues('end');
+                                    if(endDateString === '') {
+                                        return true;
+                                    } else {
+                                        return val <= toDate(endDateString) || 'Start date cannot come after end date'
+                                    }
                                 }
                             }
-                        }
-                    }}
-                    title='Select Start Time'
-                    show={showSelectStartTime}
-                    setShow={setShowSelectStartTime}
-                    onApply={(data) => {
-                        const dateString = dateToString(data.datetime);
-                        setValue('start', dateString);
-                        updateSearchParams('start', dateString, true);
-                    }}
-                />
-            }
-            {
-                <DateSelectorModal 
-                    rules={{
-                        validate: {
-                            timeParadox: val => {
-                                const startDateString = getValues('start');
-                                if(startDateString === '') {
-                                    return true;
-                                } else {
-                                    return toDate(startDateString) <= val || 'End date cannot come before start date';
+                        }}
+                        title='Select Start Time'
+                        show={showSelectStartTime}
+                        setShow={setShowSelectStartTime}
+                        onApply={(data) => {
+                            const dateString = dateToString(data.datetime);
+                            setValue('start', dateString);
+                            updateSearchParams('start', dateString, true);
+                        }}
+                    />
+                }
+                {
+                    <DateSelectorModal 
+                        rules={{
+                            validate: {
+                                timeParadox: val => {
+                                    const startDateString = getValues('start');
+                                    if(startDateString === '') {
+                                        return true;
+                                    } else {
+                                        return toDate(startDateString) <= val || 'End date cannot come before start date';
+                                    }
                                 }
                             }
-                        }
-                    }}
-                    title='Select End Time'
-                    show={showSelectEndTime}
-                    setShow={setShowSelectEndTime}
-                    onApply={(data) => {
-                        const dateString = dateToString(data.datetime);
-                        setValue('end', dateString);
-                        updateSearchParams('end', dateString, true);
-                    }}
-                />
-            }
-        </>
+                        }}
+                        title='Select End Time'
+                        show={showSelectEndTime}
+                        setShow={setShowSelectEndTime}
+                        onApply={(data) => {
+                            const dateString = dateToString(data.datetime);
+                            setValue('end', dateString);
+                            updateSearchParams('end', dateString, true);
+                        }}
+                    />
+                }
+            </Col>
+        </Collapse>
     );
 }
 

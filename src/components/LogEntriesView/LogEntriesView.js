@@ -25,12 +25,12 @@ import Col from 'react-bootstrap/Col';
 import LogDetails from '../LogDetails/LogDetails';
 import SearchResultList from '../SearchResult/SearchResultList';
 import customization from '../../utils/customization';
-import CollapsibleFilters from '../Filters/CollapsibleFilters';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 import { useSearchLogsQuery } from '../../services/ologApi';
 import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
 import ServiceErrorBanner from '../ErrorBanner/ServiceErrorBanner';
+import Filters from '../Filters/Filters';
 
 const LogEntriesView = ({
     tags, 
@@ -124,7 +124,7 @@ const LogEntriesView = ({
                 </Row>
             }
             <Row className="h-100">
-                <CollapsibleFilters {...{
+                <Filters {...{
                     logbooks,
                     tags,
                     showFilters,
