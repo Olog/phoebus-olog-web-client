@@ -19,9 +19,9 @@
 import {useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ologService from '../../api/olog-service';
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+// import Container from 'react-bootstrap/Container'
+// import Row from 'react-bootstrap/Row';
+// import Col from 'react-bootstrap/Col';
 import LogDetails from '../LogDetails/LogDetails';
 import SearchResultList from '../SearchResult/SearchResultList';
 import customization from '../../utils/customization';
@@ -31,6 +31,12 @@ import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 import { useSearchLogsQuery } from '../../services/ologApi';
 import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
 import ServiceErrorBanner from '../ErrorBanner/ServiceErrorBanner';
+import styled from 'styled-components';
+
+const ContentContainer = styled.div`
+    height: 100%;
+    display: flex;
+`
 
 const LogEntriesView = ({
     tags, 
@@ -117,13 +123,11 @@ const LogEntriesView = ({
     };
     
     return (
-        <Container fluid className="h-100">
+        <>
             {searchResultError && 
-                <Row>
-                    <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError} />
-                </Row>
+                <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError} />
             }
-            <Row className="h-100">
+            <ContentContainer>
                 <CollapsibleFilters {...{
                     logbooks,
                     tags,
@@ -131,25 +135,50 @@ const LogEntriesView = ({
                     searchParams,
                     searchPageParams
                 }}/>
-                <Col xs={{span: '12', order: 2}} lg={{span: 4, order: 2}} className="h-100 p-1">
-                    <SearchResultList {...{
-                        searchParams,
-                        searchPageParams,
-                        searchResults,
-                        searchInProgress,
-                        currentLogEntry,
-                        showFilters, setShowFilters
-                    }}/>
-                </Col>
-                <Col  
-                    xs={{span: 12, order: 1}} 
-                    lg={{span: showFilters ? 6 : 8, order: 3}} 
-                    className="p-1"
-                >
-                    {renderLogEntryDetails()}
-                </Col>
-            </Row>
-        </Container>
+                <SearchResultList {...{
+                    searchParams,
+                    searchPageParams,
+                    searchResults,
+                    searchInProgress,
+                    currentLogEntry,
+                    showFilters, setShowFilters
+                }}/>
+                {renderLogEntryDetails()}
+            </ContentContainer>
+        </>
+        // <Container fluid className="h-100">
+        //     {searchResultError && 
+        //         <Row>
+        //             <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError} />
+        //         </Row>
+        //     }
+        //     <Row className="h-100">
+        //         <CollapsibleFilters {...{
+        //             logbooks,
+        //             tags,
+        //             showFilters,
+        //             searchParams,
+        //             searchPageParams
+        //         }}/>
+        //         <Col xs={{span: '12', order: 2}} lg={{span: 4, order: 2}} className="h-100 p-1">
+        //             <SearchResultList {...{
+        //                 searchParams,
+        //                 searchPageParams,
+        //                 searchResults,
+        //                 searchInProgress,
+        //                 currentLogEntry,
+        //                 showFilters, setShowFilters
+        //             }}/>
+        //         </Col>
+        //         <Col  
+        //             xs={{span: 12, order: 1}} 
+        //             lg={{span: showFilters ? 6 : 8, order: 3}} 
+        //             className="p-1"
+        //         >
+        //             {renderLogEntryDetails()}
+        //         </Col>
+        //     </Row>
+        // </Container>
     );
 
 }

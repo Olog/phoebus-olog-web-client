@@ -17,7 +17,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import Collapse from 'react-bootstrap/Collapse';
+// import Collapse from 'react-bootstrap/Collapse';
+import Collapse from './Collapse';
 import Filters from '../Filters/Filters';
 import Col from 'react-bootstrap/Col';
 import { useDispatch } from 'react-redux';
@@ -42,7 +43,7 @@ const CollapsibleFilters = ({logbooks, tags, showFilters, searchParams, searchPa
 
     return (
 
-        <Collapse in={showFilters} onExiting={submitSearchParams} className="p-1">
+        <Collapse show={showFilters} onExiting={submitSearchParams} className="p-1">
             <Col xs={{span: 12, order: 3}} lg={{span: 2, order: 1}} >
                 <Filters
                     {...{
