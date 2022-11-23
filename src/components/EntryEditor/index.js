@@ -40,107 +40,122 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetPropertiesQuery } from '../../services/ologApi.js';
+import MultiSelect from '../input/MultiSelect.js';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import useFormPersist from 'react-hook-form-persist'
 
 const EntryEditor = ({
-    tags,
-    logbooks,
-    replyAction,
-    userData, setUserData
-}) => {
+     tags,
+     logbooks,
+     replyAction,
+     userData, setUserData
+    }) => {
 
-    const [selectedLogbooks, setSelectedLogbooks] = useState([]);
-    const [selectedTags, setSelectedTags] = useState([]);
-    const [level, setLevel] = useState(customization.defaultLevel);
-    const [attachedFiles, setAttachedFiles] = useState([]);
-    const [validated, setValidated] = useState(false);
-    const [selectedProperties, setSelectedProperties] = useState([]);
-    const [showAddProperty, setShowAddProperty] = useState(false);
-    const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
-    const {data: availableProperties} = useGetPropertiesQuery();
-    const [showHtmlPreview, setShowHtmlPreview] = useState(false);
+    const { control, handleSubmit, getValues, setValue, watch } = useForm();
+    const { fields: attachments, remove: removeAttachment, append: appendAttachment } = useFieldArray({
+        control,
+        name: 'attachments',
+        keyName: 'reactHookFormId' // default is 'id', which would override OlogAttachment#id
+    })
+    const { fields: properties, remove: removeProperty, append: appendProperty, update: updateProperty } = useFieldArray({
+        control,
+        name: 'properties',
+        keyName: 'reactHookFormId' // default is 'id', which would override OlogAttachment#id
+    })
+    // File input HTML element ref allows us to hide
+    // the element and click it from e.g. a button
+    const fileInputRef = useRef(null);
     const [createInProgress, setCreateInProgress] = useState(false);
+    const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
+    const [showHtmlPreview, setShowHtmlPreview] = useState(false);
+    const [showAddProperty, setShowAddProperty] = useState(false);
+    const {data: availableProperties} = useGetPropertiesQuery();
     const currentLogEntry = useSelector(state => state.currentLogEntry);
-
-    const fileInputRef = useRef();
-    const titleRef = useRef();
-    const descriptionRef = useRef();
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-
-        // If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
-        // Copy relevant fields to the state of this class, taking into account that a Reply
-        // may or may not exist in the template.
-        if(replyAction && currentLogEntry){
-            setSelectedLogbooks(currentLogEntry.logbooks);
-            setSelectedTags(currentLogEntry.tags);
-            setLevel(customization.defaultLevel);
-            titleRef.current.value = currentLogEntry.title;
-        }
-
-    }, [replyAction, currentLogEntry]);
-
-    // The below will ensure that when user has selected Reply and then New Log Entry,
-    // the entry being edited does not contain any copied data.
-    useEffect(() => {
-
-        if(!replyAction) {
-            setSelectedLogbooks([]);
-            setSelectedTags([]);
-            setLevel(customization.defaultLevel);
-            setSelectedProperties([]);
-            titleRef.current.value = "";
-        }
-        
-    }, [replyAction])
-
-    const logbookSelectionChanged = (selection) => {
-        if(selection) {
-            const logbookSelection = Object.values(selection).map(it => it.value);
-            setSelectedLogbooks(logbookSelection)
-        }
-    }
-
-    const tagSelectionChanged = (selection) => {
-        if(selection) {
-            const tagSelection = Object.values(selection).map(it => it.value);
-            setSelectedTags(tagSelection);
-        }
-    }
-
-    const entryTypeSelectionChanged = (selection) => {
-        if(selection) {
-            const level = selection.value;
-            setLevel(level);
-        }
-    }
-
-    const onBrowse = () => {
-        fileInputRef.current.click();
-    }
+    /**
+     * Save/restore form data
+     */
+    const {clear: clearFormData } = useFormPersist( 'entryEditorFormData', {
+        watch,
+        setValue,
+        storage: window.localStorage,
+        exclude: 'attachments' // serializing files is unsupported due to security risks
+    });
     
+    /**
+     * If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
+     * Copy relevant fields to the state of this class EXCEPT FOR entryType/level.
+     * May or may not exist in the template.
+     */
+    useEffect(() => {
+        
+        if(replyAction && currentLogEntry){
+            clearFormData();
+            setValue('logbooks', currentLogEntry.logbooks)
+            setValue('tags', currentLogEntry.tags);
+            setValue('entryType', customization.defaultLevel);
+            setValue('title', currentLogEntry.title);
+        }
+
+    }, [replyAction, currentLogEntry, setValue, clearFormData]);
+
+    /**
+     * Appends an attachment object to the attachments form field
+     * @param {*} event 
+     */
     const onFileChanged = (event) => {
         if(event.target.files){
-            let a = [];
-            for(let i = 0; i < event.target.files.length; i++){
-                a[i] = new OlogAttachment(event.target.files[i], uuidv4());
-            }
-            setAttachedFiles([...attachedFiles, ...a])
+            // note event.target.files is a FileList, not an array! But we can convert it
+            Array.from(event.target.files).forEach(file => {
+                appendAttachment(new OlogAttachment(file, uuidv4()));
+            });
         }
-        fileInputRef.current.value = null;
     }
 
     /**
-     * Removes attachment and - where applicable - updates the body/description.
-     * @param {*} file 
+     * When an attachment is removed, update the internal state
+     * and also remove any embeds found in the description
      */
-    const removeAttachment = (file) => {
-        setAttachedFiles(attachedFiles.filter(item => item.file !== file.file));
-        if(descriptionRef.current.value.indexOf(file.id) > -1){  // Find potential markup referencing the attachment
-            let updatedDescription = removeImageMarkup(descriptionRef.current.value, file.id);
-            descriptionRef.current.value = updatedDescription;
+    const onAttachmentRemoved = (attachment, index) => {
+        
+        let description = getValues('description') || '';
+        if(description.indexOf(attachment.id) > -1){  // Find potential markup referencing the attachment
+            let updatedDescription = removeImageMarkup(description, attachment.id);
+            setValue('description', updatedDescription);
         }
+        removeAttachment(index);
+    }
+    
+    /**
+     * Inserts image markup into the description field
+     * @param {*} file 
+     * @param {*} width 
+     * @param {*} height 
+     */
+    const addEmbeddedImage = (file, width, height) => {
+        setShowEmbedImageDialog(false);
+        const id = uuidv4();
+        const imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
+        let description = getValues('description') || '';
+        description += imageMarkup;
+        setValue('description', description);
+        appendAttachment(new OlogAttachment(file, id));
+    }
+
+    /**
+     * Update a property value and its attributes
+     * @param {*} property to update
+     * @param {*} attribute property attribute to update
+     * @param {*} attributeValue value of attribute to update to
+     */
+     const updateAttributeValue = (index, property, attribute, attributeValue) => {
+        let copyOfProperty = {...property};
+        let attributeIndex = copyOfProperty.attributes.indexOf(attribute);
+        let copyOfAttribute = copyOfProperty.attributes[attributeIndex];
+        copyOfAttribute.value = attributeValue;
+        updateProperty(index, copyOfProperty);
     }
 
     /**
@@ -149,12 +164,12 @@ const EntryEditor = ({
      * @param {*} id 
      * @returns 
      */
-    const submitAttachmentsMulti = async (id) => {
-        for (let i = 0; i < attachedFiles.length; i++) {
+     const submitAttachmentsMulti = async (id) => {
+        for (let i = 0; i < attachments.length; i++) {
             let formData = new FormData();
-            formData.append('file', attachedFiles[i].file);
-            formData.append('id', attachedFiles[i].id);
-            formData.append('filename', attachedFiles[i].file.name);
+            formData.append('file', attachments[i].file);
+            formData.append('id', attachments[i].id);
+            formData.append('filename', attachments[i].file.name);
             await ologService.post(`/logs/attachments/${id}`, 
                 formData,
                 {
@@ -167,10 +182,9 @@ const EntryEditor = ({
         }
     }
 
-    const submit = (event) => {
-        const checkValidity = event.currentTarget.checkValidity();
-        event.preventDefault();
-        var promise = checkSession();
+    const onSubmit = (formData) => {
+
+        const promise = checkSession();
         if(!promise){
             setUserData({});
             setCreateInProgress(false);
@@ -184,274 +198,272 @@ const EntryEditor = ({
                     return;
                 }
                 else{
-                    const selectionsAreValid = selectedLogbooks.length > 0 && level !== null;
-                    setValidated(true);
-                    if (checkValidity && selectionsAreValid){
-                        setCreateInProgress(true);
-                        const logEntry = {
-                            logbooks: selectedLogbooks,
-                            tags: selectedTags,
-                            properties: selectedProperties,
-                            title: titleRef.current.value,
-                            level: level,
-                            description: descriptionRef.current.value
-                        }
-                        let url = replyAction ? 
-                            `/logs?markup=commonmark&inReplyTo=${currentLogEntry.id}` :
-                            `/logs?markup=commonmark`;
-                        ologService.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
-                            .then(res => {
-                                if(attachedFiles.length > 0){ // No need to call backend if there are no attachments.
-                                    submitAttachmentsMulti(res.data.id);
-                                }
-                                setCreateInProgress(false);
-                                navigate('/');
-                            })
-                            .catch(error => {
-                                if(error.response && (error.response.status === 401 || error.response.status === 403)){
-                                    alert('You are currently not authorized to create a log entry.')
-                                }
-                                else if(error.response && (error.response.status >= 500)){
-                                    alert('Failed to create log entry.')
-                                }
-                                setCreateInProgress(false);
-                            });
+                    setCreateInProgress(true);
+                    const logEntry = {
+                        logbooks: formData.logbooks,
+                        tags: formData.tags,
+                        properties: formData.properties,
+                        title: formData.title,
+                        level: formData.entryType.value,
+                        description: formData.description
                     }
+                    let url = replyAction ? 
+                        `/logs?markup=commonmark&inReplyTo=${currentLogEntry.id}` :
+                        `/logs?markup=commonmark`;
+                    ologService.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
+                        .then(res => {
+                            if(attachments.length > 0){ // No need to call backend if there are no attachments.
+                                submitAttachmentsMulti(res.data.id);
+                            }
+                            setCreateInProgress(false);
+                            clearFormData();
+                            navigate('/');
+                        })
+                        .catch(error => {
+                            if(error.response && (error.response.status === 401 || error.response.status === 403)){
+                                alert('You are currently not authorized to create a log entry.')
+                            }
+                            else if(error.response && (error.response.status >= 500)){
+                                alert('Failed to create log entry.')
+                            }
+                            setCreateInProgress(false);
+                        });
                     return;
                 }
             });
         }
     }
 
-    const addProperty = (property) => {
-        setSelectedProperties([...selectedProperties, property]);
-        setShowAddProperty(false);
-    }
-
-    const getCommonmarkSrc = () => {
-        return descriptionRef.current.value;
-    }
-
-    const getAttachedFiles = () => {
-        return attachedFiles;
-    }
-
-    const removeProperty = (key) => {
-        let properties = [...selectedProperties].filter(property => property.name !== key);
-        setSelectedProperties(properties);
-    }
-
-    const addEmbeddedImage = (file, width, height) => {
-        setShowEmbedImageDialog(false);
-        const id = uuidv4();
-        var imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
-        descriptionRef.current.value += imageMarkup;
-        const ologAttachment = new OlogAttachment(file, id);
-        setAttachedFiles([...attachedFiles, ologAttachment]);
-    }
-
     /**
-     * Watch the horror!
-     * @param {*} property 
-     * @param {*} attribute 
-     * @param {*} attributeValue 
+     * If attachments are present, creates a wrapper containing an array of Attachment components
      */
-     const updateAttributeValue = (property, attribute, attributeValue) => {
-        let copyOfSelectedProperties = [...selectedProperties];
-        let propertyIndex = copyOfSelectedProperties.indexOf(property);
-        let copyOfProperty = copyOfSelectedProperties[propertyIndex];
-        let attributeIndex = copyOfProperty.attributes.indexOf(attribute);
-        let copyOfAttribute = copyOfProperty.attributes[attributeIndex];
-        copyOfAttribute.value = attributeValue;
-        setSelectedProperties(copyOfSelectedProperties);
-    }
+    const renderedAttachments = attachments.length > 0 
+        ? <Form.Row className="grid-item">
+            {attachments.map((attachment, index) => {
+                return <Attachment key={index} attachment={attachment} removeAttachment={() => onAttachmentRemoved(attachment, index)}/>
+            })}
+        </Form.Row> 
+        : null;
 
-    const asLogbookSelections = (logbooks) => {
-        if(logbooks) {
-            return logbooks.map(logbook => {
-                return {
-                    value: logbook,
-                    label: logbook.name
-                }
-            })
-        } else {
-            return []
-        }
-    }
-
-    const asTagSelections = (tags) => {
-        if(tags) {
-            return tags.map(tag => {
-                return {
-                    value: tag,
-                    label: tag.name
-                }
-            })
-        } else {
-            return []
-        }
-    }
-
-    const attachments = attachedFiles.map((file, index) => {
-        return(
-            <Attachment key={index} file={file} removeAttachment={removeAttachment}/>
-        )
-    })
-    
-    const propertyItems = selectedProperties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
+    const renderedProperties = properties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
         return (
             <PropertyEditor key={index}
+                index={index}
                 property={property}
                 removeProperty={removeProperty}
                 updateAttributeValue={updateAttributeValue}/>
-        )
+        );
     })
 
-    const levelOptions = customization.levelValues.map(level => {
-        return {
-            value: level,
-            label: level
-        }
-    });
-
-    return(
+    return (
         <>
             <LoadingOverlay
                 active={createInProgress}
             >
-            <Container fluid className="full-height">
-                <Form noValidate validated={validated} onSubmit={submit}>
-                    <Form.Row>
-                        <Form.Label className="new-entry">New Log Entry</Form.Label>
-                        <Button type="submit" disabled={userData.userName === "" || createInProgress}>Submit</Button>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group controlId='logbooks' className='w-100'>
-                            <Form.Label>Logbooks:</Form.Label>
-                            <Select
-                                isMulti
-                                name="logbooks"
-                                options={asLogbookSelections(logbooks.filter(avail => !selectedLogbooks.find(sel => sel.name === avail.name)))}
-                                onChange={logbookSelectionChanged}
-                                value={asLogbookSelections(selectedLogbooks)}
-                                className="w-100"
-                                placeholder="Select Logbook(s)"
-                                inputId='logbooks'
-                            />
-                            {selectedLogbooks.length === 0 && 
-                                <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>}
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group controlId='tags' className='w-100'>
-                            <Form.Label>Tags:</Form.Label>
-                            <Select
-                                isMulti
-                                name="tags"
-                                inputId="tags"
-                                options={asTagSelections(tags.filter(avail => !selectedTags.find(sel => sel.name === avail.name)))}
-                                onChange={tagSelectionChanged}
-                                value={asTagSelections(selectedTags)}
-                                className="w-100"
-                                placeholder="Select Tag(s)"
-                            />
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group controlId='entryTypes' className='w-100'>
-                            <Form.Label>Entry Type:</Form.Label>
-                            <Select
-                                name="entryTypes"
-                                inputId="entryTypes"
-                                options={levelOptions}
-                                defaultInputValue={customization.defaultLevel}
-                                onChange={entryTypeSelectionChanged}
-                                className="w-100"
-                                placeholder="Select Entry Type"
-                            />
-                            {(level === "" || !level) && 
-                                <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group controlId='title' className='w-100'>
-                            <Form.Label>Title:</Form.Label>
-                            <Form.Control 
-                                required
-                                type="text" 
-                                placeholder="Title" 
-                                ref={titleRef}/>
-                            <Form.Control.Feedback type="invalid">
-                                Please specify a title.
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group controlId='description' className='w-100'>    
-                            <Form.Label>Description:</Form.Label>
-                            <Form.Control
-                                as="textarea" 
-                                rows="5" 
-                                placeholder="Description"
-                                ref={descriptionRef}/>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Button variant="secondary" size="sm" onClick={ onBrowse }>
-                            <span><FaPlus className="add-button"/></span>Add Attachments
-                        </Button>
-                        <FormFile.Input
-                                hidden
-                                multiple
-                                ref={ fileInputRef }
-                                onChange={ onFileChanged } />
-                        <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                onClick={() => setShowEmbedImageDialog(true)}>
-                            Embed Image
-                        </Button>
-                        <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                onClick={() => setShowHtmlPreview(true)}>
-                            Preview
+                <Container fluid className="full-height">
+                    <Form onSubmit={handleSubmit(onSubmit)}>
+                        <Form.Row>
+                            <Form.Label className="new-entry">New Log Entry</Form.Label>
+                            <Button type="submit" disabled={userData.userName === "" || createInProgress}>Submit</Button>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group controlId='logbooks' className='w-100'>
+                                <Form.Label>Logbooks:</Form.Label>
+                                <Controller
+                                    name='logbooks'
+                                    control={control}
+                                    defaultValue={[]}
+                                    rules={{validate: val => val.length > 0}}
+                                    render={({field, fieldState})=>
+                                        <>
+                                            <MultiSelect
+                                                inputId={field.name}
+                                                options={logbooks.map(it => (
+                                                    {label: it.name, value: it}
+                                                ))}
+                                                selection={field.value.map(it => (
+                                                    {label: it.name, value: it}
+                                                ))}
+                                                onSelectionChanged={it => 
+                                                    field.onChange(it.map(item => item.value))
+                                                }
+                                                className="w-100"
+                                                placeholder="Select Logbook(s)"
+                                            />
+                                            {fieldState.error &&  
+                                                <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>
+                                            }
+                                        </>
+                                    }
+                                />
+                                
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group controlId='tags' className='w-100'>
+                                <Form.Label>Tags:</Form.Label>
+                                <Controller 
+                                    name='tags'
+                                    control={control}
+                                    defaultValue={[]}
+                                    render={({field}) => 
+                                        <>
+                                            <MultiSelect
+                                                inputId={field.name}
+                                                options={tags.map(it => (
+                                                    {label: it.name, value: it}
+                                                ))}
+                                                selection={field.value.map(it => (
+                                                    {label: it.name, value: it}
+                                                ))}
+                                                onSelectionChanged={it => field.onChange(it.map(item => item.value))}
+                                                className="w-100"
+                                                placeholder="Select Tag(s)"
+                                            />
+                                        </>
+                                }/>
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group controlId='entryType' className='w-100'>
+                                <Form.Label>Entry Type:</Form.Label>
+                                {/* 
+                                    EntryType is a string value, however there
+                                    are many possible values to pick from so it
+                                    is presented as a select input.
+                                */}
+                                <Controller 
+                                    name='entryType'
+                                    control={control}
+                                    defaultValue={customization.defaultLevel}
+                                    rules={{required: true}}
+                                    render={({field, fieldState}) =>
+                                        <>
+                                            <Select
+                                                name={field.name}
+                                                inputId={field.name}
+                                                options={customization.levelValues.map(it => (
+                                                    { value: it, label: it }
+                                                ))}
+                                                onChange={it => field.onChange(it.value)}
+                                                value={
+                                                    { value: field.value, label: field.value }
+                                                }
+                                                className="w-100"
+                                                placeholder="Select Entry Type"
+                                            />
+                                            {fieldState.error && 
+                                                <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
+                                        </>
+                                }/>
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group controlId='title' className='w-100'>
+                                <Form.Label>Title:</Form.Label>
+                                <Controller 
+                                    name='title'
+                                    control={control}
+                                    rules={{required: true}}
+                                    render={({field, fieldState})=>
+                                        <>
+                                            <Form.Control 
+                                                onChange={field.onChange} 
+                                                value={field.value} 
+                                                ref={field.ref}
+                                                type="text" 
+                                                placeholder="Title" 
+                                                isInvalid={fieldState.error}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please specify a title.
+                                            </Form.Control.Feedback>
+                                        </>
+                                }/>
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group controlId='description' className='w-100'>    
+                                <Form.Label>Description:</Form.Label>
+                                <Controller 
+                                    name='description'
+                                    control={control}
+                                    rules={{required: true}}
+                                    render={({field, fieldState})=>
+                                        <>
+                                            <Form.Control
+                                                onChange={field.onChange} 
+                                                value={field.value} 
+                                                ref={field.ref}
+                                                as="textarea" 
+                                                rows="5" 
+                                                placeholder="Description"
+                                                isInvalid={fieldState.error}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please include a description.
+                                            </Form.Control.Feedback>
+                                        </>
+                                }/>
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            {/* note file inputs are uncontrolled, especially in this case where the user can upload many attachments */}
+                            <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click() }>
+                                    <span><FaPlus className="add-button"/></span>Add Attachments
                             </Button>
-                    </Form.Row>
+                            <FormFile.Input
+                                ref={fileInputRef}
+                                multiple
+                                onChange={event => onFileChanged(event) } 
+                                hidden
+                            />
+                            
+                            <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                    onClick={() => setShowEmbedImageDialog(true)}>
+                                Embed Image
+                            </Button>
+                            <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                    onClick={() => setShowHtmlPreview(true)}>
+                                Preview
+                            </Button>
+                        </Form.Row>
                     </Form>
-                    {attachedFiles.length > 0 ? <Form.Row className="grid-item">{attachments}</Form.Row> : null}
+                    { renderedAttachments }
                     <Form.Label className="mt-3">Properties:</Form.Label>
                     {<Form.Row className="grid-item">
                         <Form.Group style={{width: "400px"}}>
                             <Button variant="secondary" size="sm" onClick={() => setShowAddProperty(true)}>
                                 <span><FaPlus className="add-button"/></span>Add Property
                             </Button>
-                            {propertyItems}              
+                            {renderedProperties}              
                         </Form.Group>
                     </Form.Row>}
                 </Container>
             </LoadingOverlay>
-            
             {
-            <Modal show={showAddProperty} onHide={() => setShowAddProperty(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Property</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <PropertySelector 
-                        availableProperties={availableProperties} 
-                        selectedProperties={selectedProperties}
-                        addProperty={addProperty}/>
-                </Modal.Body>
-            </Modal>
+                <Modal show={showAddProperty} onHide={() => setShowAddProperty(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add Property</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <PropertySelector 
+                            availableProperties={availableProperties} 
+                            selectedProperties={properties}
+                            addProperty={appendProperty}/>
+                    </Modal.Body>
+                </Modal>
             }
             <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
                 setShowEmbedImageDialog={setShowEmbedImageDialog}
                 addEmbeddedImage={addEmbeddedImage}/>
-
             <HtmlPreview showHtmlPreview={showHtmlPreview}
                 setShowHtmlPreview={setShowHtmlPreview}
-                getCommonmarkSrc={getCommonmarkSrc}
-                getAttachedFiles={getAttachedFiles}/>
+                getCommonmarkSrc={() => getValues('description')}
+                getAttachedFiles={() => attachments}/>
+
         </>
     );
+ }
 
-}
-
-export default EntryEditor;
+ export default EntryEditor;

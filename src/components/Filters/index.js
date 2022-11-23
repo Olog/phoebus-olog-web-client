@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {useState} from 'react';
-import Logbooks from '../Logbooks';
-import Tags from '../Tags';
 import { FaCalendarAlt } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
 import {dateToString} from '../../utils/utils';
@@ -26,6 +24,7 @@ import Button from 'react-bootstrap/Button';
 import { useEffect } from 'react';
 import { InputGroup } from 'react-bootstrap';
 import DateSelectorModal from './DateSelectorModal';
+import MultiSelect from '../input/MultiSelect';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -122,19 +121,32 @@ const Filters = ({logbooks, tags, searchParams, setSearchParams, searchPageParam
                 </Form.Group>
                 <Form.Group controlId='logbooks'>
                     <Form.Label>Logbooks</Form.Label>
-                    <Logbooks
-                        logbooks={logbooks}
-                        searchParams={searchParams}
-                        updateLogbookSearchCriteria={logbooks => {inputChangedArray(logbooks, 'logbooks')}}
+                    <MultiSelect
                         inputId='logbooks'
+                        options={logbooks.map(it => (
+                            {label: it.name, value: it.name}
+                        ))}
+                        selection={searchParams?.logbooks?.map(it => (
+                            {label: it, value: it}
+                        ))}
+                        onSelectionChanged={selection => 
+                            inputChangedArray(selection.map(it => it.label), 'logbooks')
+                        }
                     />
                 </Form.Group>
                 <Form.Group controlId='tags'>
                     <Form.Label>Tags</Form.Label>
-                    <Tags tags={tags}
-                        searchParams={searchParams}
-                        updateTagSearchCriteria={tags => {inputChangedArray(tags, 'tags')}}
+                    <MultiSelect
                         inputId='tags'
+                        options={tags.map(it => (
+                            {label: it.name, value: it.name}
+                        ))}
+                        selection={searchParams?.tags?.map(it => (
+                            {label: it, value: it}
+                        ))}
+                        onSelectionChanged={selection => 
+                            inputChangedArray(selection.map(it => it.label), 'tags')
+                        }
                     />
                 </Form.Group>
                 <Form.Group controlId='author'>
