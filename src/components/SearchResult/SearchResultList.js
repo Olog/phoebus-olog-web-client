@@ -20,7 +20,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import SearchResultItem from './SearchResultItem';
-import LoadingOverlay from '../LoadingOverlay/LoadingOverlay';
+import LoadingOverlay from '../LoadingOverlay';
 import SearchBox from './SearchBox';
 import PaginationBar from './PaginationBar';
 import { useDispatch } from 'react-redux';

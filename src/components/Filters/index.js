@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {useState} from 'react';
-import Logbooks from '../Logbooks/Logbooks';
-import Tags from '../Tags/Tags';
+import Logbooks from '../Logbooks';
+import Tags from '../Tags';
 import { FaCalendarAlt } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
 import {dateToString} from '../../utils/utils';

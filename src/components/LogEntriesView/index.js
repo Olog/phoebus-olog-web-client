@@ -19,10 +19,7 @@
 import {useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ologService from '../../api/olog-service';
-// import Container from 'react-bootstrap/Container'
-// import Row from 'react-bootstrap/Row';
-// import Col from 'react-bootstrap/Col';
-import LogDetails from '../LogDetails/LogDetails';
+import LogDetails from '../LogDetails';
 import SearchResultList from '../SearchResult/SearchResultList';
 import customization from '../../utils/customization';
 import CollapsibleFilters from '../Filters/CollapsibleFilters';
@@ -30,7 +27,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 import { useSearchLogsQuery } from '../../services/ologApi';
 import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
-import ServiceErrorBanner from '../ErrorBanner/ServiceErrorBanner';
+import ServiceErrorBanner from '../ErrorBanner';
 import styled from 'styled-components';
 
 const ContentContainer = styled.div`

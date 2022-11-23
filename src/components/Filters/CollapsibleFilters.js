@@ -19,7 +19,7 @@
 import { useState, useEffect } from 'react';
 // import Collapse from 'react-bootstrap/Collapse';
 import Collapse from './Collapse';
-import Filters from '../Filters/Filters';
+import Filters from '.';
 import Col from 'react-bootstrap/Col';
 import { useDispatch } from 'react-redux';
 import { updateSearchParams } from '../../features/searchParamsReducer';
