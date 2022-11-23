@@ -124,20 +124,6 @@ class Banner extends Component {
   render(){
     return (
       <>
-        {/* <Navbar bg="dark" variant="dark" >
-          <Navbar.Brand href="/">
-            <Row style={{marginLeft: "1px", marginRight: "1px"}}>{packageInfo.name}</Row>
-            <Row style={{marginLeft: "1px", marginRight: "1px"}}><span style={{fontSize: "10px  "}}>v{packageInfo.version}</span></Row>
-          </Navbar.Brand>
-          <Link to="/edit">
-            <Button disabled={!this.props.userData.userName} 
-              variant="primary" 
-              onClick={() => this.handleNewLogEntry()}>New Log Entry</Button>
-          </Link>
-          <Nav className="justify-content-end" style={{ width: "100%" }}>
-            <Button onClick={this.handleClick}>{this.props.userData.userName ? this.props.userData.userName : 'Sign In'}</Button>
-          </Nav> 
-        </Navbar> */}
         <Navbar>
           <NavHeader>
             <Link to="/">

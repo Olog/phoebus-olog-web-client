@@ -5,7 +5,7 @@ import { store } from './store.js';
 import { Provider } from 'react-redux';
 // import './css/olog.css';
 // import './css/bootstrap.css';
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 // CSS Reset
 const GlobalStyle = createGlobalStyle`
@@ -26,11 +26,20 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
+const theme = {
+    colors: {
+        primary: '#007bff',
+        secondary: '#6c757d'
+    }
+};
+
 const container = document.getElementById('root');
 const root = createRoot(container); 
 root.render(
     <Provider store={store} >
-        <GlobalStyle />
-        <App />
+        <ThemeProvider theme={theme}>
+            <GlobalStyle />
+            <App />
+        </ThemeProvider>
     </Provider>
 );
