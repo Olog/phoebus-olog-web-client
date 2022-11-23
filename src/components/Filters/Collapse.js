@@ -1,23 +1,18 @@
-import styled from "styled-components"
-
-const Container = styled.div`
-    ${({show}) => show ? `
-        display: block !important;
-    `: `
-        display: none !important;
-    `}
-`
+import { useEffect } from "react";
 
 const Collapse = ({show, onExiting, children}) => {
 
-    if(!show) {
-        onExiting();
-    }
+    useEffect(() => {
+        if(!show) {
+            onExiting();
+        }
+        // eslint-disable-next-line
+    }, [show])
     
     return (
-        <Container show={show} >
-            {children}
-        </Container>
+        <>
+            {show ? children : null}
+        </>
     )
 }
 

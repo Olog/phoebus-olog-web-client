@@ -22,13 +22,13 @@ import ologService from '../../api/olog-service';
 import LogDetails from '../LogDetails';
 import SearchResultList from '../SearchResult/SearchResultList';
 import customization from '../../utils/customization';
-import CollapsibleFilters from '../Filters/CollapsibleFilters';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
 import { useSearchLogsQuery } from '../../services/ologApi';
 import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
 import ServiceErrorBanner from '../ErrorBanner';
 import styled from 'styled-components';
+import Filters from '../Filters';
 
 const ContentContainer = styled.div`
     height: 100%;
@@ -124,8 +124,9 @@ const LogEntriesView = ({
             {searchResultError && 
                 <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError} />
             }
+
             <ContentContainer>
-                <CollapsibleFilters {...{
+                <Filters {...{
                     logbooks,
                     tags,
                     showFilters,
