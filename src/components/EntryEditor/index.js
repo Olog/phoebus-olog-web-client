@@ -43,6 +43,7 @@ import { useGetPropertiesQuery } from '../../services/ologApi.js';
 import MultiSelect from '../input/MultiSelect.js';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist'
+import TextInput from '../input/TextInput.js';
 
 const EntryEditor = ({
      tags,
@@ -358,55 +359,30 @@ const EntryEditor = ({
                                 }/>
                             </Form.Group>
                         </Form.Row>
-                        <Form.Row>
-                            <Form.Group controlId='title' className='w-100'>
-                                <Form.Label>Title:</Form.Label>
-                                <Controller 
-                                    name='title'
-                                    control={control}
-                                    rules={{required: true}}
-                                    render={({field, fieldState})=>
-                                        <>
-                                            <Form.Control 
-                                                onChange={field.onChange} 
-                                                value={field.value} 
-                                                ref={field.ref}
-                                                type="text" 
-                                                placeholder="Title" 
-                                                isInvalid={fieldState.error}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                                Please specify a title.
-                                            </Form.Control.Feedback>
-                                        </>
-                                }/>
-                            </Form.Group>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Group controlId='description' className='w-100'>    
-                                <Form.Label>Description:</Form.Label>
-                                <Controller 
-                                    name='description'
-                                    control={control}
-                                    rules={{required: true}}
-                                    render={({field, fieldState})=>
-                                        <>
-                                            <Form.Control
-                                                onChange={field.onChange} 
-                                                value={field.value} 
-                                                ref={field.ref}
-                                                as="textarea" 
-                                                rows="5" 
-                                                placeholder="Description"
-                                                isInvalid={fieldState.error}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                                Please include a description.
-                                            </Form.Control.Feedback>
-                                        </>
-                                }/>
-                            </Form.Group>
-                        </Form.Row>
+                        <TextInput 
+                            name='title'
+                            label='Title'
+                            control={control}
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: 'Please specify a title.'
+                                }
+                            }}
+                        />
+                        <TextInput 
+                            name='description'
+                            label='Description'
+                            control={control}
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: 'Please include a description.'
+                                }
+                            }}
+                            textArea
+                            rows={10}
+                        />
                         <Form.Row>
                             {/* note file inputs are uncontrolled, especially in this case where the user can upload many attachments */}
                             <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click() }>

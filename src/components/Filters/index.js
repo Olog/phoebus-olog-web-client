@@ -31,6 +31,7 @@ import { updateSearchParams as updateSearchParamsAction } from '../../features/s
 import { updateSearchPageParams as updateSearchPageParamsAction } from '../../features/searchPageParamsReducer';
 import Collapse from './Collapse';
 import Col from 'react-bootstrap/Col';
+import TextInput from '../input/TextInput';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -121,40 +122,18 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         {/* Hidden button handles submit-on-enter automatically */}
                         <Button type='submit' hidden >Submit</Button>
-                        <Form.Group controlId='title'>
-                            <Form.Label>Title:</Form.Label>
-                            <Controller 
-                                name='title'
-                                control={control}
-                                defaultValue=''
-                                render={({field}) => 
-                                    <Form.Control size="sm"
-                                        onChange={field.onChange} 
-                                        value={field.value} 
-                                        ref={field.ref}
-                                        type="text" 
-                                        placeholder="Title" 
-                                    />
-                                }
-                            />
-                        </Form.Group>
-                        <Form.Group controlId='description'>
-                            <Form.Label>Text</Form.Label>
-                            <Controller 
-                                name='desc'
-                                control={control}
-                                defaultValue=''
-                                render={({field}) => 
-                                    <Form.Control size="sm"
-                                        onChange={field.onChange} 
-                                        value={field.value} 
-                                        ref={field.ref}
-                                        type="text" 
-                                        placeholder="Description" 
-                                    />
-                                }
-                            />
-                        </Form.Group>
+                        <TextInput 
+                            name='title'
+                            label='Title'
+                            control={control}
+                            defaultValue=''
+                        />
+                        <TextInput 
+                            name='desc'
+                            label='Text'
+                            control={control}
+                            defaultValue=''
+                        />
                         <Form.Group controlId='logbooks'>
                             <Form.Label>Logbooks</Form.Label>
                             <Controller 
@@ -193,23 +172,12 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
                                     />
                             }/>
                         </Form.Group>
-                        <Form.Group controlId='owner'>
-                            <Form.Label>Author</Form.Label>
-                            <Controller 
-                                name='owner'
-                                control={control}
-                                defaultValue={tempSearchParams.owner || ''}
-                                render={({field}) => 
-                                    <Form.Control size="sm"
-                                        onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', false)} 
-                                        value={field.value} 
-                                        ref={field.ref}
-                                        type="text" 
-                                        placeholder="Author" 
-                                    />
-                                }
-                            />
-                        </Form.Group>
+                        <TextInput 
+                            name='owner'
+                            label='Author'
+                            control={control}
+                            defaultValue={tempSearchParams.owner || ''}
+                        />
                         <Form.Group controlId='start'>
                             <Form.Label>Start Time</Form.Label>
                             <InputGroup>
@@ -279,22 +247,12 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
                             }/>
                             
                         </Form.Group>
-                        <Form.Group controlId='attachments'>
-                            <Form.Label>Attachments</Form.Label>
-                            <Controller 
-                                name='attachments'
-                                control={control}
-                                defaultValue={tempSearchParams.attachments || ''}
-                                render={({field}) =>
-                                    <Form.Control size="sm"
-                                        onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', false)} 
-                                        value={field.value} 
-                                        ref={field.ref}
-                                        type="text"
-                                        placeholder='Attachments'
-                                    />
-                            }/>
-                        </Form.Group>
+                        <TextInput 
+                            name='attachments'
+                            label='Attachments'
+                            control={control}
+                            defaultValue={tempSearchParams.attachments || ''}
+                        />
                     </Form>
                 </Container>
                 {
