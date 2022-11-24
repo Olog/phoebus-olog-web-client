@@ -18,21 +18,28 @@
 
 import '../../css/olog.css';
 import Select from 'react-select';
+import { useController } from 'react-hook-form';
+import LabeledInput from './LabeledInput';
 
-const MultiSelect = ({inputId, selection=[], options=[], onSelectionChanged, isMulti=true, className, placeholder}) => {
+const MultiSelect = ({name, label, control, rules, defaultValue, className, options=[], onSelection, onSelectionChanged, isMulti=true}) => {
+    const {field, fieldState} = useController({name, control, rules, defaultValue});
 
-    return <Select
-        isMulti={isMulti}
-        name={inputId}
-        inputId={inputId}
-        options={options.filter(option => 
-            !selection.map(it => it.label).includes(option.label)
-        )}
-        onChange={onSelectionChanged}
-        value={selection}
-        className={className}
-        placeholder={placeholder}
-    />
+    return (
+        <LabeledInput {...{name, label, error: fieldState?.error?.message}} >
+            <Select
+                name={name}
+                inputId={name}
+                isMulti={isMulti}
+                placeholder={label}
+                options={options.filter(option => 
+                    ![...field.value].map(it => it.label).includes(option.label)
+                )}
+                onChange={value => onSelectionChanged(field, value)}
+                value={onSelection(field.value)}
+                className={className}
+            />
+        </LabeledInput>
+   )
     
 }
 

@@ -16,10 +16,10 @@ const TextArea = styled.textarea`
     border-radius: 5px;
 `
 
-export const TextInput = ({name, label, control, rules, defaultValue, textArea=false, rows=3}, ...props) => {
+export const TextInput = ({name, label, control, rules, defaultValue, className, textArea=false, rows=3}, ...props) => {
     
     const {field, fieldState} = useController({name, control, rules, defaultValue});
-    console.log({fieldState})
+
     return (
         <LabeledInput {...{name, label, error: fieldState?.error?.message}} >
             {textArea 
@@ -28,13 +28,16 @@ export const TextInput = ({name, label, control, rules, defaultValue, textArea=f
                 id={name}
                 placeholder={label}
                 rows={rows}
+                className={className}
                 {...field} 
+                {...props}
             />
             : <Input 
                 type="text" 
                 name={name} 
                 id={name}
                 placeholder={label}
+                className={className}
                 {...field} 
                 {...props}
             />

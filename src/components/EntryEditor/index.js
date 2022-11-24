@@ -267,98 +267,52 @@ const EntryEditor = ({
                             <Form.Label className="new-entry">New Log Entry</Form.Label>
                             <Button type="submit" disabled={userData.userName === "" || createInProgress}>Submit</Button>
                         </Form.Row>
-                        <Form.Row>
-                            <Form.Group controlId='logbooks' className='w-100'>
-                                <Form.Label>Logbooks:</Form.Label>
-                                <Controller
-                                    name='logbooks'
-                                    control={control}
-                                    defaultValue={[]}
-                                    rules={{validate: val => val.length > 0}}
-                                    render={({field, fieldState})=>
-                                        <>
-                                            <MultiSelect
-                                                inputId={field.name}
-                                                options={logbooks.map(it => (
-                                                    {label: it.name, value: it}
-                                                ))}
-                                                selection={field.value.map(it => (
-                                                    {label: it.name, value: it}
-                                                ))}
-                                                onSelectionChanged={it => 
-                                                    field.onChange(it.map(item => item.value))
-                                                }
-                                                className="w-100"
-                                                placeholder="Select Logbook(s)"
-                                            />
-                                            {fieldState.error &&  
-                                                <Form.Label className="form-error-label" column={true}>Select at least one logbook.</Form.Label>
-                                            }
-                                        </>
-                                    }
-                                />
-                                
-                            </Form.Group>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Group controlId='tags' className='w-100'>
-                                <Form.Label>Tags:</Form.Label>
-                                <Controller 
-                                    name='tags'
-                                    control={control}
-                                    defaultValue={[]}
-                                    render={({field}) => 
-                                        <>
-                                            <MultiSelect
-                                                inputId={field.name}
-                                                options={tags.map(it => (
-                                                    {label: it.name, value: it}
-                                                ))}
-                                                selection={field.value.map(it => (
-                                                    {label: it.name, value: it}
-                                                ))}
-                                                onSelectionChanged={it => field.onChange(it.map(item => item.value))}
-                                                className="w-100"
-                                                placeholder="Select Tag(s)"
-                                            />
-                                        </>
-                                }/>
-                            </Form.Group>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Group controlId='entryType' className='w-100'>
-                                <Form.Label>Entry Type:</Form.Label>
-                                {/* 
-                                    EntryType is a string value, however there
-                                    are many possible values to pick from so it
-                                    is presented as a select input.
-                                */}
-                                <Controller 
-                                    name='entryType'
-                                    control={control}
-                                    defaultValue={customization.defaultLevel}
-                                    rules={{required: true}}
-                                    render={({field, fieldState}) =>
-                                        <>
-                                            <Select
-                                                name={field.name}
-                                                inputId={field.name}
-                                                options={customization.levelValues.map(it => (
-                                                    { value: it, label: it }
-                                                ))}
-                                                onChange={it => field.onChange(it.value)}
-                                                value={
-                                                    { value: field.value, label: field.value }
-                                                }
-                                                className="w-100"
-                                                placeholder="Select Entry Type"
-                                            />
-                                            {fieldState.error && 
-                                                <Form.Label className="form-error-label" column={true}>Select an entry type.</Form.Label>}
-                                        </>
-                                }/>
-                            </Form.Group>
-                        </Form.Row>
+                        <MultiSelect
+                            name='logbooks'
+                            label='Logbooks'
+                            control={control}
+                            defaultValue={[]}
+                            options={logbooks.map(it => (
+                                {label: it.name, value: it}
+                            ))}
+                            onSelection={value => value.map(it => (
+                                {label: it.name, value: it}
+                            ))}
+                            onSelectionChanged={(field, value) => 
+                                field.onChange(value.map(it => it.value))
+                            }
+                        />
+                        <MultiSelect 
+                            name='tags'
+                            label='Tags'
+                            control={control}
+                            defaultValue={[]}
+                            options={tags.map(it => (
+                                {label: it.name, value: it}
+                            ))}
+                            onSelection={value => value.map(it => (
+                                {label: it.name, value: it}
+                            ))}
+                            onSelectionChanged={(field, value) => 
+                                field.onChange(value.map(it => it.value))
+                            }
+                        />
+                        <MultiSelect 
+                            name='entryType'
+                            label='Entry Type'
+                            control={control}
+                            defaultValue={customization.defaultLevel}
+                            options={customization.levelValues.map(it => (
+                                { value: it, label: it }
+                            ))}
+                            onSelection={sel =>( 
+                                { value: sel, label: sel }
+                            )}
+                            onSelectionChanged={(field, sel) => 
+                                field.onChange(sel.value)
+                            }
+                            isMulti={false}
+                        />
                         <TextInput 
                             name='title'
                             label='Title'

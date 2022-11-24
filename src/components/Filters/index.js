@@ -134,44 +134,32 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
                             control={control}
                             defaultValue=''
                         />
-                        <Form.Group controlId='logbooks'>
-                            <Form.Label>Logbooks</Form.Label>
-                            <Controller 
-                                name='logbooks'
-                                control={control}
-                                defaultValue={[]}
-                                render={({field})=>
-                                    <MultiSelect
-                                        inputId={field.name}
-                                        options={logbooks.map(it => (
-                                            {label: it.name, value: it}
-                                        ))}
-                                        selection={field.value.map(it => (
-                                            {label: it, value: it}
-                                        ))}
-                                        onSelectionChanged={selection => onSearchParamFieldValueChanged(field, selection.map(it => it.label))}
-                                    />
-                            }/>
-                        </Form.Group>
-                        <Form.Group controlId='tags'>
-                            <Form.Label>Tags</Form.Label>
-                            <Controller 
-                                name='tags'
-                                control={control}
-                                defaultValue={[]}
-                                render={({field})=>
-                                    <MultiSelect
-                                        inputId={field.name}
-                                        options={tags.map(it => (
-                                            {label: it.name, value: it}
-                                        ))}
-                                        selection={field.value.map(it => (
-                                            {label: it, value: it}
-                                        ))}
-                                        onSelectionChanged={selection => onSearchParamFieldValueChanged(field, selection.map(it => it.label))}
-                                    />
-                            }/>
-                        </Form.Group>
+                        <MultiSelect 
+                            name='logbooks'
+                            label='Logbooks'
+                            control={control}
+                            defaultValue={[]}
+                            options={logbooks.map(it => (
+                                {label: it.name, value: it}
+                            ))}
+                            onSelection={(value) => value.map(it => (
+                                {label: it, value: it}
+                            ))}
+                            onSelectionChanged={(field, value) => onSearchParamFieldValueChanged(field, value.map(it => it.label))}
+                        />
+                        <MultiSelect 
+                            name='tags'
+                            label='Tags'
+                            control={control}
+                            defaultValue={[]}
+                            options={tags.map(it => (
+                                {label: it.name, value: it}
+                            ))}
+                            onSelection={(value) => value.map(it => (
+                                {label: it, value: it}
+                            ))}
+                            onSelectionChanged={(field, value) => onSearchParamFieldValueChanged(field, value.map(it => it.label))}
+                        />
                         <TextInput 
                             name='owner'
                             label='Author'
