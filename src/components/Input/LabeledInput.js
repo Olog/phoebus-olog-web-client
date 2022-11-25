@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import ErrorMessage from "./ErrorMessage";
 
 const Container = styled.div`
     display: flex;
@@ -12,8 +13,6 @@ const Container = styled.div`
 
     & span {
         padding-top: 0.2rem;
-        color: ${({theme}) => theme.colors.danger};
-        font-style: italic;
     }
 `
 
@@ -23,7 +22,7 @@ const LabeledInput = ({name, label, error, children}) => {
         <Container>
             <label htmlFor={name}>{label}</label>
             {children}
-            <span>{error}</span>
+            <ErrorMessage error={error} />
         </Container>
     )
 };

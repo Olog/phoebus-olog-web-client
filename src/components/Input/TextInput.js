@@ -16,7 +16,7 @@ const TextArea = styled.textarea`
     border-radius: 5px;
 `
 
-export const TextInput = ({name, label, control, rules, defaultValue, className, textArea=false, rows=3}, ...props) => {
+export const TextInput = ({name, label, control, rules, defaultValue, className, textArea=false, rows=3, password=false, ...props}) => {
     
     const {field, fieldState} = useController({name, control, rules, defaultValue});
 
@@ -33,7 +33,7 @@ export const TextInput = ({name, label, control, rules, defaultValue, className,
                 {...props}
             />
             : <Input 
-                type="text" 
+                type={password ? 'password' : 'text'}
                 name={name} 
                 id={name}
                 placeholder={label}

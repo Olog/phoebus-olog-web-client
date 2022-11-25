@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 // import './css/olog.css';
 // import './css/bootstrap.css';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { ModalProvider } from 'styled-react-modal';
 
 // CSS Reset
 const GlobalStyle = createGlobalStyle`
@@ -45,7 +46,9 @@ root.render(
     <Provider store={store} >
         <ThemeProvider theme={theme}>
             <GlobalStyle />
-            <App />
+            <ModalProvider>
+                <App />
+            </ModalProvider>
         </ThemeProvider>
     </Provider>
 );
