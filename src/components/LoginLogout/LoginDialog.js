@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Modal, { Body, Footer, Header, Title } from '../common/Modal';
 import Button from '../common/Button';
 import ologService from '../../api/olog-service';
@@ -27,9 +27,7 @@ import ErrorMessage from '../input/ErrorMessage';
 import styled from 'styled-components';
 import Submit from '../input/Submit';
 
-const Form = styled.form`
-
-`
+const Form = styled.form``;
 
 const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
 
