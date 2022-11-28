@@ -1,7 +1,8 @@
 import * as Styled from "./styles";
 import { AiOutlineClose } from 'react-icons/ai'
+import ReactFocusLock from "react-focus-lock";
 
-const Modal = ({title, show, onConfirm, onClose, children, className, ...props}) => {
+const Modal = ({title, show, onConfirm, onClose, onOpen, children, className, ...props}) => {
 
     return (
         <Styled.StyledModal
@@ -9,9 +10,12 @@ const Modal = ({title, show, onConfirm, onClose, children, className, ...props})
             onEscapeKeydown={onClose}
             isOpen={show}
             className={className}
+            afterOpen={onOpen}
             {...props}
         >
-            {children}
+            <ReactFocusLock>
+                {children}
+            </ReactFocusLock>
         </Styled.StyledModal>
     );
 };

@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal, { Body, Footer, Header, Title } from '../common/Modal';
 import Button from '../common/Button';
 import ologService from '../../api/olog-service';
@@ -33,7 +33,7 @@ const Form = styled.form`
 
 const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
 
-  const {control, handleSubmit, reset} = useForm();
+  const {control, handleSubmit, reset, setFocus} = useForm();
   const [loginError, setLoginError] = useState('');
 
   const hideLogin = () => {
@@ -45,7 +45,6 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
 
   const login = (data) => {
     
-    console.log(data)
     const formData = new FormData();
     formData.append("username", data.username);
     formData.append("password", data.password);
@@ -73,7 +72,7 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
   
   return(
 
-    <Modal show={loginDialogVisible} onClose={hideLogin}>
+    <Modal show={loginDialogVisible} onClose={hideLogin} onOpen={() => setFocus('username', {shouldSelect: true})}>
       <Header onClose={hideLogin} >
         <Title>Sign In</Title>
       </Header>
