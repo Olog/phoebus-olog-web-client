@@ -21,7 +21,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useEffect } from 'react';
 import MultiSelect from '../input/MultiSelect';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { updateSearchParams as updateSearchParamsAction } from '../../features/searchParamsReducer';
 import { updateSearchPageParams as updateSearchPageParamsAction } from '../../features/searchPageParamsReducer';
@@ -29,6 +29,7 @@ import Collapse from './Collapse';
 import Col from 'react-bootstrap/Col';
 import TextInput from '../input/TextInput';
 import WizardDateInput from '../input/WizardDateInput';
+import RadioInput from '../input/RadioInput';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -55,7 +56,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
 
     const [triggerSubmit, setTriggerSubmit] = useState(false);
 
-    const [start, end] = watch(['start', 'end']);
+    const [start, end, sort] = watch(['start', 'end', 'sort']);
 
     // Instead of triggering submit of search parameters directly from a field change
     // function as a side effect (bad practice, which ofc generates warnings), instead
@@ -76,6 +77,10 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
         updateSearchParams('end', end, true);
         // eslint-disable-next-line
     }, [end])
+    useEffect(() => {
+        updateSearchPageParams('sort', sort, true);
+        // eslint-disable-next-line
+    }, [sort])
     
     const onSubmit = (data) => {
         // Remove keys part of page params
@@ -91,10 +96,10 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
         updateSearchParams(field.name, value, submit);
     }
 
-    const onSearchPageParamFieldValueChanged = (field, value, submit=true) => {
-        field.onChange(value);
-        updateSearchPageParams(field.name, value, submit);
-    }
+    // const onSearchPageParamFieldValueChanged = (field, value, submit=true) => {
+    //     field.onChange(value);
+    //     updateSearchPageParams(field.name, value, submit);
+    // }
 
     const updateSearchParams = (key, value, submit=true) => {
         const updatedParams = {...tempSearchParams, [key]: value}
@@ -214,31 +219,22 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
                                 }
                             }}
                         />
-                        <Form.Group controlId='sort'>
-                            <Controller 
-                                name='sort'
-                                control={control}
-                                defaultValue={searchPageParams.sort || ''}
-                                render={({field}) =>
-                                    <>
-                                        <Form.Check style={{paddingTop: "5px"}}
-                                            type='radio'
-                                            id='sortDescending'
-                                            checked={field.value === 'down'}
-                                            label='Sort descending on date'
-                                            onChange={() => onSearchPageParamFieldValueChanged(field, 'down', true)}
-                                        />
-                                        <Form.Check 
-                                            type='radio'
-                                            id='sortAscending'
-                                            label='Sort ascending on date'
-                                            checked={field.value === 'up'}
-                                            onChange={(e) => onSearchPageParamFieldValueChanged(field, 'up', true)}
-                                        />
-                                    </>
-                            }/>
-                            
-                        </Form.Group>
+                        <RadioInput 
+                            name='sort'
+                            label='Sort'
+                            control={control}
+                            defaultValue={searchPageParams.sort || ''}
+                            options={[
+                                {
+                                    label: 'Sort descending on date',
+                                    value: 'down'
+                                },
+                                {
+                                    label: 'Sort ascending on date',
+                                    value: 'up'
+                                }
+                            ]}
+                        />
                         <TextInput 
                             name='attachments'
                             label='Attachments'
