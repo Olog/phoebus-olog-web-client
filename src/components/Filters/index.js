@@ -16,14 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React, {useState} from 'react';
-import { FaCalendarAlt } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
-import {dateToString} from '../../utils/utils';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useEffect } from 'react';
-import { InputGroup } from 'react-bootstrap';
-import DateSelectorModal from './DateSelectorModal';
 import MultiSelect from '../input/MultiSelect';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -32,6 +28,7 @@ import { updateSearchPageParams as updateSearchPageParamsAction } from '../../fe
 import Collapse from './Collapse';
 import Col from 'react-bootstrap/Col';
 import TextInput from '../input/TextInput';
+import WizardDateInput from '../input/WizardDateInput';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -53,11 +50,12 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
         dispatch(updateSearchPageParamsAction(tempSearchPageParams));
     }
 
-    const { control, handleSubmit, getValues, setValue } = useForm({defaultValues: {...tempSearchParams}});
+    const form = useForm({defaultValues: {...tempSearchParams}});;
+    const { control, handleSubmit, getValues, watch } = form;
 
     const [triggerSubmit, setTriggerSubmit] = useState(false);
-    const [showSelectStartTime, setShowSelectStartTime] = useState(false);
-    const [showSelectEndTime, setShowSelectEndTime] = useState(false);
+
+    const [start, end] = watch(['start', 'end']);
 
     // Instead of triggering submit of search parameters directly from a field change
     // function as a side effect (bad practice, which ofc generates warnings), instead
@@ -69,6 +67,15 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
         }
         // eslint-disable-next-line
     }, [triggerSubmit]);
+
+    useEffect(() => {
+        updateSearchParams('start', start, true);
+        // eslint-disable-next-line
+    }, [start])
+    useEffect(() => {
+        updateSearchParams('end', end, true);
+        // eslint-disable-next-line
+    }, [end])
     
     const onSubmit = (data) => {
         // Remove keys part of page params
@@ -107,11 +114,14 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
         }
     }
 
+    const isDate = (obj) => {
+        return obj instanceof Date && !isNaN(obj);
+    }
     const toDate = (dateString) => {
-        if(!dateString || (dateString && dateString.trim() === '')) {
-            return new Date();
-        } else {
+        if(isDate(dateString)) {
             return new Date(dateString);
+        } else {
+            return null;
         }
     }
 
@@ -166,50 +176,44 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
                             control={control}
                             defaultValue={tempSearchParams.owner || ''}
                         />
-                        <Form.Group controlId='start'>
-                            <Form.Label>Start Time</Form.Label>
-                            <InputGroup>
-                                <Controller 
-                                    name='start'
-                                    control={control}
-                                    defaultValue=''
-                                    render={({field}) =>
-                                        <>
-                                            <Form.Control size="sm"
-                                                type="text"
-                                                value={field.value}
-                                                ref={field.ref}
-                                                onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', true)}
-                                            />
-                                            <InputGroup.Append>
-                                                <Button size="sm" onClick={() => setShowSelectStartTime(true)}><FaCalendarAlt/></Button>
-                                            </InputGroup.Append>
-                                        </>
-                                }/>
-                            </InputGroup>
-                        </Form.Group>
-                        <Form.Group controlId='end'>
-                            <Form.Label>End Time</Form.Label>
-                            <InputGroup>
-                                <Controller 
-                                    name='end'
-                                    control={control}
-                                    defaultValue=''
-                                    render={({field}) =>
-                                        <>
-                                            <Form.Control size="sm"
-                                                type="text"
-                                                value={field.value}
-                                                ref={field.ref}
-                                                onChange={event => onSearchParamFieldValueChanged(field, event.target.value || '', true)}
-                                            />
-                                            <InputGroup.Append>
-                                                <Button size="sm" onClick={() => setShowSelectEndTime(true)}><FaCalendarAlt/></Button>
-                                            </InputGroup.Append>
-                                        </>
-                                }/>
-                            </InputGroup>
-                        </Form.Group>
+                        <WizardDateInput 
+                            name='start'
+                            label='Start Time'
+                            form={form}
+                            defaultValue={getValues('start')}
+                            rules={{
+                                validate: {
+                                    timeParadox: val => {
+                                        const startDate = toDate(val);
+                                        const endDate = toDate(getValues('end'));
+                                        if(startDate && endDate) {
+                                            return startDate <= endDate || 'Start date cannot come after end date'
+                                        } else {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }}
+                        />
+                        <WizardDateInput 
+                            name='end'
+                            label='End Time'
+                            form={form}
+                            defaultValue={getValues('end')}
+                            rules={{
+                                validate: {
+                                    timeParadox: val => {
+                                        const startDate = toDate(getValues('start'));
+                                        const endDate = toDate(val);
+                                        if(startDate && endDate) {
+                                            return endDate > startDate || 'End date cannot come before start date'
+                                        } else {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }}
+                        />
                         <Form.Group controlId='sort'>
                             <Controller 
                                 name='sort'
@@ -243,54 +247,6 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
                         />
                     </Form>
                 </Container>
-                {
-                    <DateSelectorModal 
-                        rules={{
-                            validate: {
-                                timeParadox: val => {
-                                    const endDateString = getValues('end');
-                                    if(endDateString === '') {
-                                        return true;
-                                    } else {
-                                        return val <= toDate(endDateString) || 'Start date cannot come after end date'
-                                    }
-                                }
-                            }
-                        }}
-                        title='Select Start Time'
-                        show={showSelectStartTime}
-                        setShow={setShowSelectStartTime}
-                        onApply={(data) => {
-                            const dateString = dateToString(data.datetime);
-                            setValue('start', dateString);
-                            updateSearchParams('start', dateString, true);
-                        }}
-                    />
-                }
-                {
-                    <DateSelectorModal 
-                        rules={{
-                            validate: {
-                                timeParadox: val => {
-                                    const startDateString = getValues('start');
-                                    if(startDateString === '') {
-                                        return true;
-                                    } else {
-                                        return toDate(startDateString) <= val || 'End date cannot come before start date';
-                                    }
-                                }
-                            }
-                        }}
-                        title='Select End Time'
-                        show={showSelectEndTime}
-                        setShow={setShowSelectEndTime}
-                        onApply={(data) => {
-                            const dateString = dateToString(data.datetime);
-                            setValue('end', dateString);
-                            updateSearchParams('end', dateString, true);
-                        }}
-                    />
-                }
             </Col>
         </Collapse>
     );

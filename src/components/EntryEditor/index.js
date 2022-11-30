@@ -34,14 +34,13 @@ import { checkSession } from '../../api/olog-service.js';
 import {removeImageMarkup, ologClientInfoHeader } from '../../utils/utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from '../LoadingOverlay';
-import Select from 'react-select';
 import { useState } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetPropertiesQuery } from '../../services/ologApi.js';
 import MultiSelect from '../input/MultiSelect.js';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist'
 import TextInput from '../input/TextInput.js';
 

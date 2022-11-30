@@ -10,8 +10,8 @@ const ButtonElem = styled.button`
     filter: ${({disabled}) => disabled ? 'brightness(0.7)' : 'none'};
 `
 
-const Button = ({variant, disabled=false, onClick=() => {}, innerRef, children}) => {
-    return <ButtonElem {...{variant, disabled, onClick, ref: innerRef}}>
+const Button = ({variant, disabled=false, onClick=() => {}, innerRef, className, children}) => {
+    return <ButtonElem {...{variant, disabled, onClick, className, ref: innerRef}}>
         {children}
     </ButtonElem>
 }
