@@ -15,41 +15,61 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- import React from 'react';
- import Table from 'react-bootstrap/Table';
- import Button from 'react-bootstrap/Button';
+import React from 'react';
+import styled from 'styled-components';
+import Button from '../common/Button';
  
- const PropertySelector = (props) => {
+const Table = styled.table`
+
+`
+
+const TableBody = styled.tbody`
+
+`
+
+const TableRow = styled.tr`
+
+`
+
+const TableData = styled.td`
+
+`
+
+const PropertySelector = ({selectedProperties, availableProperties, addProperty}) => {
 
     const isAlreadySelected = (propertyName) => {
-        return props.selectedProperties.filter(prop => prop.name === propertyName).length > 0;
+        return selectedProperties.filter(prop => prop.name === propertyName).length > 0;
     }
 
-    const addProperty = (property) => {
-        props.addProperty(property)
-    };
-
-    var rows = props.availableProperties.map((row, index) => {
+    var rows = availableProperties.map((row, index) => {
         if(!isAlreadySelected(row.name)){
-            return <tr key={index}><td>{row.name}</td><td><Button 
-                style={{float: "right"}}
-                onClick={() => addProperty(row)}>Add</Button></td></tr>;
+            return (
+                <TableRow key={index}>
+                    <TableData>{row.name}</TableData>
+                    <TableData>
+                        <Button 
+                            variant='primary'
+                            onClick={() => addProperty(row)}
+                        >
+                            Add
+                        </Button>
+                    </TableData>
+                </TableRow>
+            );
         }
         else{
-            return <tr key={index}></tr>;
+            return <TableRow key={index}></TableRow>;
         }
     });
         
     
     return(
-            <>
-                <Table size="sm">
-                    <tbody>
-                    {rows}
-                    </tbody>
-                </Table>
-            </>
-        )
-    }
+        <Table>
+            <TableBody>
+                {rows}
+            </TableBody>
+        </Table>   
+    )
+}
 
- export default PropertySelector;
+export default PropertySelector;

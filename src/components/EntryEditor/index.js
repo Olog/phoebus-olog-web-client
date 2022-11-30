@@ -16,11 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import ologService from '../../api/olog-service.js';
-import Button from 'react-bootstrap/Button';
+import Button from '../common/Button';
 import { Container } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormFile from 'react-bootstrap/FormFile';
-import Modal from 'react-bootstrap/Modal';
+import Modal, {Header, Title, Body, Footer} from '../common/Modal';
 import { FaPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -43,6 +43,37 @@ import MultiSelect from '../input/MultiSelect.js';
 import { useFieldArray, useForm } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist'
 import TextInput from '../input/TextInput.js';
+import styled from 'styled-components';
+
+const FileInputContainer = styled.div`
+    display: flex;
+    gap: 1rem;
+    padding: 0 1rem;
+`
+
+const ButtonContent = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+`
+
+const RenderedAttachmentsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+`
+
+const PropertiesContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.5rem
+    border: solid 1px ${({theme}) => theme.colors.light};
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+`
 
 const EntryEditor = ({
      tags,
@@ -237,13 +268,9 @@ const EntryEditor = ({
     /**
      * If attachments are present, creates a wrapper containing an array of Attachment components
      */
-    const renderedAttachments = attachments.length > 0 
-        ? <Form.Row className="grid-item">
-            {attachments.map((attachment, index) => {
-                return <Attachment key={index} attachment={attachment} removeAttachment={() => onAttachmentRemoved(attachment, index)}/>
-            })}
-        </Form.Row> 
-        : null;
+    const renderedAttachments = attachments.map((attachment, index) => {
+        return <Attachment key={index} attachment={attachment} removeAttachment={() => onAttachmentRemoved(attachment, index)}/>
+    });
 
     const renderedProperties = properties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
         return (
@@ -264,7 +291,7 @@ const EntryEditor = ({
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Form.Row>
                             <Form.Label className="new-entry">New Log Entry</Form.Label>
-                            <Button type="submit" disabled={userData.userName === "" || createInProgress}>Submit</Button>
+                            <Button variant="primary" disabled={userData.userName === "" || createInProgress}>Submit</Button>
                         </Form.Row>
                         <MultiSelect
                             name='logbooks'
@@ -336,10 +363,12 @@ const EntryEditor = ({
                             textArea
                             rows={10}
                         />
-                        <Form.Row>
+                        <FileInputContainer>
                             {/* note file inputs are uncontrolled, especially in this case where the user can upload many attachments */}
                             <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click() }>
-                                    <span><FaPlus className="add-button"/></span>Add Attachments
+                                <ButtonContent>
+                                    <FaPlus className="add-button"/><span>Add Attachments</span>
+                                </ButtonContent>
                             </Button>
                             <FormFile.Input
                                 ref={fileInputRef}
@@ -347,7 +376,6 @@ const EntryEditor = ({
                                 onChange={event => onFileChanged(event) } 
                                 hidden
                             />
-                            
                             <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
                                     onClick={() => setShowEmbedImageDialog(true)}>
                                 Embed Image
@@ -356,41 +384,45 @@ const EntryEditor = ({
                                     onClick={() => setShowHtmlPreview(true)}>
                                 Preview
                             </Button>
-                        </Form.Row>
+                        </FileInputContainer>
                     </Form>
-                    { renderedAttachments }
-                    <Form.Label className="mt-3">Properties:</Form.Label>
-                    {<Form.Row className="grid-item">
-                        <Form.Group style={{width: "400px"}}>
-                            <Button variant="secondary" size="sm" onClick={() => setShowAddProperty(true)}>
-                                <span><FaPlus className="add-button"/></span>Add Property
-                            </Button>
-                            {renderedProperties}              
-                        </Form.Group>
-                    </Form.Row>}
+                    <RenderedAttachmentsContainer>
+                        { renderedAttachments }
+                    </RenderedAttachmentsContainer>
+                    <PropertiesContainer>
+                        <Button variant="secondary" size="sm" onClick={() => setShowAddProperty(true)}>
+                            <ButtonContent>
+                                <FaPlus className="add-button"/>
+                                <span>Add Property</span>
+                            </ButtonContent>
+                        </Button>
+                        {renderedProperties}    
+                    </PropertiesContainer>
                 </Container>
             </LoadingOverlay>
             {
-                <Modal show={showAddProperty} onHide={() => setShowAddProperty(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add Property</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
+                <Modal show={showAddProperty} onClose={() => setShowAddProperty(false)}>
+                    <Header onClose={() => setShowAddProperty(false)}>
+                        <Title>Add Property</Title>
+                    </Header>
+                    <Body>
                         <PropertySelector 
                             availableProperties={availableProperties} 
                             selectedProperties={properties}
-                            addProperty={appendProperty}/>
-                    </Modal.Body>
+                            addProperty={appendProperty}
+                        />
+                    </Body>
                 </Modal>
             }
             <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
                 setShowEmbedImageDialog={setShowEmbedImageDialog}
-                addEmbeddedImage={addEmbeddedImage}/>
+                addEmbeddedImage={addEmbeddedImage}
+            />
             <HtmlPreview showHtmlPreview={showHtmlPreview}
                 setShowHtmlPreview={setShowHtmlPreview}
                 getCommonmarkSrc={() => getValues('description')}
-                getAttachedFiles={() => attachments}/>
-
+                getAttachedFiles={() => attachments}
+            />
         </>
     );
  }
