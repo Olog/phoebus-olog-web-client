@@ -17,7 +17,6 @@
  */
 import ologService from '../../api/olog-service.js';
 import Button from '../common/Button';
-import { Container } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormFile from 'react-bootstrap/FormFile';
 import Modal, {Header, Title, Body, Footer} from '../common/Modal';
@@ -45,6 +44,10 @@ import useFormPersist from 'react-hook-form-persist'
 import TextInput from '../input/TextInput.js';
 import styled from 'styled-components';
 
+const Container = styled.div`
+    padding: 0.5rem 0;
+`
+
 const FileInputContainer = styled.div`
     display: flex;
     gap: 1rem;
@@ -62,6 +65,7 @@ const RenderedAttachmentsContainer = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+    padding: 0.5rem;
 `
 
 const PropertiesContainer = styled.div`
@@ -288,7 +292,7 @@ const EntryEditor = ({
             <LoadingOverlay
                 active={createInProgress}
             >
-                <Container fluid className="full-height">
+                <Container>
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Form.Row>
                             <Form.Label className="new-entry">New Log Entry</Form.Label>
