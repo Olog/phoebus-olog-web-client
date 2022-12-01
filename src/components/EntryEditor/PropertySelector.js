@@ -18,21 +18,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../common/Button';
- 
-const Table = styled.table`
 
+const PropertyRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
 `
 
-const TableBody = styled.tbody`
-
-`
-
-const TableRow = styled.tr`
-
-`
-
-const TableData = styled.td`
-
+const Container = styled.div`
+    padding: 1rem;
 `
 
 const PropertySelector = ({selectedProperties, availableProperties, addProperty}) => {
@@ -41,34 +36,23 @@ const PropertySelector = ({selectedProperties, availableProperties, addProperty}
         return selectedProperties.filter(prop => prop.name === propertyName).length > 0;
     }
 
-    var rows = availableProperties.map((row, index) => {
-        if(!isAlreadySelected(row.name)){
-            return (
-                <TableRow key={index}>
-                    <TableData>{row.name}</TableData>
-                    <TableData>
-                        <Button 
-                            variant='primary'
-                            onClick={() => addProperty(row)}
-                        >
-                            Add
-                        </Button>
-                    </TableData>
-                </TableRow>
-            );
-        }
-        else{
-            return <TableRow key={index}></TableRow>;
-        }
-    });
+    const rows = availableProperties.filter(row => !isAlreadySelected(row.name)).map( row => 
+        <PropertyRow>
+            <div>{row.name}</div>
+            <Button 
+                variant='primary'
+                onClick={() => addProperty(row)}
+            >
+                Add
+            </Button>
+        </PropertyRow>
+    );
         
     
     return(
-        <Table>
-            <TableBody>
-                {rows}
-            </TableBody>
-        </Table>   
+        <Container>
+            {rows}
+        </Container>
     )
 }
 

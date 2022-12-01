@@ -69,10 +69,11 @@ const PropertiesContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 0.5rem
+    gap: 0.5rem;
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
+    margin: 0.5rem;
 `
 
 const EntryEditor = ({
@@ -400,20 +401,18 @@ const EntryEditor = ({
                     </PropertiesContainer>
                 </Container>
             </LoadingOverlay>
-            {
-                <Modal show={showAddProperty} onClose={() => setShowAddProperty(false)}>
-                    <Header onClose={() => setShowAddProperty(false)}>
-                        <Title>Add Property</Title>
-                    </Header>
-                    <Body>
-                        <PropertySelector 
-                            availableProperties={availableProperties} 
-                            selectedProperties={properties}
-                            addProperty={appendProperty}
-                        />
-                    </Body>
-                </Modal>
-            }
+            <Modal show={showAddProperty} onClose={() => setShowAddProperty(false)}>
+                <Header onClose={() => setShowAddProperty(false)}>
+                    <Title>Add Property</Title>
+                </Header>
+                <Body>
+                    <PropertySelector 
+                        availableProperties={availableProperties} 
+                        selectedProperties={properties}
+                        addProperty={appendProperty}
+                    />
+                </Body>
+            </Modal>
             <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
                 setShowEmbedImageDialog={setShowEmbedImageDialog}
                 addEmbeddedImage={addEmbeddedImage}
