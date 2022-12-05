@@ -17,11 +17,10 @@
  */
 
 import React, { Component } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import { Remarkable } from 'remarkable';
-import '../../css/olog.css';
 import imageProcessor from '../../utils/image-processor';
+import Button from '../common/Button';
+import Modal, { Body, Footer } from '../common/Modal';
 
 class HtmlPreview extends Component{
 
@@ -50,17 +49,17 @@ class HtmlPreview extends Component{
     
     render(){
         return(
-            <Modal className="html-preview-modal" size="lg" show={this.props.showHtmlPreview}
-                onHide={() => this.props.setShowHtmlPreview(false)}
-                onShow={() => this.reset()}>
-                <Modal.Body>
+            <Modal show={this.props.showHtmlPreview}
+                onClose={() => this.props.setShowHtmlPreview(false)}
+                onOpen={() => this.reset()}>
+                <Body>
                         <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
                             dangerouslySetInnerHTML={{ __html: this.state.innerHtml }}>
                         </div>
-                </Modal.Body>
-                <Modal.Footer>
+                </Body>
+                <Footer>
                       <Button variant="secondary" onClick={() => this.props.setShowHtmlPreview(false)}>OK</Button>
-                </Modal.Footer> 
+                </Footer> 
             </Modal>
         )
     }
