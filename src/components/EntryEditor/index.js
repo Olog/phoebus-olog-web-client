@@ -43,6 +43,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist'
 import TextInput from '../input/TextInput.js';
 import styled from 'styled-components';
+import FileInput from '../input/FileInput.js';
 
 const Container = styled.div`
     padding: 0.5rem 0;
@@ -100,7 +101,7 @@ const EntryEditor = ({
     })
     // File input HTML element ref allows us to hide
     // the element and click it from e.g. a button
-    const fileInputRef = useRef(null);
+    // const fileInputRef = useRef(null);
     const [createInProgress, setCreateInProgress] = useState(false);
     const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
     const [showHtmlPreview, setShowHtmlPreview] = useState(false);
@@ -141,10 +142,10 @@ const EntryEditor = ({
      * Appends an attachment object to the attachments form field
      * @param {*} event 
      */
-    const onFileChanged = (event) => {
-        if(event.target.files){
+    const onFileChanged = (files) => {
+        if(files) {
             // note event.target.files is a FileList, not an array! But we can convert it
-            Array.from(event.target.files).forEach(file => {
+            Array.from(files).forEach(file => {
                 appendAttachment(new OlogAttachment(file, uuidv4()));
             });
         }
@@ -176,7 +177,7 @@ const EntryEditor = ({
         const imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
         let description = getValues('description') || '';
         description += imageMarkup;
-        setValue('description', description);
+        setValue('description', description, {shouldDirty: false, shouldTouch: false, shouldValidate: false});
         appendAttachment(new OlogAttachment(file, id));
     }
 
@@ -289,9 +290,9 @@ const EntryEditor = ({
 
     return (
         <>
-            <LoadingOverlay
+            {/* <LoadingOverlay
                 active={createInProgress}
-            >
+            > */}
                 <Container>
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Form.Row>
@@ -370,7 +371,7 @@ const EntryEditor = ({
                         />
                         <FileInputContainer>
                             {/* note file inputs are uncontrolled, especially in this case where the user can upload many attachments */}
-                            <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click() }>
+                            {/* <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click() }>
                                 <ButtonContent>
                                     <FaPlus className="add-button"/><span>Add Attachments</span>
                                 </ButtonContent>
@@ -380,6 +381,10 @@ const EntryEditor = ({
                                 multiple
                                 onChange={event => onFileChanged(event) } 
                                 hidden
+                            /> */}
+                            <FileInput 
+                                label='Add Attachments'
+                                onFileChanged={onFileChanged}
                             />
                             <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
                                     onClick={() => setShowEmbedImageDialog(true)}>
@@ -404,7 +409,7 @@ const EntryEditor = ({
                         {renderedProperties}    
                     </PropertiesContainer>
                 </Container>
-            </LoadingOverlay>
+            {/* </LoadingOverlay> */}
             <Modal show={showAddProperty} onClose={() => setShowAddProperty(false)}>
                 <Header onClose={() => setShowAddProperty(false)}>
                     <Title>Add Property</Title>
