@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import ologService from '../../api/olog-service.js';
+import ologService from '../../api/olog-service';
 import Button from '../common/Button';
 import Form from 'react-bootstrap/Form';
 import FormFile from 'react-bootstrap/FormFile';
@@ -23,13 +23,13 @@ import Modal, {Header, Title, Body, Footer} from '../common/Modal';
 import { FaPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import Attachment from '../Attachment/index.js';
+import Attachment from '../Attachment/index';
 import customization from '../../utils/customization';
 import EmbedImageDialog from './EmbedImageDialog';
 import OlogAttachment from './OlogAttachment';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
-import { checkSession } from '../../api/olog-service.js';
+import { checkSession } from '../../api/olog-service';
 import {removeImageMarkup, ologClientInfoHeader } from '../../utils/utils';
 import HtmlPreview from './HtmlPreview';
 import LoadingOverlay from '../LoadingOverlay';
@@ -37,13 +37,13 @@ import { useState } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useGetPropertiesQuery } from '../../services/ologApi.js';
-import MultiSelect from '../input/MultiSelect.js';
+import { useGetPropertiesQuery } from '../../services/ologApi';
+import MultiSelect from '../input/MultiSelect';
 import { useFieldArray, useForm } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist'
-import TextInput from '../input/TextInput.js';
+import TextInput from '../input/TextInput';
 import styled from 'styled-components';
-import FileInput from '../input/FileInput.js';
+import FileInput from '../input/FileInput';
 
 const Container = styled.div`
     padding: 0.5rem 0;

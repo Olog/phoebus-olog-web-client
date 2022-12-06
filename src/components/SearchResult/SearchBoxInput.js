@@ -65,9 +65,8 @@ const SearchBoxInput = ({searchParams, showFilters, className}) => {
         // >
         // <div className={className}>
         // </div>
-            <StyledInput size="sm" 
+            <StyledTextInput size="sm" 
                 name='search'
-                // label='Search'
                 type="input"
                 disabled={showFilters}
                 placeholder="No search string"

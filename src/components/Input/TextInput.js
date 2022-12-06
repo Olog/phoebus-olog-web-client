@@ -76,33 +76,9 @@ export const TextInput = ({name, label, control, rules, defaultValue, className,
             password, 
             ref: field.ref, 
             value:field.value, 
-            onChange:field.onChange}}//, ...{...field, ...props}}}
+            onChange:field.onChange}}
     />
-    // return (
-    //     <LabeledInput {...{name, label, error: fieldState?.error?.message}} >
-    //         {textArea 
-    //         ? <TextArea 
-    //             name={name} 
-    //             id={name}
-    //             placeholder={label}
-    //             rows={rows}
-    //             className={className}
-    //             {...field} 
-    //             {...props}
-    //         />
-    //         : <Input 
-    //             type={password ? 'password' : 'text'}
-    //             name={name} 
-    //             id={name}
-    //             placeholder={label}
-    //             className={className}
-    //             {...field} 
-    //             {...props}
-    //         />
-    //         }
-            
-    //     </LabeledInput>
-    // );
+    
 }
 
 export default TextInput;
