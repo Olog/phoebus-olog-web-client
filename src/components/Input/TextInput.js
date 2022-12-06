@@ -1,3 +1,4 @@
+import React from "react";
 import { useController } from "react-hook-form";
 import styled from "styled-components"
 import LabeledInput from "./LabeledInput"
@@ -16,35 +17,92 @@ const TextArea = styled.textarea`
     border-radius: 5px;
 `
 
-export const TextInput = ({name, label, control, rules, defaultValue, className, textArea=false, rows=3, password=false, ...props}) => {
+export const StyledTextInput = React.forwardRef(({name, label, message, className, textArea=false, rows=3, password=false, value, onChange, props}, innerRef) => {
+    return <Input 
+        ref={innerRef}
+        type={password ? 'password' : 'text'}
+        name={name} 
+        id={name}
+        placeholder={label}
+        className={className}
+        value={value}
+        onChange={onChange}
+        {...props}
+    />;
+})
+
+export const StyledLabeledTextInput = React.forwardRef(({name, label, message, className, textArea=false, rows=3, password=false, value, onChange, props}, innerRef) => {
+    return (
+        <LabeledInput {...{name, label, error: message}} >
+            {textArea 
+            ?   <StyledTextInput 
+                    ref={innerRef}
+                    name={name} 
+                    id={name}
+                    placeholder={label}
+                    rows={rows}
+                    className={className}
+                    value={value}
+                    onChange={onChange}
+                    {...props}
+                />
+            :   <Input 
+                    ref={innerRef}
+                    type={password ? 'password' : 'text'}
+                    name={name} 
+                    id={name}
+                    placeholder={label}
+                    className={className}
+                    value={value}
+                    onChange={onChange}
+                    {...props}
+                />
+            }
+        </LabeledInput>
+    );
+});
+
+export const TextInput = ({name, label, control, rules, defaultValue, className, textArea=false, rows=3, password=false}) => {
     
     const {field, fieldState} = useController({name, control, rules, defaultValue});
 
-    return (
-        <LabeledInput {...{name, label, error: fieldState?.error?.message}} >
-            {textArea 
-            ? <TextArea 
-                name={name} 
-                id={name}
-                placeholder={label}
-                rows={rows}
-                className={className}
-                {...field} 
-                {...props}
-            />
-            : <Input 
-                type={password ? 'password' : 'text'}
-                name={name} 
-                id={name}
-                placeholder={label}
-                className={className}
-                {...field} 
-                {...props}
-            />
-            }
+    return <StyledLabeledTextInput 
+        {...{name, 
+            label, 
+            message: fieldState?.error?.message, 
+            className, 
+            textArea, 
+            rows, 
+            password, 
+            ref: field.ref, 
+            value:field.value, 
+            onChange:field.onChange}}//, ...{...field, ...props}}}
+    />
+    // return (
+    //     <LabeledInput {...{name, label, error: fieldState?.error?.message}} >
+    //         {textArea 
+    //         ? <TextArea 
+    //             name={name} 
+    //             id={name}
+    //             placeholder={label}
+    //             rows={rows}
+    //             className={className}
+    //             {...field} 
+    //             {...props}
+    //         />
+    //         : <Input 
+    //             type={password ? 'password' : 'text'}
+    //             name={name} 
+    //             id={name}
+    //             placeholder={label}
+    //             className={className}
+    //             {...field} 
+    //             {...props}
+    //         />
+    //         }
             
-        </LabeledInput>
-    );
+    //     </LabeledInput>
+    // );
 }
 
 export default TextInput;

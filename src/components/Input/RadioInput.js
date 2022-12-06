@@ -22,7 +22,7 @@ const RadioInput = ({name, label, options, control, rules, defaultValue, classNa
     const {field, fieldState} = useController({name, control, rules, defaultValue});
 
     const renderedChecks = options.map(it => {
-        return <RadioAndLabelContainer>
+        return <RadioAndLabelContainer key={it.value} >
             <input 
                 key={it.value}
                 type='radio'
@@ -34,7 +34,7 @@ const RadioInput = ({name, label, options, control, rules, defaultValue, classNa
                 checked={field.value === it.value}
                 onChange={() => field.onChange(it.value)}
             />
-            <label for={it.value}>{it.label}</label>
+            <label htmlFor={it.value}>{it.label}</label>
         </RadioAndLabelContainer> 
     });
 

@@ -16,8 +16,30 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { Form, Col, Button } from "react-bootstrap"
+import styled from "styled-components"
+import Button from "../common/Button"
 import SearchBoxInput from "./SearchBoxInput"
+
+const Form = styled.form`
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem
+`
+
+const StyledSearchBoxInput = styled(SearchBoxInput)`
+    display: block;
+    flex-grow: 1;
+    background-color: green;
+`
+
+const FilterButton = styled(Button)`
+    height: 2rem;
+`
+
+const HelpButton = styled(Button)`
+    height: 2rem;
+`
 
 const SearchBox = ({searchParams, showFilters, setShowFilters}) => {
     
@@ -38,24 +60,12 @@ const SearchBox = ({searchParams, showFilters, setShowFilters}) => {
     }
     
     return (
-        < Form style={{paddingTop: "5px"}} onSubmit={(e) => submit(e)}>
-            <Form.Row>
-                <Col style={{flexGrow: "0"}}>
-                    <Button size="sm" onClick={() => toggleFilters()} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</Button>
-                </Col>
-                <Col style={{paddingLeft: "0px"}}>
-                <SearchBoxInput
-                    {...{searchParams, showFilters}}
-                />
-                </Col>
-                <Col style={{flexGrow: "0" }}>
-                    <Button 
-                        size="sm"
-                        onClick={(e) => showSearchHelp()}>
-                        Help
-                    </Button>
-                </Col>
-            </Form.Row>
+        <Form onSubmit={(e) => submit(e)}>
+            <FilterButton variant='secondary' onClick={() => toggleFilters()} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</FilterButton>
+            <StyledSearchBoxInput
+                {...{searchParams, showFilters}}
+            />
+            <HelpButton variant='secondary' onClick={(e) => showSearchHelp()}>Help</HelpButton>
         </Form>
     );
 }
