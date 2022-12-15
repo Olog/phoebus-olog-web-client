@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import '../../css/olog.css';
+// import '../../css/olog.css';
 import Select from 'react-select';
 import { useController } from 'react-hook-form';
 import LabeledInput from './LabeledInput';

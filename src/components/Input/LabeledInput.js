@@ -3,12 +3,19 @@ import ErrorMessage from "./ErrorMessage";
 
 const Container = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: ${({inlineLabel}) => inlineLabel ? 'row' : 'column'};    
     padding: 0 0.5rem;
     padding-bottom: 1rem;
+    ${({inlineLabel}) => inlineLabel ? `
+        align-items: center;
+        gap: 0.5rem;
+    ` : `
+        justify-content: center;
+        gap: 0.2rem;
+    `}
 
     & label {
-        padding-bottom: 0.2rem;
+        white-space: nowrap;
     }
 
     & span {
@@ -16,10 +23,10 @@ const Container = styled.div`
     }
 `
 
-const LabeledInput = ({name, label, error, children}) => {
+const LabeledInput = ({name, label, error, inlineLabel, children}) => {
 
     return (
-        <Container>
+        <Container {...{inlineLabel}}>
             <label htmlFor={name}>{label}</label>
             {children}
             <ErrorMessage error={error} />

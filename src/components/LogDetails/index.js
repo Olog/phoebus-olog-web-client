@@ -20,7 +20,7 @@ import { useEffect, useMemo } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Remarkable } from 'remarkable';
 import imageProcessor from '../../utils/image-processor';
-import '../../css/olog.css';
+// import '../../css/olog.css';
 import customization from '../../utils/customization';
 import {getLogEntryGroupId} from '../../utils/utils';
 import ToggleButton from 'react-bootstrap/ToggleButton';

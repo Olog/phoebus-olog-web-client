@@ -16,8 +16,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { Pagination, Container, Row, Col, Form } from "react-bootstrap";
 import { useMediaQuery } from 'react-responsive';
+import styled from 'styled-components';
+import { StyledLabeledTextInput } from '../input/TextInput';
+import { Item, Next, Pagination, Prev } from '../Pagination';
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.5rem;
+`
+
+const PageSizeContainer = styled.div`
+
+`
+
+const PaginationContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+`
 
 const PaginationBar = ({pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}) => {
 
@@ -38,51 +56,43 @@ const PaginationBar = ({pageCount, currentPageIndex, goToPage, searchPageParams,
 
         let items = [];
         for(let i = firstIndex; i < lastIndex; i++){
-            items.push(<Pagination.Item 
+            items.push(<Item
                 key={i} 
                 active={i === currentPageIndex}
-                onClick={() => goToPage(i)}>
+                onClick={() => goToPage(i)}
+                alt={`Page ${i+1}`}
+            >
                 {i + 1}
-            </Pagination.Item>)
+            </Item>)
         }
         return items;
     }
 
     return (
-        <Container fluid className="py-2" >
-            <Row className="p-2">
-                <Col className="
-                    d-flex flex-row flex-lg-column align-items-center justify-content-between p-0 pr-1" >
-                    <Col className="d-flex align-items-center p-0 pr-1 mb-lg-2" xs='auto' >
-                        <Form.Label className="inline-block align-middle m-0 mr-2 text-nowrap" >Hits per page:</Form.Label> 
-                        <Col style={{padding: '0px', maxWidth: '40px'}}>
-                            <Form.Control size="sm" 
-                                type="input"
-                                value={searchPageParams.size}
-                                onChange={(e) => setPageSize(e)}
-                                
-                                />
-                        </Col>
-                    </Col>
-                    <Col sm={'auto'} className={`
-                        ${pageCount < 2 ? 'd-none' : 'd-flex'} align-items-center justify-content-end px-0`
-                    }>
-                        <Pagination size='sm' className="m-0"> 
-                            <Pagination.Prev  onClick={() => goToPage(currentPageIndex - 1)} 
-                                disabled={currentPageIndex === 0}
-                                style={{fontWeight: 'bold'}} >&lt;</Pagination.Prev>
-                            {renderPaginationItems()}
-                            <Pagination.Next onClick={() => goToPage(currentPageIndex + 1)}
-                                disabled={currentPageIndex === pageCount - 1}
-                                style={{fontWeight: 'bold'}}>&gt;</Pagination.Next>
-                        </Pagination>
-                        <Col sm={'auto'} className='align-middle text-center px-0 pl-2' style={{flexGrow: 0, maxWidth: '2.5rem'}}>
-                            {`${currentPageIndex + 1} / ${pageCount}`}
-                        </Col>
-                    </Col>
-                </Col>
-                
-            </Row>
+        <Container>
+            <PageSizeContainer>
+                <StyledLabeledTextInput
+                    name='pageSize'
+                    label='Hits per page:'
+                    value={searchPageParams.size}
+                    onChange={(e) => setPageSize(e)}
+                    inlineLabel
+                />
+            </PageSizeContainer>
+            {pageCount >= 2 ? 
+                <PaginationContainer>
+                    <Pagination>
+                        <Prev onClick={() => goToPage(currentPageIndex - 1)} 
+                            disabled={currentPageIndex === 0}
+                        />
+                        {renderPaginationItems()}
+                        <Next onClick={() => goToPage(currentPageIndex + 1)}
+                            disabled={currentPageIndex === pageCount - 1}
+                        />
+                    </Pagination>
+                    <div>{`${currentPageIndex + 1} / ${pageCount}`}</div>
+                </PaginationContainer>
+            : null}
         </Container>
     );
 }

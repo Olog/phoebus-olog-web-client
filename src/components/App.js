@@ -31,10 +31,13 @@ import styled from 'styled-components';
 
 const ViewportContainer = styled.div`
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 `
 
 const ContentContainer = styled.div`
     height: 100%;
+    overflow: hidden;
 `
 /**
  * Entry point component.
@@ -58,14 +61,14 @@ const App = () => {
 
     return(
         <BrowserRouter>
-            <ViewportContainer>
+            <ViewportContainer id='app-viewport'>
                 <Banner {...{
                     showLogin, setShowLogin,
                     showLogout, setShowLogout,
                     userData, setUserData,
                     setReplyAction
                 }}/>
-                <ContentContainer>
+                <ContentContainer id='app-content'>
                     <Routes>
                         <Route exact path="/" element={
                             <LogEntriesView {...{

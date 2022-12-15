@@ -290,9 +290,9 @@ const EntryEditor = ({
 
     return (
         <>
-            {/* <LoadingOverlay
+            <LoadingOverlay
                 active={createInProgress}
-            > */}
+            >
                 <Container>
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Form.Row>
@@ -370,18 +370,6 @@ const EntryEditor = ({
                             rows={10}
                         />
                         <FileInputContainer>
-                            {/* note file inputs are uncontrolled, especially in this case where the user can upload many attachments */}
-                            {/* <Button variant="secondary" size="sm" onClick={() => fileInputRef.current?.click() }>
-                                <ButtonContent>
-                                    <FaPlus className="add-button"/><span>Add Attachments</span>
-                                </ButtonContent>
-                            </Button>
-                            <FormFile.Input
-                                ref={fileInputRef}
-                                multiple
-                                onChange={event => onFileChanged(event) } 
-                                hidden
-                            /> */}
                             <FileInput 
                                 label='Add Attachments'
                                 onFileChanged={onFileChanged}
@@ -409,7 +397,7 @@ const EntryEditor = ({
                         {renderedProperties}    
                     </PropertiesContainer>
                 </Container>
-            {/* </LoadingOverlay> */}
+            </LoadingOverlay>
             <Modal show={showAddProperty} onClose={() => setShowAddProperty(false)}>
                 <Header onClose={() => setShowAddProperty(false)}>
                     <Title>Add Property</Title>

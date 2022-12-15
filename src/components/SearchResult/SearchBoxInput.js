@@ -30,7 +30,7 @@ import { StyledTextInput } from "../input/TextInput";
 
 const StyledInput = styled(StyledTextInput)`
     width: 100%;
-    height: 100%;
+    // height: 100%;
 `
 
 const SearchBoxInput = ({searchParams, showFilters, className}) => {

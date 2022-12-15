@@ -1,13 +1,26 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-const ButtonElem = styled.button`
-    padding: 1vh 2vh;
+export const buttonBaseStyle = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2.5rem;
+    text-align: center;
+    padding: 1rem 2rem;
     border: none;
     border-radius: 5px;
     background-color: ${({variant, theme}) => theme.colors[variant] || theme.colors.default };
     color: #fff;
     cursor: ${({disabled}) => disabled ? 'not-allowed' : 'pointer'};
-    filter: ${({disabled}) => disabled ? 'brightness(0.7)' : 'none'};
+    filter: ${({disabled}) => disabled ? 'brightness(0.7) opacity(50%)' : 'none'};
+    
+    &:hover {
+        filter: brightness(0.7);
+    }
+`
+
+const ButtonElem = styled.button`
+    ${buttonBaseStyle}
 `
 
 const Button = ({variant, disabled=false, onClick=() => {}, innerRef, className, children}) => {

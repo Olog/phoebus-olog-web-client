@@ -20,7 +20,7 @@ import React, { useState } from 'react';
 import Modal, { Body, Footer, Header, Title } from '../common/Modal';
 import Button from '../common/Button';
 import ologService from '../../api/olog-service';
-import '../../css/olog.css';
+// import '../../css/olog.css';
 import { useForm } from 'react-hook-form';
 import TextInput from '../input/TextInput';
 import ErrorMessage from '../input/ErrorMessage';

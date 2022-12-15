@@ -25,6 +25,7 @@ const Form = styled.form`
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem
+    // height: 100%;
 `
 
 const StyledSearchBoxInput = styled(SearchBoxInput)`
