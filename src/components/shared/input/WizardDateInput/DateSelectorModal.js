@@ -20,11 +20,11 @@ import { useEffect } from "react";
 import DatePicker from "./DatePicker";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import Button from "components/common/Button";
-import Modal, { Body, Footer, Header, Title } from 'components/common/Modal';
-import TextInput from "components/input/TextInput";
-import { dateToString } from "utils/utils";
-import Submit from 'components/input/Submit';
+import Button from "components/shared/Button";
+import Modal, { Body, Footer, Header, Title } from 'components/shared/Modal';
+import TextInput from "components/shared/input/TextInput";
+import { dateToString } from "utils";
+import Submit from 'components/shared/input/Submit';
 
 const Form = styled.form`
     padding: 1rem 0;

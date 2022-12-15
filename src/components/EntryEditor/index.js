@@ -16,9 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import ologService from 'api/olog-service';
-import Button from '../common/Button';
+import Button from '../shared/Button';
 import Form from 'react-bootstrap/Form';
-import Modal, {Header, Title, Body} from 'components/common/Modal';
+import Modal, {Header, Title, Body} from 'components/shared/Modal';
 import { FaPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -29,19 +29,19 @@ import OlogAttachment from './OlogAttachment';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
 import { checkSession } from 'api/olog-service';
-import {removeImageMarkup, ologClientInfoHeader } from 'utils/utils';
+import {removeImageMarkup, ologClientInfoHeader } from 'utils';
 import HtmlPreview from './HtmlPreview';
-import LoadingOverlay from 'components/LoadingOverlay';
+import LoadingOverlay from 'components/shared/LoadingOverlay';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetPropertiesQuery } from 'services/ologApi';
-import MultiSelect from 'components/input/MultiSelect';
+import MultiSelect from 'components/shared/input/MultiSelect';
 import { useFieldArray, useForm } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist'
-import TextInput from 'components/input/TextInput';
+import TextInput from 'components/shared/input/TextInput';
 import styled from 'styled-components';
-import FileInput from 'components/input/FileInput';
+import FileInput from 'components/shared/input/FileInput';
 
 const Container = styled.div`
     padding: 0.5rem 0;

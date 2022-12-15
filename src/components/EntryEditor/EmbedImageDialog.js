@@ -18,12 +18,12 @@
 
 import React, { useEffect, useRef } from 'react';
 import Form from 'react-bootstrap/Form';
-import Modal, {Header, Title, Body, Footer} from '../common/Modal';
+import Modal, {Header, Title, Body, Footer} from '../shared/Modal';
 import { useForm } from 'react-hook-form';
-import TextInput from 'components/input/TextInput';
-import FileInput from 'components/input/FileInput';
+import TextInput from 'components/shared/input/TextInput';
+import FileInput from 'components/shared/input/FileInput';
 import { useState } from 'react';
-import Button from 'components/common/Button';
+import Button from 'components/shared/Button';
 
 const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
 

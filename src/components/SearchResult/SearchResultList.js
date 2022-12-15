@@ -17,7 +17,7 @@
  */
 import {useState, useEffect} from 'react';
 import SearchResultItem from './SearchResultItem';
-import LoadingOverlay from 'components/LoadingOverlay';
+import LoadingOverlay from 'components/shared/LoadingOverlay';
 import SearchBox from './SearchBox';
 import PaginationBar from './PaginationBar';
 import { useDispatch } from 'react-redux';

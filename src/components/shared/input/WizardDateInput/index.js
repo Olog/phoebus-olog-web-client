@@ -1,7 +1,7 @@
 import { useState } from "react"
 import styled from "styled-components";
-import LabeledInput from "components/input/LabeledInput";
-import Button from 'components/common/Button';
+import LabeledInput from "components/shared/input/LabeledInput";
+import Button from 'components/shared/Button';
 import { FaCalendarAlt } from "react-icons/fa";
 import { useController } from "react-hook-form";
 import DateSelectorModal from "./DateSelectorModal";

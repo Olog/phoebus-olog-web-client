@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { buttonBaseStyle } from "components/common/Button";
+import { buttonBaseStyle } from "components/shared/Button";
 
 export const StyledPaginationButton = styled.a`
     ${buttonBaseStyle}

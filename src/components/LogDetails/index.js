@@ -21,7 +21,7 @@ import Container from 'react-bootstrap/Container';
 import { Remarkable } from 'remarkable';
 import imageProcessor from 'utils/image-processor';
 import customization from 'utils/customization';
-import {getLogEntryGroupId} from 'utils/utils';
+import {getLogEntryGroupId} from 'utils';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';

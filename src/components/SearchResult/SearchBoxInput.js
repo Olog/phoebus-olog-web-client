@@ -22,7 +22,7 @@ import {useState} from 'react';
 import {searchParamsToQueryString, queryStringToSearchParameters} from 'utils/searchParams';
 import { useDispatch } from "react-redux";
 import { updateSearchParams } from "features/searchParamsReducer";
-import { StyledTextInput } from "components/input/TextInput";
+import { StyledTextInput } from "components/shared/input/TextInput";
 
 const SearchBoxInput = ({searchParams, showFilters, className}) => {
 

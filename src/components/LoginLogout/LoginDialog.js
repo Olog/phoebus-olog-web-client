@@ -17,14 +17,14 @@
  */
 
 import React, { useState } from 'react';
-import Modal, { Body, Footer, Header, Title } from '../common/Modal';
-import Button from 'components/common/Button';
+import Modal, { Body, Footer, Header, Title } from '../shared/Modal';
+import Button from 'components/shared/Button';
 import ologService from 'api/olog-service';
 import { useForm } from 'react-hook-form';
-import TextInput from 'components/input/TextInput';
-import ErrorMessage from 'components/input/ErrorMessage';
+import TextInput from 'components/shared/input/TextInput';
+import ErrorMessage from 'components/shared/input/ErrorMessage';
 import styled from 'styled-components';
-import Submit from 'components/input/Submit';
+import Submit from 'components/shared/input/Submit';
 
 const Form = styled.form``;
 

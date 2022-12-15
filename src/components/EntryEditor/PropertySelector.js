@@ -17,7 +17,7 @@
  */
 import React from 'react';
 import styled from 'styled-components';
-import Button from 'components/common/Button';
+import Button from 'components/shared/Button';
 
 const PropertyRow = styled.div`
     display: flex;

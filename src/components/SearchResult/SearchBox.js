@@ -17,7 +17,7 @@
  */
 
 import styled from "styled-components"
-import Button from "components/common/Button"
+import Button from "components/shared/Button"
 import SearchBoxInput from "./SearchBoxInput"
 
 const Form = styled.form`

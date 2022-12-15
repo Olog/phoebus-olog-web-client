@@ -18,7 +18,7 @@
 
 import React, { Component} from 'react'
 // import Button from 'react-bootstrap/Button';
-import Button from '../common/Button';
+import Button from '../shared/Button';
 // import Navbar from 'react-bootstrap/Navbar';
 // import Nav from 'react-bootstrap/Nav';
 import {Link} from "react-router-dom";

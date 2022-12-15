@@ -20,7 +20,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import ologService from 'api/olog-service';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
-import {getLogEntryGroupId, sortLogsDateCreated} from 'utils/utils';
+import {getLogEntryGroupId, sortLogsDateCreated} from 'utils';
 import GroupHeader from './GroupHeader';
  
  /**

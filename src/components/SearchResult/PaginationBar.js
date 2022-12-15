@@ -18,7 +18,7 @@
 
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
-import { StyledLabeledTextInput } from 'components/input/TextInput';
+import { StyledLabeledTextInput } from 'components/shared/input/TextInput';
 import { Item, Next, Pagination, Prev } from 'components/Pagination';
 
 const Container = styled.div`

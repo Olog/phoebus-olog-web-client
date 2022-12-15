@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from 'components/App.js';
-import { store } from './store.js';
+import { store } from './stores';
 import { Provider } from 'react-redux';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';

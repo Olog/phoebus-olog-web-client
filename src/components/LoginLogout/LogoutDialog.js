@@ -19,9 +19,9 @@
 import ologService from 'api/olog-service';
 import { useState } from 'react';
 import styled from 'styled-components';
-import Modal, { Body, Footer, Header, Title } from 'components/common/Modal';
-import Button from 'components/common/Button';
-import ErrorMessage from 'components/input/ErrorMessage';
+import Modal, { Body, Footer, Header, Title } from 'components/shared/Modal';
+import Button from 'components/shared/Button';
+import ErrorMessage from 'components/shared/input/ErrorMessage';
 import { useRef } from 'react';
 
 const Form = styled.form``;
