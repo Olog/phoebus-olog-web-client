@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
- import React, { Component } from 'react';
- import Image from 'react-bootstrap/Image';
- import ListGroup from 'react-bootstrap/ListGroup';
- import Properties from './Properties';
- import LogDetailsMetaData from './LogDetailsMetaData';
-//  import '../../css/olog.css';
- import Accordion from 'react-bootstrap/Accordion';
- import Card from 'react-bootstrap/Card';
- import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import React, { Component } from 'react';
+import Image from 'react-bootstrap/Image';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Properties from './Properties';
+import LogDetailsMetaData from './LogDetailsMetaData';
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 
 class LogEntrySingleView extends Component{
 

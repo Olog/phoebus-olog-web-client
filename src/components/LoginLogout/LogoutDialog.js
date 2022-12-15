@@ -16,12 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import ologService from '../../api/olog-service';
+import ologService from 'api/olog-service';
 import { useState } from 'react';
 import styled from 'styled-components';
-import Modal, { Body, Footer, Header, Title } from '../common/Modal';
-import Button from '../common/Button';
-import ErrorMessage from '../input/ErrorMessage';
+import Modal, { Body, Footer, Header, Title } from 'components/common/Modal';
+import Button from 'components/common/Button';
+import ErrorMessage from 'components/input/ErrorMessage';
 import { useRef } from 'react';
 
 const Form = styled.form``;

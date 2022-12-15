@@ -26,7 +26,7 @@ import Banner from './Banner';
 import EntryEditor from './EntryEditor';
 import LogEntriesView from './LogEntriesView';
 import { useSelector } from 'react-redux';
-import { useGetLogbooksQuery, useGetTagsQuery } from '../services/ologApi';
+import { useGetLogbooksQuery, useGetTagsQuery } from 'services/ologApi';
 import styled from 'styled-components';
 
 const ViewportContainer = styled.div`

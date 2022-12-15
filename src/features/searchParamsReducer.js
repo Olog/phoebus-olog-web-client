@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "universal-cookie";
-import customization from "../utils/customization";
+import customization from "utils/customization";
 
 const cookies = new Cookies();
 const initialState = cookies.get(customization.searchParamsCookie) || {...customization.defaultSearchParams};

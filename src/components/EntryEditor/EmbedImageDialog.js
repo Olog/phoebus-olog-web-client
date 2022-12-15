@@ -20,10 +20,10 @@ import React, { useEffect, useRef } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal, {Header, Title, Body, Footer} from '../common/Modal';
 import { useForm } from 'react-hook-form';
-import TextInput from '../input/TextInput';
-import FileInput from '../input/FileInput';
+import TextInput from 'components/input/TextInput';
+import FileInput from 'components/input/FileInput';
 import { useState } from 'react';
-import Button from '../common/Button';
+import Button from 'components/common/Button';
 
 const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
 

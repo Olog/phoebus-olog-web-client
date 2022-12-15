@@ -22,7 +22,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
+import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 
 const NavigationButtons = ({
     currentLogEntry,

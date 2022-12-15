@@ -18,8 +18,8 @@
 
 import React, { Component } from 'react';
 import { Remarkable } from 'remarkable';
-import imageProcessor from '../../utils/image-processor';
-import Button from '../common/Button';
+import imageProcessor from 'utils/image-processor';
+import Button from 'components/common/Button';
 import Modal, { Body, Footer } from '../common/Modal';
 
 class HtmlPreview extends Component{

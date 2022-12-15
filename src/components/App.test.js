@@ -1,6 +1,6 @@
-import { server } from '../mocks/server';
+import { server } from 'mocks/server';
 import { rest } from 'msw';
-import { renderWithProviders } from '../utils/test-utils';
+import { renderWithProviders } from 'utils/test-utils';
 import App from './App';
 import { fireEvent } from '@testing-library/react';
 import selectEvent from 'react-select-event';

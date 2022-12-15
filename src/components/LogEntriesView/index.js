@@ -18,17 +18,17 @@
 
 import {useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import ologService from '../../api/olog-service';
-import LogDetails from '../LogDetails';
-import SearchResultList from '../SearchResult/SearchResultList';
-import customization from '../../utils/customization';
+import ologService from 'api/olog-service';
+import LogDetails from 'components/LogDetails';
+import SearchResultList from 'components/SearchResult/SearchResultList';
+import customization from 'utils/customization';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
-import { useSearchLogsQuery } from '../../services/ologApi';
-import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
-import ServiceErrorBanner from '../ErrorBanner';
+import { updateSearchPageParams } from 'features/searchPageParamsReducer';
+import { useSearchLogsQuery } from 'services/ologApi';
+import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
+import ServiceErrorBanner from 'components/ErrorBanner';
 import styled from 'styled-components';
-import Filters from '../Filters';
+import Filters from 'components/Filters';
 
 const ContentContainer = styled.div`
     height: 100%;

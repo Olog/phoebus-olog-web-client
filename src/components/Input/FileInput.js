@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { FaPlus } from "react-icons/fa";
 import styled from "styled-components";
-import Button from "../common/Button";
+import Button from "components/common/Button";
 
 const Container = styled.div`
 

@@ -1,7 +1,7 @@
 import DateTimePicker from "react-datetime-picker"
 import { useController } from "react-hook-form";
 import styled from "styled-components";
-import LabeledInput from "../LabeledInput";
+import LabeledInput from "components/input/LabeledInput";
 
 export const DATE_FORMAT = 'y-MM-dd HH:mm';
 

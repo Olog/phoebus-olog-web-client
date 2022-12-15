@@ -1,10 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './components/App.js';
+import App from 'components/App.js';
 import { store } from './store.js';
 import { Provider } from 'react-redux';
-// import './css/olog.css';
-// import './css/bootstrap.css';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
 

@@ -18,8 +18,8 @@
 import { FaPaperclip } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
-import { formatFullDateTime, getLogEntryGroupId } from '../../utils/utils';
+import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
+import { formatFullDateTime, getLogEntryGroupId } from 'utils/utils';
 
 const LogInfoContainer = styled.div`
     display: flex;

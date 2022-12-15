@@ -17,11 +17,11 @@
  */
 import {useState, useEffect} from 'react';
 import SearchResultItem from './SearchResultItem';
-import LoadingOverlay from '../LoadingOverlay';
+import LoadingOverlay from 'components/LoadingOverlay';
 import SearchBox from './SearchBox';
 import PaginationBar from './PaginationBar';
 import { useDispatch } from 'react-redux';
-import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
+import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -34,7 +34,6 @@ const SearchResultsContainer = styled.div`
     display: flex;
     flex-direction: column;
     overflow: auto;
-    border: 1px solid black;
 `
 
 /**
@@ -113,28 +112,6 @@ const SearchResultList = ({
                 </SearchResultsContainer>
                 <PaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
         </Container>
-        // <Container fluid className="grid-item h-100 p-0" >
-        //     <Row noGutters className='h-100 flex-column'>
-        //         <Col sm='auto' >
-        //             <SearchBox {...{searchParams, showFilters, setShowFilters}} />
-        //         </Col>
-        //         <Col >
-        //             <LoadingOverlay
-        //                 active={searchInProgress}
-        //             >
-        //                 <Row noGutters className='h-100 flex-column'>
-        //                     <Col xs='auto' lg={{span: null, order: 3}}>
-        //                         <PaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
-        //                     </Col>
-        //                     <Col style={{overflowY: 'scroll'}} className="border-top border-bottom" >
-        //                         {renderedSearchResults}
-                                
-        //                     </Col>  
-        //                 </Row>
-        //             </LoadingOverlay>
-        //         </Col>
-        //     </Row>
-        // </Container>
     )
 }
 

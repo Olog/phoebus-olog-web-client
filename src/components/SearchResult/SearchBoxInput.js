@@ -19,19 +19,10 @@
 import React, { useEffect } from "react";
 
 import {useState} from 'react';
-import Form from 'react-bootstrap/Form';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import {searchParamsToQueryString, queryStringToSearchParameters} from '../../utils/searchParams';
-import Tooltip from 'react-bootstrap/Tooltip';
+import {searchParamsToQueryString, queryStringToSearchParameters} from 'utils/searchParams';
 import { useDispatch } from "react-redux";
-import { updateSearchParams } from "../../features/searchParamsReducer";
-import styled from "styled-components";
-import { StyledTextInput } from "../input/TextInput";
-
-const StyledInput = styled(StyledTextInput)`
-    width: 100%;
-    // height: 100%;
-`
+import { updateSearchParams } from "features/searchParamsReducer";
+import { StyledTextInput } from "components/input/TextInput";
 
 const SearchBoxInput = ({searchParams, showFilters, className}) => {
 

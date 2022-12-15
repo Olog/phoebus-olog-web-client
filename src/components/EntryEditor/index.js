@@ -15,35 +15,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import ologService from '../../api/olog-service';
+import ologService from 'api/olog-service';
 import Button from '../common/Button';
 import Form from 'react-bootstrap/Form';
-import FormFile from 'react-bootstrap/FormFile';
-import Modal, {Header, Title, Body, Footer} from '../common/Modal';
+import Modal, {Header, Title, Body} from 'components/common/Modal';
 import { FaPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import Attachment from '../Attachment/index';
-import customization from '../../utils/customization';
+import Attachment from 'components/Attachment';
+import customization from 'utils/customization';
 import EmbedImageDialog from './EmbedImageDialog';
 import OlogAttachment from './OlogAttachment';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
-import { checkSession } from '../../api/olog-service';
-import {removeImageMarkup, ologClientInfoHeader } from '../../utils/utils';
+import { checkSession } from 'api/olog-service';
+import {removeImageMarkup, ologClientInfoHeader } from 'utils/utils';
 import HtmlPreview from './HtmlPreview';
-import LoadingOverlay from '../LoadingOverlay';
+import LoadingOverlay from 'components/LoadingOverlay';
 import { useState } from 'react';
-import { useRef } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useGetPropertiesQuery } from '../../services/ologApi';
-import MultiSelect from '../input/MultiSelect';
+import { useGetPropertiesQuery } from 'services/ologApi';
+import MultiSelect from 'components/input/MultiSelect';
 import { useFieldArray, useForm } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist'
-import TextInput from '../input/TextInput';
+import TextInput from 'components/input/TextInput';
 import styled from 'styled-components';
-import FileInput from '../input/FileInput';
+import FileInput from 'components/input/FileInput';
 
 const Container = styled.div`
     padding: 0.5rem 0;

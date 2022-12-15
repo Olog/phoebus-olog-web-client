@@ -20,16 +20,16 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useEffect } from 'react';
-import MultiSelect from '../input/MultiSelect';
+import MultiSelect from 'components/input/MultiSelect';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { updateSearchParams as updateSearchParamsAction } from '../../features/searchParamsReducer';
-import { updateSearchPageParams as updateSearchPageParamsAction } from '../../features/searchPageParamsReducer';
+import { updateSearchParams as updateSearchParamsAction } from 'features/searchParamsReducer';
+import { updateSearchPageParams as updateSearchPageParamsAction } from 'features/searchPageParamsReducer';
 import Collapse from './Collapse';
 import Col from 'react-bootstrap/Col';
-import TextInput from '../input/TextInput';
-import WizardDateInput from '../input/WizardDateInput';
-import RadioInput from '../input/RadioInput';
+import TextInput from 'components/input/TextInput';
+import WizardDateInput from 'components/input/WizardDateInput';
+import RadioInput from 'components/input/RadioInput';
 
 /**
  * Component holding search criteria elements, i.e.
