@@ -17,19 +17,37 @@
  */
 
 import { useEffect, useMemo } from 'react';
-import Container from 'react-bootstrap/Container';
+// import Container from 'react-bootstrap/Container';
 import { Remarkable } from 'remarkable';
 import imageProcessor from 'utils/image-processor';
 import customization from 'utils/customization';
 import {getLogEntryGroupId} from 'utils';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Button from 'react-bootstrap/Button';
+// import ToggleButton from 'react-bootstrap/ToggleButton';
+// import ButtonGroup from 'react-bootstrap/ButtonGroup';
+// import Button from 'react-bootstrap/Button';
 import LogEntryGroupView from './LogEntryGroupView';
 import LogEntrySingleView from './LogEntrySingleView';
 import {Link} from "react-router-dom";
 import NavigationButtons from './NavigationButtons';
+import Button, { ToggleButton } from 'components/shared/Button';
+import styled from 'styled-components';
 
+
+const Container = styled.div`
+    width: 100%;
+`
+
+const ButtonContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 0.25rem 1rem;
+
+    & .end {
+        margin-left: auto;
+    }
+`
 
 /**
  * A view show all details of a log entry. Images are renderd, if such are
@@ -59,65 +77,56 @@ const LogDetails = ({
         remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});
     }, [remarkable]);
 
-    const toggleShowMerged = (e) => {
-        setShowGroup(e);
+    const renderedReplyButton = customization.log_entry_groups_support ?
+        <Link to="/edit">
+            <Button variant='primary'
+                    disabled={!userData || !userData.userName}
+                    onClick={() => setReplyAction(true)}>
+                Reply
+            </Button>
+        </Link> : null;
+
+    const copyUrl = () => {
+        navigator.clipboard.writeText(
+            document.baseURI.endsWith('logs/' + currentLogEntry.id)
+                ? document.baseURI
+                : document.baseURI + 'logs/' + currentLogEntry.id
+        )
     }
 
+    const renderedShowGroupButton = getLogEntryGroupId(currentLogEntry.properties) ? 
+        <ToggleButton variant='primary'
+            checked={showGroup}
+            onChange={() => setShowGroup(!showGroup)}
+        >
+            Show/hide group
+        </ToggleButton> : null;
+
+    const renderedLogView = showGroup 
+    ? <LogEntryGroupView {...{
+            showGroup, setShowGroup, 
+            currentLogEntry,
+            userData, 
+            setReplyAction, 
+            logGroupRecords, setLogGroupRecords, 
+            remarkable
+        }}/> 
+    : <LogEntrySingleView currentLogEntry={currentLogEntry} remarkable={remarkable}/>;
+
+
     return(
-        <>
-        
-        {/* Render only if currentLogRecord is defined, i.e. when user has selected from search result list,
-        or if the route is of the type /logs/:id */}
-        {currentLogEntry &&
-            <Container className="grid-item full-height" fluid >
+        <Container>
+            <ButtonContainer>
                 <NavigationButtons {...{
                     currentLogEntry,
                     searchResults
                 }}/>
-                {/* Site may choose to not support log entry groups */}
-                {customization.log_entry_groups_support && 
-                    <Link to="/edit">
-                        <Button size="sm" 
-                                disabled={!userData || !userData.userName}
-                                style={{marginTop: "10px", marginRight: "5px"}} 
-                                onClick={() => setReplyAction(true)}>
-                            Reply
-                        </Button>
-                    </Link>
-                }
-                <span style={{float: "right"}}>
-                    <Button type="button" size="sm" style={{marginTop: "10px"}} onClick={() => {navigator.clipboard.writeText(
-                        document.baseURI.endsWith('logs/' + currentLogEntry.id)
-                            ? document.baseURI
-                            : document.baseURI + 'logs/' + currentLogEntry.id
-                    )}}>Copy URL</Button>
-                </span>
-                {getLogEntryGroupId(currentLogEntry.properties) &&
-                    <ButtonGroup toggle style={{marginTop: "10px"}}>
-                        <ToggleButton 
-                            size="sm"
-                            type="checkbox"
-                            checked={showGroup}
-                            onChange={(e) => toggleShowMerged(e.currentTarget.checked)}>Show/hide group
-                        </ToggleButton>
-                    </ButtonGroup>
-                }
-                {!showGroup &&
-                    <LogEntrySingleView currentLogEntry={currentLogEntry} remarkable={remarkable}/>
-                }
-                {showGroup &&
-                    <LogEntryGroupView {...{
-                        showGroup, setShowGroup, 
-                        currentLogEntry,
-                        userData, 
-                        setReplyAction, 
-                        logGroupRecords, setLogGroupRecords, 
-                        remarkable
-                    }}/>
-                }
-            </Container>
-        }
-        </>
+                {renderedReplyButton}
+                {renderedShowGroupButton}
+                <Button variant='primary' onClick={copyUrl} className='end'>Copy URL</Button>
+            </ButtonContainer>
+            {renderedLogView}
+        </Container>
     )
     
 }

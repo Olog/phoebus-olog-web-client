@@ -15,14 +15,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
+import { useState, useEffect } from 'react';
+// import Button from 'react-bootstrap/Button';
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
-import Tooltip from 'react-bootstrap/Tooltip';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+// import Tooltip from 'react-bootstrap/Tooltip';
+// import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
+import styled from 'styled-components';
+import Button from 'components/shared/Button';
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+`
+
+const NavButton = styled(Button)`
+    padding: 0.5rem 1rem;;
+`
 
 const NavigationButtons = ({
     currentLogEntry,
@@ -53,38 +65,22 @@ const NavigationButtons = ({
     }, [currentLogEntry, searchResults]);
 
     return (
-        <>
-            <OverlayTrigger delay={{ hide: 450, show: 300 }}
-                    overlay={(props) => (
-                    <Tooltip {...props}>Previous log entry</Tooltip>
-                )}
-                rootClose
-                placement="bottom">
-                <Button 
-                    size="sm" 
-                    style={{marginTop: "10px", marginRight: "5px"}}
-                    disabled={!previousLogEntry}
-                    onClick={() => navigateToLogEntry(previousLogEntry)}
-                >
-                    <FaArrowLeft/>
-                </Button>
-            </OverlayTrigger>
-            <OverlayTrigger delay={{ hide: 450, show: 300 }}
-                    overlay={(props) => (
-                    <Tooltip {...props}>Next log entry</Tooltip>
-                )}
-                rootClose
-                placement="bottom">
-                <Button 
-                    size="sm" 
-                    style={{marginTop: "10px", marginRight: "10px"}}
-                    disabled={!nextLogEntry}
-                    onClick={() => navigateToLogEntry(nextLogEntry)}
-                >
-                    <FaArrowRight/>
-                </Button>
-            </OverlayTrigger>
-        </>
+        <Container>
+            <NavButton 
+                variant='primary'
+                disabled={!previousLogEntry}
+                onClick={() => navigateToLogEntry(previousLogEntry)}
+            >
+                <FaArrowLeft/>
+            </NavButton>
+            <NavButton 
+                variant='primary'
+                disabled={!nextLogEntry}
+                onClick={() => navigateToLogEntry(nextLogEntry)}
+            >
+                <FaArrowRight/>
+            </NavButton>
+        </Container>
     )
 
 }
