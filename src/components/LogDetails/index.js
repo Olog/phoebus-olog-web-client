@@ -17,14 +17,10 @@
  */
 
 import { useEffect, useMemo } from 'react';
-// import Container from 'react-bootstrap/Container';
 import { Remarkable } from 'remarkable';
 import imageProcessor from 'utils/image-processor';
 import customization from 'utils/customization';
 import {getLogEntryGroupId} from 'utils';
-// import ToggleButton from 'react-bootstrap/ToggleButton';
-// import ButtonGroup from 'react-bootstrap/ButtonGroup';
-// import Button from 'react-bootstrap/Button';
 import LogEntryGroupView from './LogEntryGroupView';
 import LogEntrySingleView from './LogEntrySingleView';
 import {Link} from "react-router-dom";
@@ -34,8 +30,9 @@ import styled from 'styled-components';
 
 
 const Container = styled.div`
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    overflow: auto;
 `
 
 const ButtonContainer = styled.div`
@@ -44,6 +41,7 @@ const ButtonContainer = styled.div`
     flex-direction: row;
     gap: 0.5rem;
     padding: 0.25rem 1rem;
+    border-bottom: 1px solid ${({theme}) => theme.colors.light};
 
     & .end {
         margin-left: auto;
@@ -51,8 +49,7 @@ const ButtonContainer = styled.div`
 `
 
 const LogViewContainer = styled.div`
-    height: 100%;
-    // border: 1px solid ${({theme}) => theme.colors.light};
+    overflow: auto;
 `
 
 /**

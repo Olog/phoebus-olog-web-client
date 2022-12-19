@@ -26,6 +26,7 @@ import { ListGroupItem } from 'components/shared/ListGroup';
 
 const Container = styled.div`
     padding: 0.5rem;
+    overflow: auto;
 `
 
 const LogTitle = styled.div`
