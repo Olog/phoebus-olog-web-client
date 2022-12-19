@@ -32,7 +32,7 @@ const HiddenContentEnd = styled.div`
     height: 1px;
 `
 
-const Collapse = ({title, active=false, children}) => {
+const Collapse = ({title, active=false, className, children}) => {
     const [show, setShow] = useState(active);
     
     const contentEndRef = useRef();
@@ -50,7 +50,7 @@ const Collapse = ({title, active=false, children}) => {
     });
 
     return (
-        <Container>
+        <Container className={className}>
             <Header onClick={handleClick}>
                 <Icon>{show ? <FaChevronDown /> : <FaChevronRight />}</Icon>
                 <span>{title}</span>

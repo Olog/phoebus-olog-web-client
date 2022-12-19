@@ -19,26 +19,49 @@ import React, { useState } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import Table from 'react-bootstrap/Table';
+import styled from 'styled-components';
+import Collapse from 'components/shared/Collapse';
 
-const Properties = (props) => {
+const StyledCollapse = styled(Collapse)`
+    padding-left: 1rem;
+`
 
-    const [visible, setVisible] = useState(true);
+const Container = styled.div`
+    & > *:nth-child(2n) {
+        background-color: ${({theme}) => theme.colors.light};
+    }
+`
+
+const Attribute = styled.div`
+    display: flex;
+    gap: 0.5rem;
+`
+
+const AttributeKey = styled.div`
+    font-weight: bold;
+    min-width: 3.5rem;
+    text-align: right;
+`
+
+const AttributeValue = styled.div`
+    font-style: italic;
+`
+
+const Properties = ({property}) => {
+    
+    const renderedProperties = property.attributes.map((a, index) => (
+        <Attribute key={index}>
+            <AttributeKey>{a.name}:</AttributeKey>
+            <AttributeValue>{a.value}</AttributeValue>
+        </Attribute>
+    ))
 
     return(
-        <>
-            <Accordion defaultActiveKey="0">
-                <Accordion.Toggle eventKey="0" onClick={() => setVisible(!visible)}>
-                        {visible ? <FaChevronDown /> : <FaChevronRight/> } {props.property.name}
-                </Accordion.Toggle>
-                <Accordion.Collapse eventKey="0">
-                    <Table size="sm" bordered>
-                        <tbody>
-                            {props.property.attributes.map((a, index) => (<tr key={index}><td>{a.name}</td><td>{a.value}</td></tr>))}
-                        </tbody>
-                    </Table>
-                </Accordion.Collapse>
-            </Accordion>
-        </>
+        <StyledCollapse active={true} title={property.name} >
+            <Container>
+                {renderedProperties}
+            </Container>
+        </StyledCollapse>
     )
 }
 
