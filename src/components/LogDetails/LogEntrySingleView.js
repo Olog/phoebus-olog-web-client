@@ -27,7 +27,6 @@ import { ListGroupItem } from 'components/shared/ListGroup';
 const Container = styled.div`
     padding: 0.5rem;
     border: 1px solid ${({theme}) => theme.colors.light};
-    overflow: auto;
 `
 
 const LogTitle = styled.div`
@@ -70,7 +69,7 @@ class LogEntrySingleView extends Component{
             
             if(row.fileMetadataDescription.startsWith('image')){
                 return(
-                    <ListGroupItem>
+                    <ListGroupItem key={index}>
                         <AttachmentImage 
                             onClick={() => {
                                 let w = window.open("", row.filename);
@@ -86,7 +85,7 @@ class LogEntrySingleView extends Component{
             }
             else{
                 return (
-                    <ListGroupItem>
+                    <ListGroupItem key={index}>
                         <a target="_blank" rel="noopener noreferrer" href={url}>
                             {row.filename}
                         </a>

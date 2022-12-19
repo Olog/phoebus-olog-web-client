@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import styled from "styled-components";
@@ -26,16 +28,35 @@ const Body = styled.div`
     
 `
 
-const Collapse = ({title, active, children}) => {
+const HiddenContentEnd = styled.div`
+    height: 1px;
+`
+
+const Collapse = ({title, active=false, children}) => {
     const [show, setShow] = useState(active);
     
+    const contentEndRef = useRef();
+
+    const scrollToEnd = () => {
+        contentEndRef.current?.scrollIntoView({behavior: 'smooth'});
+    }
+
+    const handleClick = () => {
+        setShow(!show);
+    }
+
+    useEffect(() => {
+        scrollToEnd();
+    });
+
     return (
         <Container>
-            <Header onClick={() => setShow(!show)}>
+            <Header onClick={handleClick}>
                 <Icon>{show ? <FaChevronDown /> : <FaChevronRight />}</Icon>
                 <span>{title}</span>
             </Header>
             {show ? <Body>{children}</Body> : null}
+            <HiddenContentEnd ref={contentEndRef} id='hidden-content-end'></HiddenContentEnd>
         </Container>
     )
     

@@ -37,6 +37,10 @@ const PaginationContainer = styled.div`
     gap: 0.5rem;
 `
 
+const PagePosition = styled.div`
+    white-space: nowrap;
+`
+
 const PaginationBar = ({pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}) => {
 
     const isMobile = useMediaQuery({ query: '(max-width: 539px)' })
@@ -90,7 +94,7 @@ const PaginationBar = ({pageCount, currentPageIndex, goToPage, searchPageParams,
                             disabled={currentPageIndex === pageCount - 1}
                         />
                     </Pagination>
-                    <div>{`${currentPageIndex + 1} / ${pageCount}`}</div>
+                    <PagePosition>{`${currentPageIndex + 1} / ${pageCount}`}</PagePosition>
                 </PaginationContainer>
             : null}
         </Container>
