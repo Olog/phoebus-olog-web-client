@@ -30,12 +30,17 @@ import Col from 'react-bootstrap/Col';
 import TextInput from 'components/shared/input/TextInput';
 import WizardDateInput from 'components/shared/input/WizardDateInput';
 import RadioInput from 'components/shared/input/RadioInput';
+import styled from 'styled-components';
+
+const StyledCollapse = styled(Collapse)`
+    height: 100%;
+`
 
 /**
  * Component holding search criteria elements, i.e.
  * logbooks, tags and time range.
  */
-const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) => {
+const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams, className}) => {
 
     const [tempSearchParams, setTempSearchParams] = useState({...searchParams});
     const [tempSearchPageParams, setTempSearchPageParams] = useState({...searchPageParams});
@@ -131,7 +136,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
     }
 
     return(
-        <Collapse show={showFilters} onExiting={handleSubmit(onSubmit)} >
+        <StyledCollapse show={showFilters} onExiting={handleSubmit(onSubmit)} className={className} >
             <Col xs={{span: 12, order: 3}} lg={{span: 2, order: 1}} >
                 <Container className="grid-item filters full-height" style={{padding: "8px"}} >
                     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -244,7 +249,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams}) 
                     </Form>
                 </Container>
             </Col>
-        </Collapse>
+        </StyledCollapse>
     );
 }
 

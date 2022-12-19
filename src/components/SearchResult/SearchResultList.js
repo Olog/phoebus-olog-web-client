@@ -34,6 +34,15 @@ const SearchResultsContainer = styled.div`
     display: flex;
     flex-direction: column;
     overflow: auto;
+
+    & > * {
+        border: 1px solid ${({theme}) => theme.colors.light};
+        border-left: none;
+        border-right: none;
+    }
+    & > *:not(:last-child) {
+        border-bottom: none;
+    }
 `
 
 /**
@@ -46,7 +55,8 @@ const SearchResultList = ({
     searchResults,
     searchInProgress,
     currentLogEntry,
-    showFilters, setShowFilters
+    showFilters, setShowFilters,
+    className
 }) => {
 
     const [pageCount, setPageCount] = useState(0);
@@ -101,7 +111,7 @@ const SearchResultList = ({
     });
 
     return(
-        <Container id='search-results-list' >
+        <Container id='search-results-list' className={className} >
             <SearchBox {...{searchParams, showFilters, setShowFilters}} />
             <LoadingOverlay
                 active={searchInProgress}

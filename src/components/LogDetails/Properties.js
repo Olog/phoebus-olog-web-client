@@ -15,10 +15,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React, { useState } from 'react';
-import Accordion from 'react-bootstrap/Accordion';
-import { FaChevronRight, FaChevronDown } from "react-icons/fa";
-import Table from 'react-bootstrap/Table';
 import styled from 'styled-components';
 import Collapse from 'components/shared/Collapse';
 

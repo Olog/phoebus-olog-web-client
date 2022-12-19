@@ -27,7 +27,6 @@ const LogInfoContainer = styled.div`
     gap: 0.25rem;
     padding: 0.25rem;
     background-color: ${({selected}) => selected ? '#c8e0f4' : 'inherit'};
-    border: 1px solid ${({theme}) => theme.colors.light};
 `
 
 const LogInfo = styled.div`

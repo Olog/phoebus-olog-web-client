@@ -25,7 +25,6 @@ const Form = styled.form`
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem
-    // height: 100%;
 `
 
 const StyledSearchBoxInput = styled(SearchBoxInput)`
@@ -36,10 +35,13 @@ const StyledSearchBoxInput = styled(SearchBoxInput)`
 
 const FilterButton = styled(Button)`
     height: 2rem;
+    width: 1rem;
+    padding: 0 1rem;
 `
 
 const HelpButton = styled(Button)`
     height: 2rem;
+    padding: 0 1rem;
 `
 
 const SearchBox = ({searchParams, showFilters, setShowFilters}) => {

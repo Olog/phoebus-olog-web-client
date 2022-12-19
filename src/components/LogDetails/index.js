@@ -50,6 +50,11 @@ const ButtonContainer = styled.div`
     }
 `
 
+const LogViewContainer = styled.div`
+    height: 100%;
+    // border: 1px solid ${({theme}) => theme.colors.light};
+`
+
 /**
  * A view show all details of a log entry. Images are renderd, if such are
  * present. Other types of attachments are rendered as links.
@@ -61,7 +66,8 @@ const LogDetails = ({
     logGroupRecords, setLogGroupRecords, 
     userData, 
     setReplyAction,
-    searchResults
+    searchResults,
+    className
 }) => {
 
     const remarkable = useMemo(() => new Remarkable('full', {
@@ -116,7 +122,7 @@ const LogDetails = ({
 
 
     return(
-        <Container>
+        <Container className={className}>
             <ButtonContainer>
                 <NavigationButtons {...{
                     currentLogEntry,
@@ -126,7 +132,9 @@ const LogDetails = ({
                 {renderedShowGroupButton}
                 <Button variant='primary' onClick={copyUrl} className='end'>Copy URL</Button>
             </ButtonContainer>
-            {renderedLogView}
+            <LogViewContainer>
+                {renderedLogView}
+            </LogViewContainer>
         </Container>
     )
     

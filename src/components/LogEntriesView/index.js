@@ -33,6 +33,28 @@ import Filters from 'components/Filters';
 const ContentContainer = styled.div`
     height: 100%;
     display: flex;
+
+    & > * {
+        border: 1px solid ${({theme}) => theme.colors.light};
+    }
+    & > *:not(:last-child) {
+        border-right: none;
+    }
+`
+
+const StyledFilters = styled(Filters)`
+    height: 100%;
+    flex: 1 2 0;
+`
+
+const StyledSearchResultList = styled(SearchResultList)`
+    height: 100%;
+    flex: 2 1 0;
+`
+
+const StyledLogDetails = styled(LogDetails)`
+    height: 100%;
+    flex: 2 1 0;
 `
 
 const LogEntriesView = ({
@@ -87,7 +109,6 @@ const LogEntriesView = ({
         }
     }, [logId, dispatch])
 
-    // 
     useEffect(() => {
         setShowGroup(false);
     }, [currentLogEntry])
@@ -96,7 +117,7 @@ const LogEntriesView = ({
         
         if(currentLogEntry) {
             return (
-                <LogDetails {...{
+                <StyledLogDetails {...{
                     showGroup, setShowGroup, 
                     currentLogEntry, 
                     logGroupRecords, setLogGroupRecords, 
@@ -126,14 +147,14 @@ const LogEntriesView = ({
             }
 
             <ContentContainer id='log-entries-view-content'>
-                <Filters {...{
+                <StyledFilters {...{
                     logbooks,
                     tags,
                     showFilters,
                     searchParams,
                     searchPageParams
                 }}/>
-                <SearchResultList {...{
+                <StyledSearchResultList {...{
                     searchParams,
                     searchPageParams,
                     searchResults,
