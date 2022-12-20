@@ -17,7 +17,6 @@
  */
 import ologService from 'api/olog-service';
 import Button from '../shared/Button';
-import Form from 'react-bootstrap/Form';
 import Modal, {Header, Title, Body} from 'components/shared/Modal';
 import { FaPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -44,7 +43,17 @@ import styled from 'styled-components';
 import FileInput from 'components/shared/input/FileInput';
 
 const Container = styled.div`
-    padding: 0.5rem 0;
+    padding: 0.5rem;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+`
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
 `
 
 const FileInputContainer = styled.div`
@@ -170,13 +179,13 @@ const EntryEditor = ({
      * @param {*} height 
      */
     const addEmbeddedImage = (file, width, height) => {
-        setShowEmbedImageDialog(false);
         const id = uuidv4();
+        appendAttachment(new OlogAttachment(file, id));
         const imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
         let description = getValues('description') || '';
         description += imageMarkup;
+        setShowEmbedImageDialog(false);
         setValue('description', description, {shouldDirty: false, shouldTouch: false, shouldValidate: false});
-        appendAttachment(new OlogAttachment(file, id));
     }
 
     /**
@@ -288,15 +297,13 @@ const EntryEditor = ({
 
     return (
         <>
-            <LoadingOverlay
-                active={createInProgress}
-            >
-                <Container>
+            <Container>
+                <LoadingOverlay
+                    active={createInProgress}
+                >
+                    <h1>New Log Entry</h1>
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <Form.Row>
-                            <Form.Label className="new-entry">New Log Entry</Form.Label>
-                            <Button variant="primary" disabled={userData.userName === "" || createInProgress}>Submit</Button>
-                        </Form.Row>
+                        
                         <MultiSelect
                             name='logbooks'
                             label='Logbooks'
@@ -373,29 +380,42 @@ const EntryEditor = ({
                                 onFileChanged={onFileChanged}
                             />
                             <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                    onClick={() => setShowEmbedImageDialog(true)}>
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setShowEmbedImageDialog(true);
+                                    }}>
                                 Embed Image
                             </Button>
                             <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                    onClick={() => setShowHtmlPreview(true)}>
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setShowHtmlPreview(true)
+                                    }}>
                                 Preview
                             </Button>
                         </FileInputContainer>
+                        <RenderedAttachmentsContainer>
+                            { renderedAttachments }
+                        </RenderedAttachmentsContainer>
+                        <PropertiesContainer>
+                            <Button variant="secondary" size="sm" onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setShowAddProperty(true);
+                            }}>
+                                <ButtonContent>
+                                    <FaPlus className="add-button"/>
+                                    <span>Add Property</span>
+                                </ButtonContent>
+                            </Button>
+                            {renderedProperties}    
+                        </PropertiesContainer>
+                        <Button type='submit' variant="primary" disabled={userData.userName === "" || createInProgress} >Submit</Button>
                     </Form>
-                    <RenderedAttachmentsContainer>
-                        { renderedAttachments }
-                    </RenderedAttachmentsContainer>
-                    <PropertiesContainer>
-                        <Button variant="secondary" size="sm" onClick={() => setShowAddProperty(true)}>
-                            <ButtonContent>
-                                <FaPlus className="add-button"/>
-                                <span>Add Property</span>
-                            </ButtonContent>
-                        </Button>
-                        {renderedProperties}    
-                    </PropertiesContainer>
-                </Container>
-            </LoadingOverlay>
+                </LoadingOverlay>
+            </Container>
             <Modal show={showAddProperty} onClose={() => setShowAddProperty(false)}>
                 <Header onClose={() => setShowAddProperty(false)}>
                     <Title>Add Property</Title>

@@ -24,8 +24,8 @@ const ButtonElem = styled.button`
     ${buttonBaseStyle}
 `
 
-const Button = ({variant, disabled=false, onClick=() => {}, innerRef, className, children}) => {
-    return <ButtonElem {...{variant, disabled, onClick, className, ref: innerRef}}>
+const Button = ({type='button', variant, disabled=false, onClick=() => {}, innerRef, className, children}) => {
+    return <ButtonElem type={type} {...{variant, disabled, onClick, className, ref: innerRef}}>
         {children}
     </ButtonElem>
 }
@@ -36,7 +36,7 @@ const StyledToggleButton = styled(ButtonElem)`
     color: ${({checked, variant, theme}) => checked ? theme.colors.lightest : (theme.colors[variant] || theme.colors.default)};
 `
 
-export const ToggleButton = ({variant, disabled=false, innerRef, className, checked, onChange, children}) => {
+export const ToggleButton = ({type='button', variant, disabled=false, innerRef, className, checked, onChange, children}) => {
 
     const [isChecked, setIsChecked] = useState(checked);
 
@@ -45,7 +45,7 @@ export const ToggleButton = ({variant, disabled=false, innerRef, className, chec
         onChange();
     }
 
-    return <StyledToggleButton {...{variant, disabled, onClick, className, ref: innerRef, checked}}>
+    return <StyledToggleButton type={type} {...{variant, disabled, onClick, className, ref: innerRef, checked}}>
         {children}
     </StyledToggleButton>
 }

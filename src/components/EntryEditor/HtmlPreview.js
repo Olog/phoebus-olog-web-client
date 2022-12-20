@@ -20,7 +20,13 @@ import React, { Component } from 'react';
 import { Remarkable } from 'remarkable';
 import imageProcessor from 'utils/image-processor';
 import Button from 'components/shared/Button';
-import Modal, { Body, Footer } from '../shared/Modal';
+import Modal, { Body, Footer, Header } from '../shared/Modal';
+import styled from 'styled-components';
+
+const StyledModal = styled(Modal)`
+    max-width: 90vw;
+    max-height: 90vh;
+`
 
 class HtmlPreview extends Component{
 
@@ -49,9 +55,12 @@ class HtmlPreview extends Component{
     
     render(){
         return(
-            <Modal show={this.props.showHtmlPreview}
+            <StyledModal show={this.props.showHtmlPreview}
                 onClose={() => this.props.setShowHtmlPreview(false)}
                 onOpen={() => this.reset()}>
+                <Header onClose={() => this.props.setShowHtmlPreview(false)}>
+                    <h2>Description Preview</h2>
+                </Header>
                 <Body>
                         <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
                             dangerouslySetInnerHTML={{ __html: this.state.innerHtml }}>
@@ -60,7 +69,7 @@ class HtmlPreview extends Component{
                 <Footer>
                       <Button variant="secondary" onClick={() => this.props.setShowHtmlPreview(false)}>OK</Button>
                 </Footer> 
-            </Modal>
+            </StyledModal>
         )
     }
 }

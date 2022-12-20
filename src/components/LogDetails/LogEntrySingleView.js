@@ -41,6 +41,7 @@ const Ruler = styled.hr`
 
 const Description = styled.div`
     width: 100%;
+    max-width: 33vw;
     padding-top: 5px;
     wordWrap: break-word;
     font-size: 16px;

@@ -36,7 +36,8 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
     const [originalImageHeight, setOriginalImageHeight] = useState(0);
     const scalingFactor = watch('scalingFactor');
     
-    const _addEmbeddedImage = () => {
+    const _addEmbeddedImage = (e) => {
+        e.preventDefault();
         addEmbeddedImage(
             // imageAttachment, 
             imageRef.current,
