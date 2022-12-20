@@ -23,7 +23,7 @@ import customization from 'utils/customization';
 import {getLogEntryGroupId} from 'utils';
 import LogEntryGroupView from './LogEntryGroupView';
 import LogEntrySingleView from './LogEntrySingleView';
-import {Link} from "react-router-dom";
+import {Link, useHref, useLocation} from "react-router-dom";
 import NavigationButtons from './NavigationButtons';
 import Button, { ToggleButton } from 'components/shared/Button';
 import styled from 'styled-components';
@@ -90,11 +90,11 @@ const LogDetails = ({
             </Button>
         </Link> : null;
 
+    const currentPath = useHref(useLocation());
+
     const copyUrl = () => {
         navigator.clipboard.writeText(
-            document.baseURI.endsWith('logs/' + currentLogEntry.id)
-                ? document.baseURI
-                : document.baseURI + 'logs/' + currentLogEntry.id
+            window.location.origin + currentPath
         )
     }
 
