@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import { formatFullDateTime, getLogEntryGroupId } from 'utils';
+import { useNavigate } from "react-router-dom";
 
 const LogInfoContainer = styled.div`
     display: flex;
@@ -42,6 +43,7 @@ const HeaderInfo = styled(LogInfo)`
 const SearchResultItem = ({log, currentLogEntry}) => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const formatDescription = (description) => {
         let length = 75;
@@ -52,11 +54,16 @@ const SearchResultItem = ({log, currentLogEntry}) => {
         return description.substring(0, length) + ellipsis;
     }
 
+    const handleClick = () => {
+        dispatch(updateCurrentLogEntry(log));
+        navigate(`/logs/${log.id}`);
+    }
+
     return (
         <LogInfoContainer 
             grouped={getLogEntryGroupId(log.properties) !== null} 
             selected={currentLogEntry && currentLogEntry.id === log.id}
-            onClick={() => dispatch(updateCurrentLogEntry(log))}
+            onClick={handleClick}
         >
             <HeaderInfo>
                 <p>{log.title}</p>
