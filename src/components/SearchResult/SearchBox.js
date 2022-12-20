@@ -19,7 +19,6 @@
 import styled from "styled-components"
 import Button from "components/shared/Button"
 import SearchBoxInput from "./SearchBoxInput"
-import Submit from "components/shared/input/Submit"
 
 const Container = styled.div`
     width: 100%;

@@ -16,8 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  import React from 'react';
+import { FaPaperclip } from 'react-icons/fa';
+import styled from 'styled-components';
  import OlogMoment from './OlogMoment';
  
+const Container = styled.div`
+    display: flex;
+    background-color: ${({theme}) => theme.colors.light};
+    font-size: 1.2rem;
+`
+
+const Right = styled.div`
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+`
+
  /**
   * Simple component rendering a header item when showing a merged view of 
   * multiple (grouped) log entries. When user clicks on the header, the associated
@@ -25,14 +39,16 @@
   * @param {} props 
   * @returns 
   */
- const GroupHeader = (props) => {
+ const GroupHeader = ({logEntry}) => {
  
      return(
-         <div className="separator" onClick={() => props.showLog(props.logEntry)}>
-             <OlogMoment date={props.logEntry.createdDate}/>, {props.logEntry.owner}, {props.logEntry.title} 
-             <span style={{float: "right"}}>{props.logEntry.id}</span>
-             {props.logEntry.attachments.length > 0 && <div className='attachment-icon'></div>}
-         </div>
+         <Container>
+             <OlogMoment date={logEntry.createdDate}/>, {logEntry.owner}, {logEntry.title} 
+             <Right>
+                <span>{logEntry.id}</span>
+                {logEntry.attachments.length > 0 ? <FaPaperclip /> : null}
+             </Right>
+         </Container>
      )
  }
  

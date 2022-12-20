@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { Component } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Properties from './Properties';
 import LogDetailsMetaData from './LogDetailsMetaData';
@@ -51,89 +50,74 @@ const AttachmentImage = styled.img`
     width: 100%;
 `
 
-class LogEntrySingleView extends Component{
+const LogEntrySingleView = ({remarkable, currentLogEntry}) => {
 
-    state = {
-        openInfo: false,
-        attachmentVisible: true,
-        propertiesVisible: false
-    };
-
-    getContent = (source) => {
-        return {__html: this.props.remarkable.render(source)};
+    const getContent = (source) => {
+        return {__html: remarkable.render(source)};
     }
 
-    render(){
-        const attachments = this.props.currentLogEntry.attachments.map((row, index) => {
-            var url = `${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogEntry.id + "/" + row.filename;
-            
-            if(row.fileMetadataDescription.startsWith('image')){
-                return(
-                    <ListGroupItem key={index}>
-                        <AttachmentImage 
-                            onClick={() => {
-                                let w = window.open("", row.filename);
-                                w.document.open();
-                                w.document.write('<html><head><title>' + row.filename + '</title></head>');
-                                w.document.write('<body><p><img src=\'' + url + '\'></p></body></html>');
-                                w.document.close();
-                            }}
-                            src={url}
-                        />
-                    </ListGroupItem>
-                )
-            }
-            else{
-                return (
-                    <ListGroupItem key={index}>
-                        <a target="_blank" rel="noopener noreferrer" href={url}>
-                            {row.filename}
-                        </a>
-                    </ListGroupItem>
-                )}
-            }
-        );
-        
-        const properties = this.props.currentLogEntry.properties.map((row, index) => {
-                if(row.name !== 'Log Entry Group'){
-                    return(
-                        <Properties key={index} property={row}/>
-                     )
-                }
-                else{
-                    return null;
-                }
-            });
     
-        return(
-            <Container>
-                <LogTitle>
-                    <span>{this.props.currentLogEntry.title}</span>
-                    <span>{this.props.currentLogEntry.id}</span>
-                </LogTitle>
-                <Ruler />
-                <LogDetailsMetaData currentLogRecord={this.props.currentLogEntry}/>
-                <Ruler />
-                <Description 
-                    dangerouslySetInnerHTML={this.getContent(this.props.currentLogEntry.source)}>
-                </Description>
-                <Collapse title='Attachments'>
-                    {this.props.currentLogEntry.attachments.length > 0 
-                        ? <ListGroup>
-                            {attachments}
-                        </ListGroup>
-                        : <p>No Attachments</p> 
-                    }
-                </Collapse>
-                <Collapse title='Properties'>
-                    {this.props.currentLogEntry.properties.length > 0 
-                        ? properties 
-                        : <p>No Properties</p> 
-                    }
-                </Collapse>
-            </Container>
-        );
-    }
+    const attachments = currentLogEntry.attachments.map((row, index) => {
+        const url = `${process.env.REACT_APP_BASE_URL}/logs/attachments/` + currentLogEntry.id + "/" + row.filename;
+        
+        if(row.fileMetadataDescription.startsWith('image')){
+            return(
+                <ListGroupItem key={index}>
+                    <AttachmentImage 
+                        onClick={() => {
+                            let w = window.open("", row.filename);
+                            w.document.open();
+                            w.document.write('<html><head><title>' + row.filename + '</title></head>');
+                            w.document.write('<body><p><img src=\'' + url + '\'></p></body></html>');
+                            w.document.close();
+                        }}
+                        src={url}
+                    />
+                </ListGroupItem>
+            )
+        } else {
+            return (
+                <ListGroupItem key={index}>
+                    <a target="_blank" rel="noopener noreferrer" href={url}>
+                        {row.filename}
+                    </a>
+                </ListGroupItem>
+            )}
+        }
+    );
+    
+    const properties = currentLogEntry.properties
+        .filter(row => row.name !== 'Log Entry Group')
+        .map((row, index) => <Properties key={index} property={row}/>);
+
+    return(
+        <Container>
+            <LogTitle>
+                <span>{currentLogEntry.title}</span>
+                <span>{currentLogEntry.id}</span>
+            </LogTitle>
+            <Ruler />
+            <LogDetailsMetaData currentLogRecord={currentLogEntry}/>
+            <Ruler />
+            <Description 
+                dangerouslySetInnerHTML={getContent(currentLogEntry.source)}>
+            </Description>
+            <Collapse title='Attachments'>
+                {currentLogEntry.attachments.length > 0 
+                    ? <ListGroup>
+                        {attachments}
+                    </ListGroup>
+                    : <p>No Attachments</p> 
+                }
+            </Collapse>
+            <Collapse title='Properties'>
+                {properties?.length > 0
+                    ? properties 
+                    : <p>No Properties</p> 
+                }
+            </Collapse>
+        </Container>
+    );
     
 }
 
