@@ -30,8 +30,8 @@ const Container = styled.div`
 `
 
 const SearchResultsContainer = styled.div`
-    height: 100%;
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     overflow: auto;
 
@@ -43,6 +43,11 @@ const SearchResultsContainer = styled.div`
     & > *:not(:last-child) {
         border-bottom: none;
     }
+`
+
+const StyledLoadingOverlay = styled(LoadingOverlay)`
+    display: flex;
+    flex-direction: column;
 `
 
 /**
@@ -113,14 +118,14 @@ const SearchResultList = ({
     return(
         <Container id='search-results-list' className={className} >
             <SearchBox {...{searchParams, showFilters, setShowFilters}} />
-            <LoadingOverlay
+            <StyledLoadingOverlay
                 active={searchInProgress}
             >
-            </LoadingOverlay>
                 <SearchResultsContainer id='search-results-list--container'>
                     {renderedSearchResults}
                 </SearchResultsContainer>
                 <PaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
+            </StyledLoadingOverlay>
         </Container>
     )
 }

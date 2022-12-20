@@ -12,9 +12,7 @@ const LoadingOverlay = ({children, active=true, message}) => {
     return (
         <div id='loading-overlay--container' >
             {overlay}
-            <div id='loading-overlay--children'>
-                {children} 
-            </div>
+            {children} 
         </div>
     );
 

@@ -46,27 +46,16 @@ const SearchBoxInput = ({searchParams, showFilters, className}) => {
     }
 
     return (
-        // <OverlayTrigger delay={{ hide: 750, show: 300 }}
-        //         overlay={(props) => (
-        //             <Tooltip {...props}>Edit and press Enter to search</Tooltip>
-        //         )}
-        //         rootClose
-        //         placement="bottom"
-        //         className={className}
-        // >
-        // <div className={className}>
-        // </div>
-            <StyledTextInput size="sm" 
-                name='search'
-                type="input"
-                disabled={showFilters}
-                placeholder="No search string"
-                style={{fontSize: "12px"}}
-                value={searchString}
-                onChange={(e) => onChange(e)}
-                onKeyDown={onKeyDown}
-            />
-        // </OverlayTrigger>
+        <StyledTextInput size="sm" 
+            name='search'
+            type="input"
+            disabled={showFilters}
+            placeholder="No search string"
+            style={{fontSize: "12px"}}
+            value={searchString}
+            onChange={(e) => onChange(e)}
+            onKeyDown={onKeyDown}
+        />
     );
 }
 

@@ -19,11 +19,12 @@
 import styled from "styled-components"
 import Button from "components/shared/Button"
 import SearchBoxInput from "./SearchBoxInput"
+import Submit from "components/shared/input/Submit"
 
-const Form = styled.form`
+const Container = styled.div`
+    width: 100%;
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem; 
     padding: 0.25rem 0.5rem ;
 `
 
@@ -44,30 +45,22 @@ const HelpButton = styled(Button)`
 
 const SearchBox = ({searchParams, showFilters, setShowFilters}) => {
     
-    const toggleFilters = () => {
+    const toggleFilters = (e) => {
         setShowFilters(!showFilters)
     }
 
     const showSearchHelp = () => {
         window.open(`${process.env.REACT_APP_BASE_URL}/SearchHelp_en.html`, '_blank');
     }
-
-    // prevent default to e.g. prevent page reload
-    // do NOT trigger search here, as the SearchBox
-    // component already triggers this by updating 
-    // the searchParams state.
-    const submit = (event) => {
-        event.preventDefault();
-    }
     
     return (
-        <Form onSubmit={(e) => submit(e)}>
-            <FilterButton variant='secondary' onClick={() => toggleFilters()} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</FilterButton>
+        <Container>
+            <FilterButton variant='secondary' onClick={(e) => toggleFilters(e)} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</FilterButton>
             <StyledSearchBoxInput
                 {...{searchParams, showFilters}}
             />
             <HelpButton variant='secondary' onClick={(e) => showSearchHelp()}>Help</HelpButton>
-        </Form>
+        </Container>
     );
 }
 

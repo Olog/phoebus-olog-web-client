@@ -88,6 +88,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams, c
     }, [sort])
     
     const onSubmit = (data) => {
+
         // Remove keys part of page params
         delete data.sort
 

@@ -17,7 +17,7 @@ const TextArea = styled.textarea`
     border-radius: 5px;
 `
 
-export const StyledTextInput = React.forwardRef(({name, label, className, textArea=false, rows=3, password=false, value, onChange, props}, innerRef) => {
+export const StyledTextInput = React.forwardRef(({name, label, className, textArea=false, rows=3, password=false, value, onChange, ...props}, innerRef) => {
     return textArea ? 
     <TextArea 
         ref={innerRef}
