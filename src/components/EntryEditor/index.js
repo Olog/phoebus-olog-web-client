@@ -353,6 +353,7 @@ const EntryEditor = ({
                             name='title'
                             label='Title'
                             control={control}
+                            defaultValue=''
                             rules={{
                                 required: {
                                     value: true,
@@ -364,6 +365,7 @@ const EntryEditor = ({
                             name='description'
                             label='Description'
                             control={control}
+                            defaultValue=''
                             rules={{
                                 required: {
                                     value: true,
