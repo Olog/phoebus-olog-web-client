@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import Modal, {Header, Title, Body, Footer} from '../shared/Modal';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
@@ -32,10 +32,10 @@ const Form = styled.form`
 const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
 
     const {control, setValue, watch, getValues} = useForm({
-        mode: 'all'
+        mode: 'all',
+        defaultValues: {imageWidth: 0, imageHeight: 0, scalingFactor: 1.0}
     });
-    // const [imageAttachment, setImageAttachment] = useState(null);
-    const imageRef = useRef(null);
+    const [imageAttachment, setImageAttachment] = useState(null);
     const [originalImageWidth, setOriginalImageWidth] = useState(0);
     const [originalImageHeight, setOriginalImageHeight] = useState(0);
     const scalingFactor = watch('scalingFactor');
@@ -43,19 +43,16 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
     const _addEmbeddedImage = (e) => {
         e.preventDefault();
         addEmbeddedImage(
-            // imageAttachment, 
-            imageRef.current,
+            imageAttachment, 
             getValues('imageWidth'),
             getValues('imageHeight')
         );
     }
 
     const onFileChanged = (files) => {
-        console.log({files})
         if(files){
-            // setImageAttachment(files[0]);
-            imageRef.current = files[0];
-            checkImageSize(imageRef.current, setSize);
+            setImageAttachment(files[0]);
+            checkImageSize(imageAttachment, setSize);
         }
     }
 
@@ -74,7 +71,7 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
             fr.onload = function() { // file is loaded
                 const img = new Image();
                 img.onload = function() { // image is loaded; sizes are available
-                    setSize(img.width, img.height);
+                    setSize(img.width || 0, img.height || 0);
                 };
                 img.src = fr.result; // is the data URL because called with readAsDataURL
             };
@@ -82,11 +79,12 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
         }
     }
     
-    // useEffect(() => {
-    //     if(imageAttachment) {
-    //         checkImageSize(imageAttachment, setSize)
-    //     }
-    // }, [imageAttachment])
+    useEffect(() => {
+        if(imageAttachment) {
+            checkImageSize(imageAttachment, setSize)
+        }
+        // eslint-disable-next-line
+    }, [imageAttachment])
 
     const scalingFactorIsValid = (value) => {
         return parseFloat(value) > 0 && parseFloat(value) <= 1;
@@ -101,6 +99,7 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
         const newImageHeight = Math.round(scalingFactor * originalImageHeight);
         setValue('imageWidth', newImageWidth);
         setValue('imageHeight', newImageHeight);
+        // eslint-disable-next-line
     }, [scalingFactor]);
     
     return(
@@ -110,7 +109,7 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
             <Form 
                 onSubmit={_addEmbeddedImage}
             >
-                <Header closeButton>
+                <Header closeButton onClose={() => setShowEmbedImageDialog(false)}>
                     <Title>Add Embedded Image</Title>
                 </Header>
                 <Body>
@@ -135,7 +134,7 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
                         name='imageWidth'
                         label='Width'
                         control={control}
-                        defaultValue=''
+                        defaultValue='0.0'
                         rules={{
                             validate: {
                                 isPositive: val => dimensionIsValid(val) || 'Width must be a positive number'
@@ -146,7 +145,7 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
                         name='imageHeight'
                         label='Height'
                         control={control}
-                        defaultValue=''
+                        defaultValue='0.0'
                         rules={{
                             validate: {
                                 isPositive: val => dimensionIsValid(val) || 'Height must be a positive number'
@@ -157,8 +156,7 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
                 </Body>
                 <Footer>
                     <Button variant="secondary" onClick={() => setShowEmbedImageDialog(false)}>Cancel</Button>
-                    {/* <Button variant="primary" disabled={imageAttachment === null} onClick={_addEmbeddedImage}>OK</Button> */}
-                    <Button variant="primary" disabled={imageRef.current === null} onClick={_addEmbeddedImage}>OK</Button>
+                    <Button variant="primary" disabled={imageAttachment === null} onClick={_addEmbeddedImage}>OK</Button>
                 </Footer>
             </Form>
         </Modal>
