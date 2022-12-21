@@ -121,11 +121,11 @@ const EntryEditor = ({
     /**
      * Save/restore form data
      */
-    const {clear: clearFormData } = useFormPersist( 'entryEditorFormData', {
+    const {clear: clearFormData } =  useFormPersist( 'entryEditorFormData', {
         watch,
         setValue,
         storage: window.localStorage,
-        exclude: 'attachments' // serializing files is unsupported due to security risks
+        exclude: 'attachments', // serializing files is unsupported due to security risks
     });
     
     /**
@@ -142,9 +142,8 @@ const EntryEditor = ({
             setValue('entryType', customization.defaultLevel);
             setValue('title', currentLogEntry.title);
         }
-
-    }, [replyAction, currentLogEntry, setValue, clearFormData]);
-
+        // eslint-disable-next-line 
+    }, [replyAction, currentLogEntry, setValue]);
     /**
      * Appends an attachment object to the attachments form field
      * @param {*} event 
@@ -260,7 +259,7 @@ const EntryEditor = ({
                                 submitAttachmentsMulti(res.data.id);
                             }
                             setCreateInProgress(false);
-                            clearFormData();
+                            // clearFormData();
                             navigate('/');
                         })
                         .catch(error => {
