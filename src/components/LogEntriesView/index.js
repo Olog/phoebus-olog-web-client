@@ -142,10 +142,7 @@ const LogEntriesView = ({
     
     return (
         <>
-            {searchResultError && 
-                <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError} />
-            }
-
+            {searchResultError ? <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError}/> : null}
             <ContentContainer id='log-entries-view-content'>
                 <StyledFilters {...{
                     logbooks,

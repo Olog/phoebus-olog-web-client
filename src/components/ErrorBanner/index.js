@@ -1,4 +1,15 @@
-import { Alert } from "react-bootstrap";
+import styled from "styled-components";
+
+const Alert = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: ${({variant, theme}) => theme.colors[variant] || theme.colors.default };
+    width: 100%;
+`
 
 const ServiceErrorBanner = ({title, error, serviceName="underlying"}) => {
 
@@ -14,8 +25,8 @@ const ServiceErrorBanner = ({title, error, serviceName="underlying"}) => {
     }
 
     return (
-        <Alert variant={variant} className="w-100 mb-0">
-            <Alert.Heading>{title}</Alert.Heading>
+        <Alert variant={variant} >
+            <h2>{title}</h2>
             <p>{message}</p>
         </Alert>
     );

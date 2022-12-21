@@ -17,9 +17,13 @@
  */
 
  import React, { Component } from 'react';
- import Table from 'react-bootstrap/Table';
  import OlogMoment from './OlogMoment';
  import customization from 'utils/customization';
+import styled from 'styled-components';
+
+ const Table = styled.table`
+ 
+ `
 
  class LogDetailsMetaData extends Component {
   

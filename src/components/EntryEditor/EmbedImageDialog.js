@@ -17,13 +17,17 @@
  */
 
 import React, { useEffect, useRef } from 'react';
-import Form from 'react-bootstrap/Form';
 import Modal, {Header, Title, Body, Footer} from '../shared/Modal';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import FileInput from 'components/shared/input/FileInput';
 import { useState } from 'react';
 import Button from 'components/shared/Button';
+import styled from 'styled-components';
+
+const Form = styled.form`
+
+`
 
 const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
 

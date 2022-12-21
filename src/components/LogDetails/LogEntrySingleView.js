@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import ListGroup from 'react-bootstrap/ListGroup';
+import ListGroup from 'components/shared/ListGroup';
 import Properties from './Properties';
 import LogDetailsMetaData from './LogDetailsMetaData';
 import styled from 'styled-components';
