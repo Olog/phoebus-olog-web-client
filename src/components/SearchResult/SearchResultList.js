@@ -23,6 +23,7 @@ import PaginationBar from './PaginationBar';
 import { useDispatch } from 'react-redux';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import styled from 'styled-components';
+import { mobile } from 'config/media';
 
 const Container = styled.div`
     display: flex;
@@ -31,7 +32,8 @@ const Container = styled.div`
 
 const SearchResultsContainer = styled.div`
     display: flex;
-    flex: 1 1 auto;
+    // flex: 1 1 auto;
+    flex: 2 500px;
     flex-direction: column;
     overflow: auto;
 
@@ -43,11 +45,20 @@ const SearchResultsContainer = styled.div`
     & > *:not(:last-child) {
         border-bottom: none;
     }
+
+    ${mobile(`
+        order: 999;
+    `)}
+
 `
 
 const StyledLoadingOverlay = styled(LoadingOverlay)`
     display: flex;
     flex-direction: column;
+`
+
+const StyledPaginationBar = styled(PaginationBar)`
+    
 `
 
 /**
@@ -124,7 +135,7 @@ const SearchResultList = ({
                 <SearchResultsContainer id='search-results-list--container'>
                     {renderedSearchResults}
                 </SearchResultsContainer>
-                <PaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
+                <StyledPaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
             </StyledLoadingOverlay>
         </Container>
     )

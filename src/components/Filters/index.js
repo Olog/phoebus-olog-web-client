@@ -83,8 +83,8 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
     }
 
     return(
-        <StyledCollapse show={showFilters} onExiting={handleSubmit(onSubmit)} className={className} >
-            <Container className="grid-item filters full-height" style={{padding: "8px"}} >
+        <StyledCollapse show={showFilters} onExiting={handleSubmit(onSubmit)} >
+            <Container style={{padding: "8px"}} className={className} >
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     {/* Hidden button handles submit-on-enter automatically */}
                     <Button type='submit' hidden >Submit</Button>

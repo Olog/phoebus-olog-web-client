@@ -29,6 +29,7 @@ import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import ServiceErrorBanner from 'components/ErrorBanner';
 import styled from 'styled-components';
 import Filters from 'components/Filters';
+import { mobile } from 'config/media';
 
 const ContentContainer = styled.div`
     height: 100%;
@@ -40,26 +41,40 @@ const ContentContainer = styled.div`
     & > *:not(:last-child) {
         border-right: none;
     }
+
+    ${mobile(`
+        flex-direction: column;
+        overflow: auto;
+        height: auto;
+    `)}
 `
 
 const StyledFilters = styled(Filters)`
     height: 100%;
     flex: 1 2 0;
+
+    ${mobile(`
+        order: 9;
+    `)}
 `
 
 const StyledSearchResultList = styled(SearchResultList)`
     height: 100%;
     flex: 2 1 0;
+
+    ${mobile(`
+        flex: 1 50%;
+    `)}
 `
 
 const LogDetailsContainer = styled.div`
     height: 100%;
     flex: 2 1 0;
+
+    ${mobile(`
+        order: -1;
+    `)}
 `
-// const StyledLogDetails = styled(LogDetails)`
-//     height: 100%;
-//     flex: 2 1 0;
-// `
 
 const LogEntriesView = ({
     tags, 

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { useState } from "react";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import styled from "styled-components";
@@ -37,17 +37,17 @@ const Collapse = ({title, active=false, className, children}) => {
     
     const contentEndRef = useRef();
 
-    const scrollToEnd = () => {
-        contentEndRef.current?.scrollIntoView({behavior: 'smooth'});
-    }
+    // const scrollToEnd = () => {
+    //     contentEndRef.current?.scrollIntoView({behavior: 'smooth'});
+    // }
 
     const handleClick = () => {
         setShow(!show);
     }
 
-    useEffect(() => {
-        scrollToEnd();
-    });
+    // useEffect(() => {
+    //     scrollToEnd();
+    // });
 
     return (
         <Container className={className}>
