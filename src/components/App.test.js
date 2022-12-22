@@ -199,7 +199,6 @@ it("updates search results instantly from the search filter bar for logbooks", a
 const givenServerRespondsWithSearchRequest = ({title, requestPredicate}) => {
     server.use(
         rest.get('*/logs/search', (req, res, ctx) => {
-            console.log({req})
             if(requestPredicate(req)) {
                 return res(
                     ctx.json({

@@ -52,10 +52,14 @@ const StyledSearchResultList = styled(SearchResultList)`
     flex: 2 1 0;
 `
 
-const StyledLogDetails = styled(LogDetails)`
+const LogDetailsContainer = styled.div`
     height: 100%;
     flex: 2 1 0;
 `
+// const StyledLogDetails = styled(LogDetails)`
+//     height: 100%;
+//     flex: 2 1 0;
+// `
 
 const LogEntriesView = ({
     tags, 
@@ -116,28 +120,22 @@ const LogEntriesView = ({
     const renderedLogEntryDetails = (() => {
         
         if(currentLogEntry) {
-            return (
-                <StyledLogDetails {...{
-                    showGroup, setShowGroup, 
-                    currentLogEntry, 
-                    logGroupRecords, setLogGroupRecords, 
-                    userData, 
-                    setReplyAction,
-                    searchResults
-                }}/>
-            );
+            return <LogDetails {...{
+                        showGroup, setShowGroup, 
+                        currentLogEntry, 
+                        logGroupRecords, setLogGroupRecords, 
+                        userData, 
+                        setReplyAction,
+                        searchResults
+                    }}/>
         } else {
             if(logId) {
-                return (
-                    <h5>Log record id {logId} not found</h5>
-                );
+                return <h5>Log record id {logId} not found</h5>
             } else {
-                return (
-                    <h5>Search for log entries, and select one to view</h5>
-                );
-            }
-            
+                return <h5>Search for log entries, and select one to view</h5>
+            }   
         }
+
     })();
     
     return (
@@ -157,7 +155,7 @@ const LogEntriesView = ({
                     currentLogEntry,
                     showFilters, setShowFilters
                 }}/>
-                {renderedLogEntryDetails}
+                <LogDetailsContainer>{renderedLogEntryDetails}</LogDetailsContainer>
             </ContentContainer>
         </>
     );

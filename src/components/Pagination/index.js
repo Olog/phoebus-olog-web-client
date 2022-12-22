@@ -17,7 +17,6 @@ const StyledItem = styled(StyledPaginationButton)`
 `
 
 export const Item = ({active, onClick, className, alt, children}) => {
-    console.log({active, children})
     return (
         <StyledItem {...{active, onClick, alt}} className={`pagination-item ${className}`} >
             {children}
