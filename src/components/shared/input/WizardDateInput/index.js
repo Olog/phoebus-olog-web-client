@@ -22,7 +22,7 @@ const StyledButton = styled(Button)`
     border-radius: 0 5px 5px 0;
 `
 
-const WizardDateInput = ({name, label, form, rules, defaultValue, className, ...props}) => {
+const WizardDateInput = ({name, label, form, rules, defaultValue, onChange, className, ...props}) => {
 
     const [show, setShow] = useState(false);
     const {control, setValue} = form;
@@ -30,6 +30,13 @@ const WizardDateInput = ({name, label, form, rules, defaultValue, className, ...
 
     const onModalApply = (data) => {
         setValue(name, data.text);
+    }
+
+    const handleOnChange = (field, val) => {
+        field.onChange(val);
+        if(onChange) {
+            onChange(field, val);
+        }
     }
 
     return (
@@ -43,6 +50,7 @@ const WizardDateInput = ({name, label, form, rules, defaultValue, className, ...
                         placeholder={label}
                         className={className}
                         {...field} 
+                        onChange={val => handleOnChange(field, val)}
                         {...props}
                     />
                     <StyledButton onClick={() => setShow(true)} variant='primary'>

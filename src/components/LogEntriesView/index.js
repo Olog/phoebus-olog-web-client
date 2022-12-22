@@ -147,9 +147,7 @@ const LogEntriesView = ({
                 <StyledFilters {...{
                     logbooks,
                     tags,
-                    showFilters,
-                    searchParams,
-                    searchPageParams
+                    showFilters
                 }}/>
                 <StyledSearchResultList {...{
                     searchParams,

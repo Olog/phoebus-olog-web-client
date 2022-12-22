@@ -19,9 +19,9 @@ import React, {useState} from 'react';
 import { useEffect } from 'react';
 import MultiSelect from 'components/shared/input/MultiSelect';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { updateSearchParams as updateSearchParamsAction } from 'features/searchParamsReducer';
-import { updateSearchPageParams as updateSearchPageParamsAction } from 'features/searchPageParamsReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateSearchParams } from 'features/searchParamsReducer';
+import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import Collapse from './Collapse';
 import TextInput from 'components/shared/input/TextInput';
 import WizardDateInput from 'components/shared/input/WizardDateInput';
@@ -45,88 +45,31 @@ const Form = styled.form`
  * Component holding search criteria elements, i.e.
  * logbooks, tags and time range.
  */
-const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams, className}) => {
+const Filters = ({showFilters, logbooks, tags, className}) => {
 
-    const [tempSearchParams, setTempSearchParams] = useState({...searchParams});
-    const [tempSearchPageParams, setTempSearchPageParams] = useState({...searchPageParams});
     const dispatch = useDispatch();
+    const searchParams = useSelector(state => state.searchParams);
+    const searchPageParams = useSelector(state => state.searchPageParams);
+    const form = useForm({defaultValues: {...searchParams}});;
 
-    useEffect(() => {
-        setTempSearchParams(searchParams);
-        setTempSearchPageParams(searchPageParams);
-    }, [searchParams, searchPageParams])
-
-    const submitSearchParams = () => {
-        dispatch(updateSearchParamsAction(tempSearchParams));
-        dispatch(updateSearchPageParamsAction(tempSearchPageParams));
-    }
-
-    const form = useForm({defaultValues: {...tempSearchParams}});;
-    const { control, handleSubmit, getValues, watch } = form;
-
-    const [triggerSubmit, setTriggerSubmit] = useState(false);
-
-    const [start, end, sort] = watch(['start', 'end', 'sort']);
-
-    // Instead of triggering submit of search parameters directly from a field change
-    // function as a side effect (bad practice, which ofc generates warnings), instead
-    // set the triggerSubmit state to true and then submit the search parameters from useEffect.
-    useEffect(() => {
-        if(triggerSubmit) {
-            setTriggerSubmit(false);
-            submitSearchParams();
-        }
-        // eslint-disable-next-line
-    }, [triggerSubmit]);
-
-    useEffect(() => {
-        updateSearchParams('start', start, true);
-        // eslint-disable-next-line
-    }, [start])
-    useEffect(() => {
-        updateSearchParams('end', end, true);
-        // eslint-disable-next-line
-    }, [end])
-    useEffect(() => {
-        updateSearchPageParams('sort', sort, true);
-        // eslint-disable-next-line
-    }, [sort])
+    const { control, handleSubmit, getValues } = form;
     
     const onSubmit = (data) => {
 
-        // Remove keys part of page params
-        delete data.sort
+        const updatedSearchParams = {...data};
+        delete updatedSearchParams.sort;
+        const updatedSearchPageParams = {...searchPageParams, sort: data.sort}
 
-        // Update the search params and trigger submit
-        setTempSearchParams({...data});
-        setTriggerSubmit(true);
+        dispatch(updateSearchParams(updatedSearchParams));
+        dispatch(updateSearchPageParams(updatedSearchPageParams));
+
     }
 
     const onSearchParamFieldValueChanged = (field, value, submit=true) => {
         field.onChange(value);
-        updateSearchParams(field.name, value, submit);
-    }
-
-    // const onSearchPageParamFieldValueChanged = (field, value, submit=true) => {
-    //     field.onChange(value);
-    //     updateSearchPageParams(field.name, value, submit);
-    // }
-
-    const updateSearchParams = (key, value, submit=true) => {
-        const updatedParams = {...tempSearchParams, [key]: value}
-        setTempSearchParams(updatedParams);
+        // updateSearchParams(field.name, value, submit);
         if(submit) {
-            // better to only trigger re-render if true
-            setTriggerSubmit(true);
-        }
-    }
-
-    const updateSearchPageParams = (key, value, submit=true) => {
-        const updatedParams = {...searchPageParams, [key]: value}
-        setTempSearchPageParams(updatedParams);
-        if(submit) {
-            // better to only trigger re-render if true
-            setTriggerSubmit(true);
+            onSubmit(getValues());
         }
     }
 
@@ -170,7 +113,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams, c
                         onSelection={(value) => value.map(it => (
                             {label: it, value: it}
                         ))}
-                        onSelectionChanged={(field, value) => onSearchParamFieldValueChanged(field, value.map(it => it.label))}
+                        onSelectionChanged={(field, value) => onSearchParamFieldValueChanged(field, value.map(it => it.label), true)}
                     />
                     <MultiSelect 
                         name='tags'
@@ -183,19 +126,20 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams, c
                         onSelection={(value) => value.map(it => (
                             {label: it, value: it}
                         ))}
-                        onSelectionChanged={(field, value) => onSearchParamFieldValueChanged(field, value.map(it => it.label))}
+                        onSelectionChanged={(field, value) => onSearchParamFieldValueChanged(field, value.map(it => it.label), true)}
                     />
                     <TextInput 
                         name='owner'
                         label='Author'
                         control={control}
-                        defaultValue={tempSearchParams.owner || ''}
+                        defaultValue=''
                     />
                     <WizardDateInput 
                         name='start'
                         label='Start Time'
                         form={form}
                         defaultValue={getValues('start')}
+                        onChange={(field, val) => onSearchParamFieldValueChanged(field, val, true)}
                         rules={{
                             validate: {
                                 timeParadox: val => {
@@ -215,6 +159,7 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams, c
                         label='End Time'
                         form={form}
                         defaultValue={getValues('end')}
+                        onChange={(field, val) => onSearchParamFieldValueChanged(field, val, true)}
                         rules={{
                             validate: {
                                 timeParadox: val => {
@@ -244,12 +189,14 @@ const Filters = ({showFilters, logbooks, tags, searchParams, searchPageParams, c
                                 value: 'up'
                             }
                         ]}
+                        onChange={(field, val) => onSearchParamFieldValueChanged(field, val, true)}
+
                     />
                     <TextInput 
                         name='attachments'
                         label='Attachments'
                         control={control}
-                        defaultValue={tempSearchParams.attachments || ''}
+                        defaultValue=''
                     />
                 </Form>
             </Container>

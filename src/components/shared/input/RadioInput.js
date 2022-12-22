@@ -17,9 +17,16 @@ const RadiosContainer = styled.div`
     padding-left: 0.5rem;
 `
 
-const RadioInput = ({name, label, options, control, rules, defaultValue, className, ...props}) => {
+const RadioInput = ({name, label, options, control, rules, defaultValue, onChange, className, ...props}) => {
 
     const {field, fieldState} = useController({name, control, rules, defaultValue});
+
+    const handleOnChange = (field, val) => {
+        field.onChange(val);
+        if(onChange) {
+            onChange(field, val);
+        }
+    }
 
     const renderedChecks = options.map(it => {
         return <RadioAndLabelContainer key={it.value} >
@@ -32,7 +39,7 @@ const RadioInput = ({name, label, options, control, rules, defaultValue, classNa
                 {...props}
                 value={it.value}
                 checked={field.value === it.value}
-                onChange={() => field.onChange(it.value)}
+                onChange={() => handleOnChange(field, it.value)}
             />
             <label htmlFor={it.value}>{it.label}</label>
         </RadioAndLabelContainer> 
