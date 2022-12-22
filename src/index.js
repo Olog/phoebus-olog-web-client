@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from 'components/App.js';
+import App from 'components/App';
 import { store } from './stores';
 import { Provider } from 'react-redux';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
