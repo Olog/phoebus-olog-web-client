@@ -42,7 +42,7 @@ const HelpButton = styled(Button)`
     padding: 0 1rem;
 `
 
-const SearchBox = ({searchParams, showFilters, setShowFilters}) => {
+const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
     
     const toggleFilters = (e) => {
         setShowFilters(!showFilters)
@@ -53,7 +53,7 @@ const SearchBox = ({searchParams, showFilters, setShowFilters}) => {
     }
     
     return (
-        <Container>
+        <Container className={className} >
             <FilterButton variant='secondary' onClick={(e) => toggleFilters(e)} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</FilterButton>
             <StyledSearchBoxInput
                 {...{searchParams, showFilters}}

@@ -34,13 +34,8 @@ import { mobile } from 'config/media';
 const ContentContainer = styled.div`
     height: 100%;
     display: flex;
-
-    & > * {
-        border: 1px solid ${({theme}) => theme.colors.light};
-    }
-    & > *:not(:last-child) {
-        border-right: none;
-    }
+    gap: 0.5rem;
+    padding: 0.5rem;
 
     ${mobile(`
         flex-direction: column;
@@ -50,8 +45,9 @@ const ContentContainer = styled.div`
 `
 
 const StyledFilters = styled(Filters)`
-    height: 100%;
     flex: 0 0 20%;
+    border: 1px solid ${({theme}) => theme.colors.light};
+    border-radius: 5px;
 
     ${mobile(`
         order: 9;
@@ -60,8 +56,9 @@ const StyledFilters = styled(Filters)`
 `
 
 const StyledSearchResultList = styled(SearchResultList)`
-    height: 100%;
     flex: 0 0 30%;
+    border: 1px solid ${({theme}) => theme.colors.light};
+    border-radius: 5px;
 
     ${mobile(`
         flex: 1 50%;
@@ -72,8 +69,9 @@ const StyledSearchResultList = styled(SearchResultList)`
 const LogDetailsContainer = styled.div`
     display: flex;
     flex-direction: column;
-    height: 100%;
     flex: 1 0 0;
+    border: 1px solid ${({theme}) => theme.colors.light};
+    border-radius: 5px;
 
     ${mobile(`
         order: -1;

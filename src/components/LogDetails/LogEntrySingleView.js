@@ -44,9 +44,10 @@ const Ruler = styled.hr`
 const Description = styled.div`
     width: 100%;
     max-width: 33vw;
-    padding-top: 5px;
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
     wordWrap: break-word;
-    font-size: 16px;
+    font-size: 1.2rem;
 `
 
 const AttachmentImage = styled.img`

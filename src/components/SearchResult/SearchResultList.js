@@ -32,8 +32,6 @@ const Container = styled.div`
 
 const SearchResultsContainer = styled.div`
     display: flex;
-    // flex: 1 1 auto;
-    
     flex-direction: column;
     overflow: auto;
 
@@ -53,13 +51,18 @@ const SearchResultsContainer = styled.div`
 
 `
 
+const StyledSearchBox = styled(SearchBox)`
+    flex: 0 0 auto;
+`
+
 const StyledLoadingOverlay = styled(LoadingOverlay)`
     display: flex;
     flex-direction: column;
+    flex: 1 0 100%;
 `
 
 const StyledPaginationBar = styled(PaginationBar)`
-    
+    flex: 0 0 auto;
 `
 
 /**
@@ -129,7 +132,7 @@ const SearchResultList = ({
 
     return(
         <Container id='search-results-list' className={className} >
-            <SearchBox {...{searchParams, showFilters, setShowFilters}} />
+            <StyledSearchBox {...{searchParams, showFilters, setShowFilters}} />
             <StyledLoadingOverlay
                 active={searchInProgress}
             >
