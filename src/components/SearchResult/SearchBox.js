@@ -54,7 +54,7 @@ const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
     
     return (
         <Container className={className} >
-            <FilterButton variant='secondary' onClick={(e) => toggleFilters(e)} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</FilterButton>
+            <FilterButton variant='primary' onClick={(e) => toggleFilters(e)} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</FilterButton>
             <StyledSearchBoxInput
                 {...{searchParams, showFilters}}
             />
