@@ -25,7 +25,7 @@ import { ListGroupItem } from 'components/shared/ListGroup';
 
 const Container = styled.div`
     padding: 0.5rem;
-    overflow: auto;
+    // overflow: auto;
     height: 100%;
     overflow: auto;
 `
@@ -53,7 +53,7 @@ const AttachmentImage = styled.img`
     width: 100%;
 `
 
-const LogEntrySingleView = ({remarkable, currentLogEntry}) => {
+const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
 
     const getContent = (source) => {
         return {__html: remarkable.render(source)};
@@ -94,7 +94,7 @@ const LogEntrySingleView = ({remarkable, currentLogEntry}) => {
         .map((row, index) => <Properties key={index} property={row}/>);
 
     return(
-        <Container>
+        <Container className={className}>
             <LogTitle>
                 <span>{currentLogEntry.title}</span>
                 <span>{currentLogEntry.id}</span>

@@ -33,6 +33,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
+    overflow: hidden;
 `
 
 const ButtonContainer = styled.div`
@@ -49,6 +50,13 @@ const ButtonContainer = styled.div`
 `
 
 const LogViewContainer = styled.div`
+    overflow: hidden;
+`
+
+const StyledLogEntrySingleView = styled(LogEntrySingleView)`
+    overflow: auto;
+`
+const StyledLogEntryGroupView = styled(LogEntryGroupView)`
     overflow: auto;
 `
 
@@ -107,7 +115,7 @@ const LogDetails = ({
         </ToggleButton> : null;
 
     const renderedLogView = showGroup 
-    ? <LogEntryGroupView {...{
+    ? <StyledLogEntryGroupView {...{
             showGroup, setShowGroup, 
             currentLogEntry,
             userData, 
@@ -115,11 +123,11 @@ const LogDetails = ({
             logGroupRecords, setLogGroupRecords, 
             remarkable
         }}/> 
-    : <LogEntrySingleView currentLogEntry={currentLogEntry} remarkable={remarkable}/>;
+    : <StyledLogEntrySingleView currentLogEntry={currentLogEntry} remarkable={remarkable}/>;
 
 
     return(
-        <Container className={className}>
+        <Container className={className} id='logdetails-and-buttons'>
             <ButtonContainer>
                 <NavigationButtons {...{
                     currentLogEntry,
@@ -129,7 +137,7 @@ const LogDetails = ({
                 {renderedShowGroupButton}
                 <Button variant='primary' onClick={copyUrl} className='end'>Copy URL</Button>
             </ButtonContainer>
-            <LogViewContainer>
+            <LogViewContainer id='logdetails'>
                 {renderedLogView}
             </LogViewContainer>
         </Container>

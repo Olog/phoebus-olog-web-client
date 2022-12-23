@@ -68,6 +68,8 @@ const StyledSearchResultList = styled(SearchResultList)`
 `
 
 const LogDetailsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
     height: 100%;
     flex: 2 1 0;
 
@@ -170,7 +172,7 @@ const LogEntriesView = ({
                     currentLogEntry,
                     showFilters, setShowFilters
                 }}/>
-                <LogDetailsContainer>{renderedLogEntryDetails}</LogDetailsContainer>
+                <LogDetailsContainer id='logdetails-container'>{renderedLogEntryDetails}</LogDetailsContainer>
             </ContentContainer>
         </>
     );

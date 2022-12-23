@@ -49,7 +49,7 @@ const Content = styled.div`
  /**
  * Merged view of all log entries 
  */
-const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLogGroupRecords}) => {
+const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLogGroupRecords, className}) => {
 
     const dispatch = useDispatch();
 
@@ -80,7 +80,7 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
     });
 
     return(
-        <Container>
+        <Container className={className}>
             {logGroupItems}
         </Container>
     );
