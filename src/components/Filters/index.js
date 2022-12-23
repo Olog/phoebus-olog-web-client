@@ -176,7 +176,7 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                         name='sort'
                         label='Sort'
                         control={control}
-                        defaultValue={searchPageParams.sort || ''}
+                        defaultValue={searchPageParams.sort || 'down'}
                         options={[
                             {
                                 label: 'Sort descending on date',
