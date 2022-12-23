@@ -37,6 +37,7 @@ const ViewportContainer = styled.div`
 
 const ContentContainer = styled.div`
     overflow: auto;
+    height: 100%;
 `
 /**
  * Entry point component.

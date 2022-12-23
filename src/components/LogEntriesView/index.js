@@ -51,19 +51,21 @@ const ContentContainer = styled.div`
 
 const StyledFilters = styled(Filters)`
     height: 100%;
-    flex: 1 2 0;
+    flex: 0 0 20%;
 
     ${mobile(`
         order: 9;
+        width: 100%;
     `)}
 `
 
 const StyledSearchResultList = styled(SearchResultList)`
     height: 100%;
-    flex: 2 1 0;
+    flex: 0 0 30%;
 
     ${mobile(`
         flex: 1 50%;
+        width: 100%;
     `)}
 `
 
@@ -71,10 +73,11 @@ const LogDetailsContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
-    flex: 2 1 0;
+    flex: 1 0 0;
 
     ${mobile(`
         order: -1;
+        width: 100%;
     `)}
 `
 

@@ -14,12 +14,15 @@ const InlineInputButtonContainer = styled.div`
 
 const Input = styled.input`
     padding: 0.5rem 1rem;
+    width: 100%;
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px 0 0 5px;
 `
 
 const StyledButton = styled(Button)`
     border-radius: 0 5px 5px 0;
+    // width: 1rem;
+    padding: 0 1rem;
 `
 
 const WizardDateInput = ({name, label, form, rules, defaultValue, onChange, className, ...props}) => {
@@ -41,7 +44,7 @@ const WizardDateInput = ({name, label, form, rules, defaultValue, onChange, clas
 
     return (
         <>
-            <LabeledInput {...{name, label, error: fieldState?.error?.message}} >
+            <LabeledInput {...{name, label, error: fieldState?.error?.message}} className={className} >
                 <InlineInputButtonContainer>
                     <Input 
                         type='text'
@@ -54,7 +57,7 @@ const WizardDateInput = ({name, label, form, rules, defaultValue, onChange, clas
                         {...props}
                     />
                     <StyledButton onClick={() => setShow(true)} variant='primary'>
-                        <FaCalendarAlt/>
+                        <FaCalendarAlt size={'1.2rem'}/>
                     </StyledButton>
                 </InlineInputButtonContainer>
             </LabeledInput>

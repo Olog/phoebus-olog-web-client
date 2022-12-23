@@ -33,7 +33,7 @@ const Container = styled.div`
 const SearchResultsContainer = styled.div`
     display: flex;
     // flex: 1 1 auto;
-    flex: 2 500px;
+    
     flex-direction: column;
     overflow: auto;
 
@@ -48,6 +48,7 @@ const SearchResultsContainer = styled.div`
 
     ${mobile(`
         order: 999;
+        flex: 2 500px;
     `)}
 
 `

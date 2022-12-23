@@ -6,6 +6,7 @@ const Container = styled.div`
     flex-direction: ${({inlineLabel}) => inlineLabel ? 'row' : 'column'};    
     padding: 0 0.5rem;
     padding-bottom: 1rem;
+    width: 100%;
     ${({inlineLabel}) => inlineLabel ? `
         align-items: center;
         gap: 0.5rem;
