@@ -8,6 +8,10 @@ const RadioAndLabelContainer = styled.div`
     align-items: flex-start;
     padding: 0.25rem 0rem;
     font-size: 0.8rem;
+
+    & label:hover, & input:hover {
+        cursor: pointer;
+    }
 `
 
 const RadiosContainer = styled.div`

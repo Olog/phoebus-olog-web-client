@@ -16,6 +16,10 @@ const Header = styled.div`
     padding: 0.25rem 0.5rem;
     background-color: ${({theme}) => theme.colors.light};
     border-bottom: 1px solid ${({theme}) => theme.colors.neutral};
+
+    &:hover {
+        cursor: pointer;
+    }
 `
 
 const Icon = styled.span`
