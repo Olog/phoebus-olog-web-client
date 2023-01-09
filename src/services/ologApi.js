@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ologClientInfoHeader } from "../utils/utils";
+import { ologClientInfoHeader } from "utils";
 
 export const ologApi = createApi({
     reducerPath: 'ologApi',

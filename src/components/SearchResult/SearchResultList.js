@@ -16,15 +16,54 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import {useState, useEffect} from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import SearchResultItem from './SearchResultItem';
-import LoadingOverlay from '../LoadingOverlay/LoadingOverlay';
+import LoadingOverlay from 'components/shared/LoadingOverlay';
 import SearchBox from './SearchBox';
 import PaginationBar from './PaginationBar';
 import { useDispatch } from 'react-redux';
-import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
+import { updateSearchPageParams } from 'features/searchPageParamsReducer';
+import styled from 'styled-components';
+import { mobile } from 'config/media';
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
+const SearchResultsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    & > * {
+        border: 1px solid ${({theme}) => theme.colors.light};
+        border-left: none;
+        border-right: none;
+    }
+    & > *:not(:last-child) {
+        border-bottom: none;
+    }
+
+    ${mobile(`
+        order: 999;
+        flex: 2 500px;
+    `)}
+
+`
+
+const StyledSearchBox = styled(SearchBox)`
+    flex: 0 0 auto;
+`
+
+const StyledLoadingOverlay = styled(LoadingOverlay)`
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 100%;
+`
+
+const StyledPaginationBar = styled(PaginationBar)`
+    flex: 0 0 auto;
+`
 
 /**
  * Pane showing search query input and a the list of log entries 
@@ -36,7 +75,8 @@ const SearchResultList = ({
     searchResults,
     searchInProgress,
     currentLogEntry,
-    showFilters, setShowFilters
+    showFilters, setShowFilters,
+    className
 }) => {
 
     const [pageCount, setPageCount] = useState(0);
@@ -91,27 +131,16 @@ const SearchResultList = ({
     });
 
     return(
-        <Container fluid className="grid-item h-100 p-0" >
-            <Row noGutters className='h-100 flex-column'>
-                <Col sm='auto' >
-                    <SearchBox {...{searchParams, showFilters, setShowFilters}} />
-                </Col>
-                <Col >
-                    <LoadingOverlay
-                        active={searchInProgress}
-                    >
-                        <Row noGutters className='h-100 flex-column'>
-                            <Col xs='auto' lg={{span: null, order: 3}}>
-                                <PaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
-                            </Col>
-                            <Col style={{overflowY: 'scroll'}} className="border-top border-bottom" >
-                                {renderedSearchResults}
-                                
-                            </Col>  
-                        </Row>
-                    </LoadingOverlay>
-                </Col>
-            </Row>
+        <Container id='search-results-list' className={className} >
+            <StyledSearchBox {...{searchParams, showFilters, setShowFilters}} />
+            <StyledLoadingOverlay
+                active={searchInProgress}
+            >
+                <SearchResultsContainer id='search-results-list--container'>
+                    {renderedSearchResults}
+                </SearchResultsContainer>
+                <StyledPaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
+            </StyledLoadingOverlay>
         </Container>
     )
 }

@@ -15,41 +15,45 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- import React from 'react';
- import Table from 'react-bootstrap/Table';
- import Button from 'react-bootstrap/Button';
- 
- const PropertySelector = (props) => {
+import React from 'react';
+import styled from 'styled-components';
+import Button from 'components/shared/Button';
+
+const PropertyRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+`
+
+const Container = styled.div`
+    padding: 1rem;
+`
+
+const PropertySelector = ({selectedProperties, availableProperties, addProperty}) => {
 
     const isAlreadySelected = (propertyName) => {
-        return props.selectedProperties.filter(prop => prop.name === propertyName).length > 0;
+        return selectedProperties.filter(prop => prop.name === propertyName).length > 0;
     }
 
-    const addProperty = (property) => {
-        props.addProperty(property)
-    };
-
-    var rows = props.availableProperties.map((row, index) => {
-        if(!isAlreadySelected(row.name)){
-            return <tr key={index}><td>{row.name}</td><td><Button 
-                style={{float: "right"}}
-                onClick={() => addProperty(row)}>Add</Button></td></tr>;
-        }
-        else{
-            return <tr key={index}></tr>;
-        }
-    });
+    const rows = availableProperties.filter(row => !isAlreadySelected(row.name)).map( row => 
+        <PropertyRow>
+            <div>{row.name}</div>
+            <Button 
+                variant='primary'
+                onClick={() => addProperty(row)}
+            >
+                Add
+            </Button>
+        </PropertyRow>
+    );
         
     
     return(
-            <>
-                <Table size="sm">
-                    <tbody>
-                    {rows}
-                    </tbody>
-                </Table>
-            </>
-        )
-    }
+        <Container>
+            {rows}
+        </Container>
+    )
+}
 
- export default PropertySelector;
+export default PropertySelector;

@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import searchPageParamsReducer from "./features/searchPageParamsReducer";
-import searchParamsReducer from "./features/searchParamsReducer";
-import { ologApi } from "./services/ologApi";
-import currentLogEntryReducer from "./features/currentLogEntryReducer";
+import searchPageParamsReducer from "features/searchPageParamsReducer";
+import searchParamsReducer from "features/searchParamsReducer";
+import { ologApi } from "services/ologApi";
+import currentLogEntryReducer from "features/currentLogEntryReducer";
 
 export const setupStore = (preloadedState) => {
     return configureStore({

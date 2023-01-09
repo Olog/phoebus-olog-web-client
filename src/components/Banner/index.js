@@ -17,16 +17,44 @@
  */
 
 import React, { Component} from 'react'
-import Button from 'react-bootstrap/Button';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
+// import Button from 'react-bootstrap/Button';
+import Button from '../shared/Button';
+// import Navbar from 'react-bootstrap/Navbar';
+// import Nav from 'react-bootstrap/Nav';
 import {Link} from "react-router-dom";
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
 import { checkSession } from '../../api/olog-service';
 import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
-import Row from 'react-bootstrap/Row';
+// import Row from 'react-bootstrap/Row';
+import styled from 'styled-components';
+
+const Navbar = styled.nav`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #343a40;
+  color: #fff;
+  padding: 1vh 2vw;
+`
+
+const NavHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+`
+
+const NavFooter = styled.div`
+  display: flex;
+  align-items: center;
+`
+const PackageName = styled.h1`
+  font-size: 1.4em;
+`
+const PackageVersion = styled.h2`
+  font-size: 0.8em;
+`
 
 /**
  * Banner component with controls to create log entry, log book or tag. Plus
@@ -96,19 +124,23 @@ class Banner extends Component {
   render(){
     return (
       <>
-        <Navbar bg="dark" variant="dark" >
-          <Navbar.Brand href="/">
-            <Row style={{marginLeft: "1px", marginRight: "1px"}}>{packageInfo.name}</Row>
-            <Row style={{marginLeft: "1px", marginRight: "1px"}}><span style={{fontSize: "10px  "}}>v{packageInfo.version}</span></Row>
-          </Navbar.Brand>
-          <Link to="/edit">
-            <Button disabled={!this.props.userData.userName} 
-              variant="primary" 
-              onClick={() => this.handleNewLogEntry()}>New Log Entry</Button>
-          </Link>
-          <Nav className="justify-content-end" style={{ width: "100%" }}>
-            <Button onClick={this.handleClick}>{this.props.userData.userName ? this.props.userData.userName : 'Sign In'}</Button>
-          </Nav> 
+        <Navbar>
+          <NavHeader>
+            <Link to="/">
+              <PackageName>{packageInfo.name}</PackageName>
+              <PackageVersion>{packageInfo.version}</PackageVersion>
+            </Link>
+            <Link to="/edit">
+              <Button disabled={!this.props.userData.userName} 
+                variant='primary'
+                onClick={() => this.handleNewLogEntry()}>New Log Entry</Button>
+            </Link>
+          </NavHeader>
+          <NavFooter>
+            <Button onClick={this.handleClick} variant="primary">
+              {this.props.userData.userName ? this.props.userData.userName : 'Sign In'}
+            </Button>
+          </NavFooter>
         </Navbar>
 
         <LoginDialog setUserData={this.props.setUserData} 

@@ -18,16 +18,38 @@
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import ologService from '../../api/olog-service';
-import '../../css/olog.css';
-import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
-import {getLogEntryGroupId, sortLogsDateCreated} from '../../utils/utils';
+import ologService from 'api/olog-service';
+import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
+import {getLogEntryGroupId, sortLogsDateCreated} from 'utils';
 import GroupHeader from './GroupHeader';
- 
+import styled from 'styled-components';
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
+`
+
+const GroupContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    cursor: pointer;
+    
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.20); 
+    }
+`
+
+const Content = styled.div`
+    word-wrap: break-word;
+`
+
  /**
  * Merged view of all log entries 
  */
-const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLogGroupRecords}) => {
+const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLogGroupRecords, className}) => {
 
     const dispatch = useDispatch();
 
@@ -50,18 +72,17 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
 
     const logGroupItems = logGroupRecords.map((row, index) => {
         return(
-            <div key={index} style={{cursor: 'pointer'}}>
-                <GroupHeader logEntry={row} showLog={showLog}/>
-                <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
-                                dangerouslySetInnerHTML={getContent(row.source)}/>
-            </div>
+            <GroupContainer key={index} onClick={() => showLog(row)} >
+                <GroupHeader logEntry={row} />
+                <Content dangerouslySetInnerHTML={getContent(row.source)}/>
+            </GroupContainer>
         );
     });
 
     return(
-        <>
+        <Container className={className}>
             {logGroupItems}
-        </>
+        </Container>
     );
     
 }

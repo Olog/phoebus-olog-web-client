@@ -17,11 +17,31 @@
  */
 
  import React, { Component } from 'react';
- import Table from 'react-bootstrap/Table';
  import OlogMoment from './OlogMoment';
- import customization from '../../utils/customization';
+ import customization from 'utils/customization';
+import styled from 'styled-components';
 
- class LogDetailsMetaData extends Component {
+const Container = styled.div`
+    font-size: 0.8rem;
+    padding-bottom: 1rem;
+`
+
+const DetailRow = styled.div`
+    display: flex;
+    gap: 1rem;
+`
+
+const Key = styled.div`
+    flex: 0 0 5rem;
+    text-align: right;
+`
+
+const Value = styled.div`
+    flex-grow: 1;
+    font-weight: bold;
+`
+
+class LogDetailsMetaData extends Component {
   
     render () {        
         
@@ -44,17 +64,37 @@
         });    
         
         return (
-            <div className="log-details-meta-data">
-                <Table size="sm">
-                    <tbody>
-                    <tr><td>Author</td><td><b>{this.props.currentLogRecord.owner}</b></td></tr>
-                    <tr><td>Created</td><td><b><OlogMoment date={this.props.currentLogRecord.createdDate}/></b></td></tr>
-                    <tr><td>Logbooks</td><td><b>{logbooks}</b></td></tr>
-                    <tr><td>Tags</td><td><b>{tags}</b></td></tr>
-                    <tr><td>{customization.level}</td><td><b>{this.props.currentLogRecord.level}</b></td></tr>
-                    </tbody>
-            </Table>
-            </div>
+            // <div className="log-details-meta-data">
+            //     <Table>
+            //         <tbody>
+            //             <tr><td>Author</td><td><b>{this.props.currentLogRecord.owner}</b></td></tr>
+            //             <tr><td>Created</td><td><b><OlogMoment date={this.props.currentLogRecord.createdDate}/></b></td></tr>
+            //             <tr><td>Logbooks</td><td><b>{logbooks}</b></td></tr>
+            //             <tr><td>Tags</td><td><b>{tags}</b></td></tr>
+            //             <tr><td>{customization.level}</td><td><b>{this.props.currentLogRecord.level}</b></td></tr>
+            //         </tbody>
+            //     </Table>
+            // </div>
+            <Container>
+                <DetailRow>
+                    <Key>Author</Key><Value>{this.props.currentLogRecord.owner}</Value>
+                </DetailRow>
+                <DetailRow>
+                    <Key>Created</Key><Value><OlogMoment date={this.props.currentLogRecord.createdDate}/></Value>
+                </DetailRow>
+                <DetailRow>
+                    <Key>Logbooks</Key><Value>{logbooks}</Value>
+                </DetailRow>
+                <DetailRow>
+                    <Key>Tags</Key><Value>{tags}</Value>
+                </DetailRow>
+                <DetailRow>
+                    <Key>{customization.level}</Key><Value>{this.props.currentLogRecord.level}</Value>
+                </DetailRow>
+                <DetailRow>
+                    <Key>Author</Key><Value>{this.props.currentLogRecord.owner}</Value>
+                </DetailRow>
+            </Container>
         );
     }
   }

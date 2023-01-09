@@ -22,13 +22,23 @@ import {
   Route,
   Routes
 } from "react-router-dom";
-import Banner from './Banner/Banner';
-import EntryEditor from './EntryEditor/EntryEditor';
-import LogEntriesView from './LogEntriesView/LogEntriesView';
-import { Col, Container, Row } from 'react-bootstrap';
+import Banner from './Banner';
+import EntryEditor from './EntryEditor';
+import LogEntriesView from './LogEntriesView';
 import { useSelector } from 'react-redux';
-import { useGetLogbooksQuery, useGetTagsQuery } from '../services/ologApi';
+import { useGetLogbooksQuery, useGetTagsQuery } from 'services/ologApi';
+import styled from 'styled-components';
 
+const ViewportContainer = styled.div`
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+`
+
+const ContentContainer = styled.div`
+    overflow: auto;
+    height: 100%;
+`
 /**
  * Entry point component.
  */
@@ -50,52 +60,46 @@ const App = () => {
     }
 
     return(
-        <>
-            <BrowserRouter>
-                <Container fluid className='h-100 p-0'>
-                    <Row noGutters className='h-100 flex-column'>
-                        <Col sm={'auto'}>
-                            <Banner {...{
-                                showLogin, setShowLogin,
-                                showLogout, setShowLogout,
-                                userData, setUserData,
-                                setReplyAction
+        <BrowserRouter>
+            <ViewportContainer id='app-viewport'>
+                <Banner {...{
+                    showLogin, setShowLogin,
+                    showLogout, setShowLogout,
+                    userData, setUserData,
+                    setReplyAction
+                }}/>
+                <ContentContainer id='app-content'>
+                    <Routes>
+                        <Route exact path="/" element={
+                            <LogEntriesView {...{
+                                tags, 
+                                logbooks,
+                                userData,
+                                setReplyAction, 
+                                currentLogEntry
                             }}/>
-                        </Col>
-                        <Col>      
-                            <Routes>
-                                <Route exact path="/" element={
-                                    <LogEntriesView {...{
-                                        tags, 
-                                        logbooks,
-                                        userData,
-                                        setReplyAction, 
-                                        currentLogEntry
-                                    }}/>
-                                } />
-                                <Route exact path="/logs/:id" element={
-                                    <LogEntriesView {...{
-                                        tags, 
-                                        logbooks,
-                                        userData,
-                                        setReplyAction, 
-                                        currentLogEntry
-                                    }}/>
-                                } />
-                                <Route path="/edit" element={
-                                    <EntryEditor {...{
-                                        tags,
-                                        logbooks,
-                                        replyAction,
-                                        userData, setUserData
-                                    }}/>
-                                } />
-                            </Routes>
-                        </Col>
-                    </Row>
-                </Container>
-            </BrowserRouter>
-        </>
+                        } />
+                        <Route exact path="/logs/:id" element={
+                            <LogEntriesView {...{
+                                tags, 
+                                logbooks,
+                                userData,
+                                setReplyAction, 
+                                currentLogEntry
+                            }}/>
+                        } />
+                        <Route path="/edit" element={
+                            <EntryEditor {...{
+                                tags,
+                                logbooks,
+                                replyAction,
+                                userData, setUserData
+                            }}/>
+                        } />
+                    </Routes>
+                </ContentContainer>
+            </ViewportContainer>
+        </BrowserRouter>
     );
 }
 

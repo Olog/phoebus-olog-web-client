@@ -16,60 +16,67 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import '../../css/olog.css';
-import ologService from '../../api/olog-service';
+import ologService from 'api/olog-service';
+import { useState } from 'react';
+import styled from 'styled-components';
+import Modal, { Body, Footer, Header, Title } from 'components/shared/Modal';
+import Button from 'components/shared/Button';
+import ErrorMessage from 'components/shared/input/ErrorMessage';
+import { useRef } from 'react';
 
-class LogoutDialog extends Component{
+const Form = styled.form``;
 
-    state = {
-        logoutError: ""
-    };
+const LogoutDialog = ({logoutDialogVisible, setShowLogout, setUserData}) => {
 
-    hideLogout = () => {
-        this.setState({loginError: ""});
-        this.props.setShowLogout(false);
-    }
+  const [logoutError, setLogoutError] = useState("");
+  const logoutButtonRef = useRef();
 
-    logout = (event) => {
-        event.preventDefault();
+  const hideLogout = () => {
+      setLogoutError("");
+      setShowLogout(false);
+  }
 
-        ologService.get('/logout', { withCredentials: true })
-          .then(res => {
-            this.setState({logoutError: ""});
-            this.props.setUserData({userName: "", roles: []});
-            this.hideLogout();
-          }, error => { 
-            if(!error.response){
-              this.setState({loginError: "Logout failed. Unable to connect to service."})
-            }
-        });
-    }
+  const logout = () => {
+    ologService.get('/logout', { withCredentials: true })
+      .then(res => {
+        setLogoutError('');
+        setUserData({userName: "", roles: []});
+        hideLogout();
+      }, error => { 
+        if(!error.response){
+          setLogoutError("Logout failed. Unable to connect to service.");
+        }
+    });
+  }
 
-    render(){
-        return(
-        <Modal centered show={this.props.logoutDialogVisible} onHide={this.hideLogout}>
-          <Modal.Header closeButton>
-            <Modal.Title>Sign Out?</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form onSubmit={this.logout}>
-              <Form.Group></Form.Group>
-              <Button variant="primary" type="submit">
-                Yes
-              </Button>
-              <Button variant="secondary" onClick={this.hideLogout}>
-                No
-              </Button>
-            </Form>
-            <Form.Label className="failureStyle">{this.state.logoutError}</Form.Label>
-          </Modal.Body>
-        </Modal>
-        )
-    }
+  const handleOpen = () => {
+    logoutButtonRef.current?.focus();
+  }
+
+  return(
+    <Modal show={logoutDialogVisible} onClose={hideLogout} onOpen={handleOpen}>
+      <Header onClose={hideLogout}>
+        <Title>Log out?</Title>
+      </Header>
+      <Body>
+        <Form>
+          <br />
+          <p>Would you like to logout?</p>
+          <br />
+          <ErrorMessage error={logoutError} />
+        </Form>
+      </Body>
+      <Footer>
+        <Button variant="primary" onClick={logout} innerRef={logoutButtonRef} > 
+          Yes
+        </Button>
+        <Button variant="secondary" onClick={hideLogout} >
+          No
+        </Button>
+      </Footer>
+    </Modal>
+  )
+
 }
 
 export default LogoutDialog;

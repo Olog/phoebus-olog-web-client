@@ -19,14 +19,12 @@
 import React, { useEffect } from "react";
 
 import {useState} from 'react';
-import Form from 'react-bootstrap/Form';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import {searchParamsToQueryString, queryStringToSearchParameters} from '../../utils/searchParams';
-import Tooltip from 'react-bootstrap/Tooltip';
+import {searchParamsToQueryString, queryStringToSearchParameters} from 'utils/searchParams';
 import { useDispatch } from "react-redux";
-import { updateSearchParams } from "../../features/searchParamsReducer";
+import { updateSearchParams } from "features/searchParamsReducer";
+import { StyledTextInput } from "components/shared/input/TextInput";
 
-const SearchBoxInput = ({searchParams, showFilters}) => {
+const SearchBoxInput = ({searchParams, showFilters, className}) => {
 
     const [searchString, setSearchString] = useState("");
     const dispatch = useDispatch();
@@ -48,23 +46,16 @@ const SearchBoxInput = ({searchParams, showFilters}) => {
     }
 
     return (
-        <OverlayTrigger delay={{ hide: 750, show: 300 }}
-                overlay={(props) => (
-                    <Tooltip {...props}>Edit and press Enter to search</Tooltip>
-                )}
-                rootClose
-                placement="bottom">
-            <Form.Control size="sm" 
-                type="input"
-                disabled={showFilters}
-                placeholder="No search string"
-                style={{fontSize: "12px"}}
-                value={searchString}
-                onChange={(e) => onChange(e)}
-                onKeyDown={onKeyDown}
-            >
-            </Form.Control>
-        </OverlayTrigger>
+        <StyledTextInput size="sm" 
+            name='search'
+            type="input"
+            disabled={showFilters}
+            placeholder="No search string"
+            style={{fontSize: "12px"}}
+            value={searchString}
+            onChange={(e) => onChange(e)}
+            onKeyDown={onKeyDown}
+        />
     );
 }
 

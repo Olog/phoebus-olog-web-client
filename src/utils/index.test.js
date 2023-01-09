@@ -20,7 +20,7 @@ import {formatShortDate,
     removeImageMarkup, 
     getLogEntryGroupId, 
     sortLogsDateCreated,
-    dateToString} from './utils';
+    dateToString} from '.';
 import { queryStringToSearchParameters, searchParamsToQueryString } from './searchParams';
 import moment from 'moment';
 

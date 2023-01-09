@@ -17,11 +17,16 @@
  */
 
 import React, { Component } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import { Remarkable } from 'remarkable';
-import '../../css/olog.css';
-import imageProcessor from '../../utils/image-processor';
+import imageProcessor from 'utils/image-processor';
+import Button from 'components/shared/Button';
+import Modal, { Body, Footer, Header } from '../shared/Modal';
+import styled from 'styled-components';
+
+const StyledModal = styled(Modal)`
+    max-width: 90vw;
+    max-height: 90vh;
+`
 
 class HtmlPreview extends Component{
 
@@ -50,18 +55,21 @@ class HtmlPreview extends Component{
     
     render(){
         return(
-            <Modal className="html-preview-modal" size="lg" show={this.props.showHtmlPreview}
-                onHide={() => this.props.setShowHtmlPreview(false)}
-                onShow={() => this.reset()}>
-                <Modal.Body>
+            <StyledModal show={this.props.showHtmlPreview}
+                onClose={() => this.props.setShowHtmlPreview(false)}
+                onOpen={() => this.reset()}>
+                <Header onClose={() => this.props.setShowHtmlPreview(false)}>
+                    <h2>Description Preview</h2>
+                </Header>
+                <Body>
                         <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
                             dangerouslySetInnerHTML={{ __html: this.state.innerHtml }}>
                         </div>
-                </Modal.Body>
-                <Modal.Footer>
+                </Body>
+                <Footer>
                       <Button variant="secondary" onClick={() => this.props.setShowHtmlPreview(false)}>OK</Button>
-                </Modal.Footer> 
-            </Modal>
+                </Footer> 
+            </StyledModal>
         )
     }
 }

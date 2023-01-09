@@ -16,47 +16,50 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { Form, Col, Button } from "react-bootstrap"
+import styled from "styled-components"
+import Button from "components/shared/Button"
 import SearchBoxInput from "./SearchBoxInput"
 
-const SearchBox = ({searchParams, showFilters, setShowFilters}) => {
+const Container = styled.div`
+    width: 100%;
+    display: flex;
+    gap: 0.25rem; 
+    padding: 0.25rem 0.5rem ;
+`
+
+const StyledSearchBoxInput = styled(SearchBoxInput)`
+    display: block;
+    flex-grow: 1;
+    background-color: green;
+`
+
+const FilterButton = styled(Button)`
+    width: 1rem;
+    padding: 0 1rem;
+`
+
+const HelpButton = styled(Button)`
+    padding: 0 1rem;
+`
+
+const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
     
-    const toggleFilters = () => {
+    const toggleFilters = (e) => {
         setShowFilters(!showFilters)
     }
 
     const showSearchHelp = () => {
         window.open(`${process.env.REACT_APP_BASE_URL}/SearchHelp_en.html`, '_blank');
     }
-
-    // prevent default to e.g. prevent page reload
-    // do NOT trigger search here, as the SearchBox
-    // component already triggers this by updating 
-    // the searchParams state.
-    const submit = (event) => {
-        event.preventDefault();
-    }
     
     return (
-        < Form style={{paddingTop: "5px"}} onSubmit={(e) => submit(e)}>
-            <Form.Row>
-                <Col style={{flexGrow: "0"}}>
-                    <Button size="sm" onClick={() => toggleFilters()} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</Button>
-                </Col>
-                <Col style={{paddingLeft: "0px"}}>
-                <SearchBoxInput
-                    {...{searchParams, showFilters}}
-                />
-                </Col>
-                <Col style={{flexGrow: "0" }}>
-                    <Button 
-                        size="sm"
-                        onClick={(e) => showSearchHelp()}>
-                        Help
-                    </Button>
-                </Col>
-            </Form.Row>
-        </Form>
+        <Container className={className} >
+            <FilterButton variant='primary' onClick={(e) => toggleFilters(e)} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</FilterButton>
+            <StyledSearchBoxInput
+                {...{searchParams, showFilters}}
+            />
+            <HelpButton variant='secondary' onClick={(e) => showSearchHelp()}>Help</HelpButton>
+        </Container>
     );
 }
 

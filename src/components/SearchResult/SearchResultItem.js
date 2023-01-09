@@ -15,16 +15,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import Table from 'react-bootstrap/Table';
 import { FaPaperclip } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
-import '../../css/olog.css';
-import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
-import { formatFullDateTime, getLogEntryGroupId } from '../../utils/utils';
+import styled from 'styled-components';
+import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
+import { formatFullDateTime, getLogEntryGroupId } from 'utils';
+import { useNavigate } from "react-router-dom";
+
+const LogInfoContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    background-color: ${({selected}) => selected ? '#c8e0f4' : 'inherit'};
+`
+
+const LogInfo = styled.div`
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+`
+
+const HeaderInfo = styled(LogInfo)`
+    font-size: 1rem;
+`
 
 const SearchResultItem = ({log, currentLogEntry}) => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const formatDescription = (description) => {
         let length = 75;
@@ -35,40 +54,30 @@ const SearchResultItem = ({log, currentLogEntry}) => {
         return description.substring(0, length) + ellipsis;
     }
 
-    const renderLog = () => {
-        if(!log) {
-            return "";
-        } else {
-            return (
-                <div 
-                    className={`${currentLogEntry && currentLogEntry.id === log.id ? "list-item selected-log-entry" : "list-item"}`}
-                    onClick={() => dispatch(updateCurrentLogEntry(log))}
-                >
-                    <Table size="sm" >
-                        <tbody>
-                            <tr>
-                                <td style={{fontSize: "18px", fontWeight: "200"}}>{log.title}</td>
-                                <td style={{textAlign: "right"}}>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip/> : ""}</td>
-                            </tr>
-                            <tr>
-                                <td>{log.owner}</td><td style={{textAlign: "right"}}>
-                                    {formatFullDateTime(log.createdDate)}</td>
-                            </tr>
-                            <tr>
-                                <td>{formatDescription(log.description)}</td>
-                                <td style={{textAlign: "right"}}>{log.id}</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </div>
-            );
-        }
+    const handleClick = () => {
+        dispatch(updateCurrentLogEntry(log));
+        navigate(`/logs/${log.id}`);
     }
 
-    return(
-        <div className={`${getLogEntryGroupId(log.properties) !== null ? "grouped-item" : ""}`}>
-            {renderLog()}
-        </div>
+    return (
+        <LogInfoContainer 
+            grouped={getLogEntryGroupId(log.properties) !== null} 
+            selected={currentLogEntry && currentLogEntry.id === log.id}
+            onClick={handleClick}
+        >
+            <HeaderInfo>
+                <p>{log.title}</p>
+                <p>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip/> : ""}</p>
+            </HeaderInfo>
+            <LogInfo>
+                <p>{log.owner}</p>
+                <p>{formatFullDateTime(log.createdDate)}</p>
+            </LogInfo>
+            <LogInfo>
+                <p>{formatDescription(log.description)}</p>
+                <p>{log.id}</p>
+            </LogInfo>
+        </LogInfoContainer>
     )
     
 }

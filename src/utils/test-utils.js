@@ -1,6 +1,8 @@
 import { render } from "@testing-library/react";
+import theme from "config/theme";
 import { Provider } from "react-redux";
-import { setupStore } from "../store";
+import { ThemeProvider } from "styled-components";
+import { setupStore } from "../stores";
 
 export function renderWithProviders(
     ui, 
@@ -11,7 +13,11 @@ export function renderWithProviders(
     } = {}
 ) {
     function Wrapper({children}){
-        return <Provider store={store}>{children}</Provider>
+        return  <Provider store={store}>
+                    <ThemeProvider theme={theme}>
+                        {children}
+                    </ThemeProvider>
+                </Provider>
     }
     return {store, ...render(ui, {wrapper: Wrapper, ...renderOptions})};
 }

@@ -18,19 +18,66 @@
 
 import {useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import ologService from '../../api/olog-service';
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import LogDetails from '../LogDetails/LogDetails';
-import SearchResultList from '../SearchResult/SearchResultList';
-import customization from '../../utils/customization';
+import ologService from 'api/olog-service';
+import LogDetails from 'components/LogDetails';
+import SearchResultList from 'components/SearchResult/SearchResultList';
+import customization from 'utils/customization';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSearchPageParams } from '../../features/searchPageParamsReducer';
-import { useSearchLogsQuery } from '../../services/ologApi';
-import { updateCurrentLogEntry } from '../../features/currentLogEntryReducer';
-import ServiceErrorBanner from '../ErrorBanner/ServiceErrorBanner';
-import Filters from '../Filters/Filters';
+import { updateSearchPageParams } from 'features/searchPageParamsReducer';
+import { useSearchLogsQuery } from 'services/ologApi';
+import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
+import ServiceErrorBanner from 'components/ErrorBanner';
+import styled from 'styled-components';
+import Filters from 'components/Filters';
+import { mobile } from 'config/media';
+
+const ContentContainer = styled.div`
+    height: 100%;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+
+    ${mobile(`
+        flex-direction: column;
+        overflow: auto;
+        height: auto;
+    `)}
+`
+
+const StyledFilters = styled(Filters)`
+    flex: 0 0 20%;
+    border: 1px solid ${({theme}) => theme.colors.light};
+    border-radius: 5px;
+
+    ${mobile(`
+        order: 9;
+        width: 100%;
+    `)}
+`
+
+const StyledSearchResultList = styled(SearchResultList)`
+    flex: 0 0 30%;
+    border: 1px solid ${({theme}) => theme.colors.light};
+    border-radius: 5px;
+
+    ${mobile(`
+        flex: 1 50%;
+        width: 100%;
+    `)}
+`
+
+const LogDetailsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
+    border: 1px solid ${({theme}) => theme.colors.light};
+    border-radius: 5px;
+
+    ${mobile(`
+        order: -1;
+        width: 100%;
+    `)}
+`
 
 const LogEntriesView = ({
     tags, 
@@ -84,72 +131,51 @@ const LogEntriesView = ({
         }
     }, [logId, dispatch])
 
-    // 
     useEffect(() => {
         setShowGroup(false);
     }, [currentLogEntry])
 
-    const renderLogEntryDetails = () => {
+    const renderedLogEntryDetails = (() => {
         
         if(currentLogEntry) {
-            return (
-                <LogDetails {...{
-                    showGroup, setShowGroup, 
-                    currentLogEntry, 
-                    logGroupRecords, setLogGroupRecords, 
-                    userData, 
-                    setReplyAction,
-                    searchResults
-                }}/>
-            );
+            return <LogDetails {...{
+                        showGroup, setShowGroup, 
+                        currentLogEntry, 
+                        logGroupRecords, setLogGroupRecords, 
+                        userData, 
+                        setReplyAction,
+                        searchResults
+                    }}/>
         } else {
             if(logId) {
-                return (
-                    <h5>Log record id {logId} not found</h5>
-                );
+                return <h5>Log record id {logId} not found</h5>
             } else {
-                return (
-                    <h5>Search for log entries, and select one to view</h5>
-                );
-            }
-            
+                return <h5>Search for log entries, and select one to view</h5>
+            }   
         }
-    };
+
+    })();
     
     return (
-        <Container fluid className="h-100">
-            {searchResultError && 
-                <Row>
-                    <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError} />
-                </Row>
-            }
-            <Row className="h-100">
-                <Filters {...{
+        <>
+            {searchResultError ? <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError}/> : null}
+            <ContentContainer id='log-entries-view-content'>
+                <StyledFilters {...{
                     logbooks,
                     tags,
-                    showFilters,
-                    searchParams,
-                    searchPageParams
+                    showFilters
                 }}/>
-                <Col xs={{span: '12', order: 2}} lg={{span: 4, order: 2}} className="h-100 p-1">
-                    <SearchResultList {...{
-                        searchParams,
-                        searchPageParams,
-                        searchResults,
-                        searchInProgress,
-                        currentLogEntry,
-                        showFilters, setShowFilters
-                    }}/>
-                </Col>
-                <Col  
-                    xs={{span: 12, order: 1}} 
-                    lg={{span: showFilters ? 6 : 8, order: 3}} 
-                    className="p-1"
-                >
-                    {renderLogEntryDetails()}
-                </Col>
-            </Row>
-        </Container>
+                <StyledSearchResultList {...{
+                    searchParams,
+                    searchPageParams,
+                    searchResults,
+                    searchInProgress,
+                    currentLogEntry,
+                    showFilters, setShowFilters
+                }}/>
+                <LogDetailsContainer id='logdetails-container'>{renderedLogEntryDetails}</LogDetailsContainer>
+            </ContentContainer>
+        </>
     );
 
 }

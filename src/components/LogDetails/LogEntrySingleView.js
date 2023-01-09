@@ -16,37 +16,58 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
- import React, { Component } from 'react';
- import Image from 'react-bootstrap/Image';
- import ListGroup from 'react-bootstrap/ListGroup';
- import Properties from './Properties';
- import LogDetailsMetaData from './LogDetailsMetaData';
- import '../../css/olog.css';
- import Accordion from 'react-bootstrap/Accordion';
- import Card from 'react-bootstrap/Card';
- import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import ListGroup from 'components/shared/ListGroup';
+import Properties from './Properties';
+import LogDetailsMetaData from './LogDetailsMetaData';
+import styled from 'styled-components';
+import Collapse from 'components/shared/Collapse';
+import { ListGroupItem } from 'components/shared/ListGroup';
 
-class LogEntrySingleView extends Component{
+const Container = styled.div`
+    padding: 0.5rem;
+    // overflow: auto;
+    height: 100%;
+    overflow: auto;
+`
 
-    state = {
-        openInfo: false,
-        attachmentVisible: true,
-        propertiesVisible: false
-    };
+const LogTitle = styled.div`
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.4rem;
+`
 
-    getContent = (source) => {
-        return {__html: this.props.remarkable.render(source)};
+const Ruler = styled.hr`
+    border: none;
+    border-top: 1px solid ${({theme}) => theme.colors.light};
+`
+
+const Description = styled.div`
+    width: 100%;
+    max-width: 33vw;
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+    wordWrap: break-word;
+    font-size: 1.2rem;
+`
+
+const AttachmentImage = styled.img`
+    width: 100%;
+`
+
+const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
+
+    const getContent = (source) => {
+        return {__html: remarkable.render(source)};
     }
 
-    render(){
-        var attachments = this.props.currentLogEntry.attachments.map((row, index) => {
-            var url = `${process.env.REACT_APP_BASE_URL}/logs/attachments/` + this.props.currentLogEntry.id + "/" + row.filename;
-            
-            if(row.fileMetadataDescription.startsWith('image')){
-                return(
-                    <ListGroup.Item key={index}>
-                    <button style={{border: "none"}}>
-                        <Image key={index} style={{border: "none"}}
+    
+    const attachments = currentLogEntry.attachments.map((row, index) => {
+        const url = `${process.env.REACT_APP_BASE_URL}/logs/attachments/` + currentLogEntry.id + "/" + row.filename;
+        
+        if(row.fileMetadataDescription.startsWith('image')){
+            return(
+                <ListGroupItem key={index}>
+                    <AttachmentImage 
                         onClick={() => {
                             let w = window.open("", row.filename);
                             w.document.open();
@@ -54,68 +75,53 @@ class LogEntrySingleView extends Component{
                             w.document.write('<body><p><img src=\'' + url + '\'></p></body></html>');
                             w.document.close();
                         }}
-                        src={url} thumbnail/>
-                    </button>
-                    </ListGroup.Item>
-                )
-            }
-            else{
-                return (
-                    <ListGroup.Item key={index}>
+                        src={url}
+                    />
+                </ListGroupItem>
+            )
+        } else {
+            return (
+                <ListGroupItem key={index}>
                     <a target="_blank" rel="noopener noreferrer" href={url}>
-                    {row.filename}
+                        {row.filename}
                     </a>
-                    </ListGroup.Item>
-                )}
-            }
-        );
-        
-        var properties = this.props.currentLogEntry.properties.map((row, index) => {
-                if(row.name !== 'Log Entry Group'){
-                    return(
-                        <Properties key={index} property={row}/>
-                     )
-                }
-                else{
-                    return null;
-                }
-            });
+                </ListGroupItem>
+            )}
+        }
+    );
     
-        return(
-            <>
-                <div className="log-details-title">
-                    <span>{this.props.currentLogEntry.title}</span>
-                    <span style={{float: "right"}}>{this.props.currentLogEntry.id}</span>
-                </div>
-                <LogDetailsMetaData currentLogRecord={this.props.currentLogEntry}/>
-                <div style={{paddingTop: "5px", wordWrap: "break-word", fontSize: "16px"}} className="olog-table"
-                    dangerouslySetInnerHTML={this.getContent(this.props.currentLogEntry.source)}>
-                </div>
-                <Accordion defaultActiveKey="0"> 
-                    <Accordion.Toggle as={Card.Header} eventKey="0" style={{padding: "2px"}}
-                    onClick={() => this.setState({attachmentVisible: !this.state.attachmentVisible})}>
-                    {this.state.attachmentVisible ? <FaChevronDown /> : <FaChevronRight/> } Attachments
-                    </Accordion.Toggle>
-                    <Accordion.Collapse eventKey="0">
-                        <ListGroup>
-                            {this.props.currentLogEntry.attachments.length === 0 ? <p>No Attachments</p> : attachments}
-                        </ListGroup>
-                    </Accordion.Collapse>
-                </Accordion>
-                <Accordion>
-                    <Accordion.Toggle as={Card.Header} eventKey="0" style={{padding: "2px"}}
-                        onClick={() => this.setState({propertiesVisible: !this.state.propertiesVisible})}>
-                        {this.state.propertiesVisible ? <FaChevronDown /> : <FaChevronRight/> } Properties
-                    </Accordion.Toggle>
-                    <Accordion.Collapse eventKey="0">
-                        <ListGroup>
-                            {this.props.currentLogEntry.properties.length === 0 ? <p>No Properties</p> : properties}
-                        </ListGroup>
-                    </Accordion.Collapse>
-                </Accordion>
-            </>
-        );
-    }
+    const properties = currentLogEntry.properties
+        .filter(row => row.name !== 'Log Entry Group')
+        .map((row, index) => <Properties key={index} property={row}/>);
+
+    return(
+        <Container className={className}>
+            <LogTitle>
+                <span>{currentLogEntry.title}</span>
+                <span>{currentLogEntry.id}</span>
+            </LogTitle>
+            <Ruler />
+            <LogDetailsMetaData currentLogRecord={currentLogEntry}/>
+            <Ruler />
+            <Description 
+                dangerouslySetInnerHTML={getContent(currentLogEntry.source)}>
+            </Description>
+            <Collapse title='Attachments'>
+                {currentLogEntry.attachments.length > 0 
+                    ? <ListGroup>
+                        {attachments}
+                    </ListGroup>
+                    : <p>No Attachments</p> 
+                }
+            </Collapse>
+            <Collapse title='Properties'>
+                {properties?.length > 0
+                    ? properties 
+                    : <p>No Properties</p> 
+                }
+            </Collapse>
+        </Container>
+    );
     
 }
 
