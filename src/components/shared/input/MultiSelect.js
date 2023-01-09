@@ -33,7 +33,7 @@ const MultiSelect = ({name, label, control, rules, defaultValue, className, opti
     const {field, fieldState} = useController({name, control, rules, defaultValue});
 
     return (
-        <StyledLabeledInput {...{name, label, error: fieldState?.error?.message}} >
+        <StyledLabeledInput {...{name, label, error: fieldState?.error?.message, className}} >
             <Select
                 name={name}
                 inputId={name}
