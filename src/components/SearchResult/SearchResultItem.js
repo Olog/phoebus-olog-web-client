@@ -28,6 +28,11 @@ const LogInfoContainer = styled.div`
     gap: 0.25rem;
     padding: 0.25rem;
     background-color: ${({selected}) => selected ? '#c8e0f4' : 'inherit'};
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.10);
+        cursor: pointer;
+    }
 `
 
 const LogInfo = styled.div`

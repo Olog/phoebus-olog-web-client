@@ -24,10 +24,10 @@ const Container = styled.div`
     }
 `
 
-const LabeledInput = ({name, label, error, inlineLabel, children}) => {
+const LabeledInput = ({name, label, error, inlineLabel, className, children}) => {
 
     return (
-        <Container {...{inlineLabel}}>
+        <Container {...{inlineLabel, className}}>
             <label htmlFor={name}>{label}</label>
             {children}
             <ErrorMessage error={error} />

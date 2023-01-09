@@ -16,16 +16,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// import '../../css/olog.css';
 import Select from 'react-select';
 import { useController } from 'react-hook-form';
 import LabeledInput from './LabeledInput';
+import styled from 'styled-components';
+
+const StyledLabeledInput = styled(LabeledInput)`
+    & .react-select-olog__control:hover,
+    & .react-select-olog__option:hover
+    {
+        cursor: pointer;
+    }
+`
 
 const MultiSelect = ({name, label, control, rules, defaultValue, className, options=[], onSelection, onSelectionChanged, isMulti=true}) => {
     const {field, fieldState} = useController({name, control, rules, defaultValue});
 
     return (
-        <LabeledInput {...{name, label, error: fieldState?.error?.message}} >
+        <StyledLabeledInput {...{name, label, error: fieldState?.error?.message}} >
             <Select
                 name={name}
                 inputId={name}
@@ -36,9 +44,10 @@ const MultiSelect = ({name, label, control, rules, defaultValue, className, opti
                 )}
                 onChange={value => onSelectionChanged(field, value)}
                 value={onSelection(field.value)}
-                className={className}
+                className='react-select-container'
+                classNamePrefix='react-select-olog'
             />
-        </LabeledInput>
+        </StyledLabeledInput>
    )
     
 }

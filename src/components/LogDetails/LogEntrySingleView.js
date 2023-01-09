@@ -52,6 +52,10 @@ const Description = styled.div`
 
 const AttachmentImage = styled.img`
     width: 100%;
+
+    &:hover {
+        cursor: pointer;
+    }
 `
 
 const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
