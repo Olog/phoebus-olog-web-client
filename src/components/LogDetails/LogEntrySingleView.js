@@ -65,21 +65,22 @@ const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
     }
 
     
-    const attachments = currentLogEntry.attachments.map((row, index) => {
-        const url = `${process.env.REACT_APP_BASE_URL}/logs/attachments/` + currentLogEntry.id + "/" + row.filename;
+    const attachments = currentLogEntry.attachments.map((attachment, index) => {
+        const url = `${process.env.REACT_APP_BASE_URL}/attachment/` + attachment.id;
         
-        if(row.fileMetadataDescription.startsWith('image')){
+        if(attachment.fileMetadataDescription.startsWith('image')){
             return(
                 <ListGroupItem key={index}>
                     <AttachmentImage 
                         onClick={() => {
-                            let w = window.open("", row.filename);
+                            let w = window.open("", attachment.filename);
                             w.document.open();
-                            w.document.write('<html><head><title>' + row.filename + '</title></head>');
+                            w.document.write('<html><head><title>' + attachment.filename + '</title></head>');
                             w.document.write('<body><p><img src=\'' + url + '\'></p></body></html>');
                             w.document.close();
                         }}
                         src={url}
+                        alt={attachment.filename}
                     />
                 </ListGroupItem>
             )
@@ -87,7 +88,7 @@ const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
             return (
                 <ListGroupItem key={index}>
                     <a target="_blank" rel="noopener noreferrer" href={url}>
-                        {row.filename}
+                        {attachment.filename}
                     </a>
                 </ListGroupItem>
             )}
@@ -95,8 +96,8 @@ const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
     );
     
     const properties = currentLogEntry.properties
-        .filter(row => row.name !== 'Log Entry Group')
-        .map((row, index) => <Properties key={index} property={row}/>);
+        .filter(property => property.name !== 'Log Entry Group')
+        .map((property, index) => <Properties key={index} property={property}/>);
 
     return(
         <Container className={className}>

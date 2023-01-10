@@ -23,6 +23,7 @@ const FileInput = ({label, onFileChanged, multiple, accept}) => {
 
     const onClick = (event) => {
         event.preventDefault(); // event bubbling can cause a page refresh in some components
+        fileInputRef.current.value = null;
         fileInputRef.current.click();
     }
 
