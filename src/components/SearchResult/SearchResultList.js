@@ -58,7 +58,8 @@ const StyledSearchBox = styled(SearchBox)`
 const StyledLoadingOverlay = styled(LoadingOverlay)`
     display: flex;
     flex-direction: column;
-    flex: 1 0 100%;
+    flex: 1 0 auto;
+    border-radius: inherit;
 `
 
 const StyledPaginationBar = styled(PaginationBar)`
@@ -132,10 +133,11 @@ const SearchResultList = ({
 
     return(
         <Container id='search-results-list' className={className} >
-            <StyledSearchBox {...{searchParams, showFilters, setShowFilters}} />
             <StyledLoadingOverlay
                 active={searchInProgress}
+                size={10}
             >
+                <StyledSearchBox {...{searchParams, showFilters, setShowFilters}} />
                 <SearchResultsContainer id='search-results-list--container'>
                     {renderedSearchResults}
                 </SearchResultsContainer>
