@@ -99,8 +99,10 @@ const LogEntriesView = ({
             hitCount: 0
         },
         error: searchResultError, 
-        isLoading: searchInProgress 
-    } = useSearchLogsQuery({searchParams, searchPageParams}, {pollingInterval: customization.defaultSearchFrequency});
+        isFetching: searchInProgress 
+    } = useSearchLogsQuery({searchParams, searchPageParams}, {
+        pollingInterval: customization.defaultSearchFrequency
+    });
     if(searchResultError) {
         console.error("An error occurred while fetching search results", searchResultError);
     }

@@ -55,6 +55,7 @@ const SearchBoxInput = ({searchParams, showFilters, className}) => {
             value={searchString}
             onChange={(e) => onChange(e)}
             onKeyDown={onKeyDown}
+            className={className}
         />
     );
 }

@@ -30,7 +30,6 @@ const Container = styled.div`
 const StyledSearchBoxInput = styled(SearchBoxInput)`
     display: block;
     flex-grow: 1;
-    background-color: green;
 `
 
 const FilterButton = styled(Button)`
@@ -43,7 +42,7 @@ const HelpButton = styled(Button)`
 `
 
 const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
-    
+
     const toggleFilters = (e) => {
         setShowFilters(!showFilters)
     }
@@ -56,7 +55,7 @@ const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
         <Container className={className} >
             <FilterButton variant='primary' onClick={(e) => toggleFilters(e)} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</FilterButton>
             <StyledSearchBoxInput
-                {...{searchParams, showFilters}}
+                {...{searchParams, showFilters, isFetching: true}}
             />
             <HelpButton variant='secondary' onClick={(e) => showSearchHelp()}>Help</HelpButton>
         </Container>
