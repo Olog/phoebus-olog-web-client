@@ -22,6 +22,7 @@ import LogDetailsMetaData from './LogDetailsMetaData';
 import styled from 'styled-components';
 import Collapse from 'components/shared/Collapse';
 import { ListGroupItem } from 'components/shared/ListGroup';
+import HtmlContent from 'components/shared/HtmlContent';
 
 const Container = styled.div`
     padding: 0.5rem;
@@ -41,7 +42,7 @@ const Ruler = styled.hr`
     margin: 0.5rem 0;
 `
 
-const Description = styled.div`
+const Description = styled(HtmlContent)`
     width: 100%;
     max-width: 33vw;
     padding-top: 0.5rem;
@@ -63,7 +64,6 @@ const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
     const getContent = (source) => {
         return {__html: remarkable.render(source)};
     }
-
     
     const attachments = currentLogEntry.attachments.map((attachment, index) => {
         const url = `${process.env.REACT_APP_BASE_URL}/attachment/` + attachment.id;
@@ -108,9 +108,7 @@ const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
             <Ruler />
             <LogDetailsMetaData currentLogRecord={currentLogEntry}/>
             <Ruler />
-            <Description 
-                dangerouslySetInnerHTML={getContent(currentLogEntry.source)}>
-            </Description>
+            <Description html={getContent(currentLogEntry.source)} />
             <Collapse title='Attachments'>
                 {currentLogEntry.attachments.length > 0 
                     ? <ListGroup>

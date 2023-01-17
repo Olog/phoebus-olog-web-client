@@ -22,10 +22,15 @@ import imageProcessor from 'utils/image-processor';
 import Button from 'components/shared/Button';
 import Modal, { Body, Footer, Header } from '../shared/Modal';
 import styled from 'styled-components';
+import HtmlContent from 'components/shared/HtmlContent';
 
 const StyledModal = styled(Modal)`
     max-width: 90vw;
     max-height: 90vh;
+`
+
+const StyledHtmlContent = styled(HtmlContent)`
+    padding: 0.5rem 0;
 `
 
 class HtmlPreview extends Component{
@@ -62,9 +67,7 @@ class HtmlPreview extends Component{
                     <h2>Description Preview</h2>
                 </Header>
                 <Body>
-                        <div style={{paddingTop: "5px", wordWrap: "break-word"}} className="olog-table"
-                            dangerouslySetInnerHTML={{ __html: this.state.innerHtml }}>
-                        </div>
+                    <StyledHtmlContent html={{ __html: this.state.innerHtml }} />
                 </Body>
                 <Footer>
                       <Button variant="secondary" onClick={() => this.props.setShowHtmlPreview(false)}>OK</Button>
