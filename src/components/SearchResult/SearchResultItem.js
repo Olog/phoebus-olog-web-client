@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import { FaPaperclip } from "react-icons/fa";
+import { FaPaperclip, FaReply } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
@@ -23,16 +23,26 @@ import { formatFullDateTime, getLogEntryGroupId } from 'utils';
 import { useNavigate } from "react-router-dom";
 
 const LogInfoContainer = styled.div`
+    
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
     padding: 0.25rem;
-    background-color: ${({selected}) => selected ? '#c8e0f4' : 'inherit'};
 
     &:hover {
         background-color: rgba(0, 0, 0, 0.10);
         cursor: pointer;
     }
+
+
+    ${({selected}) => selected ? `
+        background-color: #c8e0f4;
+        border-left: 2px solid #333;
+        padding-left: 0.5rem;
+    ` : ''}
+
+    transition: padding 100ms ease;
+
 `
 
 const LogInfo = styled.div`
@@ -43,12 +53,14 @@ const LogInfo = styled.div`
 
 const HeaderInfo = styled(LogInfo)`
     font-size: 1rem;
+    gap: 0.5rem;
 `
 
 const SearchResultItem = ({log, currentLogEntry}) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const isGroupEntry = getLogEntryGroupId(log.properties);
 
     const formatDescription = (description) => {
         let length = 75;
@@ -69,10 +81,14 @@ const SearchResultItem = ({log, currentLogEntry}) => {
             grouped={getLogEntryGroupId(log.properties) !== null} 
             selected={currentLogEntry && currentLogEntry.id === log.id}
             onClick={handleClick}
+            isGroupEntry={isGroupEntry}
         >
             <HeaderInfo>
                 <p>{log.title}</p>
-                <p>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip/> : ""}</p>
+                <HeaderInfo>
+                    <p>{isGroupEntry ? <FaReply/> : null}</p>
+                    <p>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip/> : null}</p>
+                </HeaderInfo>
             </HeaderInfo>
             <LogInfo>
                 <p>{log.owner}</p>
