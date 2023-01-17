@@ -34,6 +34,7 @@ const SearchResultsContainer = styled.div`
     display: flex;
     flex-direction: column;
     overflow: auto;
+    flex: 2 0px;
 
     & > * {
         border: 1px solid ${({theme}) => theme.colors.light};
