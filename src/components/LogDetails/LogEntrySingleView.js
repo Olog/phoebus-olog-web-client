@@ -25,7 +25,6 @@ import { ListGroupItem } from 'components/shared/ListGroup';
 
 const Container = styled.div`
     padding: 0.5rem;
-    // overflow: auto;
     height: 100%;
     overflow: auto;
 `
@@ -39,6 +38,7 @@ const LogTitle = styled.div`
 const Ruler = styled.hr`
     border: none;
     border-top: 1px solid ${({theme}) => theme.colors.light};
+    margin: 0.5rem 0;
 `
 
 const Description = styled.div`
