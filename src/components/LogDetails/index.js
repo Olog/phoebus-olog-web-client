@@ -125,7 +125,6 @@ const LogDetails = ({
         }}/> 
     : <StyledLogEntrySingleView currentLogEntry={currentLogEntry} remarkable={remarkable}/>;
 
-    console.log({logGroupRecords})
     return(
         <Container className={className} id='logdetails-and-buttons'>
             <ButtonContainer>

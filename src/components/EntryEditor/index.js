@@ -259,7 +259,7 @@ const EntryEditor = ({
                                 submitAttachmentsMulti(res.data.id);
                             }
                             setCreateInProgress(false);
-                            // clearFormData();
+                            clearFormData();
                             navigate('/');
                         })
                         .catch(error => {
