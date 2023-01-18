@@ -4,20 +4,21 @@ const Container = styled.div`
     word-wrap: break-word;
     width: 100%;
     padding: 2rem 0;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 400;
     color: #222;
 
 
     /** Text Elements **/
+    h1, h2 {
+        padding-bottom: 0.5rem;
+    }
     h1 {
-        font-size: 4rem;
-        padding-bottom: 0.7rem;
+        font-size: 2.8rem;
     }
     h2 {
-        font-size: 3.3rem;
-        padding-bottom: 0.7rem;
+        font-size: 2.1rem;
     }
     p {
         padding: 1rem 0;
