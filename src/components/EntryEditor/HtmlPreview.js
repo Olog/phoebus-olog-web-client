@@ -27,10 +27,13 @@ import HtmlContent from 'components/shared/HtmlContent';
 const StyledModal = styled(Modal)`
     max-width: 90vw;
     max-height: 90vh;
+    width: 100%;
+    overflow: auto;
 `
 
 const StyledHtmlContent = styled(HtmlContent)`
     padding: 0.5rem 0;
+    width: 100%;
 `
 
 class HtmlPreview extends Component{

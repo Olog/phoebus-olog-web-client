@@ -2,29 +2,96 @@ import styled from "styled-components";
 
 const Container = styled.div`
     word-wrap: break-word;
+    width: 100%;
+    padding: 2rem 0;
+    font-size: 1.5rem;
+    font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    color: #222;
 
-    & table {
+
+    /** Text Elements **/
+    h1 {
+        font-size: 4rem;
+        padding-bottom: 0.7rem;
+    }
+    h2 {
+        font-size: 3.3rem;
+        padding-bottom: 0.7rem;
+    }
+    p {
+        padding: 1rem 0;
+    }
+    
+    /** Links **/
+    a, a:visited {
+        color: ${({theme}) => theme.colors.primary};
+        text-decoration: underline;
+    }
+    a:hover {
+        cursor: pointer;
+    }
+
+    /** Block Quotes **/
+    blockquote {
+        border-left: 5px solid #ccc;
+        padding: 0.5rem 10px;
+        margin: 1.5em 10px;
+    }
+
+    /** Lists **/
+    ul {
+        list-style: disc inside;
+    }
+    ol {
+        list-style: decimal inside;
+    }
+
+    /** Code **/
+    code, pre {
+        padding: 0.2rem 0.5rem;
+        background-color: #f1f1f1;
+        border: 1px solid #e1e1e1;
+        border-radius: 4px;
+        font-family: monospace;
+    }
+    pre code {
+        border: none;
+        padding: 0;
+    }
+
+    /** Horizontal Rule **/
+    hr {
+        border: none;
+        border-top: 3px solid #E1E1E1;
+        margin-top: 1rem;
+        margin-bottom: 3.5rem;
+    }
+
+    /** Table Styling **/
+    table {
         border-collapse: collapse;
     }
 
-    & table th, & table td {
+    table th, table td {
         border: 1px solid #ddd;
-        padding: 3px;
+        padding: 0.3rem;
     }
-
-    & table tr:nth-child(even){
-        background-color: #f2f2f2;
-    }
-
-    & table tr:hover {
-        background-color: #ddd;
-    }
-
-    & table th {
+    table th {
         text-align: left;
         background-color: #0095CA;
         color: white;
+        padding: 0.5rem 0.3rem;
     }
+
+    table tr:nth-child(even){
+        background-color: #f2f2f2;
+    }
+
+    table tr:hover {
+        background-color: #ddd;
+    }
+
 `
 
 const HtmlContent = ({html, className}) => {

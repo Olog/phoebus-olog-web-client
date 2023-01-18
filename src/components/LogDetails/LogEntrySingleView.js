@@ -44,7 +44,6 @@ const Ruler = styled.hr`
 
 const Description = styled(HtmlContent)`
     width: 100%;
-    max-width: 33vw;
     padding-top: 0.5rem;
     padding-bottom: 1rem;
     wordWrap: break-word;
