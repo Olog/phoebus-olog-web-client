@@ -366,12 +366,6 @@ const EntryEditor = ({
                             label='Description'
                             control={control}
                             defaultValue=''
-                            rules={{
-                                required: {
-                                    value: true,
-                                    message: 'Please include a description.'
-                                }
-                            }}
                             textArea
                             rows={10}
                         />

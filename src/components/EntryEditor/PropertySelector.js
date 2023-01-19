@@ -37,7 +37,7 @@ const PropertySelector = ({selectedProperties, availableProperties, addProperty}
     }
 
     const rows = availableProperties.filter(row => !isAlreadySelected(row.name)).map( row => 
-        <PropertyRow>
+        <PropertyRow key={row.name}>
             <div>{row.name}</div>
             <Button 
                 variant='primary'
