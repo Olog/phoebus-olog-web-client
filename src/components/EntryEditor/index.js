@@ -40,7 +40,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist'
 import TextInput from 'components/shared/input/TextInput';
 import styled from 'styled-components';
-import FileInput from 'components/shared/input/FileInput';
+import { DroppableFileUploadInput } from 'components/shared/input/FileInput';
 
 const Container = styled.div`
     padding: 0.5rem;
@@ -79,7 +79,6 @@ const ButtonContent = styled.div`
 `
 
 const RenderedAttachmentsContainer = styled.div`
-    display: flex;
     display: grid;
     place-items: center;
     grid-template-columns: repeat(auto-fill, 10rem);
@@ -91,6 +90,10 @@ const RenderedAttachmentsContainer = styled.div`
     margin: 0.5rem;
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
+
+    ${({hasAttachments}) => hasAttachments ? '' : `
+        display: flex;
+    `}
 `
 
 const StyledAttachment = styled(Attachment)`
@@ -110,6 +113,10 @@ const PropertiesContainer = styled.div`
     border-radius: 5px;
     padding: 0.5rem;
     margin: 0.5rem;
+`
+
+const DetachedLabel = styled.label`
+    padding: 0 0.5rem;
 `
 
 const EntryEditor = ({
@@ -414,9 +421,9 @@ const EntryEditor = ({
                                 </Button>
                             </DescriptionContainerFooter>
                         </DescriptionContainer>
-                        <RenderedAttachmentsContainer>
-                            <FileInput 
-                                label='Add Attachments'
+                        <DetachedLabel>Attachments</DetachedLabel>
+                        <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>
+                            <DroppableFileUploadInput 
                                 onFileChanged={onFileChanged}
                             />
                             { renderedAttachments }
