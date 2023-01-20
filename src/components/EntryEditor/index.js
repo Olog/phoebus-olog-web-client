@@ -289,9 +289,11 @@ const EntryEditor = ({
                             if(attachments.length > 0){ // No need to call backend if there are no attachments.
                                 submitAttachmentsMulti(res.data.id);
                             }
-                            setCreateInProgress(false);
-                            clearFormData();
-                            navigate('/');
+                            setTimeout(() => {
+                                clearFormData();
+                                setCreateInProgress(false);
+                                navigate('/');      
+                            }, 1);
                         })
                         .catch(error => {
                             if(error.response && (error.response.status === 401 || error.response.status === 403)){
