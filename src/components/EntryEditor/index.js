@@ -259,7 +259,7 @@ const EntryEditor = ({
                                 submitAttachmentsMulti(res.data.id);
                             }
                             setCreateInProgress(false);
-                            // clearFormData();
+                            clearFormData();
                             navigate('/');
                         })
                         .catch(error => {
@@ -366,12 +366,6 @@ const EntryEditor = ({
                             label='Description'
                             control={control}
                             defaultValue=''
-                            rules={{
-                                required: {
-                                    value: true,
-                                    message: 'Please include a description.'
-                                }
-                            }}
                             textArea
                             rows={10}
                         />

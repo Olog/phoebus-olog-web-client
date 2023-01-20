@@ -125,7 +125,6 @@ const LogDetails = ({
         }}/> 
     : <StyledLogEntrySingleView currentLogEntry={currentLogEntry} remarkable={remarkable}/>;
 
-
     return(
         <Container className={className} id='logdetails-and-buttons'>
             <ButtonContainer>

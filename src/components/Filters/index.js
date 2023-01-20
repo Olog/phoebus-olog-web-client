@@ -48,18 +48,20 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
     const dispatch = useDispatch();
     const searchParams = useSelector(state => state.searchParams);
     const searchPageParams = useSelector(state => state.searchPageParams);
-    const form = useForm({defaultValues: {...searchParams}});;
+    const form = useForm({defaultValues: {...searchParams}});
 
     const { control, handleSubmit, getValues } = form;
     
     const onSubmit = (data) => {
 
         const updatedSearchParams = {...data};
-        delete updatedSearchParams.sort;
-        const updatedSearchPageParams = {...searchPageParams, sort: data.sort}
+        if(data.sort) {
+            delete updatedSearchParams.sort;
+            const updatedSearchPageParams = {...searchPageParams, sort: data.sort}
+            dispatch(updateSearchPageParams(updatedSearchPageParams));
+        }
 
         dispatch(updateSearchParams(updatedSearchParams));
-        dispatch(updateSearchPageParams(updatedSearchPageParams));
 
     }
 

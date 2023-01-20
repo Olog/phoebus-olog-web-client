@@ -64,17 +64,6 @@ class LogDetailsMetaData extends Component {
         });    
         
         return (
-            // <div className="log-details-meta-data">
-            //     <Table>
-            //         <tbody>
-            //             <tr><td>Author</td><td><b>{this.props.currentLogRecord.owner}</b></td></tr>
-            //             <tr><td>Created</td><td><b><OlogMoment date={this.props.currentLogRecord.createdDate}/></b></td></tr>
-            //             <tr><td>Logbooks</td><td><b>{logbooks}</b></td></tr>
-            //             <tr><td>Tags</td><td><b>{tags}</b></td></tr>
-            //             <tr><td>{customization.level}</td><td><b>{this.props.currentLogRecord.level}</b></td></tr>
-            //         </tbody>
-            //     </Table>
-            // </div>
             <Container>
                 <DetailRow>
                     <Key>Author</Key><Value>{this.props.currentLogRecord.owner}</Value>
@@ -90,9 +79,6 @@ class LogDetailsMetaData extends Component {
                 </DetailRow>
                 <DetailRow>
                     <Key>{customization.level}</Key><Value>{this.props.currentLogRecord.level}</Value>
-                </DetailRow>
-                <DetailRow>
-                    <Key>Author</Key><Value>{this.props.currentLogRecord.owner}</Value>
                 </DetailRow>
             </Container>
         );

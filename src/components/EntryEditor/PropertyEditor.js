@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import React from 'react';
 import {BsXCircle} from 'react-icons/bs';
 import styled from 'styled-components';
 
@@ -25,7 +26,7 @@ const Container = styled.div`
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
     padding: 0.5rem;
-    min-width: 30%;
+    width: 100%;
 `
 
 const Header = styled.div`
@@ -35,23 +36,18 @@ const Header = styled.div`
 `
 
 const Body = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 0.25rem;
+    align-items: center;
 `
 
-const PropertyEditorRow = styled.div`
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-
-    & label {
-        min-width: 15%;
-    }
+const PropertyEditorLabel = styled.label`
+    text-align: right;
+    min-width: 50%;
 `
 
 const PropertyEditorInput = styled.input`
-    width: 100%;
     padding: 0.25rem 0.5rem;
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
@@ -66,8 +62,8 @@ const PropertyEditor = ({index, property, removeProperty, updateAttributeValue})
     const renderedAttributeRows = property.attributes.map((attribute, index) => {
         const uniqueName = `row-${index}-${attribute.name}`;
         return (
-            <PropertyEditorRow key={uniqueName} >
-                <label htmlFor={uniqueName}>{attribute.name}</label>
+            <React.Fragment key={uniqueName}>
+                <PropertyEditorLabel htmlFor={uniqueName}>{attribute.name}</PropertyEditorLabel>
                 <PropertyEditorInput 
                     type='text' 
                     defaultValue={attribute.value}
@@ -75,7 +71,7 @@ const PropertyEditor = ({index, property, removeProperty, updateAttributeValue})
                     id={uniqueName}
                     name={uniqueName}
                 />
-            </PropertyEditorRow>
+            </React.Fragment>
         )
     });
 
