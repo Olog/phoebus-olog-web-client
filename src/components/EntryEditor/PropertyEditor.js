@@ -53,6 +53,12 @@ const PropertyEditorInput = styled.input`
     border-radius: 5px;
 `
 
+const CloseIcon = styled(BsXCircle)`
+    &:hover {
+        cursor: pointer;
+    }
+`
+
 const PropertyEditor = ({index, property, removeProperty, updateAttributeValue}) => {
 
     const updateValue = (event, attribute) => {
@@ -79,7 +85,7 @@ const PropertyEditor = ({index, property, removeProperty, updateAttributeValue})
         <Container>
             <Header>
                 <h3>{property.name}</h3>
-                <BsXCircle onClick={() => removeProperty(property)} />
+                <CloseIcon onClick={() => removeProperty(property)} />
             </Header>
             <Body>
                 {renderedAttributeRows}

@@ -56,10 +56,20 @@ const Form = styled.form`
     overflow: auto;
 `
 
-const FileInputContainer = styled.div`
+const DescriptionContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    padding-top: 0;
+`
+
+const DescriptionTextInput = styled(TextInput)`
+    padding-top: 0;
+`
+
+const DescriptionContainerFooter = styled.div`
     display: flex;
     gap: 1rem;
-    padding: 0 1rem;
 `
 
 const ButtonContent = styled.div`
@@ -70,10 +80,24 @@ const ButtonContent = styled.div`
 
 const RenderedAttachmentsContainer = styled.div`
     display: flex;
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(auto-fill, 10rem);
+    grid-template-rows: repeat(auto-fill, 10rem);
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem;
+    margin: 0.5rem;
+    border: solid 1px ${({theme}) => theme.colors.light};
+    border-radius: 5px;
+`
+
+const StyledAttachment = styled(Attachment)`
+    border: solid 1px ${({theme}) => theme.colors.light};
+    border-radius: 5px;
+    height: 100%;
+    width: 100%;
 `
 
 const PropertiesContainer = styled.div`
@@ -281,7 +305,7 @@ const EntryEditor = ({
      * If attachments are present, creates a wrapper containing an array of Attachment components
      */
     const renderedAttachments = attachments.map((attachment, index) => {
-        return <Attachment key={index} attachment={attachment} removeAttachment={() => onAttachmentRemoved(attachment, index)}/>
+        return <StyledAttachment key={index} attachment={attachment} removeAttachment={() => onAttachmentRemoved(attachment, index)}/>
     });
 
     const renderedProperties = properties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
@@ -361,37 +385,40 @@ const EntryEditor = ({
                                 }
                             }}
                         />
-                        <TextInput 
-                            name='description'
-                            label='Description'
-                            control={control}
-                            defaultValue=''
-                            textArea
-                            rows={10}
-                        />
-                        <FileInputContainer>
+                        <DescriptionContainer>
+
+                            <DescriptionTextInput 
+                                name='description'
+                                label='Description'
+                                control={control}
+                                defaultValue=''
+                                textArea
+                                rows={10}
+                            />
+                            <DescriptionContainerFooter>
+                                <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            setShowEmbedImageDialog(true);
+                                        }}>
+                                    Embed Image
+                                </Button>
+                                <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            setShowHtmlPreview(true)
+                                        }}>
+                                    Preview
+                                </Button>
+                            </DescriptionContainerFooter>
+                        </DescriptionContainer>
+                        <RenderedAttachmentsContainer>
                             <FileInput 
                                 label='Add Attachments'
                                 onFileChanged={onFileChanged}
                             />
-                            <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setShowEmbedImageDialog(true);
-                                    }}>
-                                Embed Image
-                            </Button>
-                            <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setShowHtmlPreview(true)
-                                    }}>
-                                Preview
-                            </Button>
-                        </FileInputContainer>
-                        <RenderedAttachmentsContainer>
                             { renderedAttachments }
                         </RenderedAttachmentsContainer>
                         <PropertiesContainer>
