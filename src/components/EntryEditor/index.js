@@ -43,28 +43,28 @@ import styled from 'styled-components';
 import { DroppableFileUploadInput } from 'components/shared/input/FileInput';
 
 const Container = styled.div`
-    padding: 0.5rem;
+    padding: 1rem 0.5rem;
     overflow: hidden;
     height: 100%;
     display: flex;
     flex-direction: column;
+    gap: 1rem;
 `
 
 const Form = styled.form`
     display: flex;
     flex-direction: column;
     overflow: auto;
+    gap: 0.5rem;
 `
 
 const DescriptionContainer = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 1rem 0;
-    padding-top: 0;
+    padding-bottom: 1rem;
 `
 
 const DescriptionTextInput = styled(TextInput)`
-    padding-top: 0;
 `
 
 const DescriptionContainerFooter = styled.div`
@@ -87,7 +87,7 @@ const RenderedAttachmentsContainer = styled.div`
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem;
-    margin: 0.5rem;
+    margin-bottom: 1rem;
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
 
@@ -112,12 +112,10 @@ const PropertiesContainer = styled.div`
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
     padding: 0.5rem;
-    margin: 0.5rem;
+    margin-bottom: 1rem;
 `
 
-const DetachedLabel = styled.label`
-    padding: 0 0.5rem;
-`
+const DetachedLabel = styled.label``
 
 const EntryEditor = ({
      tags,
@@ -141,7 +139,6 @@ const EntryEditor = ({
     // the element and click it from e.g. a button
     // const fileInputRef = useRef(null);
     const [createInProgress, setCreateInProgress] = useState(false);
-    const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
     const [showHtmlPreview, setShowHtmlPreview] = useState(false);
     const [showAddProperty, setShowAddProperty] = useState(false);
     const {data: availableProperties} = useGetPropertiesQuery();
@@ -214,7 +211,6 @@ const EntryEditor = ({
         const imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
         let description = getValues('description') || '';
         description += imageMarkup;
-        setShowEmbedImageDialog(false);
         setValue('description', description, {shouldDirty: false, shouldTouch: false, shouldValidate: false});
     }
 
@@ -327,10 +323,10 @@ const EntryEditor = ({
 
     return (
         <>
-            <Container>
                 <LoadingOverlay
                     active={createInProgress}
                 >
+                    <Container>
                     <h1>New Log Entry</h1>
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         
@@ -403,14 +399,7 @@ const EntryEditor = ({
                                 rows={10}
                             />
                             <DescriptionContainerFooter>
-                                <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            setShowEmbedImageDialog(true);
-                                        }}>
-                                    Embed Image
-                                </Button>
+                                <EmbedImageDialog addEmbeddedImage={addEmbeddedImage} />
                                 <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
                                         onClick={(e) => {
                                             e.preventDefault();
@@ -428,6 +417,7 @@ const EntryEditor = ({
                             />
                             { renderedAttachments }
                         </RenderedAttachmentsContainer>
+                        <DetachedLabel>Properties</DetachedLabel>
                         <PropertiesContainer>
                             <Button variant="secondary" size="sm" onClick={(e) => {
                                 e.preventDefault();
@@ -443,8 +433,8 @@ const EntryEditor = ({
                         </PropertiesContainer>
                         <Button type='submit' variant="primary" disabled={userData.userName === "" || createInProgress} >Submit</Button>
                     </Form>
-                </LoadingOverlay>
-            </Container>
+                </Container>
+            </LoadingOverlay>
             <Modal show={showAddProperty} onClose={() => setShowAddProperty(false)}>
                 <Header onClose={() => setShowAddProperty(false)}>
                     <Title>Add Property</Title>
@@ -457,10 +447,6 @@ const EntryEditor = ({
                     />
                 </Body>
             </Modal>
-            <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
-                setShowEmbedImageDialog={setShowEmbedImageDialog}
-                addEmbeddedImage={addEmbeddedImage}
-            />
             <HtmlPreview showHtmlPreview={showHtmlPreview}
                 setShowHtmlPreview={setShowHtmlPreview}
                 getCommonmarkSrc={() => getValues('description')}

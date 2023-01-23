@@ -29,7 +29,9 @@ const Form = styled.form`
 
 `
 
-const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
+const EmbedImageDialog = ({addEmbeddedImage, className}) => {
+
+    const [show, setShow] = useState(false);
 
     const {control, setValue, watch, getValues} = useForm({
         mode: 'all',
@@ -40,13 +42,13 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
     const [originalImageHeight, setOriginalImageHeight] = useState(0);
     const scalingFactor = watch('scalingFactor');
     
-    const _addEmbeddedImage = (e) => {
-        e.preventDefault();
+    const handleSubmit = (e) => {
         addEmbeddedImage(
             imageAttachment, 
             getValues('imageWidth'),
             getValues('imageHeight')
         );
+        setShow(false);
     }
 
     const onFileChanged = (files) => {
@@ -103,63 +105,75 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
     }, [scalingFactor]);
     
     return(
-        <Modal show={showEmbedImageDialog} 
-            onClose={() => setShowEmbedImageDialog(false)}
-        >
-            <Form 
-                onSubmit={_addEmbeddedImage}
+        <>
+            <Button variant="secondary" 
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShow(true);
+                }}
+                className={className}
             >
-                <Header closeButton onClose={() => setShowEmbedImageDialog(false)}>
-                    <Title>Add Embedded Image</Title>
-                </Header>
-                <Body>
-                    <FileInput 
-                        label='Browse'
-                        onFileChanged={onFileChanged}
-                        multiple={false}
-                        accept='image/*'
-                    />
-                    <TextInput 
-                        name='scalingFactor'
-                        label='Scaling Factor'
-                        control={control}
-                        defaultValue='1.0'
-                        rules={{
-                            validate: {
-                                isCorrectRange: val => scalingFactorIsValid(val) || 'Scaling factor must be between 0 and 1'
-                            }
-                        }}
-                    />
-                    <TextInput 
-                        name='imageWidth'
-                        label='Width'
-                        control={control}
-                        defaultValue='0.0'
-                        rules={{
-                            validate: {
-                                isPositive: val => dimensionIsValid(val) || 'Width must be a positive number'
-                            }
-                        }}
-                    />
-                    <TextInput 
-                        name='imageHeight'
-                        label='Height'
-                        control={control}
-                        defaultValue='0.0'
-                        rules={{
-                            validate: {
-                                isPositive: val => dimensionIsValid(val) || 'Height must be a positive number'
-                            }
-                        }}
-                    />
-                    
-                </Body>
-                <Footer>
-                    <Button variant="secondary" onClick={() => setShowEmbedImageDialog(false)}>Cancel</Button>
-                    <Button variant="primary" disabled={imageAttachment === null} onClick={_addEmbeddedImage}>OK</Button>
-                </Footer>
-            </Form>
-        </Modal>
+                Embed Image
+            </Button>
+            <Modal show={show} 
+                onClose={() => setShow(false)}
+            >
+                <Form 
+                    onSubmit={handleSubmit}
+                >
+                    <Header closeButton onClose={() => setShow(false)}>
+                        <Title>Add Embedded Image</Title>
+                    </Header>
+                    <Body>
+                        <FileInput 
+                            label='Browse'
+                            onFileChanged={onFileChanged}
+                            multiple={false}
+                            accept='image/*'
+                        />
+                        <TextInput 
+                            name='scalingFactor'
+                            label='Scaling Factor'
+                            control={control}
+                            defaultValue='1.0'
+                            rules={{
+                                validate: {
+                                    isCorrectRange: val => scalingFactorIsValid(val) || 'Scaling factor must be between 0 and 1'
+                                }
+                            }}
+                        />
+                        <TextInput 
+                            name='imageWidth'
+                            label='Width'
+                            control={control}
+                            defaultValue='0.0'
+                            rules={{
+                                validate: {
+                                    isPositive: val => dimensionIsValid(val) || 'Width must be a positive number'
+                                }
+                            }}
+                        />
+                        <TextInput 
+                            name='imageHeight'
+                            label='Height'
+                            control={control}
+                            defaultValue='0.0'
+                            rules={{
+                                validate: {
+                                    isPositive: val => dimensionIsValid(val) || 'Height must be a positive number'
+                                }
+                            }}
+                        />
+                        
+                    </Body>
+                    <Footer>
+                        <Button variant="secondary" onClick={() => setShow(false)}>Cancel</Button>
+                        <Button variant="primary" disabled={imageAttachment === null} onClick={handleSubmit}>OK</Button>
+                    </Footer>
+                </Form>
+            </Modal>
+        </>
     )
     
 }
