@@ -31,7 +31,11 @@ const SearchBoxInput = ({searchParams, showFilters, className}) => {
 
     useEffect(() => {
         if(searchParams) {
-            setSearchString(searchParamsToQueryString(searchParams));
+            const copy = {...searchParams};
+            if(copy.cacheBust) {
+                delete copy.cacheBust;
+            }
+            setSearchString(searchParamsToQueryString(copy));
         }
     }, [searchParams]);
 
