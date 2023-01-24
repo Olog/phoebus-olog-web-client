@@ -18,7 +18,7 @@
 import MultiSelect from 'components/shared/input/MultiSelect';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { forceUpdateSearchParams, updateSearchParams } from 'features/searchParamsReducer';
+import { forceUpdateSearchParams } from 'features/searchParamsReducer';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import Collapse from './Collapse';
 import TextInput from 'components/shared/input/TextInput';
