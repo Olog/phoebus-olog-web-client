@@ -350,7 +350,7 @@ const EntryEditor = ({
                             }
                             rules={{
                                 validate: {
-                                    notEmpty: val => val && val.length > 0 || 'Select at least one logbook'
+                                    notEmpty: val => val?.length > 0 || 'Select at least one logbook'
                                 }
                             }}
                         />
