@@ -348,6 +348,11 @@ const EntryEditor = ({
                             onSelectionChanged={(field, value) => 
                                 field.onChange(value.map(it => it.value))
                             }
+                            rules={{
+                                validate: {
+                                    notEmpty: val => val?.length > 0 || 'Select at least one logbook'
+                                }
+                            }}
                         />
                         <MultiSelect 
                             name='tags'
