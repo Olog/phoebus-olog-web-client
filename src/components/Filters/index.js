@@ -18,7 +18,7 @@
 import MultiSelect from 'components/shared/input/MultiSelect';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSearchParams } from 'features/searchParamsReducer';
+import { forceUpdateSearchParams } from 'features/searchParamsReducer';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import Collapse from './Collapse';
 import TextInput from 'components/shared/input/TextInput';
@@ -61,13 +61,12 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
             dispatch(updateSearchPageParams(updatedSearchPageParams));
         }
 
-        dispatch(updateSearchParams(updatedSearchParams));
+        dispatch(forceUpdateSearchParams(updatedSearchParams));
 
     }
 
     const onSearchParamFieldValueChanged = (field, value, submit=true) => {
         field.onChange(value);
-        // updateSearchParams(field.name, value, submit);
         if(submit) {
             onSubmit(getValues());
         }

@@ -7,11 +7,19 @@ export const ologApi = createApi({
     keepUnusedDataFor: 0, // Don't cache anything
     endpoints: builder => ({
         searchLogs: builder.query({
-            query: ({searchParams, searchPageParams}) => ({
-                url: '/logs/search',
-                params: {...searchParams, ...searchPageParams},
-                headers: {...ologClientInfoHeader()}
-            })
+            query: ({searchParams, searchPageParams}) => {
+                // Clean up any cache busting from forced dispatching;
+                // we don't need to send those params to the server.
+                const cleanSearchParams = {...searchParams};
+                if(cleanSearchParams.cacheBust) {
+                    delete cleanSearchParams.cacheBust; 
+                }
+                return {
+                    url: '/logs/search',
+                    params: {...cleanSearchParams, ...searchPageParams},
+                    headers: {...ologClientInfoHeader()}
+                }
+            }
         }),
         getTags: builder.query({
             query: () => ({
