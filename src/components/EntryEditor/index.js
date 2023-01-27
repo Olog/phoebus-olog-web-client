@@ -285,14 +285,14 @@ const EntryEditor = ({
                         `/logs?markup=commonmark&inReplyTo=${currentLogEntry.id}` :
                         `/logs?markup=commonmark`;
                     ologService.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
-                        .then(res => {
+                        .then(async res => {
                             if(attachments.length > 0){ // No need to call backend if there are no attachments.
-                                submitAttachmentsMulti(res.data.id);
+                                await submitAttachmentsMulti(res.data.id);
                             }
                             setTimeout(() => {
                                 clearFormData();
                                 setCreateInProgress(false);
-                                navigate('/');      
+                                navigate('/');
                             }, 1);
                         })
                         .catch(error => {

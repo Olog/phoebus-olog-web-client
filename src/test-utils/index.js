@@ -31,11 +31,12 @@ export {renderWithProviders as render};
 // Utility test function that will setup the server to respond to the request
 // with a log entry having the desired `title` is the `requestPredicate` is true
 // otherwise will respond with empty search results
-export const givenServerRespondsWithSearchRequest = ({title, requestPredicate}) => {
+export const givenServerRespondsWithSearchRequest = ({title, requestPredicate, delay=10}) => {
     server.use(
         rest.get('*/logs/search', (req, res, ctx) => {
             if(requestPredicate(req)) {
                 return res(
+                    ctx.delay(delay),
                     ctx.json({
                         hitCount: 1,
                         logs: [

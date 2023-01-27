@@ -74,5 +74,78 @@ export const defaultHandlers = [
                 }
             ])
         )
+    }),
+    rest.get('*/properties', (req, res, ctx) => {
+        return res(
+            ctx.json([
+                {
+                    "name": "Ticket",
+                    "owner": "olog-logs",
+                    "state": "Active",
+                    "attributes": [
+                        {
+                            "name": "url",
+                            "value": null,
+                            "state": "Active"
+                        },
+                        {
+                            "name": "id",
+                            "value": null,
+                            "state": "Active"
+                        }
+                    ]
+                },
+                {
+                    "name": "longname",
+                    "owner": null,
+                    "state": "Active",
+                    "attributes": [
+                        {
+                            "name": "thisAttributeNameIsReallyReallyLongOhByTheWayDidITellYouAboutUhmAhUhmn",
+                            "value": null,
+                            "state": "Active"
+                        },
+                        {
+                            "name": "imShort",
+                            "value": null,
+                            "state": "Active"
+                        },
+                        {
+                            "name": "howdyImAmiddleSizedAttribute",
+                            "value": null,
+                            "state": "Active"
+                        }
+                    ]
+                },
+                {
+                    "name": "resource",
+                    "owner": null,
+                    "state": "Active",
+                    "attributes": [
+                        {
+                            "name": "file",
+                            "value": null,
+                            "state": "Active"
+                        },
+                        {
+                            "name": "name",
+                            "value": null,
+                            "state": "Active"
+                        }
+                    ]
+                }
+            ])
+        )
+    }),
+    rest.get('*/user', (req, res, ctx) => {
+        return res(
+            ctx.json({"userName":"admin","roles":["ROLE_ADMIN"]})
+        )
+    }),
+    rest.put('*/logs', (req, res, ctx) => {
+        return res(ctx.status(200));
+    }),
+    rest.options('*/logs', (req, res, ctx) => {
+        return res(ctx.status(200));
     })
 ];

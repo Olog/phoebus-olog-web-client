@@ -165,7 +165,7 @@ it("updates search results instantly from the search filter bar for tags", async
 
 });
 
-it.only("updates search results instantly from the search filter bar for logbooks", async () => {
+it("updates search results instantly from the search filter bar for logbooks", async () => {
 
     // Given app is rendered with default search results
     const user = userEvent.setup();
@@ -190,3 +190,37 @@ it.only("updates search results instantly from the search filter bar for logbook
     expect(await screen.findByText("hmmm title")).toBeInTheDocument();
 
 });
+
+test.only('user can create a log entry, submit it, and see it in the search results', async () => {
+
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+    const title = 'my new log entry, tada!';
+
+    // navigate to log entry form
+    const newLogEntry = screen.getByRole('button', {name: /new log entry/i});
+    await user.click(newLogEntry);
+    const newLogEntryPageTitle = await screen.findByRole('heading', {name: /New Log Entry/i});
+    expect(newLogEntryPageTitle).toBeInTheDocument();
+
+    // fill in required information
+    const logbooksInput = screen.getByRole('combobox', {name: /logbooks/i});
+    await selectEvent.select(logbooksInput, ['test controls']);
+
+    const titleInput = screen.getByRole('textbox', {name: /title/i});
+    await user.clear(titleInput);
+    await user.type(titleInput, title);
+
+    // given the server processed the request and the search query will return it
+    // but maybe the server is a tad bit slow
+    givenServerRespondsWithSearchRequest({title, requestPredicate: () => true, delay: 1000});
+
+    // submit the form and be redirected
+    const submit = screen.getByRole('button', {name: /submit/i});
+    await user.click(submit);
+
+    // check the result shows up in search
+    const newLogEntrySearchResult = await screen.findByText(title);
+    expect(newLogEntrySearchResult).toBeInTheDocument();
+
+})
