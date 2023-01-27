@@ -47,6 +47,10 @@ const Container = styled.div`
     ol {
         list-style: decimal inside;
     }
+    li > ul,
+    li > ol {
+        padding-left: 2rem;
+    }
 
     /** Code **/
     code, pre {
