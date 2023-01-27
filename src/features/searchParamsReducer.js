@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "universal-cookie";
 import customization from "utils/customization";
+import {v4 as uuidv4} from 'uuid';
 
 const cookies = new Cookies();
 const initialState = cookies.get(customization.searchParamsCookie) || {...customization.defaultSearchParams};
@@ -34,6 +35,18 @@ export const searchParamsSlice = createSlice({
         }
     }
 })
+
+// This is a workaround to allowing users to force search
+// updates from e.g. hitting enter repeatedly on the search box.
+// Redux only fires an event if the state has changed
+// So we force a change by adding a cacheBust param (which must be
+// later removed before an API call)
+export const forceUpdateSearchParams = (searchParams) => {
+    return updateSearchParams({
+        ...searchParams,
+        cacheBust: uuidv4()
+    })
+}
 
 export const { updateSearchParams } = searchParamsSlice.actions;
 

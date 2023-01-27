@@ -21,7 +21,7 @@ import React, { useEffect } from "react";
 import {useState} from 'react';
 import {searchParamsToQueryString, queryStringToSearchParameters} from 'utils/searchParams';
 import { useDispatch } from "react-redux";
-import { updateSearchParams } from "features/searchParamsReducer";
+import { forceUpdateSearchParams } from "features/searchParamsReducer";
 import { StyledTextInput } from "components/shared/input/TextInput";
 
 const SearchBoxInput = ({searchParams, showFilters, className}) => {
@@ -31,7 +31,11 @@ const SearchBoxInput = ({searchParams, showFilters, className}) => {
 
     useEffect(() => {
         if(searchParams) {
-            setSearchString(searchParamsToQueryString(searchParams));
+            const copy = {...searchParams};
+            if(copy.cacheBust) {
+                delete copy.cacheBust;
+            }
+            setSearchString(searchParamsToQueryString(copy));
         }
     }, [searchParams]);
 
@@ -41,7 +45,7 @@ const SearchBoxInput = ({searchParams, showFilters, className}) => {
 
     const onKeyDown = (event) => {
         if(event.key === 'Enter') {
-            dispatch(updateSearchParams(queryStringToSearchParameters(searchString)));
+            dispatch(forceUpdateSearchParams(queryStringToSearchParameters(searchString)));
         }
     }
 

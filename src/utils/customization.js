@@ -32,7 +32,8 @@ let customization = {
         "Beam Loss",
         "Beam Configuration",
         "Crew",
-        "Expert Intervention Call"
+        "Expert Intervention Call",
+        "Incident"
     ],
 
     /**
