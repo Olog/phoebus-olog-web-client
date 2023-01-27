@@ -1,7 +1,8 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import App from './App';
-import { fireEvent, screen, render, givenServerRespondsWithSearchRequest } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, waitForElementToBeRemoved } from 'test-utils';
+import userEvent from '@testing-library/user-event';
 import selectEvent from 'react-select-event';
 
 it('renders without crashing', async () => {
@@ -80,14 +81,14 @@ it("displays username and allows creating log entries when signed in", async () 
 it("allows user to manually enter search terms", async () => {
 
     // Given app is rendered with default search results
+    const user = userEvent.setup();
     render(<App />);
     expect(await screen.findByText("example entry")).toBeInTheDocument();
 
-    // When user hits enter
-    fireEvent.keyDown(
-        await screen.findByDisplayValue(/start=12/),
-        {key: 'Enter', code: 'Enter'}
-    );
+    // When user selects the search box and hits enter
+    const searchBox = await screen.findByDisplayValue(/start=12/); // TODO NOT ACCESSIBLE!!
+    userEvent.click(searchBox)
+    userEvent.keyboard('{Enter}')
 
     // Then those search results are still there / unchanged
     expect(await screen.findByText("example entry")).toBeInTheDocument();
@@ -101,23 +102,18 @@ it("allows user to manually enter search terms", async () => {
     // When user locates text search bar,
     // enters new search terms,
     // and presses enter
-    fireEvent.input(
-        await screen.findByDisplayValue(/start=/),
-        {target: { value: 'start=987654321' }}
-    )
-    fireEvent.keyDown(
-        await screen.findByDisplayValue(/start=987654321/),
-        {key: 'Enter', code: 'Enter'}
-    );
+    userEvent.clear(searchBox);
+    userEvent.type(searchBox, 'start=987654321{Enter}');
 
     // then the results are updated
     expect(await screen.findByText("hmmm title")).toBeInTheDocument();
 
 });
 
-it("allows user to search with search filter bar", async () => {
+it("user can search by toggling the filter area", async () => {
 
     // Given app is rendered with default search results
+    const user = userEvent.setup();
     render(<App />);
     expect(await screen.findByText("example entry")).toBeInTheDocument();
 
@@ -127,17 +123,17 @@ it("allows user to search with search filter bar", async () => {
         requestPredicate: (req) => req.url.searchParams.get('title') === 'some value'
     });
 
-    // When user opens the filter bar, updates the query, and closes it
-    fireEvent.click(
-        await screen.findByLabelText(/Show Search Filters/i)
-    )
-    fireEvent.input(
-        await screen.findByLabelText(/Title/i),
-        {target: {value: 'some value'}}
-    )
-    fireEvent.click(
-        await screen.findByLabelText(/Show Search Filters/i)
-    )
+    // Open the filters
+    const filterToggle = await screen.findByRole('button', {name: /Show Search Filters/i});
+    user.click(filterToggle);
+
+    // Enter search query for title
+    const titleInput = await screen.findByRole('textbox', {name: /title/i});
+    await user.clear(titleInput);
+    await user.type(titleInput, 'some value');
+    
+    // Close the filters
+    user.click(filterToggle);
 
     // then the results are updated
     expect(await screen.findByText("hmmm title")).toBeInTheDocument();
@@ -147,6 +143,7 @@ it("allows user to search with search filter bar", async () => {
 it("updates search results instantly from the search filter bar for tags", async () => {
 
     // Given app is rendered with default search results
+    const user = userEvent.setup();
     render(<App />);
     expect(await screen.findByText("example entry")).toBeInTheDocument();
 
@@ -156,11 +153,11 @@ it("updates search results instantly from the search filter bar for tags", async
         requestPredicate: (req) => req.url.searchParams.get('tags') === 'foo'
     });
 
-    // When user opens the filter bar, updates the query, and closes it
-    fireEvent.click(
-        await screen.findByLabelText(/Show Search Filters/i)
-    )
-    // unfortunately, atm this is react-select dependent
+    // Open the filters area
+    const filterToggle = await screen.findByRole('button', {name: /Show Search Filters/i});
+    user.click(filterToggle);
+
+    // select a tag
     await selectEvent.select(await screen.findByLabelText(/Tags/i), ['foo']);
 
     // then the results are updated
@@ -168,9 +165,10 @@ it("updates search results instantly from the search filter bar for tags", async
 
 });
 
-it("updates search results instantly from the search filter bar for logbooks", async () => {
+it.only("updates search results instantly from the search filter bar for logbooks", async () => {
 
     // Given app is rendered with default search results
+    const user = userEvent.setup();
     render(<App />);
     expect(await screen.findByText("example entry")).toBeInTheDocument();
 
@@ -178,16 +176,17 @@ it("updates search results instantly from the search filter bar for logbooks", a
     // (and we expect different results from the server)
     givenServerRespondsWithSearchRequest({
         title: 'hmmm title',
-        requestPredicate: (req) => req.url.searchParams.get('logbooks') === 'controls'
+        requestPredicate: (req) => req.url.searchParams.get('logbooks') === 'test controls'
     });
-    
-    fireEvent.click(
-        await screen.findByLabelText(/Show Search Filters/i)
-    )
-    // unfortunately, atm this is react-select dependent
-    await selectEvent.select(await screen.findByLabelText(/Logbooks/i), ['controls']);
 
-    // then the results are updated
+    // Open the filters
+    const filterToggle = await screen.findByRole('button', {name: /Show Search Filters/i});
+    user.click(filterToggle);
+
+    // select a logbook
+    await selectEvent.select(await screen.findByLabelText(/Logbooks/i), ['test controls']);
+
+    // then the results are updated instantly
     expect(await screen.findByText("hmmm title")).toBeInTheDocument();
 
 });

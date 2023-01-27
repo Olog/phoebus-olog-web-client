@@ -63,12 +63,12 @@ export const defaultHandlers = [
         return res(
             ctx.json([
                 {
-                    "name": "controls",
+                    "name": "test controls",
                     "owner": null,
                     "state": "Active"
                 },
                 {
-                    "name": "operations",
+                    "name": "test operations",
                     "owner": "olog-logs",
                     "state": "Active"
                 }
