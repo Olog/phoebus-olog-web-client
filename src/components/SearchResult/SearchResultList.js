@@ -100,8 +100,7 @@ const SearchResultList = ({
     useEffect(() => {
         const from = currentPageIndex * searchPageParams.size;
         dispatch(updateSearchPageParams({...searchPageParams, from}));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPageIndex]);
+    }, [currentPageIndex, dispatch, updateSearchPageParams, searchPageParams.size]);
 
     const goToPage = (pageNumber) => {
         if(pageNumber >= 0) {

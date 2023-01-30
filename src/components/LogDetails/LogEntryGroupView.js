@@ -54,12 +54,17 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
     const dispatch = useDispatch();
 
     useEffect(() => {
-        ologService.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(currentLogEntry.properties)}`)
+        const signal = new AbortController();
+        ologService.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(currentLogEntry.properties)}`, { signal })
         .then(res => {
             let sortedResult = sortLogsDateCreated(res.data, false);
             setLogGroupRecords(sortedResult);
         })
         .catch(e => console.error("Could not fetch logs by group", e));
+
+        return () => {
+            signal.abort();
+        }
     });
 
     const getContent = (source) => {

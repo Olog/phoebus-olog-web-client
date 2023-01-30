@@ -6,7 +6,10 @@ import userEvent from '@testing-library/user-event';
 import selectEvent from 'react-select-event';
 
 it('renders without crashing', async () => {
-    render(<App />);
+    const { unmount } = render(<App />);
+
+    // cleanup lingering network resources
+    unmount();
 });
 
 it('renders with a default search result', async () => {
@@ -27,10 +30,13 @@ it("renders an error banner if the logbook service cannot be reached", async () 
     );
 
     // When rendered
-    render(<App />);
+    const { unmount } = render(<App />);
 
     // Then an error message is present
     expect(await screen.findByText(/Search Error/i)).toBeInTheDocument();
+
+    // cleanup lingering network resources
+    unmount();
 
 });
 
@@ -40,18 +46,20 @@ it("displays sign-in and disabled log entry when logged out", async () => {
     server.use(
         rest.get('*/user', (req, res, ctx) => {
             return res(
-                ctx.status(404) // weird, yes, but this is the current behavior...
+                ctx.status(404) // service returns a 404 instead of 401 or 403 when unauthorized/unauthenticated
             )
         })
     );
 
-
     // When rendered
-    render(<App />);
+    const { unmount } = render(<App />);
 
     // Then the user is logged out and cannot create log entries
     expect(await screen.findByText(/Sign In/i)).toBeInTheDocument();
     expect(await screen.findByText(/New Log Entry/i)).toBeDisabled();
+
+    // cleanup lingering network resources
+    unmount(); // TODO further investigate why updates are happening after test concludes
 
 });
 
@@ -87,8 +95,8 @@ it("allows user to manually enter search terms", async () => {
 
     // When user selects the search box and hits enter
     const searchBox = await screen.findByDisplayValue(/start=12/); // TODO NOT ACCESSIBLE!!
-    userEvent.click(searchBox)
-    userEvent.keyboard('{Enter}')
+    user.click(searchBox)
+    user.keyboard('{Enter}')
 
     // Then those search results are still there / unchanged
     expect(await screen.findByText("example entry")).toBeInTheDocument();
@@ -102,8 +110,8 @@ it("allows user to manually enter search terms", async () => {
     // When user locates text search bar,
     // enters new search terms,
     // and presses enter
-    userEvent.clear(searchBox);
-    userEvent.type(searchBox, 'start=987654321{Enter}');
+    user.clear(searchBox);
+    user.type(searchBox, 'start=987654321{Enter}');
 
     // then the results are updated
     expect(await screen.findByText("hmmm title")).toBeInTheDocument();
@@ -144,7 +152,7 @@ it("updates search results instantly from the search filter bar for tags", async
 
     // Given app is rendered with default search results
     const user = userEvent.setup();
-    render(<App />);
+    const { unmount } = render(<App />);
     expect(await screen.findByText("example entry")).toBeInTheDocument();
 
     // Given the server responds with updated search results
@@ -163,13 +171,16 @@ it("updates search results instantly from the search filter bar for tags", async
     // then the results are updated
     expect(await screen.findByText("hmmm title")).toBeInTheDocument();
 
+    // Cleanup network resources
+    unmount(); // TODO: Investigate why updates remain after test
+
 });
 
 it("updates search results instantly from the search filter bar for logbooks", async () => {
 
     // Given app is rendered with default search results
     const user = userEvent.setup();
-    render(<App />);
+    const { unmount } = render(<App />);
     expect(await screen.findByText("example entry")).toBeInTheDocument();
 
     // When user opens the filter bar, and updates the query without closing it
@@ -188,6 +199,9 @@ it("updates search results instantly from the search filter bar for logbooks", a
 
     // then the results are updated instantly
     expect(await screen.findByText("hmmm title")).toBeInTheDocument();
+
+    // Cleanup network resources
+    unmount(); // TODO: investigate lingering updates
 
 });
 

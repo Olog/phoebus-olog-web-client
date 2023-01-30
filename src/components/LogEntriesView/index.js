@@ -93,7 +93,7 @@ const LogEntriesView = ({
     const dispatch = useDispatch();
     const searchParams = useSelector(state => state.searchParams);
     const searchPageParams = useSelector(state => state.searchPageParams);
-    const { 
+    const {         
         data: searchResults={
             logs: [],
             hitCount: 0
@@ -122,8 +122,9 @@ const LogEntriesView = ({
 
     // if viewing a specific log entry, then retrieve it
     useEffect(() => {
+        const signal = new AbortController();
         if(logId > 0) {
-            ologService.get(`/logs/${logId}`)
+            ologService.get(`/logs/${logId}`, {signal})
             .then(res => {
                 dispatch(updateCurrentLogEntry(res.data));
             })
@@ -131,6 +132,9 @@ const LogEntriesView = ({
                 console.error(`Could not find log id ${logId}`, e);
                 dispatch(updateCurrentLogEntry(null));
             })
+        }
+        return () => {
+            signal.abort();
         }
     }, [logId, dispatch])
 
