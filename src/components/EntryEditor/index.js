@@ -120,8 +120,8 @@ const DetachedLabel = styled.label`
 `
 
 const EntryEditor = ({
-     tags,
-     logbooks,
+     tags=[],
+     logbooks=[],
      replyAction,
      userData, setUserData
     }) => {
@@ -447,6 +447,7 @@ const EntryEditor = ({
                         <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>
                             <DroppableFileUploadInput 
                                 onFileChanged={onFileChanged}
+                                id='attachments-upload'
                             />
                             { renderedAttachments }
                         </RenderedAttachmentsContainer>

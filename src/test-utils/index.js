@@ -5,6 +5,7 @@ import theme from "config/theme";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "styled-components";
 import { setupStore } from "../stores";
+import App from "components/App";
 
 function renderWithProviders(
     ui, 

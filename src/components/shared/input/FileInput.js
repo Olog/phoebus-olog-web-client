@@ -80,7 +80,7 @@ const StyledClickableArea = styled.div`
     text-align: center;
 `
 
-export const DroppableFileUploadInput = ({onFileChanged, className, multiple, accept}) => {
+export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple, accept}) => {
 
     const fileInputRef = useRef();
 
@@ -128,9 +128,10 @@ export const DroppableFileUploadInput = ({onFileChanged, className, multiple, ac
         >
             <StyledClickableArea onClick={onClick}>
                 <MdFileUpload size={'5rem'}/>
-                <span>Choose a File or <strong>Drag It Here</strong></span>
+                <label htmlFor={id} >Choose a File or <strong>Drag It Here</strong></label>
             </StyledClickableArea>
             <input
+                id={id}
                 type='file'
                 ref={fileInputRef}
                 onChange={onChange} 
