@@ -1,7 +1,7 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import App from './App';
-import { screen, render, givenServerRespondsWithSearchRequest, waitForElementToBeRemoved } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, waitForElementToBeRemoved, waitFor, testEntry } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import selectEvent from 'react-select-event';
 
@@ -191,11 +191,12 @@ it("updates search results instantly from the search filter bar for logbooks", a
 
 });
 
-test.only('user can create a log entry, submit it, and see it in the search results', async () => {
+test('user can create a log entry, submit it, and see it in the search results even with a server delay', async () => {
 
     const user = userEvent.setup();
-    const { container } = render(<App />);
+    render(<App />);
     const title = 'my new log entry, tada!';
+    const id = 12345;
 
     // navigate to log entry form
     const newLogEntry = screen.getByRole('button', {name: /new log entry/i});
@@ -211,16 +212,49 @@ test.only('user can create a log entry, submit it, and see it in the search resu
     await user.clear(titleInput);
     await user.type(titleInput, title);
 
-    // given the server processed the request and the search query will return it
-    // but maybe the server is a tad bit slow
-    givenServerRespondsWithSearchRequest({title, requestPredicate: () => true, delay: 1000});
+    // given the server creates the log entry successfully, responding with the id
+    server.use(
+        rest.put('*/logs', (req, res, ctx) => {
+            return res(
+                ctx.json({id, title}),
+            );
+        })
+    )
+
+    // And given the server processed the request and the search query will return it
+    // but maybe the server is a tad bit slow processing the new entry and making
+    // it available via search
+    // Note responses for MSW must be queued in reverse order
+    server.use(
+        rest.get('*/logs/search', (req, res, ctx) => {
+            return res(
+                ctx.json(testEntry(title, id))                  // Successful response
+            );
+        })
+    )
+    server.use(
+        rest.get('*/logs/search', (req, res, ctx) => {
+            return res.once(
+                ctx.json(testEntry('nope not this either')),    // Server not done yet
+            );
+        })
+    )
+    server.use(
+        rest.get('*/logs/search', (req, res, ctx) => {
+            return res.once(
+                ctx.json(testEntry('not what you want yet')),   // Server not done yet
+            );
+        })
+    )
 
     // submit the form and be redirected
     const submit = screen.getByRole('button', {name: /submit/i});
     await user.click(submit);
 
     // check the result shows up in search
-    const newLogEntrySearchResult = await screen.findByText(title);
-    expect(newLogEntrySearchResult).toBeInTheDocument();
+    await waitFor(async () => {
+        const newLogEntrySearchResult = await screen.findByText(title);
+        expect(newLogEntrySearchResult).toBeInTheDocument();
+    }, {timeout: 3000});
 
 })

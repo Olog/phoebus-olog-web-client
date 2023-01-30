@@ -98,7 +98,6 @@ export const DroppableFileUploadInput = ({onFileChanged, className, multiple, ac
     const dragAreaRef = useRef();
 
     const handleDragEnter = (event) => {
-        console.log('DRAGGING OVER')
         event.preventDefault();
         // event.stopPropagation();
         dragAreaRef.current.classList.add('dragging-over')

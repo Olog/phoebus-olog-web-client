@@ -31,33 +31,37 @@ export {renderWithProviders as render};
 // Utility test function that will setup the server to respond to the request
 // with a log entry having the desired `title` is the `requestPredicate` is true
 // otherwise will respond with empty search results
-export const givenServerRespondsWithSearchRequest = ({title, requestPredicate, delay=10}) => {
+export const testEntry = (title, id) => (
+    {
+        hitCount: 1,
+        logs: [
+            {
+                "id": id ? id : 45,
+                "owner": "jones",
+                "source": title + " description",
+                "description": title + " description",
+                "title": title,
+                "level": "Normal",
+                "state": "Active",
+                "createdDate": 1656599929021,
+                "modifyDate": null,
+                "events": null,
+                "logbooks": [],
+                "tags": [],
+                "properties": [],
+                "attachments": []
+            }
+        ]
+    }
+)
+
+export const givenServerRespondsWithSearchRequest = ({title, requestPredicate, delay=100}) => {
     server.use(
         rest.get('*/logs/search', (req, res, ctx) => {
             if(requestPredicate(req)) {
                 return res(
                     ctx.delay(delay),
-                    ctx.json({
-                        hitCount: 1,
-                        logs: [
-                            {
-                                "id": 45,
-                                "owner": "jones",
-                                "source": title + " description",
-                                "description": title + " description",
-                                "title": title,
-                                "level": "Normal",
-                                "state": "Active",
-                                "createdDate": 1656599929021,
-                                "modifyDate": null,
-                                "events": null,
-                                "logbooks": [],
-                                "tags": [],
-                                "properties": [],
-                                "attachments": []
-                            }
-                        ]
-                    })
+                    ctx.json(testEntry(title))
                 );
             } else {
                 return res(
