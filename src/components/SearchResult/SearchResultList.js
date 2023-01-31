@@ -24,13 +24,14 @@ import { useDispatch } from 'react-redux';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import styled from 'styled-components';
 import { mobile } from 'config/media';
+import { sortLogsDateCreated } from 'utils';
 
 const Container = styled.div`
     display: flex;
     flex-direction: column;
 `
 
-const SearchResultsContainer = styled.div`
+const SearchResultsContainer = styled.ol`
     display: flex;
     flex-direction: column;
     overflow: auto;
@@ -122,8 +123,14 @@ const SearchResultList = ({
             dispatch(updateSearchPageParams({...searchPageParams, size: e.target.value}))
         } 
     }
-    
-    const renderedSearchResults = searchResults.logs.length === 0 ? "No search results" : searchResults.logs.map((item, index) => {
+
+    // Guarantee that sort is applied for the current page of results
+    const sortedLogs = [...searchResults.logs];
+    if(sortedLogs.length > 0) {
+        sortLogsDateCreated(sortedLogs, searchPageParams.sort === 'down');
+    }
+    const sortedResults = {...searchResults, logs: sortedLogs};
+    const renderedSearchResults = sortedResults.logs.length === 0 ? "No search results" : sortedResults.logs.map((item, index) => {
         return <SearchResultItem
                     key={index}
                     log={item}
@@ -138,7 +145,7 @@ const SearchResultList = ({
                 size={10}
             >
                 <StyledSearchBox {...{searchParams, showFilters, setShowFilters}} />
-                <SearchResultsContainer id='search-results-list--container'>
+                <SearchResultsContainer id='search-results-list--container' aria-label='Search Results' >
                     {renderedSearchResults}
                 </SearchResultsContainer>
                 <StyledPaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />

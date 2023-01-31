@@ -1,7 +1,7 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import App from './App';
-import { screen, render, givenServerRespondsWithSearchRequest, waitForElementToBeRemoved, waitFor, testEntry } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, waitForElementToBeRemoved, waitFor, testEntry, within, resultList } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import selectEvent from 'react-select-event';
 
@@ -242,21 +242,27 @@ test('user can create a log entry, submit it, and see it in the search results e
     server.use(
         rest.get('*/logs/search', (req, res, ctx) => {
             return res(
-                ctx.json(testEntry(title, id))                  // Successful response
+                ctx.json(resultList([
+                    testEntry({title, id})
+                ]))                  // Successful response
             );
         })
     )
     server.use(
         rest.get('*/logs/search', (req, res, ctx) => {
             return res.once(
-                ctx.json(testEntry('nope not this either')),    // Server not done yet
+                ctx.json(resultList([
+                    testEntry({title: 'nope not this either'})
+                ])),    // Server not done yet
             );
         })
     )
     server.use(
         rest.get('*/logs/search', (req, res, ctx) => {
             return res.once(
-                ctx.json(testEntry('not what you want yet')),   // Server not done yet
+                ctx.json(resultList([
+                    testEntry({title: 'not what you want yet'})
+                ])),   // Server not done yet
             );
         })
     )
@@ -270,5 +276,46 @@ test('user can create a log entry, submit it, and see it in the search results e
         const newLogEntrySearchResult = await screen.findByText(title);
         expect(newLogEntrySearchResult).toBeInTheDocument();
     }, {timeout: 3000});
+
+})
+test('search results sort order is newest-date-first by default, and updates as expected', async () => {
+
+    // Given the server will return search results out of order
+    // (IMPORTANT: currently the ordering is server-side since there is paging)
+    server.use(
+        rest.get('*/logs/search', (req, res, ctx) => {
+            return res(
+                ctx.json(resultList([
+                    testEntry({title: 'log entry 3', createdDate: Date.parse('2023-01-31T00:00:03')}),
+                    testEntry({title: 'log entry 1', createdDate: Date.parse('2023-01-31T00:00:01')}),
+                    testEntry({title: 'log entry 2', createdDate: Date.parse('2023-01-31T00:00:02')}),
+                ]))
+            );
+        })
+    )
+
+    // When viewed
+    const user = userEvent.setup();
+    render(<App />);
+
+    // The user will see search results in descending order by default (newest date first)
+    const searchResults = await screen.findByRole('list', {name: /Search Results/i});
+    const { findAllByRole } = within(searchResults);
+    let elems = await findAllByRole('heading', {name: /log entry \d/})
+    expect(elems.map(it => it.textContent)).toEqual(['log entry 3', 'log entry 2', 'log entry 1']);
+
+    // Update the sort direction
+    const filterToggle = screen.getByRole('button', {name: /show search filters/i})
+    await user.click(filterToggle);
+    const sortAscending = screen.getByRole('radio', {name: /ascending/i});
+    await user.click(sortAscending);
+    elems = await findAllByRole('heading', {name: /log entry \d/})
+    expect(elems.map(it => it.textContent)).toEqual(['log entry 1', 'log entry 2', 'log entry 3']);
+
+    // Update sort again
+    const sortDescending = screen.getByRole('radio', {name: /descending/i});
+    await user.click(sortDescending);
+    elems = await findAllByRole('heading', {name: /log entry \d/})
+    expect(elems.map(it => it.textContent)).toEqual(['log entry 3', 'log entry 2', 'log entry 1']);
 
 })

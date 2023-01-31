@@ -32,29 +32,33 @@ export {renderWithProviders as render};
 // Utility test function that will setup the server to respond to the request
 // with a log entry having the desired `title` is the `requestPredicate` is true
 // otherwise will respond with empty search results
-export const testEntry = (title, id) => (
+export const testEntry = ({title, id, createdDate}) => (
     {
-        hitCount: 1,
-        logs: [
-            {
-                "id": id ? id : 45,
-                "owner": "jones",
-                "source": title + " description",
-                "description": title + " description",
-                "title": title,
-                "level": "Normal",
-                "state": "Active",
-                "createdDate": 1656599929021,
-                "modifyDate": null,
-                "events": null,
-                "logbooks": [],
-                "tags": [],
-                "properties": [],
-                "attachments": []
-            }
-        ]
+        "id": id || 45,
+        "owner": "jones",
+        "source": title + " description",
+        "description": title + " description",
+        "title": title,
+        "level": "Normal",
+        "state": "Active",
+        "createdDate": createdDate || 1656599929021,
+        "modifyDate": null,
+        "events": null,
+        "logbooks": [],
+        "tags": [],
+        "properties": [],
+        "attachments": []
     }
 )
+
+export const resultList = (testEntries = []) => {
+    return {
+        hitCount: testEntries.length,
+        logs: [
+            ...testEntries
+        ]
+    }
+}
 
 export const givenServerRespondsWithSearchRequest = ({title, requestPredicate, delay=100}) => {
     server.use(
@@ -62,14 +66,13 @@ export const givenServerRespondsWithSearchRequest = ({title, requestPredicate, d
             if(requestPredicate(req)) {
                 return res(
                     ctx.delay(delay),
-                    ctx.json(testEntry(title))
+                    ctx.json(resultList([
+                        testEntry({title})
+                    ]))
                 );
             } else {
                 return res(
-                    ctx.json({
-                        hitCount: 0,
-                        logs: []
-                    })
+                    ctx.json(resultList([]))
                 );
             }
         })
