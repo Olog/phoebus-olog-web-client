@@ -1,10 +1,11 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import App from './App';
-import { screen, render, givenServerRespondsWithSearchRequest, waitFor, testEntry, within, resultList } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, waitFor, testEntry, within, resultList, getOptionItems, expectReactSelectSelection } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import selectEvent from 'react-select-event';
 import { MemoryRouter } from 'react-router-dom';
+import customization from 'utils/customization';
 
 it('renders without crashing', async () => {
     const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
@@ -487,6 +488,82 @@ describe('Creating Log Entries', () => {
             expect(newLogEntrySearchResult).toBeInTheDocument();
         }, {timeout: 3000});
     
+    })
+
+})
+
+describe('Replying To Log Entries', () => {
+    test('when replying to a log entry, the form is (partially) prepopulated from the entry', async () => {
+
+        // Given log entries to reply to
+        server.use(
+            rest.get('*/logs/search', (req, res, ctx) => {
+                return res(
+                    ctx.json(resultList([
+                        {...testEntry({title: 'entry 1'}), 
+                            "logbooks": [
+                                {
+                                    "name": "test controls",
+                                    "owner": null,
+                                    "state": "Active"
+                                }
+                            ],
+                            "tags": [
+                                {
+                                    "name": "bar",
+                                    "state": "Active"
+                                },
+                                {
+                                    "name": "baz",
+                                    "state": "Active"
+                                }
+                            ]
+                        },
+                        testEntry({title: 'entry 2'})
+                    ]))
+                )
+            })
+        )
+        const user = userEvent.setup();
+        render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+
+        // When replying to one
+        const entry1 = await screen.findByRole('heading', {name: 'entry 1'});
+        await user.click(entry1);
+        const replyButton = await screen.findByRole('button', {name: /reply/i});
+        await user.click(replyButton);
+
+        // Then the form is prepopulated with logs, tags, and title
+        // and EntryType is given the default value
+        const entryEditorPage = await screen.findByRole('heading', {name: /New Log Entry/i});
+        expect(entryEditorPage).toBeInTheDocument();
+        await expectReactSelectSelection({screen, label: 'logbooks', selected: ['test controls'], notSelected: ['test operations']});
+        await expectReactSelectSelection({screen, label: 'tags', selected: ['bar', 'baz'], notSelected: ['foo']});
+        await expectReactSelectSelection({screen, label: 'entry type', selected: ['normal'], notSelected: customization.levelValues.filter(it => it !== 'Normal')})
+        const title = screen.getByRole('textbox', {name: /title/i});
+        expect(title).toHaveValue('entry 1');
+
+        // When replying to another
+        const homeLink = screen.getByRole('link', {name: /olog \d\.\d\.\d/i});
+        await user.click(homeLink);
+        const entry2 = await screen.findByRole('heading', {name: 'entry 2'});
+        await user.click(entry2);
+        const replyButton2 = await screen.findByRole('button', {name: /reply/i});
+        await user.click(replyButton2);
+
+        // Then it is prepopulated with that log's information instead
+        const entryEditorPage2 = await screen.findByRole('heading', {name: /New Log Entry/i});
+        expect(entryEditorPage2).toBeInTheDocument();
+        await expectReactSelectSelection({screen, label: 'logbooks', selected: [], notSelected: ['test operations', 'test controls']});
+        await expectReactSelectSelection({screen, label: 'tags', selected: [], notSelected: ['foo', 'bar', 'baz']});
+        await expectReactSelectSelection({screen, label: 'entry type', selected: ['normal'], notSelected: customization.levelValues.filter(it => it !== 'Normal')})
+        const title2 = screen.getByRole('textbox', {name: /title/i});
+        expect(title2).toHaveValue('entry 2');
+
     })
 
 })

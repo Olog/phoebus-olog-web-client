@@ -1,6 +1,6 @@
 import { server } from "mocks/server";
 import { rest } from "msw";
-import { render } from "@testing-library/react";
+import { render, within } from "@testing-library/react";
 import theme from "config/theme";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "styled-components";
@@ -93,4 +93,21 @@ export const givenServerRespondsWithSearchRequest = ({title, requestPredicate, d
             }
         })
     )
+}
+
+/**
+ * Tests the selection state of react-select elements.
+ * TODO: Consider a different select element that is more testable...It works, but it's fragile because it uses divs and custom aria roles
+ * instead of semantic html (such as selection and options). 
+ * So, in order to test we are reduced to checking for presence of text within the page (rather than checking if e.g. an option is selected).
+ */
+export const expectReactSelectSelection = async ({screen, label, selected, notSelected}) => {
+    const selectionInput = await screen.findByRole('combobox', {name: new RegExp(label, 'i')})
+    const selectionParentContainer = selectionInput.closest('div.react-select-olog__value-container');
+    for(let selectedItem of selected) {
+        expect(within(selectionParentContainer).getByText(new RegExp(selectedItem, 'i'))).toBeInTheDocument();
+    }
+    for(let notSelectedItem of notSelected) {
+        expect(within(selectionParentContainer).queryByText(new RegExp(notSelectedItem, 'i'))).not.toBeInTheDocument();
+    }
 }

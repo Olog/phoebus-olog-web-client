@@ -23,6 +23,7 @@ import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import {getLogEntryGroupId, sortLogsDateCreated} from 'utils';
 import GroupHeader from './GroupHeader';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
     display: flex;
@@ -52,6 +53,7 @@ const Content = styled.div`
 const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLogGroupRecords, className}) => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const signal = new AbortController();
@@ -73,6 +75,7 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
 
     const showLog = (log) => {
         dispatch(updateCurrentLogEntry(log));
+        navigate(`/logs/${log.id}`);
     }
 
     const logGroupItems = logGroupRecords.map((row, index) => {
