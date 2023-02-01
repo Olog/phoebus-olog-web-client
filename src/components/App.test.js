@@ -1,12 +1,13 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import App from './App';
-import { screen, render, givenServerRespondsWithSearchRequest, waitForElementToBeRemoved, waitFor, testEntry, within, resultList } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, waitFor, testEntry, within, resultList } from 'test-utils';
 import userEvent from '@testing-library/user-event';
 import selectEvent from 'react-select-event';
+import { MemoryRouter } from 'react-router-dom';
 
 it('renders without crashing', async () => {
-    const { unmount } = render(<App />);
+    const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
 
     // cleanup lingering network resources
     unmount();
@@ -16,7 +17,7 @@ describe('Search Results', () => {
 
     it('renders with a default search result', async () => {
     
-        render(<App />);
+        render(<MemoryRouter><App /></MemoryRouter>);
     
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
@@ -26,7 +27,7 @@ describe('Search Results', () => {
 
         // Given app is rendered with default search results
         const user = userEvent.setup();
-        render(<App />);
+        render(<MemoryRouter><App /></MemoryRouter>);
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
         // When user selects the search box and hits enter
@@ -58,7 +59,7 @@ describe('Search Results', () => {
     
         // Given app is rendered with default search results
         const user = userEvent.setup();
-        render(<App />);
+        render(<MemoryRouter><App /></MemoryRouter>);
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
         // And given the server will respond with updated search results
@@ -88,7 +89,7 @@ describe('Search Results', () => {
     
         // Given app is rendered with default search results
         const user = userEvent.setup();
-        const { unmount } = render(<App />);
+        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
         // Given the server responds with updated search results
@@ -116,7 +117,7 @@ describe('Search Results', () => {
     
         // Given app is rendered with default search results
         const user = userEvent.setup();
-        const { unmount } = render(<App />);
+        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
         // When user opens the filter bar, and updates the query without closing it
@@ -159,7 +160,7 @@ describe('Search Results', () => {
     
         // When viewed
         const user = userEvent.setup();
-        render(<App />);
+        render(<MemoryRouter><App /></MemoryRouter>);
     
         // The user will see search results in descending order by default (newest date first)
         const searchResults = await screen.findByRole('list', {name: /Search Results/i});
@@ -181,7 +182,160 @@ describe('Search Results', () => {
         elems = await findAllByRole('heading', {name: /log entry \d/})
         expect(elems.map(it => it.textContent)).toEqual(['log entry 3', 'log entry 2', 'log entry 1']);
     
-    })    
+    })
+
+    test('user can view different log entries by clicking on their search result', async () => {
+
+        // Given the server responds with many search results to click on
+        server.use(
+            rest.get('*/logs/search', (req, res, ctx) => {
+                return res(
+                    ctx.json(resultList([
+                        testEntry({title: 'Entry 1'}),
+                        testEntry({title: 'Entry 2'}),
+                        testEntry({title: 'Entry 3'})
+                    ])),    // Server not done yet
+                );
+            })
+        )
+
+        const user = userEvent.setup();
+        const {unmount} = render(<MemoryRouter><App /></MemoryRouter>);
+
+        // On initial render, nothing is clicked so we see an informative message
+        const helpfulMessage = await screen.findByText(/Search for log entries, and select one to view/i);
+        expect(helpfulMessage).toBeInTheDocument();
+
+        // When we click on an entry, we can view its details
+        const searchResults = screen.getByRole('list', {name: /search results/i});
+        const {findByRole} = within(searchResults);
+
+        const entry1 = await findByRole('heading', {name: 'Entry 1'});
+        await user.click(entry1);
+
+        expect(helpfulMessage).not.toBeInTheDocument();
+        const entry1View = await screen.findByRole('heading', {name: 'Entry 1', level: 2});
+        expect(entry1View).toBeInTheDocument();
+
+        // When we click on another entry, we can see that entry's details
+        const entry2 = await findByRole('heading', {name: 'Entry 2'});
+        await user.click(entry2);
+        const entry2View = await screen.findByRole('heading', {name: 'Entry 2', level: 2});
+        expect(entry2View).toBeInTheDocument();
+
+        // Cleanup any network resources
+        unmount();
+
+    })
+
+    test('user can navigate different log entries by clicking on the next/previous buttons', async () => {
+
+        // Given the server responds with many search results to click on
+        server.use(
+            rest.get('*/logs/search', (req, res, ctx) => {
+                return res(
+                    ctx.json(resultList([
+                        testEntry({title: 'Entry 1'}),
+                        testEntry({title: 'Entry 2'}),
+                        testEntry({title: 'Entry 3'})
+                    ])),    // Server not done yet
+                );
+            })
+        )
+
+        const user = userEvent.setup();
+        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
+
+        // When we click on an entry, we can navigate to other entries
+        const searchResults = screen.getByRole('list', {name: /search results/i});
+        const {findByRole} = within(searchResults);
+        const entry1 = await findByRole('heading', {name: 'Entry 1'});
+        await user.click(entry1);
+
+        const entry1Header = await screen.findByRole('heading', {name: 'Entry 1', level: 2});
+        expect(entry1Header).toBeInTheDocument();
+        const previousEntry = await screen.findByRole('button', {name: /previous/i});
+        const nextEntry = await screen.findByRole('button', {name: /next/i});
+        expect(previousEntry).toBeDisabled();
+        expect(nextEntry).toBeEnabled();
+
+        await user.click(nextEntry);
+        const entry2Header = await screen.findByRole('heading', {name: 'Entry 2', level: 2});
+        expect(entry2Header).toBeInTheDocument();
+        expect(previousEntry).toBeEnabled();
+        expect(nextEntry).toBeEnabled();
+
+        await user.click(nextEntry);
+
+        const entry3Header = await screen.findByRole('heading', {name: 'Entry 3', level: 2});
+        expect(entry3Header).toBeInTheDocument();
+        expect(previousEntry).toBeEnabled();
+        expect(nextEntry).toBeDisabled();
+
+        await user.click(previousEntry);
+        expect(entry2Header).toBeInTheDocument();
+
+        // Cleanup any network resources
+        unmount();
+
+    })
+
+    test('user can view a log entry directly by ID, even if it is not in the search results', async () => {
+
+        // Given a log can be viewed by ID
+        const title = 'special entry';
+        const id = 123456789;
+        server.use(
+            rest.get(`*/logs/${id}`, (req, res, ctx) => {
+                return res(
+                    ctx.json(testEntry({title, id}))
+                )
+            })
+        )
+
+        // When navigated to that log directly
+        const { unmount } = render(
+            <MemoryRouter initialEntries={[`/logs/${id}`]}>
+                <App />
+            </MemoryRouter>
+        );
+
+        // Then we expect to find that entry on the page
+        const entry = await screen.findByRole('heading', {name: title, level: 2});
+        expect(entry).toBeInTheDocument();
+
+        // cleanup network resources
+        unmount();
+
+    })
+
+    test('user cannot navigate directly to a nonexistent log', async () => {
+        
+        // Given a log doesn't exist
+        const id = 987654321;
+        server.use(
+            rest.get(`*/logs/${id}`, (req, res, ctx) => {
+                return res(
+                    ctx.status(404)
+                )
+            })
+        )
+
+        // When navigated to that log directly
+        const { unmount } = render(
+            <MemoryRouter initialEntries={[`/logs/${id}`]}>
+                <App />
+            </MemoryRouter>
+        );
+
+        // Then we expect to find that entry on the page
+        const notFoundMessage = await screen.findByRole('heading', {name: /log record .* not found/i});
+        expect(notFoundMessage).toBeInTheDocument();
+
+        // cleanup network resources
+        unmount();
+
+    })
 
 })
 
@@ -197,7 +351,7 @@ describe('App Errors', () => {
         );
     
         // When rendered
-        const { unmount } = render(<App />);
+        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
     
         // Then an error message is present
         expect(await screen.findByText(/Search Error/i)).toBeInTheDocument();
@@ -223,7 +377,7 @@ describe('Login/Logout', () => {
         );
     
         // When rendered
-        const { unmount } = render(<App />);
+        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
     
         // Then the user is logged out and cannot create log entries
         expect(await screen.findByText(/Sign In/i)).toBeInTheDocument();
@@ -249,7 +403,7 @@ describe('Login/Logout', () => {
         );
     
         // When rendered
-        render(<App />);
+        render(<MemoryRouter><App /></MemoryRouter>);
     
         // Then the user is logged in and can create log entries
         expect(await screen.findByText(/garfieldHatesMondays/i)).toBeInTheDocument();
@@ -264,7 +418,7 @@ describe('Creating Log Entries', () => {
     test('user can create a log entry, submit it, and see it in the search results even with a server delay', async () => {
     
         const user = userEvent.setup();
-        render(<App />);
+        render(<MemoryRouter><App /></MemoryRouter>);
         const title = 'my new log entry, tada!';
         const id = 12345;
     

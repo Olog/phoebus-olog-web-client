@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import styled from 'styled-components';
 import Button from 'components/shared/Button';
+import VisuallyHiddenText from 'components/shared/VisuallyHiddenText';
 
 const Container = styled.div`
     display: flex;
@@ -71,14 +72,16 @@ const NavigationButtons = ({
                 disabled={!previousLogEntry}
                 onClick={() => navigateToLogEntry(previousLogEntry)}
             >
-                <FaArrowLeft/>
+                <FaArrowLeft aria-hidden />
+                <VisuallyHiddenText text='previous' />
             </NavButton>
             <NavButton 
                 variant='primary'
                 disabled={!nextLogEntry}
                 onClick={() => navigateToLogEntry(nextLogEntry)}
             >
-                <FaArrowRight/>
+                <FaArrowRight aria-hidden />
+                <VisuallyHiddenText text='next' />
             </NavButton>
         </Container>
     )

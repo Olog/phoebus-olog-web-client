@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
 import theme from 'config/theme';
+import { BrowserRouter } from 'react-router-dom';
 
 // CSS Reset
 const GlobalStyle = createGlobalStyle`
@@ -33,7 +34,9 @@ root.render(
         <ThemeProvider theme={theme}>
             <GlobalStyle />
             <ModalProvider>
-                <App />
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
             </ModalProvider>
         </ThemeProvider>
     </Provider>

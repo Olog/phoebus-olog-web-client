@@ -122,21 +122,25 @@ const LogEntriesView = ({
 
     // if viewing a specific log entry, then retrieve it
     useEffect(() => {
-        const signal = new AbortController();
-        if(logId > 0) {
-            ologService.get(`/logs/${logId}`, {signal})
-            .then(res => {
-                dispatch(updateCurrentLogEntry(res.data));
-            })
-            .catch(e => {
-                console.error(`Could not find log id ${logId}`, e);
-                dispatch(updateCurrentLogEntry(null));
-            })
+        // If the entry isn't already in the search results, then fetch it
+        if(!searchResults?.logs?.find(it => `${it.id}` === `${logId}`)) {
+            const signal = new AbortController();
+            if(logId > 0) {
+                ologService.get(`/logs/${logId}`, {signal})
+                .then(res => {
+                    dispatch(updateCurrentLogEntry(res.data));
+                })
+                .catch(e => {
+                    console.error(`Could not find log id ${logId}`, e);
+                    dispatch(updateCurrentLogEntry(null));
+                })
+            }
+            return () => {
+                signal.abort();
+            }
         }
-        return () => {
-            signal.abort();
-        }
-    }, [logId, dispatch])
+
+    }, [searchResults, logId, dispatch])
 
     useEffect(() => {
         setShowGroup(false);

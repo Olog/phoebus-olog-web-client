@@ -60,46 +60,46 @@ const App = () => {
     }
 
     return(
-        <BrowserRouter>
-            <ViewportContainer id='app-viewport'>
-                <Banner {...{
-                    showLogin, setShowLogin,
-                    showLogout, setShowLogout,
-                    userData, setUserData,
-                    setReplyAction
-                }}/>
-                <ContentContainer id='app-content'>
-                    <Routes>
-                        <Route exact path="/" element={
-                            <LogEntriesView {...{
-                                tags, 
-                                logbooks,
-                                userData,
-                                setReplyAction, 
-                                currentLogEntry
-                            }}/>
-                        } />
-                        <Route exact path="/logs/:id" element={
-                            <LogEntriesView {...{
-                                tags, 
-                                logbooks,
-                                userData,
-                                setReplyAction, 
-                                currentLogEntry
-                            }}/>
-                        } />
-                        <Route path="/edit" element={
-                            <EntryEditor {...{
-                                tags,
-                                logbooks,
-                                replyAction,
-                                userData, setUserData
-                            }}/>
-                        } />
-                    </Routes>
-                </ContentContainer>
-            </ViewportContainer>
-        </BrowserRouter>
+        
+        <ViewportContainer id='app-viewport'>
+            <Banner {...{
+                showLogin, setShowLogin,
+                showLogout, setShowLogout,
+                userData, setUserData,
+                setReplyAction
+            }}/>
+            <ContentContainer id='app-content'>
+                <Routes>
+                    <Route exact path="/" element={
+                        <LogEntriesView {...{
+                            tags, 
+                            logbooks,
+                            userData,
+                            setReplyAction, 
+                            currentLogEntry
+                        }}/>
+                    } />
+                    <Route exact path="/logs/:id" element={
+                        <LogEntriesView {...{
+                            tags, 
+                            logbooks,
+                            userData,
+                            setReplyAction, 
+                            currentLogEntry
+                        }}/>
+                    } />
+                    <Route path="/edit" element={
+                        <EntryEditor {...{
+                            tags,
+                            logbooks,
+                            replyAction,
+                            userData, setUserData
+                        }}/>
+                    } />
+                </Routes>
+            </ContentContainer>
+        </ViewportContainer>
+        
     );
 }
 
