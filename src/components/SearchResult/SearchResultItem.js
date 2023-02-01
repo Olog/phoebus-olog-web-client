@@ -86,12 +86,13 @@ const SearchResultItem = ({log, currentLogEntry}) => {
             selected={currentLogEntry && currentLogEntry.id === log.id}
             onClick={handleClick}
             isGroupEntry={isGroupEntry}
+            aria-labelledby={log.id}
         >
-            <HeaderInfo>
-                <h3>{log.title}</h3>
+            <HeaderInfo >
+                <h3 id={log.id}>{log.title}</h3>
                 <HeaderInfo>
-                    <p>{isGroupEntry ? <FaReply/> : null}</p>
-                    <p>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip/> : null}</p>
+                    <p>{isGroupEntry ? <FaReply aria-label='grouped' role='status' /> : null}</p>
+                    <p>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip aria-label='has attachments' role='status' /> : null}</p>
                 </HeaderInfo>
             </HeaderInfo>
             <LogInfo>
