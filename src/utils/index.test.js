@@ -21,7 +21,7 @@ import {formatShortDate,
     getLogEntryGroupId, 
     sortLogsDateCreated,
     dateToString} from '.';
-import { queryStringToSearchParameters, searchParamsToQueryString } from './searchParams';
+import { queryStringToSearchParameters } from './searchParams';
 import moment from 'moment';
 
 test('sortSearchResultByDay', () => {

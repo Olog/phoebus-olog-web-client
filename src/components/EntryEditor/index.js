@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import ologService from 'api/olog-service';
+import ologService, { ologServiceWithRetry } from 'api/olog-service';
 import Button from '../shared/Button';
 import Modal, {Header, Title, Body} from 'components/shared/Modal';
 import { FaPlus } from 'react-icons/fa';
@@ -285,13 +285,30 @@ const EntryEditor = ({
                         `/logs?markup=commonmark&inReplyTo=${currentLogEntry.id}` :
                         `/logs?markup=commonmark`;
                     ologService.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
-                        .then(res => {
+                        .then(async res => {
+                            // console.log({created: res.data})
                             if(attachments.length > 0){ // No need to call backend if there are no attachments.
-                                submitAttachmentsMulti(res.data.id);
+                                await submitAttachmentsMulti(res.data.id);
                             }
-                            setCreateInProgress(false);
+
+                            // Wait until the new log entry is available in the search results
+                            await ologServiceWithRetry({
+                                method: 'GET',
+                                path: `/logs/search?title=${res.data.title}&end=now`,
+                                retries: 5,
+                                retryCondition: (retryRes) => {
+                                    // Retry if the entry we created isn't in the search results yet
+                                    const found = retryRes?.data?.logs.find(it => `${it.id}` === `${res.data.id}`);
+                                    const willRetry = !found;
+                                    // console.log({time: new Date(), retryData: retryRes?.data?.logs, found, willRetry})
+                                    return willRetry;
+                                },
+                                retryDelay: (count) => count*200
+                            });
                             clearFormData();
+                            setCreateInProgress(false);
                             navigate('/');
+
                         })
                         .catch(error => {
                             if(error.response && (error.response.status === 401 || error.response.status === 403)){
