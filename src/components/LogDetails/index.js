@@ -41,7 +41,7 @@ const ButtonContainer = styled.div`
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
-    padding: 0.25rem 1rem;
+    padding: 0.25rem 0.5rem;
     border-bottom: 1px solid ${({theme}) => theme.colors.light};
 
     & .end {
