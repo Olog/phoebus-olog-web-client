@@ -24,7 +24,6 @@ import { checkSession } from '../../api/olog-service';
 import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
 import styled from 'styled-components';
-import { useState } from 'react';
 import { useEffect } from 'react';
 
 const Navbar = styled.nav`
@@ -59,9 +58,6 @@ const PackageVersion = styled.h2`
  */
 const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, setShowLogout, setReplyAction}) => {
 
-  const [showAddLogbook, setShowAddLogbook] = useState(false);
-  const [showAddTag, setShowAddTag] = useState(false);
-
   useEffect(() => {
 
     // Try to get user data from back-end.
@@ -83,7 +79,7 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
     return () => {
       signal.abort();
     }
-  }, [])
+  }, [setUserData])
 
   const handleNewLogEntry = () => {
     

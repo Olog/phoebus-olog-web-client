@@ -18,7 +18,6 @@
 
 import React, { useState } from 'react';
 import {
-  BrowserRouter,
   Route,
   Routes
 } from "react-router-dom";
@@ -60,7 +59,6 @@ const App = () => {
     }
 
     return(
-        
         <ViewportContainer id='app-viewport'>
             <Banner {...{
                 showLogin, setShowLogin,
@@ -99,7 +97,6 @@ const App = () => {
                 </Routes>
             </ContentContainer>
         </ViewportContainer>
-        
     );
 }
 

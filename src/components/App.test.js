@@ -517,7 +517,8 @@ describe('Replying To Log Entries', () => {
                                     "name": "baz",
                                     "state": "Active"
                                 }
-                            ]
+                            ],
+                            "level": "Beam Loss"
                         },
                         testEntry({title: 'entry 2'})
                     ]))

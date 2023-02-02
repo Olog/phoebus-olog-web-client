@@ -67,7 +67,7 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
         return () => {
             signal.abort();
         }
-    }, []);
+    }, [currentLogEntry.properties, setLogGroupRecords]);
 
     const getContent = (source) => {
         return {__html: remarkable.render(source)};
