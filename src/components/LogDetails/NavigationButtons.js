@@ -73,7 +73,7 @@ const NavigationButtons = ({
                 onClick={() => navigateToLogEntry(previousLogEntry)}
             >
                 <FaArrowLeft aria-hidden />
-                <VisuallyHiddenText text='previous' />
+                <VisuallyHiddenText>previous</VisuallyHiddenText>
             </NavButton>
             <NavButton 
                 variant='primary'
@@ -81,7 +81,7 @@ const NavigationButtons = ({
                 onClick={() => navigateToLogEntry(nextLogEntry)}
             >
                 <FaArrowRight aria-hidden />
-                <VisuallyHiddenText text='next' />
+                <VisuallyHiddenText>next</VisuallyHiddenText>
             </NavButton>
         </Container>
     )

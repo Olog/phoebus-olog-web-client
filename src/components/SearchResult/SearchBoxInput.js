@@ -23,6 +23,7 @@ import {searchParamsToQueryString, queryStringToSearchParameters} from 'utils/se
 import { useDispatch } from "react-redux";
 import { forceUpdateSearchParams } from "features/searchParamsReducer";
 import { StyledTextInput } from "components/shared/input/TextInput";
+import VisuallyHiddenText from "components/shared/VisuallyHiddenText";
 
 const SearchBoxInput = ({searchParams, showFilters, className}) => {
 
@@ -50,17 +51,20 @@ const SearchBoxInput = ({searchParams, showFilters, className}) => {
     }
 
     return (
-        <StyledTextInput size="sm" 
-            name='search'
-            type="input"
-            disabled={showFilters}
-            placeholder="No search string"
-            style={{fontSize: "12px"}}
-            value={searchString}
-            onChange={(e) => onChange(e)}
-            onKeyDown={onKeyDown}
-            className={className}
-        />
+        <>
+            <VisuallyHiddenText><label htmlFor="search">Search</label></VisuallyHiddenText>
+            <StyledTextInput size="sm" 
+                name='search'
+                type='search'
+                disabled={showFilters}
+                placeholder="No search string"
+                style={{fontSize: "12px"}}
+                value={searchString}
+                onChange={(e) => onChange(e)}
+                onKeyDown={onKeyDown}
+                className={className}
+            />
+        </>
     );
 }
 

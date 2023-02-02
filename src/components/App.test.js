@@ -32,7 +32,7 @@ describe('Search Results', () => {
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
         // When user selects the search box and hits enter
-        const searchBox = await screen.findByDisplayValue(/start=12/); // TODO NOT ACCESSIBLE!!
+        const searchBox = screen.getByRole('searchbox', {name: /Search/i});
         user.click(searchBox)
         user.keyboard('{Enter}')
     

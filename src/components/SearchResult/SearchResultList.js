@@ -98,6 +98,7 @@ const SearchResultList = ({
             <StyledLoadingOverlay
                 active={searchInProgress}
                 size={10}
+                message='Loading...'
             >
                 <StyledSearchBox {...{searchParams, showFilters, setShowFilters}} />
                 <SearchResultsContainer id='search-results-list--container' aria-label='Search Results' >

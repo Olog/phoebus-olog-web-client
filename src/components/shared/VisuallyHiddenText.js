@@ -12,8 +12,8 @@ const StyledSpan = styled.span`
     }
 `
 
-const VisuallyHiddenText = ({text}) => {
-    return <StyledSpan>{text}</StyledSpan>
+const VisuallyHiddenText = ({children}) => {
+    return <StyledSpan>{children}</StyledSpan>
 }
 
 export default VisuallyHiddenText;
