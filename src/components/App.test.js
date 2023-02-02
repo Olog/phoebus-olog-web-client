@@ -492,7 +492,7 @@ describe('Creating Log Entries', () => {
 
 })
 
-describe('Replying To Log Entries', () => {
+describe('Log Entry Groups / Replies', () => {
     test('when replying to a log entry, the form is (partially) prepopulated from the entry', async () => {
 
         // Given log entries to reply to
@@ -565,6 +565,161 @@ describe('Replying To Log Entries', () => {
         const title2 = screen.getByRole('textbox', {name: /title/i});
         expect(title2).toHaveValue('entry 2');
 
+    })
+
+    test('when an user clicks on a group entry and it is already in the search results, that log entry is displayed', async () => {
+
+        // Given log entries belonging to a group
+        const entry1 = {...testEntry({title:'grouped entry 1', id: 1}), "properties": [
+            {
+                "name": "Log Entry Group",
+                "owner": null,
+                "state": "Active",
+                "attributes": [
+                    {
+                        "name": "id",
+                        "value": "50480e12-cfd3-400d-a4db-2045cba08901",
+                        "state": "Active"
+                    }
+                ]
+            }
+        ]};
+        const entry2 = {...testEntry({title:'grouped entry 2', id: 2}), "properties": [
+            {
+                "name": "Log Entry Group",
+                "owner": null,
+                "state": "Active",
+                "attributes": [
+                    {
+                        "name": "id",
+                        "value": "50480e12-cfd3-400d-a4db-2045cba08901",
+                        "state": "Active"
+                    }
+                ]
+            }
+        ]};
+        server.use(
+            rest.get('*/logs/search', (req, res, ctx) => {
+                return res(
+                    ctx.json(resultList([entry1, entry2]))
+                )
+            }),
+            rest.get('*/logs', (req, res, ctx) => {
+                if(req.url.searchParams.get('properties') === 'Log Entry Group.id.50480e12-cfd3-400d-a4db-2045cba08901') {
+                    return res(
+                        ctx.json([entry1, entry2])
+                    )
+                }
+            })
+        )
+
+        const user = userEvent.setup();
+        const { unmount } = render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+
+        // When user navigates to the group view and clicks and entry
+        const entry1Result = await screen.findByRole('heading', {name: entry1.title});
+        await user.click(entry1Result);
+        const showGroupButton = screen.getByRole('button', {name: /show.*group/i});
+        await user.click(showGroupButton);
+        const groupEntriesElement = await screen.findByRole('list', {name: /group entries/i});
+        const groupEntries = within(groupEntriesElement);
+        const entry2HistoryEntry = await groupEntries.findByText(entry2.id);
+        await user.click(entry2HistoryEntry);
+
+        // Then that entry is displayed
+        const entry2Title = screen.getByRole('heading', {name: entry2.title, level: 2}); // we should NOT need to await this
+        expect(entry2Title).toBeInTheDocument();
+
+        // And the group log view is hidden again
+        expect(groupEntriesElement).not.toBeInTheDocument();
+        
+        // cleanup network resources
+        unmount();
+
+    })
+
+    test('when an user clicks on a group entry and it is NOT already in the search results, that log entry is still displayed', async () => {
+
+        // Given log entries belonging to a group
+        const entry1 = {...testEntry({title:'grouped entry 1', id: 1}), "properties": [
+            {
+                "name": "Log Entry Group",
+                "owner": null,
+                "state": "Active",
+                "attributes": [
+                    {
+                        "name": "id",
+                        "value": "50480e12-cfd3-400d-a4db-2045cba08901",
+                        "state": "Active"
+                    }
+                ]
+            }
+        ]};
+        const entry2 = {...testEntry({title:'grouped entry 2', id: 2}), "properties": [
+            {
+                "name": "Log Entry Group",
+                "owner": null,
+                "state": "Active",
+                "attributes": [
+                    {
+                        "name": "id",
+                        "value": "50480e12-cfd3-400d-a4db-2045cba08901",
+                        "state": "Active"
+                    }
+                ]
+            }
+        ]};
+        server.use(
+            rest.get('*/logs/search', (req, res, ctx) => {
+                return res(
+                    ctx.json(resultList([entry1]))
+                )
+            }),
+            rest.get('*/logs', (req, res, ctx) => {
+                if(req.url.searchParams.get('properties') === 'Log Entry Group.id.50480e12-cfd3-400d-a4db-2045cba08901') {
+                    return res(
+                        ctx.json([entry1, entry2])
+                    )
+                }
+            }),
+            rest.get('*/logs/:logId', (req, res, ctx) => {
+                const logId = req.params.logId;
+                if (logId === `${entry2.id}`) {
+                    return res(ctx.json(entry2));
+                }
+            })
+        )
+        
+        const user = userEvent.setup();
+        const { unmount } = render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+
+        // When user navigates to the group view and clicks and entry
+        const entry1Result = await screen.findByRole('heading', {name: entry1.title});
+        await user.click(entry1Result);
+        const showGroupButton = screen.getByRole('button', {name: /show.*group/i});
+        await user.click(showGroupButton);
+        const groupEntriesElement = await screen.findByRole('list', {name: /group entries/i});
+        const groupEntries = within(groupEntriesElement);
+        const entry2HistoryEntry = await groupEntries.findByText(entry2.id);
+        await user.click(entry2HistoryEntry);
+
+        // Then that entry is displayed
+        const entry2Title = await screen.findByRole('heading', {name: entry2.title, level: 2}); // we SHOULD await this since we expect a network request to display it
+        expect(entry2Title).toBeInTheDocument();
+
+        // And the group log view is hidden again
+        expect(groupEntriesElement).not.toBeInTheDocument();
+        
+        // cleanup network resources
+        unmount();
     })
 
 })

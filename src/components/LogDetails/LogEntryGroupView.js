@@ -32,7 +32,7 @@ const Container = styled.div`
     padding: 0.5rem;
 `
 
-const GroupContainer = styled.div`
+const GroupContainer = styled.li`
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -89,7 +89,9 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
 
     return(
         <Container className={className}>
-            {logGroupItems}
+            <ol aria-label='Group Entries' >
+                {logGroupItems}
+            </ol>
         </Container>
     );
     
