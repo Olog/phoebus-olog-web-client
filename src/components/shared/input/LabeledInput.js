@@ -22,15 +22,24 @@ const Container = styled.div`
     & span {
         padding-top: 0.2rem;
     }
+
+    ${({error, theme}) => error ? `
+        margin: 1rem 0;
+        padding-left: 1rem;
+        border-left: 5px solid ${theme.colors.danger};
+    `: ''}
 `
 
 const LabeledInput = ({name, label, error, inlineLabel, className, children}) => {
 
+    const LabelContents = error 
+    ? <ErrorMessage error={label + " - Error: " + error} />
+    : label;
+
     return (
-        <Container {...{inlineLabel, className}}>
-            <label htmlFor={name}>{label}</label>
+        <Container {...{inlineLabel, error, className}}>
+            <label htmlFor={name}>{LabelContents}</label>
             {children}
-            <ErrorMessage error={error} />
         </Container>
     )
 };
