@@ -22,7 +22,7 @@ import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import { formatFullDateTime, getLogEntryGroupId } from 'utils';
 import { useNavigate } from "react-router-dom";
 
-const LogInfoContainer = styled.div`
+const LogInfoContainer = styled.li`
     
     display: flex;
     flex-direction: column;
@@ -52,8 +52,12 @@ const LogInfo = styled.div`
 `
 
 const HeaderInfo = styled(LogInfo)`
-    font-size: 1rem;
     gap: 0.5rem;
+
+    h3, & {
+        font-size: 1rem;
+        font-weight: normal;
+    }
 `
 
 const SearchResultItem = ({log, currentLogEntry}) => {
@@ -82,12 +86,13 @@ const SearchResultItem = ({log, currentLogEntry}) => {
             selected={currentLogEntry && currentLogEntry.id === log.id}
             onClick={handleClick}
             isGroupEntry={isGroupEntry}
+            aria-labelledby={log.id}
         >
-            <HeaderInfo>
-                <p>{log.title}</p>
+            <HeaderInfo >
+                <h3 id={log.id}>{log.title}</h3>
                 <HeaderInfo>
-                    <p>{isGroupEntry ? <FaReply/> : null}</p>
-                    <p>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip/> : null}</p>
+                    <p>{isGroupEntry ? <FaReply aria-label='grouped' role='status' /> : null}</p>
+                    <p>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip aria-label='has attachments' role='status' /> : null}</p>
                 </HeaderInfo>
             </HeaderInfo>
             <LogInfo>

@@ -23,6 +23,7 @@ import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import {getLogEntryGroupId, sortLogsDateCreated} from 'utils';
 import GroupHeader from './GroupHeader';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
     display: flex;
@@ -33,7 +34,7 @@ const Container = styled.div`
     overflow: auto;
 `
 
-const GroupContainer = styled.div`
+const GroupContainer = styled.li`
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -54,15 +55,21 @@ const Content = styled.div`
 const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLogGroupRecords, className}) => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        ologService.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(currentLogEntry.properties)}`)
+        const signal = new AbortController();
+        ologService.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(currentLogEntry.properties)}`, { signal })
         .then(res => {
             let sortedResult = sortLogsDateCreated(res.data, false);
             setLogGroupRecords(sortedResult);
         })
         .catch(e => console.error("Could not fetch logs by group", e));
-    });
+
+        return () => {
+            signal.abort();
+        }
+    }, [currentLogEntry.properties, setLogGroupRecords]);
 
     const getContent = (source) => {
         return {__html: remarkable.render(source)};
@@ -70,6 +77,7 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
 
     const showLog = (log) => {
         dispatch(updateCurrentLogEntry(log));
+        navigate(`/logs/${log.id}`);
     }
 
     const logGroupItems = logGroupRecords.map((row, index) => {
@@ -82,8 +90,10 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
     });
 
     return(
-        <Container className={className} >
-            {logGroupItems}
+        <Container className={className}>
+            <ol aria-label='Group Entries' >
+                {logGroupItems}
+            </ol>
         </Container>
     );
     

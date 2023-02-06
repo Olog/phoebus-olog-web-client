@@ -16,19 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { Component} from 'react'
-// import Button from 'react-bootstrap/Button';
 import Button from '../shared/Button';
-// import Navbar from 'react-bootstrap/Navbar';
-// import Nav from 'react-bootstrap/Nav';
 import {Link} from "react-router-dom";
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
 import { checkSession } from '../../api/olog-service';
 import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
-// import Row from 'react-bootstrap/Row';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 
 const Navbar = styled.nav`
   display: flex;
@@ -60,100 +56,90 @@ const PackageVersion = styled.h2`
  * Banner component with controls to create log entry, log book or tag. Plus
  * button for signing in/out. 
  */
-class Banner extends Component {
+const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, setShowLogout, setReplyAction}) => {
 
-  state = {
-    showAddLogbook: false,
-    showAddTag: false
-  }
-
-  componentDidMount() {
+  useEffect(() => {
 
     // Try to get user data from back-end.
     // If server returns user data with non-null userName, there is a valid session.
-    ologService.get('/user', { withCredentials: true })
+    const signal = new AbortController();
+    ologService.get('/user', { withCredentials: true, signal})
         .then(res => {
             // As long as there is a session cookie, the response SHOULD contain
             // user data. Check for status just in case...
             if(res.status === 200 && res.data){ 
-                this.props.setUserData(res.data);
+                setUserData(res.data);
             }
         }).catch(err => {
           if(err.response && err.response.status === 404){
-            this.props.setUserData({userName: "", roles: []});
+            setUserData({userName: "", roles: []});
           }
         });
-  } 
 
+    return () => {
+      signal.abort();
+    }
+  }, [setUserData])
 
-  handleNewLogEntry = () => {
+  const handleNewLogEntry = () => {
     
     var promise = checkSession();
     if(!promise){
-      this.props.setShowLogin(true);
+      setShowLogin(true);
     }
     else{
       promise.then(data => {
         if(!data){
-          this.props.setShowLogin(true);
+          setShowLogin(true);
         }
         else{
-          this.props.setReplyAction(false);
+          setReplyAction(false);
         }
       });
     }
   }
 
-  setShowAddLogbook = (show) => {
-    this.setState({showAddLogbook: show});
-  }
-
-  setShowAddTag = (show) => {
-    this.setState({showAddTag: show});
-  }
-
-  handleClick = () => {
-    if(!this.props.userData.userName){
-        this.props.setShowLogin(true);
+  const handleClick = () => {
+    if(!userData.userName){
+        setShowLogin(true);
     }
     else{
-        this.props.setShowLogout(true);
+        setShowLogout(true);
     }
   }
 
-  render(){
-    return (
-      <>
-        <Navbar>
-          <NavHeader>
-            <Link to="/">
-              <PackageName>{packageInfo.name}</PackageName>
-              <PackageVersion>{packageInfo.version}</PackageVersion>
-            </Link>
-            <Link to="/edit">
-              <Button disabled={!this.props.userData.userName} 
-                variant='primary'
-                onClick={() => this.handleNewLogEntry()}>New Log Entry</Button>
-            </Link>
-          </NavHeader>
-          <NavFooter>
-            <Button onClick={this.handleClick} variant="primary">
-              {this.props.userData.userName ? this.props.userData.userName : 'Sign In'}
-            </Button>
-          </NavFooter>
-        </Navbar>
+  return (
+    <>
+      <Navbar>
+        <NavHeader>
+          <Link to="/">
+            <PackageName>{packageInfo.name}</PackageName>
+            <PackageVersion>{packageInfo.version}</PackageVersion>
+          </Link>
+          <Link to="/edit">
+            <Button disabled={!userData.userName} 
+              variant='primary'
+              onClick={() => handleNewLogEntry()}>New Log Entry</Button>
+          </Link>
+        </NavHeader>
+        <NavFooter>
+          <Button onClick={handleClick} variant="primary">
+            {userData.userName ? userData.userName : 'Sign In'}
+          </Button>
+        </NavFooter>
+      </Navbar>
 
-        <LoginDialog setUserData={this.props.setUserData} 
-                setShowLogin={this.props.setShowLogin}
-                loginDialogVisible={this.props.showLogin}/>
+      <LoginDialog setUserData={setUserData} 
+              setShowLogin={setShowLogin}
+              loginDialogVisible={showLogin}/>
 
-        <LogoutDialog setUserData={this.props.setUserData} 
-                        setShowLogout={this.props.setShowLogout} 
-                        logoutDialogVisible={this.props.showLogout}/>
+      <LogoutDialog setUserData={setUserData} 
+                      setShowLogout={setShowLogout} 
+                      logoutDialogVisible={showLogout}/>
 
-      </>
-    )
-  }
+    </>
+  )
+  
 }
 
 export default Banner;

@@ -33,7 +33,11 @@ const Container = styled.div`
 const LogTitle = styled.div`
     display: flex;
     justify-content: space-between;
-    font-size: 1.4rem;
+
+    &, & h2 {
+        font-size: 1.4rem;
+        font-weight: normal;
+    }
 `
 
 const Ruler = styled.hr`
@@ -101,7 +105,7 @@ const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
     return(
         <Container className={className}>
             <LogTitle>
-                <span>{currentLogEntry.title}</span>
+                <h2>{currentLogEntry.title}</h2>
                 <span>{currentLogEntry.id}</span>
             </LogTitle>
             <Ruler />

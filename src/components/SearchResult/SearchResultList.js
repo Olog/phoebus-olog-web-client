@@ -15,22 +15,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import {useState, useEffect} from 'react';
 import SearchResultItem from './SearchResultItem';
 import LoadingOverlay from 'components/shared/LoadingOverlay';
 import SearchBox from './SearchBox';
 import PaginationBar from './PaginationBar';
-import { useDispatch } from 'react-redux';
-import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import styled from 'styled-components';
 import { mobile } from 'config/media';
+import { sortLogsDateCreated } from 'utils';
 
 const Container = styled.div`
     display: flex;
     flex-direction: column;
 `
 
-const SearchResultsContainer = styled.div`
+const SearchResultsContainer = styled.ol`
     display: flex;
     flex-direction: column;
     overflow: auto;
@@ -81,50 +79,13 @@ const SearchResultList = ({
     className
 }) => {
 
-    const [pageCount, setPageCount] = useState(0);
-    const [currentPageIndex, setCurrentPageIndex] = useState(0);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if(!searchResults){
-            setPageCount(0);
-            return;
-        }
-        if(searchPageParams.from === 0) {
-            setCurrentPageIndex(0);
-        }
-        let newPageCount = Math.ceil(searchResults.hitCount / searchPageParams.size);
-        setPageCount(newPageCount);
-    }, [searchResults, searchPageParams.size, searchPageParams.from])
-
-    useEffect(() => {
-        const from = currentPageIndex * searchPageParams.size;
-        dispatch(updateSearchPageParams({...searchPageParams, from}));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPageIndex]);
-
-    const goToPage = (pageNumber) => {
-        if(pageNumber >= 0) {
-            setCurrentPageIndex(pageNumber);
-        };
+    // Guarantee that sort is applied for the current page of results
+    const sortedLogs = [...searchResults.logs];
+    if(sortedLogs.length > 0) {
+        sortLogsDateCreated(sortedLogs, searchPageParams.sort === 'down');
     }
-
-    /**
-     * Handles input in hits per page field and rejets any
-     * value < 1 and > 999, i.e. leading zeros are also rejected.
-     */
-    const setPageSize = (e) => {
-        const re = /^[0-9\b]{1,3}$/;
-        if (e.target.value === '' || re.test(e.target.value)) {
-            let pageCount = parseInt(e.target.value);
-            if(pageCount === 0){
-                return;
-            }
-            dispatch(updateSearchPageParams({...searchPageParams, size: e.target.value}))
-        } 
-    }
-    
-    const renderedSearchResults = searchResults.logs.length === 0 ? "No search results" : searchResults.logs.map((item, index) => {
+    const sortedResults = {...searchResults, logs: sortedLogs};
+    const renderedSearchResults = sortedResults.logs.length === 0 ? "No search results" : sortedResults.logs.map((item, index) => {
         return <SearchResultItem
                     key={index}
                     log={item}
@@ -137,12 +98,13 @@ const SearchResultList = ({
             <StyledLoadingOverlay
                 active={searchInProgress}
                 size={10}
+                message='Loading...'
             >
                 <StyledSearchBox {...{searchParams, showFilters, setShowFilters}} />
-                <SearchResultsContainer id='search-results-list--container'>
+                <SearchResultsContainer id='search-results-list--container' aria-label='Search Results' >
                     {renderedSearchResults}
                 </SearchResultsContainer>
-                <StyledPaginationBar {...{pageCount, currentPageIndex, goToPage, searchPageParams, setPageSize}} />
+                <StyledPaginationBar {...{searchResults, searchPageParams}} />
             </StyledLoadingOverlay>
         </Container>
     )

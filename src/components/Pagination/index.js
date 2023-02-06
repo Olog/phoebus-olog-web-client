@@ -16,25 +16,25 @@ const StyledItem = styled(StyledPaginationButton)`
     border-radius: 0;
 `
 
-export const Item = ({active, onClick, className, alt, children}) => {
+export const Item = ({className, children, ...props}) => {
     return (
-        <StyledItem {...{active, onClick, alt}} className={`pagination-item ${className}`} >
+        <StyledItem {...props} className={`pagination-item ${className ? className : ''}`} >
             {children}
         </StyledItem>
     )
 }
 
-export const Prev = ({onClick, className}) => {
+export const Prev = ({className, ...props}) => {
     return (
-        <Item {...{onClick, className, alt: 'Previous'}}>
+        <Item {...{alt: 'Previous', ...props}}>
             <MdNavigateBefore />
         </Item>
     )
 }
 
-export const Next = ({onClick, className}) => {
+export const Next = ({className, ...props}) => {
     return (
-        <Item {...{onClick, className, alt: 'Next'}}>
+        <Item {...{alt: 'Next', ...props}}>
             <MdNavigateNext />
         </Item>
     )

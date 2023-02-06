@@ -41,6 +41,7 @@ import useFormPersist from 'react-hook-form-persist'
 import TextInput from 'components/shared/input/TextInput';
 import styled from 'styled-components';
 import { DroppableFileUploadInput } from 'components/shared/input/FileInput';
+import { useRef } from 'react';
 import ExternalLink from 'components/shared/ExternalLink';
 import { APP_BASE_URL } from 'constants';
 
@@ -129,13 +130,14 @@ const DetachedLabel = styled.label`
 `
 
 const EntryEditor = ({
-     tags,
-     logbooks,
+     tags=[],
+     logbooks=[],
      replyAction,
      userData, setUserData
     }) => {
 
-    const { control, handleSubmit, getValues, setValue, watch } = useForm();
+    const topElem = useRef();
+    const { control, handleSubmit, getValues, setValue, watch, formState } = useForm();
     const { fields: attachments, remove: removeAttachment, append: appendAttachment } = useFieldArray({
         control,
         name: 'attachments',
@@ -184,6 +186,16 @@ const EntryEditor = ({
         }
         // eslint-disable-next-line 
     }, [replyAction, currentLogEntry, setValue]);
+
+    // Scroll to top if there are field errors
+    useEffect(() => {
+        if(Object.keys(formState.errors).length > 0) {
+            if(topElem.current && typeof topElem.current.scrollIntoView === 'function') {
+                topElem.current.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    }, [formState])
+
     /**
      * Appends an attachment object to the attachments form field
      * @param {*} event 
@@ -359,7 +371,7 @@ const EntryEditor = ({
                 >
                     <h1>New Log Entry</h1>
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        
+                        <span ref={topElem}></span>
                         <MultiSelect
                             name='logbooks'
                             label='Logbooks'
@@ -463,6 +475,7 @@ const EntryEditor = ({
                         <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>
                             <DroppableFileUploadInput 
                                 onFileChanged={onFileChanged}
+                                id='attachments-upload'
                             />
                             { renderedAttachments }
                         </RenderedAttachmentsContainer>
