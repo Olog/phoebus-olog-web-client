@@ -17,12 +17,11 @@
  */
 
 import axios from "axios";
-
-const ologServiceBaseUrl = process.env.REACT_APP_BASE_URL; // e.g. http://localhost:8080/Olog
+import { APP_BASE_URL } from "constants";
 
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 const ologService = axios.create({
-    baseURL: ologServiceBaseUrl
+    baseURL: APP_BASE_URL
 });
 
 /**

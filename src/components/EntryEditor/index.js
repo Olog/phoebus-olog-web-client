@@ -18,7 +18,7 @@
 import ologService, { ologServiceWithRetry } from 'api/olog-service';
 import Button from '../shared/Button';
 import Modal, {Header, Title, Body} from 'components/shared/Modal';
-import { FaPlus } from 'react-icons/fa';
+import { FaMarkdown, FaPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Attachment from 'components/Attachment';
@@ -41,6 +41,8 @@ import useFormPersist from 'react-hook-form-persist'
 import TextInput from 'components/shared/input/TextInput';
 import styled from 'styled-components';
 import { DroppableFileUploadInput } from 'components/shared/input/FileInput';
+import ExternalLink from 'components/shared/ExternalLink';
+import { APP_BASE_URL } from 'constants';
 
 const Container = styled.div`
     padding: 0.5rem;
@@ -69,7 +71,14 @@ const DescriptionTextInput = styled(TextInput)`
 
 const DescriptionContainerFooter = styled.div`
     display: flex;
-    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+
+    & div {
+        display: flex;
+        gap: 1rem;
+    }
 `
 
 const ButtonContent = styled.div`
@@ -425,22 +434,29 @@ const EntryEditor = ({
                                 rows={10}
                             />
                             <DescriptionContainerFooter>
-                                <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            setShowEmbedImageDialog(true);
-                                        }}>
-                                    Embed Image
-                                </Button>
-                                <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            setShowHtmlPreview(true)
-                                        }}>
-                                    Preview
-                                </Button>
+                                <div>
+                                    <ExternalLink href={`${APP_BASE_URL}/help/CommonmarkCheatsheet`} >
+                                        <FaMarkdown />CommonMark Formatting Help
+                                    </ExternalLink>
+                                </div>
+                                <div>
+                                    <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                setShowEmbedImageDialog(true);
+                                            }}>
+                                        Embed Image
+                                    </Button>
+                                    <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                setShowHtmlPreview(true)
+                                            }}>
+                                        Preview
+                                    </Button>
+                                </div>
                             </DescriptionContainerFooter>
                         </DescriptionContainer>
                         <DetachedLabel>Attachments</DetachedLabel>
