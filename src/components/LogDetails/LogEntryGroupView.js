@@ -27,9 +27,11 @@ import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
     display: flex;
+    height: 100%;
     flex-direction: column;
     gap: 1rem;
     padding: 0.5rem;
+    overflow: auto;
 `
 
 const GroupContainer = styled.li`
