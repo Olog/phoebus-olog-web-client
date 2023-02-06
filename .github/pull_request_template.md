@@ -7,6 +7,7 @@
 - [ ] Conformance to Markdown styles: https://olog.esss.lu.se/Olog/help/CommonmarkCheatsheet
     - [ ] ...when viewing a log entry
     - [ ] ...when previewing HTML while writing a description
+    - [ ] ...when viewing a log entry in the group view
 - [ ] Scroll is possible (elements don't overflow their container, and they are scrollable)
     - [ ] ...search result list
     - [ ] ...log entry group view list
