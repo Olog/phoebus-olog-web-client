@@ -24,6 +24,7 @@ import {getLogEntryGroupId, sortLogsDateCreated} from 'utils';
 import GroupHeader from './GroupHeader';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import HtmlContent from 'components/shared/HtmlContent';
 
 const Container = styled.div`
     display: flex;
@@ -45,8 +46,8 @@ const GroupContainer = styled.li`
     }
 `
 
-const Content = styled.div`
-    word-wrap: break-word;
+const StyledHtmlContent = styled(HtmlContent)`
+    padding: 0 0.5rem;
 `
 
  /**
@@ -84,7 +85,7 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
         return(
             <GroupContainer key={index} onClick={() => showLog(row)} >
                 <GroupHeader logEntry={row} />
-                <Content dangerouslySetInnerHTML={getContent(row.source)}/>
+                <StyledHtmlContent html={getContent(row.source)}/>
             </GroupContainer>
         );
     });
