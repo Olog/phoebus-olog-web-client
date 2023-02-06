@@ -26,9 +26,11 @@ import styled from 'styled-components';
 
 const Container = styled.div`
     display: flex;
+    height: 100%;
     flex-direction: column;
     gap: 1rem;
     padding: 0.5rem;
+    overflow: auto;
 `
 
 const GroupContainer = styled.div`
@@ -80,7 +82,7 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
     });
 
     return(
-        <Container className={className}>
+        <Container className={className} >
             {logGroupItems}
         </Container>
     );
