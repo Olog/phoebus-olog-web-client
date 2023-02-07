@@ -1,14 +1,15 @@
 import { useRef } from "react";
-// import { useEffect } from "react";
 import { useState } from "react";
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa";
 import styled from "styled-components";
 
 const Container = styled.div`
     padding: 0.5rem 0;
 `
 
-const Header = styled.div`
+const Header = styled.button`
+    border: none;
+    width: 100%;
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
@@ -22,45 +23,30 @@ const Header = styled.div`
     }
 `
 
-const Icon = styled.span`
-    & > * {
-        vertical-align: top;
-    }
+const Icon = styled(FaChevronRight)`
+    transition: all 100ms;
+    ${({show}) => show ? `
+        transform: rotate(90deg);
+    ` : ''}
 `
 
 const Body = styled.div`
-    
-`
-
-const HiddenContentEnd = styled.div`
-    height: 1px;
 `
 
 const Collapse = ({title, active=false, className, children}) => {
     const [show, setShow] = useState(active);
-    
-    const contentEndRef = useRef();
-
-    // const scrollToEnd = () => {
-    //     contentEndRef.current?.scrollIntoView({behavior: 'smooth'});
-    // }
 
     const handleClick = () => {
         setShow(!show);
     }
 
-    // useEffect(() => {
-    //     scrollToEnd();
-    // });
-
     return (
         <Container className={className}>
-            <Header onClick={handleClick}>
-                <Icon>{show ? <FaChevronDown /> : <FaChevronRight />}</Icon>
-                <span>{title}</span>
+            <Header onClick={handleClick} aria-expanded={show}>
+                <Icon show={show} aria-hidden='true' />
+                {title}
             </Header>
             {show ? <Body>{children}</Body> : null}
-            <HiddenContentEnd ref={contentEndRef} id='hidden-content-end'></HiddenContentEnd>
         </Container>
     )
     

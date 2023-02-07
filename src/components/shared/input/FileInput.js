@@ -68,6 +68,11 @@ const StyledDroppableFileUploadArea = styled.div`
     &:hover {
         cursor: pointer;
     }
+
+    & input {
+        color: transparent;
+    }
+
 `
 
 const StyledClickableArea = styled.div`
