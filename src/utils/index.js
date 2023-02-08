@@ -167,3 +167,16 @@ export function dateToString(value){
 export function ologClientInfoHeader() {
     return {"X-Olog-Client-Info": "Olog Web " + packageInfo.version + " on " + window.navigator.userAgent}
 }
+
+/**
+ * A wrapper around setTimeout that allows awaiting a delay.
+ * @param {number} duration duration in milliseconds to delay.
+ * @returns a resolvable Promise.
+ */
+export const delay = (duration) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, duration)
+    })
+}

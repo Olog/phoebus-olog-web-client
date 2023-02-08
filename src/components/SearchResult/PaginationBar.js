@@ -18,11 +18,11 @@
 
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
-import { StyledLabeledTextInput } from 'components/shared/input/TextInput';
-import { Item, Next, Pagination, Prev } from 'components/Pagination';
+import { PaginationItem, Next, Pagination, Prev } from 'components/Pagination';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
+import PageSizeInput from './PageSizeInput';
 
 const Container = styled.div`
     display: flex;
@@ -50,7 +50,7 @@ const PaginationBar = ({searchResults, searchPageParams}) => {
     const [pageCount, setPageCount] = useState(0);
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const dispatch = useDispatch();
-
+    
     useEffect(() => {
         if(!searchResults){
             setPageCount(0);
@@ -65,30 +65,16 @@ const PaginationBar = ({searchResults, searchPageParams}) => {
 
     useEffect(() => {
         const from = currentPageIndex * searchPageParams.size;
-        dispatch(updateSearchPageParams({...searchPageParams, from}));
-        // TODO: Investigate / fix the circular looping here and remove es-lint disable
-        // eslint-disable-next-line 
-    }, [currentPageIndex, dispatch, searchPageParams.size]);
+        // dispatch only if different, to prevent infinite loop
+        if(searchPageParams.from !== from) {
+            dispatch(updateSearchPageParams({...searchPageParams, from}));
+        }
+    }, [currentPageIndex, dispatch, searchPageParams]);
 
     const goToPage = (pageNumber) => {
         if(pageNumber >= 0) {
             setCurrentPageIndex(pageNumber);
         };
-    }
-
-    /**
-     * Handles input in hits per page field and rejets any
-     * value < 1 and > 999, i.e. leading zeros are also rejected.
-     */
-    const setPageSize = (e) => {
-        const re = /^[0-9\b]{1,3}$/;
-        if (e.target.value === '' || re.test(e.target.value)) {
-            let pageCount = parseInt(e.target.value);
-            if(pageCount === 0){
-                return;
-            }
-            dispatch(updateSearchPageParams({...searchPageParams, size: e.target.value}))
-        } 
     }
 
     const isMobile = useMediaQuery({ query: '(max-width: 539px)' })
@@ -108,39 +94,50 @@ const PaginationBar = ({searchResults, searchPageParams}) => {
 
         let items = [];
         for(let i = firstIndex; i < lastIndex; i++){
-            items.push(<Item
+            const isCurrentPage = i === currentPageIndex;
+            items.push(<PaginationItem
                 key={i} 
-                active={i === currentPageIndex}
-                onClick={() => goToPage(i)}
-                alt={`Page ${i+1}`}
+                active={isCurrentPage}
+                onClick={() => {
+                    if(!isCurrentPage) {
+                        goToPage(i)
+                    }
+                }}
+                label={`go to page ${i+1}`}
             >
                 {i + 1}
-            </Item>)
+            </PaginationItem>)
         }
         return items;
+    }
+
+    const prevDisabled = currentPageIndex === 0;
+    const nextDisabled = currentPageIndex + 1 === pageCount;
+    const onClickPreviousPage = () => {
+        if(!prevDisabled) {
+            goToPage(currentPageIndex - 1);
+        }
+    }
+    const onClickNextPage = () => {
+        if(!nextDisabled) {
+            goToPage(currentPageIndex + 1);
+        }
     }
 
     return (
         <Container>
             <PageSizeContainer>
-                <StyledLabeledTextInput
-                    name='pageSize'
-                    label='Hits per page:'
-                    value={searchPageParams.size}
-                    onChange={(e) => setPageSize(e)}
-                    inlineLabel
+                <PageSizeInput 
+                    initialValue={searchPageParams.size}
+                    onValidChange={(value) => dispatch(updateSearchPageParams({...searchPageParams, size: value}))}
                 />
             </PageSizeContainer>
             {pageCount >= 2 ? 
                 <PaginationContainer>
                     <Pagination>
-                        <Prev onClick={() => goToPage(currentPageIndex - 1)} 
-                            disabled={currentPageIndex === 0}
-                        />
+                        <Prev onClick={onClickPreviousPage} disabled={prevDisabled} />
                         {renderPaginationItems()}
-                        <Next onClick={() => goToPage(currentPageIndex + 1)}
-                            disabled={currentPageIndex + 1 === pageCount}
-                        />
+                        <Next onClick={onClickNextPage} disabled={nextDisabled} />
                     </Pagination>
                     <PagePosition>{`${currentPageIndex + 1} / ${pageCount}`}</PagePosition>
                 </PaginationContainer>
