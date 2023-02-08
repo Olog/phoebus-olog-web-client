@@ -1,11 +1,11 @@
 import userEvent from '@testing-library/user-event';
 import { render, screen } from 'test-utils';
-import PaginationBar from './PaginationBar'
+import PageSizeInput from './PageSizeInput'
 
 test('hits per page accepts positive integers', async () => {
 
     const user = userEvent.setup();
-    render(<PaginationBar />)
+    render(<PageSizeInput />);
 
     const hitsPerPage = screen.getByLabelText(/hits per page/i);
     await user.clear(hitsPerPage);
@@ -18,7 +18,7 @@ test('hits per page accepts positive integers', async () => {
 test('hits per page rejects negative numbers', async () => {
 
     const user = userEvent.setup();
-    render(<PaginationBar />)
+    render(<PageSizeInput />);
 
     const hitsPerPage = screen.getByLabelText(/hits per page/i);
     await user.clear(hitsPerPage);
@@ -31,7 +31,7 @@ test('hits per page rejects negative numbers', async () => {
 test('hits per page rejects zero', async () => {
 
     const user = userEvent.setup();
-    render(<PaginationBar />)
+    render(<PageSizeInput />);
 
     const hitsPerPage = screen.getByLabelText(/hits per page/i);
     await user.clear(hitsPerPage);
@@ -44,7 +44,7 @@ test('hits per page rejects zero', async () => {
 test('hits per page rejects text', async () => {
 
     const user = userEvent.setup();
-    render(<PaginationBar />)
+    render(<PageSizeInput />);
 
     const hitsPerPage = screen.getByLabelText(/hits per page/i);
     await user.clear(hitsPerPage);
@@ -57,7 +57,7 @@ test('hits per page rejects text', async () => {
 test('hits per page rejects leading zeros', async () => {
 
     const user = userEvent.setup();
-    render(<PaginationBar />)
+    render(<PageSizeInput />);
 
     const hitsPerPage = screen.getByLabelText(/hits per page/i);
     await user.clear(hitsPerPage);
@@ -68,7 +68,7 @@ test('hits per page rejects leading zeros', async () => {
 test('hits per page rejects numbers greater than three digits', async () => {
 
     const user = userEvent.setup();
-    render(<PaginationBar />)
+    render(<PageSizeInput />);
 
     const hitsPerPage = screen.getByLabelText(/hits per page/i);
     await user.clear(hitsPerPage);

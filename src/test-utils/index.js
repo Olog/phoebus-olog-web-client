@@ -67,9 +67,9 @@ export const testEntry = ({title, id, createdDate}) => (
     }
 )
 
-export const resultList = (testEntries = []) => {
+export const resultList = (testEntries = [], hitCount) => {
     return {
-        hitCount: testEntries.length,
+        hitCount: hitCount || testEntries.length,
         logs: [
             ...testEntries
         ]
