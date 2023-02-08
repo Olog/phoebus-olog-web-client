@@ -723,3 +723,62 @@ describe('Log Entry Groups / Replies', () => {
     })
 
 })
+
+describe('Pagination Bar', () => {
+
+    test('hits per page accepts empty values but does not send them to the server / cause errors', async () => {
+
+        // Given the server responds with an error on empty paging parameters
+        // But otherwise responds normally
+        server.use(
+            rest.get('*/logs/search', (req, res, ctx) => {
+                const from = req.url.searchParams.get('from');
+                const size = req.url.searchParams.get('size');
+                console.log({from, size})
+                if(!from || !size || `${from}`.trim() === '' || `${size}`.trim() === '') {
+                    console.log('responding with error')
+                    return res(ctx.status(500));
+                } else {
+                    console.log('looks good!')
+                    return res(ctx.json(resultList([testEntry({title: 'some title'})])))
+                }
+
+            })
+        );
+
+        // When rendered
+        const user = userEvent.setup();
+        const { unmount, container } = render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+
+        // Initially there should be no error
+        const errorBanner = screen.queryByText(/Search error/i);
+        expect(errorBanner).not.toBeInTheDocument();
+    
+        // And When the user enters a value for the hitsPerPage input, and then clears it
+        const hitsPerPage = screen.getByLabelText(/hits per page/i);
+        await user.clear(hitsPerPage);
+        await user.type(hitsPerPage, '67');
+        await user.clear(hitsPerPage);
+    
+        // The hitsPerPage input should be empty
+        expect(hitsPerPage).toHaveValue('');
+
+        screen.debug(container, 100000000000);
+    
+        // And the previous search results should remain
+        const previousSearchResults = await screen.findByRole('heading', {name: /some title/});
+        expect(previousSearchResults).toBeInTheDocument();
+
+        // And there should be no error banner
+        const stillNoErrorBanner = screen.queryByText(/Search error/i);
+        expect(stillNoErrorBanner).not.toBeInTheDocument();
+
+        // cleanup network resources
+        unmount();
+    
+    })
+})

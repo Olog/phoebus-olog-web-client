@@ -21,7 +21,7 @@ import styled from 'styled-components';
 import { StyledLabeledTextInput } from 'components/shared/input/TextInput';
 import { Item, Next, Pagination, Prev } from 'components/Pagination';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 
 const Container = styled.div`
@@ -45,10 +45,13 @@ const PagePosition = styled.div`
     white-space: nowrap;
 `
 
-const PaginationBar = ({searchResults, searchPageParams}) => {
+const PaginationBar = () => {
 
     const [pageCount, setPageCount] = useState(0);
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const searchResults = useSelector(state => state.searchResults);
+    const searchPageParams = useSelector(state => state.searchPageParams);
+    const [pageSize, setPageSize] = useState(searchPageParams.size);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -65,10 +68,11 @@ const PaginationBar = ({searchResults, searchPageParams}) => {
 
     useEffect(() => {
         const from = currentPageIndex * searchPageParams.size;
-        dispatch(updateSearchPageParams({...searchPageParams, from}));
-        // TODO: Investigate / fix the circular looping here and remove es-lint disable
-        // eslint-disable-next-line 
-    }, [currentPageIndex, dispatch, searchPageParams.size]);
+        // dispatch only if different, to prevent infinite loop
+        if(searchPageParams.from !== from) {
+            dispatch(updateSearchPageParams({...searchPageParams, from}));
+        }
+    }, [currentPageIndex, dispatch, searchPageParams]);
 
     const goToPage = (pageNumber) => {
         if(pageNumber >= 0) {
@@ -80,15 +84,14 @@ const PaginationBar = ({searchResults, searchPageParams}) => {
      * Handles input in hits per page field and rejets any
      * value < 1 and > 999, i.e. leading zeros are also rejected.
      */
-    const setPageSize = (e) => {
-        const re = /^[0-9\b]{1,3}$/;
-        if (e.target.value === '' || re.test(e.target.value)) {
-            let pageCount = parseInt(e.target.value);
-            if(pageCount === 0){
-                return;
+    const onPageSizeChange = (e) => {
+        const re = /^([1-9]|[1-9][0-9]{1,2})$/
+        if(e.target.value === '' || re.test(e.target.value)) {
+            setPageSize(e.target.value)
+            if(`${e.target.value}`.trim() !== '') {
+                dispatch(updateSearchPageParams({...searchPageParams, size: e.target.value}))
             }
-            dispatch(updateSearchPageParams({...searchPageParams, size: e.target.value}))
-        } 
+        }
     }
 
     const isMobile = useMediaQuery({ query: '(max-width: 539px)' })
@@ -124,10 +127,12 @@ const PaginationBar = ({searchResults, searchPageParams}) => {
         <Container>
             <PageSizeContainer>
                 <StyledLabeledTextInput
+                    type='text'
+                    inputMode='numeric'
                     name='pageSize'
                     label='Hits per page:'
-                    value={searchPageParams.size}
-                    onChange={(e) => setPageSize(e)}
+                    value={pageSize}
+                    onChange={onPageSizeChange}
                     inlineLabel
                 />
             </PageSizeContainer>
