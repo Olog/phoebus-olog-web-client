@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { StyledListItem, StyledPagination, StyledPaginationButton } from "./styles";
 import {MdNavigateNext, MdNavigateBefore} from 'react-icons/md'
 
