@@ -2,6 +2,25 @@
 version: "3.7"
 services:
 
+  fe-olog-e2e-tests:
+    build: ./e2e
+    depends_on:
+      - fe-olog
+    environment:
+      CYPRESS_baseUrl: http://fe-olog:3000
+    working_dir: /e2e
+    volumes:
+      - ./e2e:/e2e
+    entrypoint: > 
+      /bin/bash -c "
+          while ! curl -s -f fe-olog:3000;
+        do
+          echo Waiting for Frontend;
+          sleep 1;
+        done;
+        cypress run;
+      "
+
   fe-olog:
     build: .
     ports: 

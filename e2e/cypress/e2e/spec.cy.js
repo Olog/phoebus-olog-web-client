@@ -5,8 +5,9 @@ describe('login and create a log entry', () => {
 
     const title = 'title ' + uuidv4();
 
-    // navigate to the page
-    cy.visit('http://localhost:3000');
+    // navigate to the main page
+    // NOTE: set CYPRESS_baseUrl to the frontend location!
+    cy.visit('/');
 
     // login
     cy.findByRole('button', {name: /sign in/i}).click()

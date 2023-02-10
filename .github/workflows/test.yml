@@ -22,6 +22,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: CI=true npm test
+    - name: Clean and Build
+      run: ./scripts/clean-and-build.sh
+    - name: Run Unit and Integration Tests
+      run: ./scripts/test.sh
+    - name: Run End-To-End Tests
+      run: ./scripts/e2e-test.sh

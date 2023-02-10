@@ -1,15 +1,13 @@
-# Olog es web client
-
-Note: this is work in progress. 
+# Olog Web Client
 
 This project implements a web client for the Phoebus Olog logbook service. It provides read, write and search capabilities, but not the full feature set of the CS Studio logbook client, see https://github.com/ControlSystemStudio/phoebus
 
 Technology stack:
 * ReactJS (main framework)
-* React Bootstrap (UI components)
-* axios (back-end access)
+* Axios & Redux Toolkit (app state, http clients)
 * Remarkable for commonmark processing/rendering (https://github.com/jonschlinkert/remarkable)
 * Jest for unit testing
+* Cypress and docker-compose for end-to-end testing
 
 ## Commonmark support
 Markup as defined by the Commonmark specification is supported, see https://commonmark.org/.
@@ -43,7 +41,9 @@ Backlog:
 
 The file `customization.js` contains customizable items. Please review its contents and adjust to your needs.
 
-## Toolchain
+## Development 
+
+### Environment
 
 In order to develop and test with reasonable effort you will need the proper toolchain:
 
@@ -67,7 +67,7 @@ Install the toolchain and then:
 
 Unit test code are added in files named ``*.test.js``.
    
-To run tests, invoke ``>npm run-script test``.
+To run tests, invoke ``>npm test``.
 
 ## Deployment
 
