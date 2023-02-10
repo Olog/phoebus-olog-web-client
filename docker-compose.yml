@@ -7,13 +7,17 @@ services:
     depends_on:
       - fe-olog
     environment:
-      CYPRESS_baseUrl: http://fe-olog:3000
+      CYPRESS_baseUrl: http://localhost:3000
+    # IMPORTANT: run as if from outside the docker network
+    # so that the service url is accessible the same way
+    # as it would be locally on the host
+    network_mode: "host"
     working_dir: /e2e
     volumes:
       - ./e2e:/e2e
     entrypoint: > 
       /bin/bash -c "
-          while ! curl -s -f fe-olog:3000;
+          while ! curl -s -f http://localhost:3000;
         do
           echo Waiting for Frontend;
           sleep 1;
