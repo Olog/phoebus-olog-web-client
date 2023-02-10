@@ -1,0 +1,76 @@
+# Use the default network olog_default.
+version: "3.7"
+services:
+
+  fe-olog:
+    build: .
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - fe-olog-service
+    environment:
+      REACT_APP_BASE_URL: http://localhost:8080/Olog
+    command: >
+      /bin/bash -c "
+          while ! curl -s -f fe-olog-service:8080/Olog;
+        do
+          echo Waiting for Olog Service;
+          sleep 1;
+        done;
+        npm start;
+      "
+
+  fe-olog-service:
+    image: local-olog-service
+    ports:
+      - "8080:8080"
+      - "8181:8181"
+    depends_on:
+      - fe-olog-mongo
+      - fe-olog-elastic
+    environment:
+      elasticsearch.network.host: fe-olog-elastic
+      mongo.host: fe-olog-mongo
+      elasticsearch.cluster.name: fe-olog-elastic-cluster
+    # Ensure that the elastic server is up before starting olog.
+    command: >
+      /bin/bash -c "
+          while ! curl -s -f fe-olog-elastic:9200/_cluster/health?wait_for_status=yellow;
+        do
+          echo Waiting for Elasticsearch;
+          sleep 1;
+        done;
+        java -jar service-olog-*.jar --spring.config.name=application-docker
+      "
+
+  fe-olog-mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - fe-olog-mongo-data:/etc/mongo
+
+  fe-olog-elastic:
+    image: elasticsearch:8.2.3
+    environment:
+      cluster.name: fe-olog-elastic-cluster
+      bootstrap.memory_lock: "true"
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      xpack.security.enabled: "false"
+      xpack.security.http.ssl.enabled: "false"
+    ports:
+      - 9200:9200
+    volumes:
+      - fe-olog-elastic-data:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+# Configure persistent storage for mongo and elastic.
+volumes:
+  fe-olog-elastic-data:
+    driver: local
+  fe-olog-mongo-data:
+    driver: local
