@@ -2,47 +2,6 @@
 version: "3.7"
 services:
 
-  fe-olog-e2e-tests:
-    build: ./e2e
-    depends_on:
-      - fe-olog
-    environment:
-      CYPRESS_baseUrl: http://localhost:3000
-    # IMPORTANT: run as if from outside the docker network
-    # so that the service url is accessible the same way
-    # as it would be locally on the host
-    network_mode: "host"
-    working_dir: /e2e
-    volumes:
-      - ./e2e:/e2e
-    entrypoint: > 
-      /bin/bash -c "
-          while ! curl -s -f http://localhost:3000;
-        do
-          echo Waiting for Frontend;
-          sleep 1;
-        done;
-        cypress run;
-      "
-
-  fe-olog:
-    build: .
-    ports: 
-      - "3000:3000"
-    depends_on:
-      - fe-olog-service
-    environment:
-      REACT_APP_BASE_URL: http://localhost:8080/Olog
-    command: >
-      /bin/bash -c "
-          while ! curl -s -f fe-olog-service:8080/Olog;
-        do
-          echo Waiting for Olog Service;
-          sleep 1;
-        done;
-        npm start;
-      "
-
   fe-olog-service:
     image: local-olog-service
     ports:
