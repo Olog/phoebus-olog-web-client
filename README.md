@@ -97,10 +97,14 @@ End-to-end testing is run via [Cypress](https://www.cypress.io/), and is provide
 You can run tests interactively (this will open cypress, a browser, etc. and execute the tests live) or you can run them headlessly one-time via docker compose (videos of the tests are made available in the `cypress/videos` and `cypress/screenshots` folders, and is ignored by git)
 
 Run end-to-end tests interactively:
+
 ```
+# (start the backend services in one console)
+# (start the frontend in another console)
+# In a new console:
 cd e2e
 npm ci
-npx cypress open
+npm test
 ```
 
 Run end-to-end tests headlessly (from the main project directory):
