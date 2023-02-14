@@ -112,7 +112,7 @@ const PaginationBar = ({searchResults, searchPageParams}) => {
                 key={i} 
                 active={i === currentPageIndex}
                 onClick={() => goToPage(i)}
-                alt={`Page ${i+1}`}
+                aria-label={`Page ${i+1}`}
             >
                 {i + 1}
             </Item>)
