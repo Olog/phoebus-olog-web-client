@@ -58,7 +58,7 @@ describe('Happy Paths', () => {
     cy.findByRole('button', {name: /submit/i}).click();
     cy.findByRole('heading', {name: title, level: 3 }).click();
     cy.findByRole('button', {name: /attachments/i}).click();
-    cy.findByRole('img', {name: /testImage/i});
+    cy.findByRole('img', {name: /testImage/i}).should('exist');
 
   })
 
