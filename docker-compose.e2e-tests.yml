@@ -8,6 +8,7 @@ services:
       - fe-olog
     environment:
       CYPRESS_baseUrl: http://localhost:3000
+      TEST_BE_URL: http://localhost:8080/Olog
     # IMPORTANT: run as if from outside the docker network
     # so that the service url is accessible the same way
     # as it would be locally on the host
