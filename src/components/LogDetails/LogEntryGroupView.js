@@ -40,6 +40,7 @@ const GroupContainer = styled.li`
     flex-direction: column;
     gap: 0.25rem;
     cursor: pointer;
+    width: 100%;
     
     &:hover {
         background-color: rgba(0, 0, 0, 0.20); 
@@ -48,6 +49,7 @@ const GroupContainer = styled.li`
 
 const StyledHtmlContent = styled(HtmlContent)`
     padding: 0 0.5rem;
+    overflow: auto;
 `
 
  /**
