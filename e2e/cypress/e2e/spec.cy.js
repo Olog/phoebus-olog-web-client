@@ -1,6 +1,12 @@
 import {v4 as uuidv4} from 'uuid';
 
+
 describe('login and create a log entry', () => {
+
+  before(() => {
+    cy.task('db:seed');
+  })
+
   it('passes', () => {
 
     const title = 'title ' + uuidv4();
@@ -27,4 +33,6 @@ describe('login and create a log entry', () => {
     cy.findByRole('img', {name: /testImage/i});
 
   })
+
+  
 })
