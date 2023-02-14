@@ -7,6 +7,8 @@ describe('Happy Paths', () => {
     cy.task('db:seed');
   })
 
+  after(() => cy.screenshot());
+
   it('Can page through log entries', () => {
 
     // navigate to the main page
