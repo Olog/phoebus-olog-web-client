@@ -20,7 +20,7 @@ import React, { useEffect } from 'react';
 import Modal, {Header, Title, Body, Footer} from '../shared/Modal';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
-import FileInput from 'components/shared/input/FileInput';
+import FileInput, { DroppableFileUploadInput } from 'components/shared/input/FileInput';
 import { useState } from 'react';
 import Button from 'components/shared/Button';
 import styled from 'styled-components';
@@ -31,7 +31,7 @@ const Form = styled.form`
 
 const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
 
-    const {control, setValue, watch, getValues} = useForm({
+    const {control, setValue, watch, getValues, reset: resetForm} = useForm({
         mode: 'all',
         defaultValues: {imageWidth: 0, imageHeight: 0, scalingFactor: 1.0}
     });
@@ -39,15 +39,6 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
     const [originalImageWidth, setOriginalImageWidth] = useState(0);
     const [originalImageHeight, setOriginalImageHeight] = useState(0);
     const scalingFactor = watch('scalingFactor');
-    
-    const _addEmbeddedImage = (e) => {
-        e.preventDefault();
-        addEmbeddedImage(
-            imageAttachment, 
-            getValues('imageWidth'),
-            getValues('imageHeight')
-        );
-    }
 
     const onFileChanged = (files) => {
         if(files){
@@ -64,18 +55,18 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
         setValue('imageHeight', h);
     }
 
-    const checkImageSize = (image, setSize) => {
+    const checkImageSize = (file, setSize) => {
         //check whether browser fully supports all File API
-        if (window.File && window.FileReader && window.FileList && window.Blob) {
-            const fr = new FileReader();
-            fr.onload = function() { // file is loaded
+        if (file && window.File && window.FileReader && window.FileList && window.Blob) {
+            const fileReader = new FileReader();
+            fileReader.onloadend = function () { // file is loaded
                 const img = new Image();
                 img.onload = function() { // image is loaded; sizes are available
                     setSize(img.width || 0, img.height || 0);
                 };
-                img.src = fr.result; // is the data URL because called with readAsDataURL
+                img.src = fileReader.result; // is the data URL because called with readAsDataURL
             };
-            fr.readAsDataURL(image);
+            fileReader.readAsDataURL(file);
         }
     }
     
@@ -101,23 +92,42 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
         setValue('imageHeight', newImageHeight);
         // eslint-disable-next-line
     }, [scalingFactor]);
+
+    const handleClose = () => {
+        console.log('close')
+        setShowEmbedImageDialog(false);
+        setImageAttachment(null);
+        setOriginalImageHeight(0);
+        setOriginalImageWidth(0);
+        resetForm();
+    }
+
+
+    const handleSubmit = () => {
+        addEmbeddedImage(
+            imageAttachment, 
+            getValues('imageWidth'),
+            getValues('imageHeight')
+        );
+        handleClose();
+    }
     
     return(
         <Modal show={showEmbedImageDialog} 
-            onClose={() => setShowEmbedImageDialog(false)}
+            onClose={handleClose}
         >
             <Form 
-                onSubmit={_addEmbeddedImage}
+                onSubmit={handleSubmit}
             >
                 <Header closeButton onClose={() => setShowEmbedImageDialog(false)}>
                     <Title>Add Embedded Image</Title>
                 </Header>
                 <Body>
-                    <FileInput 
-                        label='Browse'
+                    <DroppableFileUploadInput 
                         onFileChanged={onFileChanged}
-                        multiple={false}
-                        accept='image/*'
+                        id='embed-image-upload'
+                        dragLabel='Drag Image Here'
+                        browseLabel='Choose an Image or'
                     />
                     <TextInput 
                         name='scalingFactor'
@@ -155,8 +165,8 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
                     
                 </Body>
                 <Footer>
-                    <Button variant="secondary" onClick={() => setShowEmbedImageDialog(false)}>Cancel</Button>
-                    <Button variant="primary" disabled={imageAttachment === null} onClick={_addEmbeddedImage}>OK</Button>
+                    <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+                    <Button variant="primary" disabled={imageAttachment === null} onClick={handleSubmit}>Confirm Embed</Button>
                 </Footer>
             </Form>
         </Modal>

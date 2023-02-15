@@ -476,6 +476,8 @@ const EntryEditor = ({
                             <DroppableFileUploadInput 
                                 onFileChanged={onFileChanged}
                                 id='attachments-upload'
+                                dragLabel='Drag It Here'
+                                browseLabel='Choose a File or'
                             />
                             { renderedAttachments }
                         </RenderedAttachmentsContainer>
