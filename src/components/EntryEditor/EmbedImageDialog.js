@@ -20,13 +20,21 @@ import React, { useEffect } from 'react';
 import Modal, {Header, Title, Body, Footer} from '../shared/Modal';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
-import FileInput, { DroppableFileUploadInput } from 'components/shared/input/FileInput';
+import { DroppableFileUploadInput } from 'components/shared/input/FileInput';
 import { useState } from 'react';
 import Button from 'components/shared/Button';
 import styled from 'styled-components';
 
 const Form = styled.form`
+`
 
+const ImageContainer = styled.div`
+    max-height: 50vh;
+    max-width: 50vw;
+    & img {
+        height: 100%;
+        width: 100%;
+    }
 `
 
 const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
@@ -94,14 +102,12 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
     }, [scalingFactor]);
 
     const handleClose = () => {
-        console.log('close')
         setShowEmbedImageDialog(false);
         setImageAttachment(null);
         setOriginalImageHeight(0);
         setOriginalImageWidth(0);
         resetForm();
     }
-
 
     const handleSubmit = () => {
         addEmbeddedImage(
@@ -123,12 +129,18 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
                     <Title>Add Embedded Image</Title>
                 </Header>
                 <Body>
-                    <DroppableFileUploadInput 
-                        onFileChanged={onFileChanged}
-                        id='embed-image-upload'
-                        dragLabel='Drag Image Here'
-                        browseLabel='Choose an Image or'
-                    />
+                    {imageAttachment 
+                    ?   <ImageContainer>
+                            <img src={URL.createObjectURL(imageAttachment)} alt={`preview of ${imageAttachment.name}`} />
+                        </ImageContainer>
+                    :   <DroppableFileUploadInput 
+                            onFileChanged={onFileChanged}
+                            id='embed-image-upload'
+                            dragLabel='Drag Image Here'
+                            browseLabel='Choose an Image or'
+                        />
+                    }
+                    
                     <TextInput 
                         name='scalingFactor'
                         label='Scaling Factor'

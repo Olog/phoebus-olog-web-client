@@ -121,6 +121,12 @@ test('embed images successfully', async () => {
     // When we upload an image
     const uploadInput = screen.getByLabelText(/choose an image/i);
     await user.upload(uploadInput, image);
+    
+    // Then it is previewed in the modal
+    const previewedImage = screen.getByRole('img', {name: /preview of hello/i});
+    expect(previewedImage).toBeInTheDocument();
+
+    // And when we confirm embed
     const confirmButton = screen.getByRole('button', {name: /confirm embed/i});
     await user.click(confirmButton);
 
