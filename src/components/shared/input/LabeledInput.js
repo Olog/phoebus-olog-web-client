@@ -4,7 +4,6 @@ import ErrorMessage from "./ErrorMessage";
 const Container = styled.div`
     display: flex;
     flex-direction: ${({inlineLabel}) => inlineLabel ? 'row' : 'column'};    
-    padding: 0 0.5rem;
     padding-bottom: 1rem;
     width: 100%;
     ${({inlineLabel}) => inlineLabel ? `
