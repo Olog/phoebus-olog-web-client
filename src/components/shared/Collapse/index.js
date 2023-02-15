@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
 import styled from "styled-components";
