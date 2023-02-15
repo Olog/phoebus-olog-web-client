@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import selectEvent from 'react-select-event';
 import { MemoryRouter } from 'react-router-dom';
 import customization from 'utils/customization';
+import { delay } from 'utils';
 
 it('renders without crashing', async () => {
     const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
@@ -720,6 +721,105 @@ describe('Log Entry Groups / Replies', () => {
         
         // cleanup network resources
         unmount();
+    })
+
+})
+
+describe('Pagination Bar', () => {
+
+    test('hits per page accepts empty values but does not send them to the server / cause errors', async () => {
+
+        // Given the server responds with an error on empty paging parameters
+        // But otherwise responds normally
+        server.use(
+            rest.get('*/logs/search', (req, res, ctx) => {
+                const from = req.url.searchParams.get('from');
+                const size = req.url.searchParams.get('size');
+
+                if(!from || !size || `${from}`.trim() === '' || `${size}`.trim() === '') {
+                    return res(ctx.status(500));
+                } else {
+                    return res(ctx.json(resultList([testEntry({title: 'some title'})])))
+                }
+
+            })
+        );
+
+        // When rendered
+        const user = userEvent.setup();
+        const { unmount } = render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+
+        // Initially there should be no error
+        const errorBanner = screen.queryByText(/Search error/i);
+        expect(errorBanner).not.toBeInTheDocument();
+    
+        // And When the user enters a value for the hitsPerPage input, and then clears it
+        const hitsPerPage = screen.getByLabelText(/hits per page/i);
+        await user.clear(hitsPerPage);
+        await user.type(hitsPerPage, '67');
+        await user.clear(hitsPerPage);
+    
+        // The hitsPerPage input should be empty
+        expect(hitsPerPage).toHaveValue('');
+    
+        // And the previous search results should remain
+        const previousSearchResults = await screen.findByRole('heading', {name: /some title/});
+        expect(previousSearchResults).toBeInTheDocument();
+
+        // And there should be no error banner
+        const stillNoErrorBanner = screen.queryByText(/Search error/i);
+        expect(stillNoErrorBanner).not.toBeInTheDocument();
+
+        // cleanup network resources
+        unmount();
+    
+    })
+
+    test('paging controls are shown when only when more than one page of results are available', async () => {
+    
+        const user = userEvent.setup();
+        const { unmount } = render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+    
+        // Given the server responds with a page of 10 results and 11 hits 
+        server.use(
+            rest.get('*/logs/search', (req, res, ctx) => {
+                return res(ctx.json(
+                    resultList([
+                        ...[...Array(10).keys()].map(it => testEntry({title: `title #${it + 1}`, id: it+1}))
+                    ], 11)
+                ))
+
+            })
+        );
+
+        // And the user sets the page size to 10
+        const hitsPerPage = screen.getByLabelText(/hits per page/i);
+        await user.clear(hitsPerPage);
+        await user.type(hitsPerPage, '10');
+        
+        // Then the pagination controls should be rendered
+        const paginationControls = await screen.findByRole('navigation', {name: /pagination controls/i});
+        expect(paginationControls).toBeInTheDocument();
+
+        // And when the user sets the page size to 11
+        await user.clear(hitsPerPage);
+        await user.type(hitsPerPage, '11');
+
+        // Then the pagination controls should not be rendered
+        const noPaginationControls = screen.queryByRole('navigation', {name: /pagination controls/i});
+        expect(noPaginationControls).not.toBeInTheDocument();
+
+        // cleanup network resources
+        unmount();
+    
     })
 
 })

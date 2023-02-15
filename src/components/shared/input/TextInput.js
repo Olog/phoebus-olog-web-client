@@ -3,14 +3,14 @@ import { useController } from "react-hook-form";
 import styled from "styled-components"
 import LabeledInput from "./LabeledInput"
 
-const Input = styled.input`
+export const StyledInput = styled.input`
     width: 100%;
     padding: 0.5rem 1rem;
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
 `
 
-const TextArea = styled.textarea`
+export const StyledTextArea = styled.textarea`
     width: 100%;
     padding: 0.5rem 1rem;
     border: solid 1px ${({theme}) => theme.colors.light};
@@ -19,7 +19,7 @@ const TextArea = styled.textarea`
 
 export const StyledTextInput = React.forwardRef(({name, label, className, textArea=false, rows=3, password=false, value, onChange, ...props}, innerRef) => {
     return textArea ? 
-    <TextArea 
+    <StyledTextArea 
         ref={innerRef}
         name={name} 
         id={name}
@@ -30,7 +30,7 @@ export const StyledTextInput = React.forwardRef(({name, label, className, textAr
         rows={rows}
         {...props}
     />
-    : <Input 
+    : <StyledInput 
         ref={innerRef}
         type={password ? 'password' : 'text'}
         name={name} 
@@ -43,7 +43,7 @@ export const StyledTextInput = React.forwardRef(({name, label, className, textAr
     />;
 })
 
-export const StyledLabeledTextInput = React.forwardRef(({name, label, message, className, textArea=false, rows=3, password=false, value, onChange, inlineLabel, props}, innerRef) => {
+export const StyledLabeledTextInput = React.forwardRef(({name, label, message, className, textArea=false, rows=3, password=false, value, onChange, inlineLabel, ...props}, innerRef) => {
     return (
         <LabeledInput {...{name, label, error: message, inlineLabel}} >
             <StyledTextInput 

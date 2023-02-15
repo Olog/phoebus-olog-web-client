@@ -18,24 +18,12 @@
 
 import axios from "axios";
 import { APP_BASE_URL } from "constants";
+import { delay } from "utils";
 
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 const ologService = axios.create({
     baseURL: APP_BASE_URL
 });
-
-/**
- * A wrapper around setTimeout that allows awaiting a delay.
- * @param {number} duration duration in milliseconds to delay.
- * @returns a resolvable Promise.
- */
-const delay = (duration) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve();
-        }, duration)
-    })
-}
 
 /**
  * Perform an Olog Service request with a retry policy
