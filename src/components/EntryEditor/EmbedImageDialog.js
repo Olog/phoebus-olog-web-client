@@ -37,7 +37,7 @@ const ImageContainer = styled.div`
     }
 `
 
-const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
+const EmbedImageDialog = ({addEmbeddedImage, initialImage=null, setInitialImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
 
     const {control, setValue, watch, getValues, reset: resetForm} = useForm({
         mode: 'all',
@@ -47,6 +47,13 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
     const [originalImageWidth, setOriginalImageWidth] = useState(0);
     const [originalImageHeight, setOriginalImageHeight] = useState(0);
     const scalingFactor = watch('scalingFactor');
+
+    // If provided with an initial image, then use it
+    useEffect(() => {
+        if(initialImage) {
+            setImageAttachment(initialImage);
+        }
+    }, [initialImage])
 
     const onFileChanged = (files) => {
         if(files){
@@ -104,6 +111,7 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
     const handleClose = () => {
         setShowEmbedImageDialog(false);
         setImageAttachment(null);
+        setInitialImage(null);
         setOriginalImageHeight(0);
         setOriginalImageWidth(0);
         resetForm();
@@ -125,7 +133,7 @@ const EmbedImageDialog = ({addEmbeddedImage, showEmbedImageDialog, setShowEmbedI
             <Form 
                 onSubmit={handleSubmit}
             >
-                <Header closeButton onClose={() => setShowEmbedImageDialog(false)}>
+                <Header closeButton onClose={handleClose}>
                     <Title>Add Embedded Image</Title>
                 </Header>
                 <Body>

@@ -57,7 +57,7 @@ export const StyledLabeledTextInput = React.forwardRef(({name, label, message, c
     );
 });
 
-export const TextInput = ({name, label, control, rules, defaultValue, className, textArea=false, rows=3, password=false, inlineLabel}) => {
+export const TextInput = ({name, label, control, rules, defaultValue, className, textArea=false, rows=3, password=false, inlineLabel, ...props}) => {
     
     const {field, fieldState} = useController({name, control, rules, defaultValue});
 
@@ -72,8 +72,9 @@ export const TextInput = ({name, label, control, rules, defaultValue, className,
             ref: field.ref, 
             value:field.value, 
             onChange:field.onChange,
-            inlineLabel
+            inlineLabel,
         }}
+        {...props}
     />
     
 }

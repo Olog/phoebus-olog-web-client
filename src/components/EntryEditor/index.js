@@ -149,6 +149,7 @@ const EntryEditor = ({
     // File input HTML element ref allows us to hide
     // the element and click it from e.g. a button
     // const fileInputRef = useRef(null);
+    const [initialImage, setInitialImage] = useState(null);
     const [createInProgress, setCreateInProgress] = useState(false);
     const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
     const [showHtmlPreview, setShowHtmlPreview] = useState(false);
@@ -360,6 +361,22 @@ const EntryEditor = ({
         );
     })
 
+    const handlePaste = (e) => {
+        const items = e.clipboardData.items;
+        let imageFile = null;
+        for(let item of items) {
+            if(item.kind === 'file' && item.type.match(/^image/)) {
+                imageFile = item.getAsFile();
+            }
+        }
+        if(imageFile) {
+            setInitialImage(imageFile);
+            setShowEmbedImageDialog(true);
+            // prevent paste of image 'text'
+            e.preventDefault();
+        }
+    }
+
     return (
         <>
                 <LoadingOverlay
@@ -367,7 +384,7 @@ const EntryEditor = ({
                 >
                     <Container>
                     <h1>New Log Entry</h1>
-                    <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Form onSubmit={handleSubmit(onSubmit)} >
                         <span ref={topElem}></span>
                         <MultiSelect
                             name='logbooks'
@@ -441,6 +458,7 @@ const EntryEditor = ({
                                 defaultValue=''
                                 textArea
                                 rows={10}
+                                onPaste={handlePaste}
                             />
                             <DescriptionContainerFooter>
                                 <div>
@@ -511,6 +529,8 @@ const EntryEditor = ({
             <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
                 setShowEmbedImageDialog={setShowEmbedImageDialog}
                 addEmbeddedImage={addEmbeddedImage}
+                initialImage={initialImage}
+                setInitialImage={setInitialImage}
             />
             <HtmlPreview showHtmlPreview={showHtmlPreview}
                 setShowHtmlPreview={setShowHtmlPreview}
