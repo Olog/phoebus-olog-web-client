@@ -58,7 +58,9 @@ describe('Happy Paths', () => {
     cy.findByRole('textbox', {name: /description/i}).type('my custom description');
     cy.get('input[type=file]').selectFile('cypress/fixtures/testImage.jpg', {force: true});
     cy.findByRole('button', {name: /submit/i}).click();
-    cy.findByRole('heading', {name: title, level: 3 }).click();
+
+    // expect to find the entry we created
+    cy.findByRole('heading', {name: title, level: 3}).click();
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
 

@@ -319,8 +319,11 @@ const EntryEditor = ({
                                 retries: 5,
                                 retryCondition: (retryRes) => {
                                     // Retry if the entry we created isn't in the search results yet
+                                    // Or if it does show in search but the attachments haven't been associated to it yet
+                                    // (the server sometimes responds with the entry but has an empty attachments field)
                                     const found = retryRes?.data?.logs.find(it => `${it.id}` === `${res.data.id}`);
-                                    const willRetry = !found;
+                                    const hasAllAttachments = found?.attachments?.length === attachments.length;
+                                    const willRetry = !found || (found && !hasAllAttachments)
                                     // console.log({time: new Date(), retryData: retryRes?.data?.logs, found, willRetry})
                                     return willRetry;
                                 },
