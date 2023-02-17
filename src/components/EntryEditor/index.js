@@ -46,28 +46,28 @@ import ExternalLink from 'components/shared/ExternalLink';
 import { APP_BASE_URL } from 'constants';
 
 const Container = styled.div`
-    padding: 0.5rem;
+    padding: 1rem 0.5rem;
     overflow: hidden;
     height: 100%;
     display: flex;
     flex-direction: column;
+    gap: 1rem;
 `
 
 const Form = styled.form`
     display: flex;
     flex-direction: column;
     overflow: auto;
+    gap: 0.5rem;
 `
 
 const DescriptionContainer = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 1rem 0;
-    padding-top: 0;
+    padding-bottom: 1rem;
 `
 
 const DescriptionTextInput = styled(TextInput)`
-    padding-top: 0;
 `
 
 const DescriptionContainerFooter = styled.div`
@@ -97,7 +97,7 @@ const RenderedAttachmentsContainer = styled.div`
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem;
-    margin: 0.5rem;
+    margin-bottom: 1rem;
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
 
@@ -122,12 +122,10 @@ const PropertiesContainer = styled.div`
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
     padding: 0.5rem;
-    margin: 0.5rem;
+    margin-bottom: 1rem;
 `
 
-const DetachedLabel = styled.label`
-    padding: 0 0.5rem;
-`
+const DetachedLabel = styled.label``
 
 const EntryEditor = ({
      tags=[],
@@ -151,6 +149,7 @@ const EntryEditor = ({
     // File input HTML element ref allows us to hide
     // the element and click it from e.g. a button
     // const fileInputRef = useRef(null);
+    const [initialImage, setInitialImage] = useState(null);
     const [createInProgress, setCreateInProgress] = useState(false);
     const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
     const [showHtmlPreview, setShowHtmlPreview] = useState(false);
@@ -235,7 +234,6 @@ const EntryEditor = ({
         const imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
         let description = getValues('description') || '';
         description += imageMarkup;
-        setShowEmbedImageDialog(false);
         setValue('description', description, {shouldDirty: false, shouldTouch: false, shouldValidate: false});
     }
 
@@ -363,14 +361,30 @@ const EntryEditor = ({
         );
     })
 
+    const handlePaste = (e) => {
+        const items = e.clipboardData.items;
+        let imageFile = null;
+        for(let item of items) {
+            if(item.kind === 'file' && item.type.match(/^image/)) {
+                imageFile = item.getAsFile();
+            }
+        }
+        if(imageFile) {
+            setInitialImage(imageFile);
+            setShowEmbedImageDialog(true);
+            // prevent paste of image 'text'
+            e.preventDefault();
+        }
+    }
+
     return (
         <>
-            <Container>
                 <LoadingOverlay
                     active={createInProgress}
                 >
+                    <Container>
                     <h1>New Log Entry</h1>
-                    <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Form onSubmit={handleSubmit(onSubmit)} >
                         <span ref={topElem}></span>
                         <MultiSelect
                             name='logbooks'
@@ -444,6 +458,7 @@ const EntryEditor = ({
                                 defaultValue=''
                                 textArea
                                 rows={10}
+                                onPaste={handlePaste}
                             />
                             <DescriptionContainerFooter>
                                 <div>
@@ -476,9 +491,12 @@ const EntryEditor = ({
                             <DroppableFileUploadInput 
                                 onFileChanged={onFileChanged}
                                 id='attachments-upload'
+                                dragLabel='Drag It Here'
+                                browseLabel='Choose a File or'
                             />
                             { renderedAttachments }
                         </RenderedAttachmentsContainer>
+                        <DetachedLabel>Properties</DetachedLabel>
                         <PropertiesContainer>
                             <Button variant="secondary" size="sm" onClick={(e) => {
                                 e.preventDefault();
@@ -494,8 +512,8 @@ const EntryEditor = ({
                         </PropertiesContainer>
                         <Button type='submit' variant="primary" disabled={userData.userName === "" || createInProgress} >Submit</Button>
                     </Form>
-                </LoadingOverlay>
-            </Container>
+                </Container>
+            </LoadingOverlay>
             <Modal show={showAddProperty} onClose={() => setShowAddProperty(false)}>
                 <Header onClose={() => setShowAddProperty(false)}>
                     <Title>Add Property</Title>
@@ -511,6 +529,8 @@ const EntryEditor = ({
             <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
                 setShowEmbedImageDialog={setShowEmbedImageDialog}
                 addEmbeddedImage={addEmbeddedImage}
+                initialImage={initialImage}
+                setInitialImage={setInitialImage}
             />
             <HtmlPreview showHtmlPreview={showHtmlPreview}
                 setShowHtmlPreview={setShowHtmlPreview}
