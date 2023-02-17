@@ -70,7 +70,6 @@ const Container = styled.div`
         border: none;
         border-top: 3px solid #E1E1E1;
         margin-top: 1rem;
-        margin-bottom: 3.5rem;
     }
 
     /** Table Styling **/
