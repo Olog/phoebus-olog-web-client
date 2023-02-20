@@ -52,6 +52,7 @@ const Description = styled(HtmlContent)`
     padding-bottom: 1rem;
     wordWrap: break-word;
     font-size: 1.2rem;
+    overflow: auto;
 `
 
 const AttachmentImage = styled.img`
