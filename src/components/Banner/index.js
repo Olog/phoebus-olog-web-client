@@ -27,12 +27,14 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 
 const Navbar = styled.nav`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #343a40;
-  color: #fff;
-  padding: 1vh 2vw;
+  & ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #343a40;
+    color: #fff;
+    padding: 1vh 2vw;
+  }
 `
 
 const NavHeader = styled.div`
@@ -45,10 +47,10 @@ const NavFooter = styled.div`
   display: flex;
   align-items: center;
 `
-const PackageName = styled.h1`
+const PackageName = styled.div`
   font-size: 1.4em;
 `
-const PackageVersion = styled.h2`
+const PackageVersion = styled.div`
   font-size: 0.8em;
 `
 
@@ -109,9 +111,27 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
   }
 
   return (
-    <>
+    <header>
       <Navbar>
-        <NavHeader>
+        <ul>
+          <NavHeader>
+            <li><Link to="/">
+              <PackageName>{packageInfo.name}</PackageName>
+              <PackageVersion>{packageInfo.version}</PackageVersion>
+            </Link></li>
+            <li><Link to="/edit">
+              <Button disabled={!userData.userName} 
+                variant='primary'
+                onClick={() => handleNewLogEntry()}>New Log Entry</Button>
+            </Link></li>
+          </NavHeader>
+          <NavFooter>
+            <li><Button onClick={handleClick} variant="primary">
+              {userData.userName ? userData.userName : 'Sign In'}
+            </Button></li>
+          </NavFooter>
+        </ul>
+        {/* <NavHeader>
           <Link to="/">
             <PackageName>{packageInfo.name}</PackageName>
             <PackageVersion>{packageInfo.version}</PackageVersion>
@@ -126,7 +146,7 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
           <Button onClick={handleClick} variant="primary">
             {userData.userName ? userData.userName : 'Sign In'}
           </Button>
-        </NavFooter>
+        </NavFooter> */}
       </Navbar>
 
       <LoginDialog setUserData={setUserData} 
@@ -137,7 +157,7 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
                       setShowLogout={setShowLogout} 
                       logoutDialogVisible={showLogout}/>
 
-    </>
+    </header>
   )
   
 }
