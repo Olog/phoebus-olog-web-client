@@ -28,3 +28,10 @@ jobs:
       run: ./scripts/test.sh
     - name: Run End-To-End Tests
       run: ./scripts/e2e-test.sh
+    - name: Publish Test Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: |
+          e2e/cypress/screenshots
+          e2e/cypress/videos
