@@ -25,6 +25,7 @@ import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
 import styled from 'styled-components';
 import { useEffect } from 'react';
+import SkipToContent from 'components/shared/SkipToContent';
 
 const Navbar = styled.nav`
   & ul {
@@ -113,6 +114,7 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
   return (
     <header>
       <Navbar>
+        <SkipToContent href='#app-content'>Skip to Main Content</SkipToContent>
         <ul>
           <NavHeader>
             <li><Link to="/">

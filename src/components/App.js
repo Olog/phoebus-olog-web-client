@@ -34,7 +34,7 @@ const ViewportContainer = styled.div`
     flex-direction: column;
 `
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.main`
     overflow: auto;
     height: 100%;
 `
