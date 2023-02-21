@@ -20,7 +20,6 @@ import Button, { buttonBaseStyle } from '../shared/Button';
 import {Link} from "react-router-dom";
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
-import { checkSession } from '../../api/olog-service';
 import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
 import styled from 'styled-components';
