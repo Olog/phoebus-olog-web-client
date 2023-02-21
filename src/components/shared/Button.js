@@ -37,9 +37,10 @@ const Button = ({type='button', variant, disabled=false, onClick=() => {}, inner
     const handleClick = (e) => {
         if(disabled) {
             e.preventDefault();
-            e.preventPropagation();
+            e.stopPropagation();
+        } else {
+            onClick(e);
         }
-        onClick(e);
     }
 
     return <StyledButton onClick={handleClick} type={type} {...{variant, className, ref: innerRef, ...props}} aria-disabled={disabled} >
