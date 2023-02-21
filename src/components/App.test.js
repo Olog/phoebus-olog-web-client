@@ -422,7 +422,7 @@ describe('Login/Logout', () => {
         );
     
         // when rendered
-        const {container} = render(
+        render(
             <MemoryRouter initialEntries={['/edit']}>
                 <ModalProvider>
                     <App />
@@ -430,7 +430,6 @@ describe('Login/Logout', () => {
             </MemoryRouter>
         );
     
-        screen.debug(container, 100000000)
         // then login is displayed
         const passwordField = await screen.findByLabelText(/password/i);
         expect(passwordField).toBeInTheDocument();
