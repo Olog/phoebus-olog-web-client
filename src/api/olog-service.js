@@ -62,7 +62,7 @@ export function checkSession () {
     // If server returns user data with non-null userName, there is a valid session.
     return ologService.get('/user', { withCredentials: true })
             .then(res => {return res.data})
-            .catch(err => alert("Unable to check login session: " + err));
+            .catch(err => console.warn("Unable to check login session: ", err));
 }
 
 export default ologService;

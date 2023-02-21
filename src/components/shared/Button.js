@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled, { css } from "styled-components";
 
 export const buttonBaseStyle = css`
-    ${({hidden, variant, theme, disabled}) => hidden ? '' : `
+    ${({hidden, variant, theme}) => hidden ? '' : `
         display: flex;
         justify-content: center;
         align-items: center;
@@ -13,27 +13,41 @@ export const buttonBaseStyle = css`
         border-radius: 5px;
         background-color: ${ theme.colors[variant] || theme.colors.default };
         color: #fff;
-        cursor: ${disabled ? 'not-allowed' : 'pointer'};
-        filter: ${disabled ? 'brightness(0.7) opacity(50%)' : 'none'};
+        cursor: pointer;
+        filter: none;
         
+        &[aria-disabled=true] {
+            cursor: not-allowed;
+            opacity: 0.50;
+        }
+
         &:hover {
             filter: brightness(0.7);
         }
     `}
 `
 
-const ButtonElem = styled.button`
+const StyledButton = styled.button`
     ${buttonBaseStyle}
 `
 
 // const Button = ({type='button', variant, disabled=false, onClick=() => {}, innerRef, className, hidden, children}) => {
 const Button = ({type='button', variant, disabled=false, onClick=() => {}, innerRef, className, children, ...props}) => {
-    return <ButtonElem type={type} {...{variant, disabled, onClick, className, ref: innerRef, ...props}}>
+
+    const handleClick = (e) => {
+        if(disabled) {
+            e.preventDefault();
+            e.preventPropagation();
+        }
+        onClick(e);
+    }
+
+    return <StyledButton onClick={handleClick} type={type} {...{variant, className, ref: innerRef, ...props}} aria-disabled={disabled} >
         {children}
-    </ButtonElem>
+    </StyledButton>
 }
 
-const StyledToggleButton = styled(ButtonElem)`
+const StyledToggleButton = styled(StyledButton)`
     background-color: ${({checked, variant, theme}) => checked ? (theme.colors[variant] || theme.colors.default) : 'transparent'};
     border: 1px solid ${({variant, theme}) => theme.colors[variant] || theme.colors.default};
     color: ${({checked, variant, theme}) => checked ? theme.colors.lightest : (theme.colors[variant] || theme.colors.default)};

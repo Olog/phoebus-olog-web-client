@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import Button from '../shared/Button';
+import Button, { buttonBaseStyle } from '../shared/Button';
 import {Link} from "react-router-dom";
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
@@ -55,6 +55,11 @@ const PackageVersion = styled.div`
   font-size: 0.8em;
 `
 
+const NewLogEntryLinkButton = styled(Link)`
+  ${buttonBaseStyle}
+  background-color: ${({theme}) => theme.colors.primary};
+`
+
 /**
  * Banner component with controls to create log entry, log book or tag. Plus
  * button for signing in/out. 
@@ -84,24 +89,6 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
     }
   }, [setUserData])
 
-  const handleNewLogEntry = () => {
-    
-    var promise = checkSession();
-    if(!promise){
-      setShowLogin(true);
-    }
-    else{
-      promise.then(data => {
-        if(!data){
-          setShowLogin(true);
-        }
-        else{
-          setReplyAction(false);
-        }
-      });
-    }
-  }
-
   const handleClick = () => {
     if(!userData.userName){
         setShowLogin(true);
@@ -117,15 +104,14 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
         <SkipToContent href='#app-content'>Skip to Main Content</SkipToContent>
         <ul>
           <NavHeader>
-            <li><Link to="/">
+            <li><Link to="/" aria-label='home'>
               <PackageName>{packageInfo.name}</PackageName>
               <PackageVersion>{packageInfo.version}</PackageVersion>
             </Link></li>
-            <li><Link to="/edit">
-              <Button disabled={!userData.userName} 
-                variant='primary'
-                onClick={() => handleNewLogEntry()}>New Log Entry</Button>
-            </Link></li>
+
+            <li><NewLogEntryLinkButton to="/edit" >
+              New Log Entry
+            </NewLogEntryLinkButton></li>
           </NavHeader>
           <NavFooter>
             <li><Button onClick={handleClick} variant="primary">
@@ -133,22 +119,6 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
             </Button></li>
           </NavFooter>
         </ul>
-        {/* <NavHeader>
-          <Link to="/">
-            <PackageName>{packageInfo.name}</PackageName>
-            <PackageVersion>{packageInfo.version}</PackageVersion>
-          </Link>
-          <Link to="/edit">
-            <Button disabled={!userData.userName} 
-              variant='primary'
-              onClick={() => handleNewLogEntry()}>New Log Entry</Button>
-          </Link>
-        </NavHeader>
-        <NavFooter>
-          <Button onClick={handleClick} variant="primary">
-            {userData.userName ? userData.userName : 'Sign In'}
-          </Button>
-        </NavFooter> */}
       </Navbar>
 
       <LoginDialog setUserData={setUserData} 

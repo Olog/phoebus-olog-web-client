@@ -90,8 +90,9 @@ const App = () => {
                         <EntryEditor {...{
                             tags,
                             logbooks,
-                            replyAction,
-                            userData, setUserData
+                            replyAction, setReplyAction,
+                            userData, setUserData,
+                            setShowLogin
                         }}/>
                     } />
                 </Routes>

@@ -7,6 +7,7 @@ import selectEvent from 'react-select-event';
 import { MemoryRouter } from 'react-router-dom';
 import customization from 'utils/customization';
 import { delay } from 'utils';
+import { ModalProvider } from 'styled-react-modal';
 
 it('renders without crashing', async () => {
     const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
@@ -230,7 +231,7 @@ describe('Search Results', () => {
 
     })
 
-    test('user can navigate different log entries by clicking on the next/previous buttons', async () => {
+    test('user can navigate different log entries by clicking on the next/previous buttons on the log entry', async () => {
 
         // Given the server responds with many search results to click on
         server.use(
@@ -253,26 +254,24 @@ describe('Search Results', () => {
         const {findByRole} = within(searchResults);
         const entry1 = await findByRole('heading', {name: 'Entry 1'});
         await user.click(entry1);
-
         const entry1Header = await screen.findByRole('heading', {name: 'Entry 1', level: 2});
         expect(entry1Header).toBeInTheDocument();
         const previousEntry = await screen.findByRole('button', {name: /previous/i});
         const nextEntry = await screen.findByRole('button', {name: /next/i});
-        expect(previousEntry).toBeDisabled();
-        expect(nextEntry).toBeEnabled();
+        expect(previousEntry).toHaveAttribute('aria-disabled', 'true');
+        expect(nextEntry).toHaveAttribute('aria-disabled', 'false'); // arguably, pagination should be LINKS not buttons...don't render next if no next page!
 
         await user.click(nextEntry);
         const entry2Header = await screen.findByRole('heading', {name: 'Entry 2', level: 2});
         expect(entry2Header).toBeInTheDocument();
-        expect(previousEntry).toBeEnabled();
-        expect(nextEntry).toBeEnabled();
-
+        expect(previousEntry).toHaveAttribute('aria-disabled', 'false');
+        expect(nextEntry).toHaveAttribute('aria-disabled', 'false');
         await user.click(nextEntry);
 
         const entry3Header = await screen.findByRole('heading', {name: 'Entry 3', level: 2});
         expect(entry3Header).toBeInTheDocument();
-        expect(previousEntry).toBeEnabled();
-        expect(nextEntry).toBeDisabled();
+        expect(previousEntry).toHaveAttribute('aria-disabled', 'false');
+        expect(nextEntry).toHaveAttribute('aria-disabled', 'true');
 
         await user.click(previousEntry);
         expect(entry2Header).toBeInTheDocument();
@@ -381,9 +380,8 @@ describe('Login/Logout', () => {
         // When rendered
         const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
     
-        // Then the user is logged out and cannot create log entries
-        expect(await screen.findByText(/Sign In/i)).toBeInTheDocument();
-        expect(await screen.findByText(/New Log Entry/i)).toBeDisabled();
+        // Then the user is logged out
+        expect(await screen.findByRole('button', {name: /Sign In/i})).toBeInTheDocument();
     
         // cleanup lingering network resources
         unmount(); // TODO further investigate why updates are happening after test concludes
@@ -407,11 +405,37 @@ describe('Login/Logout', () => {
         // When rendered
         render(<MemoryRouter><App /></MemoryRouter>);
     
-        // Then the user is logged in and can create log entries
-        expect(await screen.findByText(/garfieldHatesMondays/i)).toBeInTheDocument();
-        expect(await screen.findByText(/New Log Entry/i)).toBeEnabled();
+        // Then the user is logged in 
+        expect(await screen.findByRole('button', {name:/garfieldHatesMondays/i})).toBeInTheDocument();
     
     });
+
+    test('when navigating to create a log entry directly but not logged in, the user is prompted to login', async () => {
+
+        // given an user isn't logged in
+        server.use(
+            rest.get('*/user', (req, res, ctx) => {
+                return res(
+                    ctx.status(404) // service returns a 404 instead of 401 or 403 when unauthorized/unauthenticated
+                )
+            })
+        );
+    
+        // when rendered
+        const {container} = render(
+            <MemoryRouter initialEntries={['/edit']}>
+                <ModalProvider>
+                    <App />
+                </ModalProvider>
+            </MemoryRouter>
+        );
+    
+        screen.debug(container, 100000000)
+        // then login is displayed
+        const passwordField = await screen.findByLabelText(/password/i);
+        expect(passwordField).toBeInTheDocument();
+    
+    })
 
 })
 
@@ -425,9 +449,9 @@ describe('Creating Log Entries', () => {
         const id = 12345;
     
         // navigate to log entry form
-        const newLogEntry = screen.getByRole('button', {name: /new log entry/i});
+        const newLogEntry = screen.getByRole('link', {name: /new log entry/i});
         await user.click(newLogEntry);
-        const newLogEntryPageTitle = await screen.findByRole('heading', {name: /New Log Entry/i});
+        const newLogEntryPageTitle = await screen.findByRole('link', {name: /New Log Entry/i});
         expect(newLogEntryPageTitle).toBeInTheDocument();
     
         // fill in required information
@@ -550,7 +574,7 @@ describe('Log Entry Groups / Replies', () => {
         expect(title).toHaveValue('entry 1');
 
         // When replying to another
-        const homeLink = screen.getByRole('link', {name: /olog \d\.\d\.\d/i});
+        const homeLink = screen.getByRole('link', {name: /home/i});
         await user.click(homeLink);
         const entry2 = await screen.findByRole('heading', {name: 'entry 2'});
         await user.click(entry2);
