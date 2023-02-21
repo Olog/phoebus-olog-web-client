@@ -28,23 +28,21 @@ import { useEffect } from 'react';
 import SkipToContent from 'components/shared/SkipToContent';
 
 const Navbar = styled.nav`
-  & ul {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: #343a40;
-    color: #fff;
-    padding: 1vh 2vw;
-  }
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #343a40;
+  color: #fff;
+  padding: 1vh 2vw;
 `
 
-const NavHeader = styled.div`
+const NavHeader = styled.ul`
   display: flex;
   align-items: center;
   gap: 1vw;
 `
 
-const NavFooter = styled.div`
+const NavFooter = styled.ul`
   display: flex;
   align-items: center;
 `
@@ -115,40 +113,22 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
     <header>
       <Navbar>
         <SkipToContent href='#app-content'>Skip to Main Content</SkipToContent>
-        <ul>
-          <NavHeader>
-            <li><Link to="/">
-              <PackageName>{packageInfo.name}</PackageName>
-              <PackageVersion>{packageInfo.version}</PackageVersion>
-            </Link></li>
-            <li><Link to="/edit">
-              <Button disabled={!userData.userName} 
-                variant='primary'
-                onClick={() => handleNewLogEntry()}>New Log Entry</Button>
-            </Link></li>
-          </NavHeader>
-          <NavFooter>
-            <li><Button onClick={handleClick} variant="primary">
-              {userData.userName ? userData.userName : 'Sign In'}
-            </Button></li>
-          </NavFooter>
-        </ul>
-        {/* <NavHeader>
-          <Link to="/">
+        <NavHeader>
+          <li><Link to="/">
             <PackageName>{packageInfo.name}</PackageName>
             <PackageVersion>{packageInfo.version}</PackageVersion>
-          </Link>
-          <Link to="/edit">
+          </Link></li>
+          <li><Link to="/edit">
             <Button disabled={!userData.userName} 
               variant='primary'
               onClick={() => handleNewLogEntry()}>New Log Entry</Button>
-          </Link>
+          </Link></li>
         </NavHeader>
         <NavFooter>
-          <Button onClick={handleClick} variant="primary">
+          <li><Button onClick={handleClick} variant="primary">
             {userData.userName ? userData.userName : 'Sign In'}
-          </Button>
-        </NavFooter> */}
+          </Button></li>
+        </NavFooter>
       </Navbar>
 
       <LoginDialog setUserData={setUserData} 
