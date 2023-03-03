@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   fe-olog-service:
-    image: local-olog-service
+    image: ghcr.io/olog/org-phoebus-service-olog:latest
     ports:
       - "8080:8080"
       - "8181:8181"
