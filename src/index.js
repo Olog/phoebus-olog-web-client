@@ -29,6 +29,7 @@ const GlobalStyle = createGlobalStyle`
     *:focus-visible {
         outline: 3px solid orange;
         outline-offset: 1px;
+        z-index: 9999;
     }
 `;
 
