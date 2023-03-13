@@ -514,6 +514,7 @@ const EntryEditor = ({
                                 id='attachments-upload'
                                 dragLabel='Drag It Here'
                                 browseLabel='Choose a File or'
+                                multiple
                             />
                             { renderedAttachments }
                         </RenderedAttachmentsContainer>
