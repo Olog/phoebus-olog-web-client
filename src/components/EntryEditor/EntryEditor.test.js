@@ -16,7 +16,7 @@ test('when an image is uploaded, then it is displayed', async () => {
 
     // upload an attachment
     const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-    const uploadInput = screen.getByLabelText(/choose a file/i);
+    const uploadInput = screen.getByLabelText(/choose file\(s\)/i);
     await user.upload(uploadInput, file);
 
     // check it is rendered on the page
@@ -37,7 +37,7 @@ test('when many images are uploaded simultaneously, then all are displayed', asy
     // upload an attachment
     const file1 = new File(['hello'], 'hello.png', {type: 'image/png'})
     const file2 = new File(['goodday'], 'goodday.png', {type: 'image/png'})
-    const uploadInput = screen.getByLabelText(/choose a file/i);
+    const uploadInput = screen.getByLabelText(/choose file\(s\)/i);
     await user.upload(uploadInput, [file1, file2]);
 
     // check it is rendered on the page
@@ -59,7 +59,7 @@ test('can upload a file with the same name', async () => {
     // upload an attachment
     const file = new File(['hello'], 'hello.png', {type: 'image/png'})
     const fileCopy = new File(['hello'], 'hello.png', {type: 'image/png'})
-    const uploadInput = screen.getByLabelText(/choose a file/i);
+    const uploadInput = screen.getByLabelText(/choose file\(s\)/i);
     await user.upload(uploadInput, file);
     await user.upload(uploadInput, fileCopy);
 
