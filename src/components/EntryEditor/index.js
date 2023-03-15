@@ -130,8 +130,9 @@ const DetachedLabel = styled.label``
 const EntryEditor = ({
      tags=[],
      logbooks=[],
-     replyAction,
-     userData, setUserData
+     replyAction, setReplyAction=() => {},
+     userData, setUserData,
+     setShowLogin=() => {}
     }) => {
 
     const topElem = useRef();
@@ -168,6 +169,26 @@ const EntryEditor = ({
         storage: window.localStorage,
         exclude: 'attachments', // serializing files is unsupported due to security risks
     });
+
+    /**
+     * Show login if no session
+     */
+    useEffect(() => {
+        const promise = checkSession();
+        if(!promise){
+            setShowLogin(true);
+        }
+        else{
+            promise.then(data => {
+                if(!data){
+                setShowLogin(true);
+                }
+                else{
+                setReplyAction(false);
+                }
+            });
+        }
+    }, [setShowLogin, setReplyAction])
     
     /**
      * If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
@@ -491,8 +512,9 @@ const EntryEditor = ({
                             <DroppableFileUploadInput 
                                 onFileChanged={onFileChanged}
                                 id='attachments-upload'
-                                dragLabel='Drag It Here'
-                                browseLabel='Choose a File or'
+                                dragLabel='Drag Here'
+                                browseLabel='Choose File(s) or'
+                                multiple
                             />
                             { renderedAttachments }
                         </RenderedAttachmentsContainer>
