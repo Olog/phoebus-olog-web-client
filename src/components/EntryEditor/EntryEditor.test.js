@@ -16,12 +16,35 @@ test('when an image is uploaded, then it is displayed', async () => {
 
     // upload an attachment
     const file = new File(['hello'], 'hello.png', {type: 'image/png'})
-    const uploadInput = screen.getByLabelText(/choose a file/i);
+    const uploadInput = screen.getByLabelText(/choose file\(s\)/i);
     await user.upload(uploadInput, file);
 
     // check it is rendered on the page
     const uploadedImage = await screen.findByRole('img', {name: /hello/i});
     expect(uploadedImage).toBeInTheDocument();
+
+})
+
+test('when many images are uploaded simultaneously, then all are displayed', async () => {
+
+    const user = userEvent.setup();
+    render(
+        <MemoryRouter>
+            <EntryEditor userData={{username: 'foo'}}/>
+        </MemoryRouter>
+    );
+
+    // upload an attachment
+    const file1 = new File(['hello'], 'hello.png', {type: 'image/png'})
+    const file2 = new File(['goodday'], 'goodday.png', {type: 'image/png'})
+    const uploadInput = screen.getByLabelText(/choose file\(s\)/i);
+    await user.upload(uploadInput, [file1, file2]);
+
+    // check it is rendered on the page
+    const uploadedImage1 = await screen.findByRole('img', {name: /hello/i});
+    const uploadedImage2 = await screen.findByRole('img', {name: /goodday/i});
+    expect(uploadedImage1).toBeInTheDocument();
+    expect(uploadedImage2).toBeInTheDocument();
 
 })
 
@@ -36,7 +59,7 @@ test('can upload a file with the same name', async () => {
     // upload an attachment
     const file = new File(['hello'], 'hello.png', {type: 'image/png'})
     const fileCopy = new File(['hello'], 'hello.png', {type: 'image/png'})
-    const uploadInput = screen.getByLabelText(/choose a file/i);
+    const uploadInput = screen.getByLabelText(/choose file\(s\)/i);
     await user.upload(uploadInput, file);
     await user.upload(uploadInput, fileCopy);
 

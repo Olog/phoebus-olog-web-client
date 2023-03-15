@@ -129,7 +129,7 @@ const Attachment = ({attachment, removeAttachment, className}) => {
         <>
             <Container className={className}>
                 <ImageHeader>
-                    <CloseIcon onClick={() => removeAttachment(attachment.file)} aria-label={`remove ${attachment.file.name}`}>
+                    <CloseIcon type='button' onClick={() => removeAttachment(attachment.file)} aria-label={`remove ${attachment.file.name}`}>
                         <BsXCircle />
                     </CloseIcon>
                 </ImageHeader>
