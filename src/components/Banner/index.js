@@ -27,23 +27,21 @@ import { useEffect } from 'react';
 import SkipToContent from 'components/shared/SkipToContent';
 
 const Navbar = styled.nav`
-  & ul {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: #343a40;
-    color: #fff;
-    padding: 1vh 2vw;
-  }
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #343a40;
+  color: #fff;
+  padding: 1vh 2vw;
 `
 
-const NavHeader = styled.div`
+const NavHeader = styled.ul`
   display: flex;
   align-items: center;
   gap: 1vw;
 `
 
-const NavFooter = styled.div`
+const NavFooter = styled.ul`
   display: flex;
   align-items: center;
 `
@@ -101,23 +99,20 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
     <header>
       <Navbar>
         <SkipToContent href='#app-content'>Skip to Main Content</SkipToContent>
-        <ul>
-          <NavHeader>
-            <li><Link to="/" aria-label='home'>
-              <PackageName>{packageInfo.name}</PackageName>
-              <PackageVersion>{packageInfo.version}</PackageVersion>
-            </Link></li>
-
-            <li><NewLogEntryLinkButton to="/edit" >
+        <NavHeader>
+          <li><Link to="/" aria-label='home'>
+            <PackageName>{packageInfo.name}</PackageName>
+            <PackageVersion>{packageInfo.version}</PackageVersion>
+          </Link></li>
+          <li><NewLogEntryLinkButton to="/edit" >
               New Log Entry
             </NewLogEntryLinkButton></li>
-          </NavHeader>
-          <NavFooter>
-            <li><Button onClick={handleClick} variant="primary">
-              {userData.userName ? userData.userName : 'Sign In'}
-            </Button></li>
-          </NavFooter>
-        </ul>
+        </NavHeader>
+        <NavFooter>
+          <li><Button onClick={handleClick} variant="primary">
+            {userData.userName ? userData.userName : 'Sign In'}
+          </Button></li>
+        </NavFooter>
       </Navbar>
 
       <LoginDialog setUserData={setUserData} 
