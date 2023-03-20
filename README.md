@@ -54,7 +54,7 @@ Environment variables can be set directly on the terminal, or they can be loaded
 In order to develop and test with reasonable effort you will need the proper toolchain:
 
 1. Node JS, install latest (>= 17.x) version.
-1. Docker; backend services are defined via compose files
+1. Docker; backend services are defined via compose files. IMPORTANT: Allocate at least 4 CPU cores and 8GB RAM, consider increasing if tests fail.
 1. A reasonably clever text editor. Visual Studio Code is a good alternative as it comes with some support for React development.
 1. Optional: a React JS add-on to your browser.
 

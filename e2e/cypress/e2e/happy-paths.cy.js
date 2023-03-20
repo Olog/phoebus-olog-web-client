@@ -16,7 +16,7 @@ describe('Happy Paths', () => {
     cy.visit('/');
 
     // Perform a search that should return the seed data (Should see 35 results from the seeding <30 seconds ago)
-    cy.findByRole('searchbox', {name: /Search/i}).clear().type('start=30 sec{Enter}');
+    cy.findByRole('searchbox', {name: /Search/i}).clear().type('start=1 min{Enter}');
 
     // Set the page size as expected
     cy.findByRole('textbox', {name: /hits per page/i}).clear().type('30{Enter}');
