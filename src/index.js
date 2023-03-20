@@ -25,6 +25,12 @@ const GlobalStyle = createGlobalStyle`
     a:visited {
         color: inherit;
     }
+
+    *:focus-visible {
+        outline: 3px solid orange;
+        outline-offset: 1px;
+        z-index: 9999;
+    }
 `;
 
 const container = document.getElementById('root');

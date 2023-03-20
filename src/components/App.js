@@ -34,7 +34,7 @@ const ViewportContainer = styled.div`
     flex-direction: column;
 `
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.main`
     overflow: auto;
     height: 100%;
 `
@@ -90,8 +90,9 @@ const App = () => {
                         <EntryEditor {...{
                             tags,
                             logbooks,
-                            replyAction,
-                            userData, setUserData
+                            replyAction, setReplyAction,
+                            userData, setUserData,
+                            setShowLogin
                         }}/>
                     } />
                 </Routes>

@@ -60,7 +60,9 @@ const ImageHeader = styled.div`
     align-items: center;
 `
 
-const CloseIcon = styled(BsXCircle)`
+const CloseIcon = styled.button`
+    background-color: transparent;
+    border: none;
     &:hover {
         cursor: pointer;
     }
@@ -126,7 +128,11 @@ const Attachment = ({attachment, removeAttachment, className}) => {
     return (
         <>
             <Container className={className}>
-                <ImageHeader><CloseIcon onClick={() => removeAttachment(attachment.file)} /></ImageHeader>
+                <ImageHeader>
+                    <CloseIcon type='button' onClick={() => removeAttachment(attachment.file)} aria-label={`remove ${attachment.file.name}`}>
+                        <BsXCircle />
+                    </CloseIcon>
+                </ImageHeader>
                 <ImageContainer onClick={previewImage} >
                     {image}
                 </ImageContainer>

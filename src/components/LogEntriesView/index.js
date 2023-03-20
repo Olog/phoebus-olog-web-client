@@ -29,7 +29,7 @@ import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import ServiceErrorBanner from 'components/ErrorBanner';
 import styled from 'styled-components';
 import Filters from 'components/Filters';
-import { mobile } from 'config/media';
+import { desktop, mobile } from 'config/media';
 
 const ContentContainer = styled.div`
     height: 100%;
@@ -72,7 +72,11 @@ const LogDetailsContainer = styled.div`
     flex: 1 0 0;
     border: 1px solid ${({theme}) => theme.colors.light};
     border-radius: 5px;
-
+    
+    ${desktop(`
+        overflow-x: hidden;
+        overflow-y: auto;
+    `)}
     ${mobile(`
         order: -1;
         width: 100%;

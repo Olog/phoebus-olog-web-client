@@ -16,15 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import Button from '../shared/Button';
+import Button, { buttonBaseStyle } from '../shared/Button';
 import {Link} from "react-router-dom";
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
-import { checkSession } from '../../api/olog-service';
 import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
 import styled from 'styled-components';
 import { useEffect } from 'react';
+import SkipToContent from 'components/shared/SkipToContent';
 
 const Navbar = styled.nav`
   display: flex;
@@ -35,21 +35,26 @@ const Navbar = styled.nav`
   padding: 1vh 2vw;
 `
 
-const NavHeader = styled.div`
+const NavHeader = styled.ul`
   display: flex;
   align-items: center;
   gap: 1vw;
 `
 
-const NavFooter = styled.div`
+const NavFooter = styled.ul`
   display: flex;
   align-items: center;
 `
-const PackageName = styled.h1`
+const PackageName = styled.div`
   font-size: 1.4em;
 `
-const PackageVersion = styled.h2`
+const PackageVersion = styled.div`
   font-size: 0.8em;
+`
+
+const NewLogEntryLinkButton = styled(Link)`
+  ${buttonBaseStyle}
+  background-color: ${({theme}) => theme.colors.primary};
 `
 
 /**
@@ -81,24 +86,6 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
     }
   }, [setUserData])
 
-  const handleNewLogEntry = () => {
-    
-    var promise = checkSession();
-    if(!promise){
-      setShowLogin(true);
-    }
-    else{
-      promise.then(data => {
-        if(!data){
-          setShowLogin(true);
-        }
-        else{
-          setReplyAction(false);
-        }
-      });
-    }
-  }
-
   const handleClick = () => {
     if(!userData.userName){
         setShowLogin(true);
@@ -109,23 +96,22 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
   }
 
   return (
-    <>
+    <header>
       <Navbar>
+        <SkipToContent href='#app-content'>Skip to Main Content</SkipToContent>
         <NavHeader>
-          <Link to="/">
+          <li><Link to="/" aria-label='home'>
             <PackageName>{packageInfo.name}</PackageName>
             <PackageVersion>{packageInfo.version}</PackageVersion>
-          </Link>
-          <Link to="/edit">
-            <Button disabled={!userData.userName} 
-              variant='primary'
-              onClick={() => handleNewLogEntry()}>New Log Entry</Button>
-          </Link>
+          </Link></li>
+          <li><NewLogEntryLinkButton to="/edit" >
+              New Log Entry
+            </NewLogEntryLinkButton></li>
         </NavHeader>
         <NavFooter>
-          <Button onClick={handleClick} variant="primary">
+          <li><Button onClick={handleClick} variant="primary">
             {userData.userName ? userData.userName : 'Sign In'}
-          </Button>
+          </Button></li>
         </NavFooter>
       </Navbar>
 
@@ -137,7 +123,7 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
                       setShowLogout={setShowLogout} 
                       logoutDialogVisible={showLogout}/>
 
-    </>
+    </header>
   )
   
 }
