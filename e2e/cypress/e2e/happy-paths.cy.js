@@ -52,7 +52,7 @@ describe('Happy Paths', () => {
     cy.findByRole('button', {name: /login/i}).click();
 
     // create and submit a new log entry
-    cy.findByRole('button', {name: /new log entry/i}).click();
+    cy.findByRole('link', {name: /new log entry/i}).click();
     cy.findByLabelText(/logbooks/i).type('control{downArrow}{enter}');
     cy.findByRole('textbox', {name: /title/i}).type(title);
     cy.findByRole('textbox', {name: /description/i}).type('my custom description');
