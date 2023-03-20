@@ -103,7 +103,7 @@ const PaginationBar = ({searchResults, searchPageParams}) => {
                         goToPage(i)
                     }
                 }}
-                label={`go to page ${i+1}`}
+                label={`Page ${i+1}`}
             >
                 {i + 1}
             </PaginationItem>)

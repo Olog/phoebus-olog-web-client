@@ -1,0 +1,68 @@
+# Use the default network olog_default.
+version: "3.7"
+services:
+
+  fe-olog-e2e-tests:
+    build: ./e2e
+    depends_on:
+      - fe-olog
+    environment:
+      CYPRESS_baseUrl: http://localhost:3000
+      TEST_BE_URL: http://localhost:8080/Olog
+    # IMPORTANT: run as if from outside the docker network
+    # so that the service url is accessible the same way
+    # as it would be locally on the host
+    network_mode: "host"
+    working_dir: /e2e
+    volumes:
+      - ./e2e/cypress/screenshots:/e2e/cypress/screenshots
+      - ./e2e/cypress/videos:/e2e/cypress/videos
+    entrypoint: > 
+      /bin/bash -c "
+          while ! curl -s -f http://localhost:3000;
+        do
+          echo Waiting for Frontend;
+          sleep 1;
+        done;
+        cypress run;
+      "
+
+  fe-olog:
+    build: .
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - fe-olog-service
+    environment:
+      REACT_APP_BASE_URL: http://localhost:8080/Olog
+    command: >
+      /bin/bash -c "
+          while ! curl -s -f fe-olog-service:8080/Olog;
+        do
+          echo Waiting for Olog Service;
+          sleep 1;
+        done;
+        npm start;
+      "
+
+  fe-olog-service:
+    extends:
+      file: docker-compose.yml
+      service: fe-olog-service
+
+  fe-olog-mongo:
+    extends:
+      file: docker-compose.yml
+      service: fe-olog-mongo
+
+  fe-olog-elastic:
+    extends:
+      file: docker-compose.yml
+      service: fe-olog-elastic
+
+# Configure persistent storage for mongo and elastic.
+volumes:
+  fe-olog-elastic-data:
+    driver: local
+  fe-olog-mongo-data:
+    driver: local

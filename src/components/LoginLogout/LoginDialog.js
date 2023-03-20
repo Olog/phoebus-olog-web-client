@@ -95,7 +95,7 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
       </Body>
       <Footer>
         <Button variant="primary" type="submit" onClick={handleSubmit(login)}>
-          Sign In
+          Login
         </Button>
         <Button variant="secondary" type="button" onClick={hideLogin}>
           Cancel

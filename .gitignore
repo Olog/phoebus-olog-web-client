@@ -4,3 +4,5 @@ build
 .vscode
 .idea/**
 **/.DS_Store 
+e2e/cypress/videos/*
+e2e/cypress/screenshots/*
