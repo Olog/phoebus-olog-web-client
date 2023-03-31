@@ -180,11 +180,12 @@ const EntryEditor = ({
         }
         else{
             promise.then(data => {
+                console.log(data);
                 if(!data){
-                setShowLogin(true);
+                    setShowLogin(true);
                 }
                 else{
-                setReplyAction(false);
+                    //setReplyAction(false);
                 }
             });
         }
@@ -350,6 +351,7 @@ const EntryEditor = ({
                             });
                             clearFormData();
                             setCreateInProgress(false);
+                            setReplyAction(false);
                             navigate('/');
 
                         })
