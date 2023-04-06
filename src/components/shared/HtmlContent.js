@@ -44,8 +44,20 @@ const Container = styled.div`
     }
 
     /** Lists **/
-    ul {
+    /** Unfortunately no good way of using selectors
+     *  to enforce alternating bullet styles purely
+     *  with CSS; this supports six levels, which 
+     *  should be enough 
+     **/
+    ul,
+    li, li li li, li li li li li {
         list-style: disc inside;
+    }
+    li li, li li li li, li li li li li li {
+        list-style: circle inside;
+    }
+    li li li, li li li li li {
+        list-style: square inside;
     }
     ol {
         list-style: decimal inside;
