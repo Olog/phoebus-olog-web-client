@@ -23,6 +23,9 @@ const Container = styled.div`
     p {
         padding: 1rem 0;
     }
+    h3, h4 {
+        padding-bottom: 0.5rem;
+    }
     
     /** Links **/
     a, a:visited {
@@ -47,9 +50,19 @@ const Container = styled.div`
     ol {
         list-style: decimal inside;
     }
+    ul, ol,
     li > ul,
     li > ol {
         padding-left: 2rem;
+    }
+    li > p {
+        /* prevent newline for paragraphs inside of list items */
+        display: inline-block;
+        padding-bottom: 0.25rem;
+    }
+    ul + *, 
+    ol + * {
+        padding-top: 1rem;
     }
 
     /** Code **/
