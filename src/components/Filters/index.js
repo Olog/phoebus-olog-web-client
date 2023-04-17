@@ -32,7 +32,9 @@ const StyledCollapse = styled(Collapse)`
 `
 
 const Container = styled.div`
-
+ & h2 {
+    padding-bottom: 1rem;
+ }
 `
 
 const Form = styled.form`
@@ -86,7 +88,8 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
     return(
         <StyledCollapse show={showFilters} onExiting={handleSubmit(onSubmit)} >
             <Container style={{padding: "8px"}} className={className} >
-                <Form onSubmit={handleSubmit(onSubmit)}>
+                <h2 id="advanced-search">Advanced Search</h2>
+                <Form onSubmit={handleSubmit(onSubmit)} aria-labelledby='advanced-search' role='search' >
                     {/* Hidden button handles submit-on-enter automatically */}
                     <Button type='submit' hidden >Submit</Button>
                     <TextInput 
