@@ -6,7 +6,6 @@ import userEvent from '@testing-library/user-event';
 import selectEvent from 'react-select-event';
 import { MemoryRouter } from 'react-router-dom';
 import customization from 'utils/customization';
-import { delay } from 'utils';
 import { ModalProvider } from 'styled-react-modal';
 
 it('renders without crashing', async () => {
@@ -74,6 +73,7 @@ describe('Search Results', () => {
         // Open the filters
         const filterToggle = await screen.findByRole('button', {name: /Show Search Filters/i});
         user.click(filterToggle);
+        await screen.findByRole('heading', {name: /advanced search/i})
     
         // Enter search query for title
         const titleInput = await screen.findByRole('textbox', {name: /title/i});
@@ -104,6 +104,7 @@ describe('Search Results', () => {
         // Open the filters area
         const filterToggle = await screen.findByRole('button', {name: /Show Search Filters/i});
         user.click(filterToggle);
+        await screen.findByRole('heading', {name: /advanced search/i})
     
         // select a tag
         await selectEvent.select(await screen.findByLabelText(/Tags/i), ['foo']);
@@ -133,6 +134,7 @@ describe('Search Results', () => {
         // Open the filters
         const filterToggle = await screen.findByRole('button', {name: /Show Search Filters/i});
         user.click(filterToggle);
+        await screen.findByRole('heading', {name: /advanced search/i})
     
         // select a logbook
         await selectEvent.select(await screen.findByLabelText(/Logbooks/i), ['test controls']);
@@ -174,6 +176,7 @@ describe('Search Results', () => {
         // Update the sort direction
         const filterToggle = screen.getByRole('button', {name: /show search filters/i})
         await user.click(filterToggle);
+        await screen.findByRole('heading', {name: /advanced search/i})
         const sortAscending = screen.getByRole('radio', {name: /ascending/i});
         await user.click(sortAscending);
         elems = await findAllByRole('heading', {name: /log entry \d/})
