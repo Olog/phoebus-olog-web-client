@@ -60,11 +60,10 @@ describe('Happy Paths', () => {
     cy.findByRole('button', {name: /submit/i}).click();
 
     // expect to find the entry we created
-    cy.findByRole('heading', {name: title, level: 3}).click();
+    cy.findByRole('heading', {name: title, level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
 
   })
-
   
 })
