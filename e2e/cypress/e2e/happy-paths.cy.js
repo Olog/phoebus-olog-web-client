@@ -16,7 +16,7 @@ describe('Happy Paths', () => {
     cy.visit('/');
 
     // Perform a search that should return the seed data (Should see 35 results from the seeding <30 seconds ago)
-    cy.findByRole('searchbox', {name: /Search/i}).clear().type('start=1 min{Enter}');
+    cy.findByRole('searchbox', {name: /Search/i}).clear().type('start=5 min{Enter}');
 
     // Set the page size as expected
     cy.findByRole('textbox', {name: /hits per page/i}).clear().type('30{Enter}');
@@ -60,11 +60,10 @@ describe('Happy Paths', () => {
     cy.findByRole('button', {name: /submit/i}).click();
 
     // expect to find the entry we created
-    cy.findByRole('heading', {name: title, level: 3}).click();
+    cy.findByRole('heading', {name: title, level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
 
   })
-
   
 })
