@@ -22,9 +22,18 @@ import SearchBoxInput from "./SearchBoxInput"
 
 const Container = styled.div`
     width: 100%;
+    padding: 0.25rem 0.5rem;
     display: flex;
-    gap: 0.25rem; 
-    padding: 0.25rem 0.5rem ;
+    flex-direction: column;
+    gap: 0.25rem;
+    & > .searchbox {
+        display: flex;
+        gap: 0.25rem; 
+    }
+    & .advanced-search {
+        display: flex;
+        justify-content: flex-end;
+    }
 `
 
 const StyledSearchBoxInput = styled(SearchBoxInput)`
@@ -32,9 +41,16 @@ const StyledSearchBoxInput = styled(SearchBoxInput)`
     flex-grow: 1;
 `
 
-const FilterButton = styled(Button)`
-    width: 1rem;
-    padding: 0 1rem;
+const FilterLinkToggle = styled.button`
+    padding: 0;
+    border: none;
+    background: none;
+    color: blue;
+    font-style: italic;
+    &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 `
 
 const HelpButton = styled(Button)`
@@ -53,11 +69,15 @@ const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
     
     return (
         <Container className={className} >
-            <FilterButton variant='primary' onClick={(e) => toggleFilters(e)} aria-label="Show Search Filters" >{showFilters ? ">" : "<"}</FilterButton>
-            <StyledSearchBoxInput
-                {...{searchParams, showFilters, isFetching: true}}
-            />
-            <HelpButton variant='secondary' onClick={(e) => showSearchHelp()}>Help</HelpButton>
+            <div className="searchbox">
+                <StyledSearchBoxInput
+                    {...{searchParams, showFilters, isFetching: true}}
+                />
+                <HelpButton variant='secondary' onClick={(e) => showSearchHelp()}>Help</HelpButton>
+            </div>
+            <div className="advanced-search">
+                <FilterLinkToggle type="button" onClick={(e) => toggleFilters(e)} aria-expanded={showFilters} >{showFilters ? "Hide Advanced Search" : "Show Advanced Search"}</FilterLinkToggle>
+            </div>
         </Container>
     );
 }

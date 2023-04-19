@@ -71,8 +71,8 @@ describe('Search Results', () => {
         });
     
         // Open the filters
-        const filterToggle = await screen.findByRole('button', {name: /Show Search Filters/i});
-        user.click(filterToggle);
+        const showAdvancedSearchButton = await screen.findByRole('button', {name: /show advanced search/i});
+        user.click(showAdvancedSearchButton);
         await screen.findByRole('heading', {name: /advanced search/i})
     
         // Enter search query for title
@@ -81,7 +81,8 @@ describe('Search Results', () => {
         await user.type(titleInput, 'some value');
         
         // Close the filters
-        user.click(filterToggle);
+        const hideAdvancedSearchButton = await screen.findByRole('button', {name: /hide advanced search/i});
+        user.click(hideAdvancedSearchButton);
     
         // then the results are updated
         expect(await screen.findByText("hmmm title")).toBeInTheDocument();
@@ -102,7 +103,7 @@ describe('Search Results', () => {
         });
     
         // Open the filters area
-        const filterToggle = await screen.findByRole('button', {name: /Show Search Filters/i});
+        const filterToggle = await screen.findByRole('button', {name: /show advanced search/i});
         user.click(filterToggle);
         await screen.findByRole('heading', {name: /advanced search/i})
     
@@ -132,7 +133,7 @@ describe('Search Results', () => {
         });
     
         // Open the filters
-        const filterToggle = await screen.findByRole('button', {name: /Show Search Filters/i});
+        const filterToggle = await screen.findByRole('button', {name: /show advanced search/i});
         user.click(filterToggle);
         await screen.findByRole('heading', {name: /advanced search/i})
     
@@ -174,7 +175,7 @@ describe('Search Results', () => {
         expect(elems.map(it => it.textContent)).toEqual(['log entry 3', 'log entry 2', 'log entry 1']);
     
         // Update the sort direction
-        const filterToggle = screen.getByRole('button', {name: /show search filters/i})
+        const filterToggle = screen.getByRole('button', {name: /show advanced search/i})
         await user.click(filterToggle);
         await screen.findByRole('heading', {name: /advanced search/i})
         const sortAscending = screen.getByRole('radio', {name: /ascending/i});
