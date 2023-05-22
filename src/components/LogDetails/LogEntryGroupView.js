@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import ologService from 'api/olog-service';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
@@ -24,7 +24,8 @@ import {getLogEntryGroupId, sortLogsDateCreated} from 'utils';
 import GroupHeader from './GroupHeader';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import HtmlContent from 'components/shared/HtmlContent';
+import HtmlPreview from 'components/EntryEditor/HtmlPreview';
+import customization from 'utils/customization';
 
 const Container = styled.div`
     display: flex;
@@ -47,15 +48,10 @@ const GroupContainer = styled.li`
     }
 `
 
-const StyledHtmlContent = styled(HtmlContent)`
-    padding: 0 0.5rem;
-    overflow: auto;
-`
-
  /**
  * Merged view of all log entries 
  */
-const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLogGroupRecords, className}) => {
+const LogEntryGroupView = ({currentLogEntry, logGroupRecords, setLogGroupRecords, className}) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -74,10 +70,6 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
         }
     }, [currentLogEntry.properties, setLogGroupRecords]);
 
-    const getContent = (source) => {
-        return {__html: remarkable.render(source)};
-    }
-
     const showLog = (log) => {
         dispatch(updateCurrentLogEntry(log));
         navigate(`/logs/${log.id}`);
@@ -87,7 +79,7 @@ const LogEntryGroupView = ({remarkable, currentLogEntry, logGroupRecords, setLog
         return(
             <GroupContainer key={index} onClick={() => showLog(row)} >
                 <GroupHeader logEntry={row} />
-                <StyledHtmlContent html={getContent(row.source)}/>
+                <HtmlPreview commonmarkSrc={row.source} imageUrlPrefix={customization.urlPrefix} />
             </GroupContainer>
         );
     });

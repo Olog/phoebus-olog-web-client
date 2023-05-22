@@ -1,5 +1,4 @@
 import React from "react";
-// import { MarkdownPreview } from "components/shared/Markdown";
 import HtmlPreview from "components/EntryEditor/HtmlPreview";
 
 export default {
@@ -85,9 +84,6 @@ Table:
 
 export const Default = {
     args: {
-        showHtmlPreview: true,
-        setShowHtmlPreview: () => {},
-        getCommonmarkSrc: () => source, 
-        getAttachedFiles: () => []
+        commonmarkSrc: source
     }
 };

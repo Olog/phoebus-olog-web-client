@@ -15,10 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-import { useEffect, useMemo } from 'react';
-import { Remarkable } from 'remarkable';
-import imageProcessor from 'utils/image-processor';
+import React from 'react';
 import customization from 'utils/customization';
 import {getLogEntryGroupId} from 'utils';
 import LogEntryGroupView from './LogEntryGroupView';
@@ -64,7 +61,6 @@ const StyledLogEntryGroupView = styled(LogEntryGroupView)`
  * A view show all details of a log entry. Images are renderd, if such are
  * present. Other types of attachments are rendered as links.
  */
-// class LogDetails extends Component{
 const LogDetails = ({
     showGroup, setShowGroup, 
     currentLogEntry,
@@ -74,20 +70,6 @@ const LogDetails = ({
     searchResults,
     className
 }) => {
-
-    const remarkable = useMemo(() => new Remarkable('full', {
-        html:         false,        // Enable HTML tags in source
-        xhtmlOut:     false,        // Use '/' to close single tags (<br />)
-        breaks:       false,        // Convert '\n' in paragraphs into <br>
-        langPrefix:   'language-',  // CSS language prefix for fenced blocks
-        linkTarget:   '',           // set target to open link in
-        // Enable some language-neutral replacements + quotes beautification
-        typographer:  false,
-    }), []);
-
-    useEffect(() => {
-        remarkable.use(imageProcessor, {urlPrefix: customization.urlPrefix});
-    }, [remarkable]);
 
     const renderedReplyButton = customization.log_entry_groups_support ?
         <Link to="/edit">
@@ -115,15 +97,16 @@ const LogDetails = ({
         </ToggleButton> : null;
 
     const renderedLogView = showGroup 
-    ? <StyledLogEntryGroupView {...{
+    ?   <StyledLogEntryGroupView {...{
             showGroup, setShowGroup, 
             currentLogEntry,
             userData, 
             setReplyAction, 
             logGroupRecords, setLogGroupRecords, 
-            remarkable
         }}/> 
-    : <StyledLogEntrySingleView currentLogEntry={currentLogEntry} remarkable={remarkable}/>;
+    :   <StyledLogEntrySingleView 
+            currentLogEntry={currentLogEntry} 
+        />;
 
     return(
         <Container className={className} id='logdetails-and-buttons'>

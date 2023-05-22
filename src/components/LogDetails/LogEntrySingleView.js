@@ -16,13 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import React from 'react';
 import ListGroup from 'components/shared/ListGroup';
 import Properties from './Properties';
 import LogDetailsMetaData from './LogDetailsMetaData';
 import styled from 'styled-components';
 import Collapse from 'components/shared/Collapse';
 import { ListGroupItem } from 'components/shared/ListGroup';
-import HtmlContent from 'components/shared/HtmlContent';
+import HtmlPreview from 'components/EntryEditor/HtmlPreview';
+import customization from 'utils/customization';
 
 const Container = styled.div`
     padding: 0.5rem;
@@ -46,7 +48,7 @@ const Ruler = styled.hr`
     margin: 0.5rem 0;
 `
 
-const Description = styled(HtmlContent)`
+const Description = styled(HtmlPreview)`
     width: 100%;
     padding-top: 0.5rem;
     padding-bottom: 1rem;
@@ -63,11 +65,7 @@ const AttachmentImage = styled.img`
     }
 `
 
-const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
-
-    const getContent = (source) => {
-        return {__html: remarkable.render(source)};
-    }
+const LogEntrySingleView = ({currentLogEntry, className}) => {
     
     const attachments = currentLogEntry.attachments.map((attachment, index) => {
         const url = `${process.env.REACT_APP_BASE_URL}/attachment/` + attachment.id;
@@ -112,7 +110,7 @@ const LogEntrySingleView = ({remarkable, currentLogEntry, className}) => {
             <Ruler />
             <LogDetailsMetaData currentLogRecord={currentLogEntry}/>
             <Ruler />
-            <Description html={getContent(currentLogEntry.source)} />
+            <Description commonmarkSrc={currentLogEntry.source} imageUrlPrefix={customization.urlPrefix} />
             <Collapse title='Attachments'>
                 {currentLogEntry.attachments.length > 0 
                     ? <ListGroup>

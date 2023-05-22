@@ -16,62 +16,50 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Remarkable } from 'remarkable';
 import imageProcessor from 'utils/image-processor';
-import Button from 'components/shared/Button';
-import Modal, { Body, Footer, Header } from '../shared/Modal';
 import styled from 'styled-components';
 import HtmlContent from 'components/shared/HtmlContent';
-
-const StyledModal = styled(Modal)`
-    max-width: 90vw;
-    max-height: 90vh;
-    width: 100%;
-    overflow: auto;
-`
+import OlogAttachment from './OlogAttachment';
 
 const StyledHtmlContent = styled(HtmlContent)`
     padding: 0.5rem 0;
     width: 100%;
 `
 
-const remarkable = new Remarkable('full', {
-    html:         false,        // Enable HTML tags in source
-    xhtmlOut:     false,        // Use '/' to close single tags (<br />)
-    breaks:       false,        // Convert '\n' in paragraphs into <br>
-    langPrefix:   'language-',  // CSS language prefix for fenced blocks
-    linkTarget:   '',           // set target to open link in
-    // Enable some language-neutral replacements + quotes beautification
-    typographer:  false,
-});
-
-const HtmlPreview = ({getCommonmarkSrc, getAttachedFiles, showHtmlPreview, setShowHtmlPreview}) => {
-
-    const [commonmarkSrc, setCommonmarkSrc] = useState("");
+/**
+ * Renders and HTML preview of CommonMark markup, with support for embedded images
+ * @param {string} commonmarkSrc commonmark markup
+ * @param {OlogAttachment[]} attachedFiles List of OlogAttachments (file objects with unique ids)
+ * @param {string} [imageUrlPrefix=http://your-server.domain/path/to/images] Prefix attached to 
+ * attachedFile urls; ignored if there are no file objects.
+ * @returns 
+ */
+const HtmlPreview = ({commonmarkSrc, attachedFiles, imageUrlPrefix}) => {
+    
     const [innerHtml, setInnerHtml] = useState("");
+    
+    const remarkable = useMemo(() => new Remarkable('full', {
+        html:         false,        // Enable HTML tags in source
+        xhtmlOut:     false,        // Use '/' to close single tags (<br />)
+        breaks:       false,        // Convert '\n' in paragraphs into <br>
+        langPrefix:   'language-',  // CSS language prefix for fenced blocks
+        linkTarget:   '',           // set target to open link in
+        typographer:  false,        // Enable some language-neutral replacements + quotes beautification
+    }), []);
 
-    const reset = () => {
-        const source = getCommonmarkSrc();
-        const allAttachedFiles = getAttachedFiles();
-        remarkable.use(imageProcessor, {attachedFiles: allAttachedFiles, setHtmlPreview: true});
-        setInnerHtml(remarkable.render(source));
-    }
+    useEffect(() => {
+        remarkable.use(imageProcessor, {
+            attachedFiles, 
+            setHtmlPreview: attachedFiles && attachedFiles.length > 0, 
+            urlPrefix: imageUrlPrefix
+        });
+        setInnerHtml(remarkable.render(commonmarkSrc));
+    }, [commonmarkSrc, attachedFiles, imageUrlPrefix, remarkable])
 
     return(
-        <StyledModal show={showHtmlPreview}
-            onClose={() => setShowHtmlPreview(false)}
-            onOpen={() => reset()}>
-            <Header onClose={() => setShowHtmlPreview(false)}>
-                <h2>Description Preview</h2>
-            </Header>
-            <Body>
-                <StyledHtmlContent html={{ __html: innerHtml }} />
-            </Body>
-            <Footer>
-                    <Button variant="secondary" onClick={() => setShowHtmlPreview(false)}>OK</Button>
-            </Footer> 
-        </StyledModal>
+        <StyledHtmlContent html={{ __html: innerHtml }} /> 
     )
 
 }
