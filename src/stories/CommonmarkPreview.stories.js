@@ -1,9 +1,9 @@
 import React from "react";
-import HtmlPreview from "components/EntryEditor/HtmlPreview";
+import CommonmarkPreview from "components/shared/CommonmarkPreview";
 
 export default {
-    title: "Common/Markdown",
-    component: HtmlPreview
+    title: "Common/CommonmarkPreview",
+    component: CommonmarkPreview
 }
 
 const source = `# Heading 1

@@ -24,7 +24,7 @@ import {getLogEntryGroupId, sortLogsDateCreated} from 'utils';
 import GroupHeader from './GroupHeader';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import HtmlPreview from 'components/EntryEditor/HtmlPreview';
+import CommonmarkPreview from 'components/shared/CommonmarkPreview';
 import customization from 'utils/customization';
 
 const Container = styled.div`
@@ -79,7 +79,7 @@ const LogEntryGroupView = ({currentLogEntry, logGroupRecords, setLogGroupRecords
         return(
             <GroupContainer key={index} onClick={() => showLog(row)} >
                 <GroupHeader logEntry={row} />
-                <HtmlPreview commonmarkSrc={row.source} imageUrlPrefix={customization.urlPrefix} />
+                <CommonmarkPreview commonmarkSrc={row.source} imageUrlPrefix={customization.urlPrefix} />
             </GroupContainer>
         );
     });

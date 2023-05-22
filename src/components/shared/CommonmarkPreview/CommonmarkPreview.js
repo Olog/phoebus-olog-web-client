@@ -20,8 +20,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Remarkable } from 'remarkable';
 import imageProcessor from 'utils/image-processor';
 import styled from 'styled-components';
-import HtmlContent from 'components/shared/HtmlContent';
-import OlogAttachment from './OlogAttachment';
+import HtmlContent from './HtmlContent';
 
 const StyledHtmlContent = styled(HtmlContent)`
     padding: 0.5rem 0;
@@ -36,7 +35,7 @@ const StyledHtmlContent = styled(HtmlContent)`
  * attachedFile urls; ignored if there are no file objects.
  * @returns 
  */
-const HtmlPreview = ({commonmarkSrc, attachedFiles, imageUrlPrefix}) => {
+export const CommonmarkPreview = ({commonmarkSrc, attachedFiles, imageUrlPrefix}) => {
     
     const [innerHtml, setInnerHtml] = useState("");
     
@@ -63,5 +62,3 @@ const HtmlPreview = ({commonmarkSrc, attachedFiles, imageUrlPrefix}) => {
     )
 
 }
-
-export default HtmlPreview;

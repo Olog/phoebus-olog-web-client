@@ -23,7 +23,7 @@ import LogDetailsMetaData from './LogDetailsMetaData';
 import styled from 'styled-components';
 import Collapse from 'components/shared/Collapse';
 import { ListGroupItem } from 'components/shared/ListGroup';
-import HtmlPreview from 'components/EntryEditor/HtmlPreview';
+import CommonmarkPreview from 'components/shared/CommonmarkPreview';
 import customization from 'utils/customization';
 
 const Container = styled.div`
@@ -48,7 +48,7 @@ const Ruler = styled.hr`
     margin: 0.5rem 0;
 `
 
-const Description = styled(HtmlPreview)`
+const Description = styled(CommonmarkPreview)`
     width: 100%;
     padding-top: 0.5rem;
     padding-bottom: 1rem;

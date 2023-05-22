@@ -20,7 +20,7 @@ import React from 'react';
 import Button from 'components/shared/Button';
 import Modal, { Body, Footer, Header } from '../shared/Modal';
 import styled from 'styled-components';
-import HtmlPreview from './HtmlPreview';
+import CommonmarkPreview from '../shared/CommonmarkPreview';
 
 const StyledModal = styled(Modal)`
     max-width: 90vw;
@@ -40,7 +40,7 @@ const HtmlPreviewModal = ({commonmarkSrc, attachedFiles, showHtmlPreview, setSho
                 <h2>Description Preview</h2>
             </Header>
             <Body>
-                <HtmlPreview {...{commonmarkSrc, attachedFiles}} />
+                <CommonmarkPreview {...{commonmarkSrc, attachedFiles}} />
             </Body>
             <Footer>
                     <Button variant="secondary" onClick={() => setShowHtmlPreview(false)}>OK</Button>
