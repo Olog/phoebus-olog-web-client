@@ -49,18 +49,29 @@ const Container = styled.div`
      *  with CSS; this supports six levels, which 
      *  should be enough 
      **/
-    ul,
-    li, li li li, li li li li li {
+    ul, 
+    ul li, 
+    ul li li li, 
+    ul li li li li li {
         list-style: disc inside;
     }
-    li li, li li li li, li li li li li li {
+    ul li li, 
+    ul li li li li, 
+    ul li li li li li li {
         list-style: circle inside;
     }
-    li li li, li li li li li {
+    ul li li li, 
+    ul li li li li li {
         list-style: square inside;
     }
-    ol {
+    ol,
+    ol li,
+    ol li li li {
         list-style: decimal inside;
+    }
+    ol li li,
+    ol li li li li {
+        list-style: lower-alpha inside;
     }
     ul, ol,
     li > ul,
