@@ -8,6 +8,7 @@ Technology stack:
 * Remarkable for commonmark processing/rendering (https://github.com/jonschlinkert/remarkable)
 * Jest for unit testing
 * Cypress and docker-compose for end-to-end testing
+* Storybook for previewing components in isolation (without a backend)
 
 ## Commonmark support
 Markup as defined by the Commonmark specification is supported, see https://commonmark.org/.
@@ -72,6 +73,17 @@ npm start
 ```
 
 The application will be available on `http://localhost:3000`.
+
+### Storybook
+
+If you want to view components in isolation (without running the backend or starting the app above), 
+you can preview them via [Storybook](https://storybook.js.org/):
+
+```
+npm run storybook
+```
+
+Components can then be previewed at `http://localhost:6006/`
 
 ### Unit Tests
 

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "test-utils";
 import userEvent from '@testing-library/user-event';
-import EntryEditor from ".";
+import { EntryEditor } from "./EntryEditor";
 import { MemoryRouter } from "react-router-dom";
 import selectEvent from "react-select-event";
 import { ModalProvider } from "styled-react-modal";
