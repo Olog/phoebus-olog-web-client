@@ -272,30 +272,6 @@ export const EntryEditor = ({
         updateProperty(index, copyOfProperty);
     }
 
-    /**
-     * Uploading multiple attachments must be done in a synchronous manner. Using axios.all()
-     * will upload only a single attachment, not sure why...
-     * @param {*} id 
-     * @returns 
-     */
-     const submitAttachmentsMulti = async (id) => {
-        for (let i = 0; i < attachments.length; i++) {
-            let formData = new FormData();
-            formData.append('file', attachments[i].file);
-            formData.append('id', attachments[i].id);
-            formData.append('filename', attachments[i].file.name);
-            await ologService.post(`/logs/attachments/${id}`, 
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Accept': 'application/json'
-                    },
-                    withCredentials: true
-                });
-        }
-    }
-
     const onSubmit = (formData) => {
 
         const promise = checkSession();
@@ -319,18 +295,29 @@ export const EntryEditor = ({
                         properties: formData.properties,
                         title: formData.title,
                         level: formData.entryType.value,
-                        description: formData.description
+                        description: formData.description,
+                        attachments: attachments
                     }
-                    let url = replyAction ? 
-                        `/logs?markup=commonmark&inReplyTo=${currentLogEntry.id}` :
-                        `/logs?markup=commonmark`;
-                    ologService.put(url, logEntry, { withCredentials: true, headers: ologClientInfoHeader() })
-                        .then(async res => {
-                            // console.log({created: res.data})
-                            if(attachments.length > 0){ // No need to call backend if there are no attachments.
-                                await submitAttachmentsMulti(res.data.id);
-                            }
+                    // This FormData object will contain both the log entry and all attached files, if any
+                    let multipartFormData = new FormData();
+                    // Append all files. Each is added with name "files", and that is actually OK
+                    for (let i = 0; i < attachments.length; i++) {
+                        multipartFormData.append("files", attachments[i].file, attachments[i].file.name);
+                    }
+                    // Log entry must be added as JSON blob, otherwise the content type cannot be set.
+                    multipartFormData.append("logEntry", new Blob([JSON.stringify(logEntry)], {type: 'application/json'}));
 
+                    // Need to set content type for the request "multipart/form-data"
+                    let requestHeaders = ologClientInfoHeader();
+                    requestHeaders["Content-Type"] = "multipart/form-data";
+                    requestHeaders["Accept"] = "application/json";
+                    
+                    let url = replyAction ? 
+                        `/logs/multipart?markup=commonmark&inReplyTo=${currentLogEntry.id}` :
+                        `/logs/multipart?markup=commonmark`;
+                    // Upload the full monty, i.e. log entry and all attachment files, in one single request.
+                    ologService.put(url, multipartFormData, { withCredentials: true, headers: requestHeaders})
+                        .then(async res => {
                             // Wait until the new log entry is available in the search results
                             await ologServiceWithRetry({
                                 method: 'GET',
@@ -343,7 +330,6 @@ export const EntryEditor = ({
                                     const found = retryRes?.data?.logs.find(it => `${it.id}` === `${res.data.id}`);
                                     const hasAllAttachments = found?.attachments?.length === attachments.length;
                                     const willRetry = !found || (found && !hasAllAttachments)
-                                    // console.log({time: new Date(), retryData: retryRes?.data?.logs, found, willRetry})
                                     return willRetry;
                                 },
                                 retryDelay: (count) => count*200
@@ -357,6 +343,9 @@ export const EntryEditor = ({
                         .catch(error => {
                             if(error.response && (error.response.status === 401 || error.response.status === 403)){
                                 alert('You are currently not authorized to create a log entry.')
+                            }
+                            else if(error.response && error.response.status === 413){ // 413 = payload too large
+                                alert(error.response.data); // Message set in data by server
                             }
                             else if(error.response && (error.response.status >= 500)){
                                 alert('Failed to create log entry.')
