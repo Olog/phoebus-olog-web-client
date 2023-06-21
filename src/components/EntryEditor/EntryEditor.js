@@ -153,7 +153,6 @@ export const EntryEditor = ({
                 maxRequestSize: (attachments) => {
                     const total = attachments.map(it => it?.file?.size || 0).reduce((prev, curr) => curr + prev, 0);
                     const max = maxRequestSizeMb*1000000;
-                    console.log({validatingAttachments: attachments, total, max})
                     return total < max || `Attachments exceed total maximum upload size of ${maxRequestSizeMb}MB` 
                 },
                 maxFileSize: (attachments) => {
@@ -227,9 +226,6 @@ export const EntryEditor = ({
                 setMaxFileSizeMb(customization.defaultMaxFileSizeMb);
             })
     }, []);
-
-    console.log({maxRequestSizeMb, maxFileSizeMb, errors: formState?.errors?.attachments?.root})
-    console.log(formState.errors)
     
     /**
      * If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
