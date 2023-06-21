@@ -44,6 +44,7 @@ import { useRef } from 'react';
 import ExternalLink from 'components/shared/ExternalLink';
 import { APP_BASE_URL } from 'constants';
 import HtmlPreviewModal from './HtmlPreviewModal';
+import ErrorMessage from 'components/shared/input/ErrorMessage';
 
 const Container = styled.div`
     padding: 1rem 0.5rem;
@@ -88,6 +89,13 @@ const ButtonContent = styled.div`
     gap: 0.5rem;
 `
 
+const AttachmentsInputContainer = styled.div`
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+`
+
 const RenderedAttachmentsContainer = styled.div`
     display: grid;
     place-items: center;
@@ -97,7 +105,6 @@ const RenderedAttachmentsContainer = styled.div`
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem;
-    margin-bottom: 1rem;
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
 
@@ -140,7 +147,22 @@ export const EntryEditor = ({
     const { fields: attachments, remove: removeAttachment, append: appendAttachment } = useFieldArray({
         control,
         name: 'attachments',
-        keyName: 'reactHookFormId' // default is 'id', which would override OlogAttachment#id
+        keyName: 'reactHookFormId', // default is 'id', which would override OlogAttachment#id
+        rules: {
+            validate: {
+                maxRequestSize: (attachments) => {
+                    const total = attachments.map(it => it?.file?.size || 0).reduce((prev, curr) => curr + prev, 0);
+                    const max = maxRequestSizeMb*1000000;
+                    console.log({validatingAttachments: attachments, total, max})
+                    return total < max || `Attachments exceed total maximum upload size of ${maxRequestSizeMb}MB` 
+                },
+                maxFileSize: (attachments) => {
+                    const max = maxFileSizeMb*1000000;
+                    const results = attachments.filter(it => it?.file?.size > max).map(it => it?.file?.name);
+                    return results.length === 0 || `Attachments exceed max filesize (${maxFileSizeMb}MB): ${results}`
+                }
+            }
+        }
     })
     const { fields: properties, remove: removeProperty, append: appendProperty, update: updateProperty } = useFieldArray({
         control,
@@ -155,6 +177,8 @@ export const EntryEditor = ({
     const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
     const [showHtmlPreview, setShowHtmlPreview] = useState(false);
     const [showAddProperty, setShowAddProperty] = useState(false);
+    const [maxRequestSizeMb, setMaxRequestSizeMb] = useState(customization.defaultMaxRequestSizeMb)
+    const [maxFileSizeMb, setMaxFileSizeMb] = useState(customization.defaultMaxFileSizeMb)
     const {data: availableProperties} = useGetPropertiesQuery();
     const currentLogEntry = useSelector(state => state.currentLogEntry);
 
@@ -189,6 +213,23 @@ export const EntryEditor = ({
             });
         }
     }, [setShowLogin, setReplyAction])
+
+    // Get the max attachment filesize 
+    useEffect(() => {
+        ologService.get('/')
+            .then(res => {
+                const {data} = res;
+                setMaxRequestSizeMb(data?.serverConfig?.maxRequestSize || customization.defaultMaxRequestSizeMb);
+                setMaxFileSizeMb(data?.serverConfig?.maxFileSize || customization.defaultMaxFileSizeMb);
+            })
+            .catch(() => {
+                setMaxRequestSizeMb(customization.defaultMaxRequestSizeMb);
+                setMaxFileSizeMb(customization.defaultMaxFileSizeMb);
+            })
+    }, []);
+
+    console.log({maxRequestSizeMb, maxFileSizeMb, errors: formState?.errors?.attachments?.root})
+    console.log(formState.errors)
     
     /**
      * If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
@@ -501,16 +542,19 @@ export const EntryEditor = ({
                             </DescriptionContainerFooter>
                         </DescriptionContainer>
                         <DetachedLabel>Attachments</DetachedLabel>
-                        <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>
-                            <DroppableFileUploadInput 
-                                onFileChanged={onFileChanged}
-                                id='attachments-upload'
-                                dragLabel='Drag Here'
-                                browseLabel='Choose File(s) or'
-                                multiple
-                            />
-                            { renderedAttachments }
-                        </RenderedAttachmentsContainer>
+                        <AttachmentsInputContainer>
+                            <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>
+                                <DroppableFileUploadInput 
+                                    onFileChanged={onFileChanged}
+                                    id='attachments-upload'
+                                    dragLabel='Drag Here'
+                                    browseLabel='Choose File(s) or'
+                                    multiple
+                                />
+                                { renderedAttachments }
+                            </RenderedAttachmentsContainer>
+                            { formState?.errors?.attachments ? <ErrorMessage error={formState?.errors?.attachments?.root.message}/> : null } 
+                        </AttachmentsInputContainer>
                         <DetachedLabel>Properties</DetachedLabel>
                         <PropertiesContainer>
                             <Button variant="secondary" size="sm" onClick={(e) => {

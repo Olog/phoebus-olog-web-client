@@ -72,7 +72,13 @@ let customization = {
     /**
      * Name of the cookie that stores the current search string
      */
-    searchPageParamsCookie: 'searchPageParams'
+    searchPageParamsCookie: 'searchPageParams',
+
+    /**
+     * Max total attachment upload size and individual file size (MB)
+     */
+    defaultMaxRequestSizeMb: 100,
+    defaultMaxFileSizeMb: 50
 }
 
 export default customization;
