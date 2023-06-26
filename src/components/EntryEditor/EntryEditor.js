@@ -170,7 +170,6 @@ export const EntryEditor = ({
     })
     // File input HTML element ref allows us to hide
     // the element and click it from e.g. a button
-    // const fileInputRef = useRef(null);
     const [initialImage, setInitialImage] = useState(null);
     const [createInProgress, setCreateInProgress] = useState(false);
     const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
@@ -537,7 +536,7 @@ export const EntryEditor = ({
                                 </div>
                             </DescriptionContainerFooter>
                         </DescriptionContainer>
-                        <DetachedLabel>Attachments</DetachedLabel>
+                        <DetachedLabel>Attachments <div style={{fontStyle: "italic", fontSize: "0.9em"}}>max size per file: {maxFileSizeMb}MB, max total size: {maxRequestSizeMb}MB</div></DetachedLabel>
                         <AttachmentsInputContainer>
                             <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>
                                 <DroppableFileUploadInput 
@@ -546,6 +545,7 @@ export const EntryEditor = ({
                                     dragLabel='Drag Here'
                                     browseLabel='Choose File(s) or'
                                     multiple
+                                    maxFileSizeMb={maxFileSizeMb}
                                 />
                                 { renderedAttachments }
                             </RenderedAttachmentsContainer>
@@ -586,6 +586,7 @@ export const EntryEditor = ({
                 addEmbeddedImage={addEmbeddedImage}
                 initialImage={initialImage}
                 setInitialImage={setInitialImage}
+                maxFileSizeMb={maxFileSizeMb}
             />
             <HtmlPreviewModal 
                 showHtmlPreview={showHtmlPreview}

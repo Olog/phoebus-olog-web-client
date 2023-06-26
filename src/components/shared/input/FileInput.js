@@ -1,52 +1,7 @@
-import { useRef } from "react";
-import { FaPlus } from "react-icons/fa";
+import { useRef, useState } from "react";
 import styled from "styled-components";
-import Button from "components/shared/Button";
 import { MdFileUpload } from "react-icons/md";
-
-const Container = styled.div`
-
-`
-
-const ButtonContent = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-`
-const FileInput = ({label, onFileChanged, multiple, accept}) => {
-
-    const fileInputRef = useRef();
-
-    const onChange = (event) => {
-        event.preventDefault();
-        onFileChanged(event.target.files);
-    }
-
-    const onClick = (event) => {
-        event.preventDefault(); // event bubbling can cause a page refresh in some components
-        fileInputRef.current.value = null;
-        fileInputRef.current.click();
-    }
-
-    return (
-        <Container>
-            <Button variant="secondary" size="sm" onClick={onClick}>
-                <ButtonContent>
-                    <FaPlus className="add-button"/><span>{label}</span>
-                </ButtonContent>
-            </Button>
-            <input
-                type='file'
-                ref={fileInputRef}
-                onChange={onChange} 
-                multiple={multiple}
-                accept={accept}
-                hidden
-            />
-        </Container>
-    );
-
-}
+import ErrorMessage from "./ErrorMessage";
 
 const StyledDroppableFileUploadArea = styled.div`
     width: 100%;
@@ -85,13 +40,30 @@ const StyledClickableArea = styled.div`
     text-align: center;
 `
 
-export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple, accept, dragLabel, browseLabel}) => {
+export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple, accept, dragLabel, browseLabel, maxFileSizeMb}) => {
 
     const fileInputRef = useRef();
+    const [error, setError] = useState(null);
+
+    // Validates the filesize (if applicable)
+    // And invokes the filechange callback if valid
+    const internalOnFileChanged = (files) => {
+        setError(null);
+        if(maxFileSizeMb) {
+            for(const file of files) {
+                if(file.size > maxFileSizeMb*1000000) {
+                    fileInputRef.current.value = null;
+                    setError(`${file.name} too large; max is ${maxFileSizeMb}MB`)
+                    return;
+                }
+            }
+        }
+        onFileChanged(files);
+    }
 
     const onChange = (event) => {
         event.preventDefault();
-        onFileChanged(event.target.files);
+        internalOnFileChanged(event.target.files);
     }
 
     const onClick = (event) => {
@@ -117,7 +89,7 @@ export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple
     const handleDrop = (event) => {
         event.preventDefault();
         const dataTransfer = event.dataTransfer;
-        onFileChanged(dataTransfer.files);
+        internalOnFileChanged(dataTransfer.files);
         dragAreaRef.current.classList.remove('dragging-over')
     }
 
@@ -143,8 +115,9 @@ export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple
                 accept={accept}
                 hidden
             />
+            <ErrorMessage error={error} />
         </StyledDroppableFileUploadArea>
     )
 }
 
-export default FileInput;
+export default DroppableFileUploadInput;
