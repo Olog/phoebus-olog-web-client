@@ -467,7 +467,7 @@ describe('Creating Log Entries', () => {
     
         // given the server creates the log entry successfully, responding with the id
         server.use(
-            rest.put('*/logs', (req, res, ctx) => {
+            rest.put('*/logs/multipart', (req, res, ctx) => {
                 return res(
                     ctx.json({id, title}),
                 );

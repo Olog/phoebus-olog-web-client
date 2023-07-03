@@ -37,7 +37,7 @@ const ImageContainer = styled.div`
     }
 `
 
-const EmbedImageDialog = ({addEmbeddedImage, initialImage=null, setInitialImage, showEmbedImageDialog, setShowEmbedImageDialog}) => {
+const EmbedImageDialog = ({addEmbeddedImage, initialImage=null, setInitialImage, showEmbedImageDialog, setShowEmbedImageDialog, maxFileSizeMb}) => {
 
     const {control, setValue, watch, getValues, reset: resetForm} = useForm({
         mode: 'all',
@@ -146,6 +146,7 @@ const EmbedImageDialog = ({addEmbeddedImage, initialImage=null, setInitialImage,
                             id='embed-image-upload'
                             dragLabel='Drag Image Here'
                             browseLabel='Choose an Image or'
+                            maxFileSizeMb={maxFileSizeMb}
                         />
                     }
                     
