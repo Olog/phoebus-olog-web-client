@@ -16,47 +16,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import Button, { buttonBaseStyle } from '../shared/Button';
 import {Link} from "react-router-dom";
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
 import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
-import styled from 'styled-components';
 import { useEffect } from 'react';
 import SkipToContent from 'components/shared/SkipToContent';
+import { AppBar, Toolbar, Typography, styled } from '@mui/material';
+import MuiButton from "components/shared/MuiButton";
 
-const Navbar = styled.nav`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #343a40;
-  color: #fff;
-  padding: 1vh 2vw;
-`
-
-const NavHeader = styled.ul`
+const NavHeader = styled("ul")`
   display: flex;
   align-items: center;
-  gap: 1vw;
+  gap: 2rem;
 `
-
-const NavFooter = styled.ul`
+const NavFooter = styled("ul")`
   display: flex;
   align-items: center;
 `
-const PackageName = styled.div`
-  font-size: 1.4em;
-`
-const PackageVersion = styled.div`
-  font-size: 0.8em;
-`
-
-const NewLogEntryLinkButton = styled(Link)`
-  ${buttonBaseStyle}
-  background-color: ${({theme}) => theme.colors.primary};
-`
-
 /**
  * Banner component with controls to create log entry, log book or tag. Plus
  * button for signing in/out. 
@@ -96,34 +74,50 @@ const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, set
   }
 
   return (
-    <header>
-      <Navbar>
+    <AppBar 
+      component={"header"} 
+      position="static" 
+      variant="outlined" 
+      sx={{
+        backgroundColor: "#343a40"
+      }}
+    >
+      <Toolbar component={"nav"} sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between"
+      }} >
         <SkipToContent href='#app-content'>Skip to Main Content</SkipToContent>
         <NavHeader>
-          <li><Link to="/" aria-label='home'>
-            <PackageName>{packageInfo.name}</PackageName>
-            <PackageVersion>{packageInfo.version}</PackageVersion>
-          </Link></li>
-          <li><NewLogEntryLinkButton to="/edit" >
+          <li>
+            <Link to="/" aria-label='home'>
+              <Typography variant="h6">{packageInfo.name}</Typography>
+              <Typography variant="body2">{packageInfo.version}</Typography>
+            </Link>
+          </li>
+          <li>
+            <MuiButton component={Link} to="/edit" variant="contained" >
               New Log Entry
-            </NewLogEntryLinkButton></li>
+            </MuiButton>      
+          </li>
         </NavHeader>
         <NavFooter>
-          <li><Button onClick={handleClick} variant="primary">
-            {userData.userName ? userData.userName : 'Sign In'}
-          </Button></li>
+          <li>
+            <MuiButton onClick={handleClick} variant="contained" >
+              {userData.userName ? userData.userName : 'Sign In'}
+            </MuiButton>
+          </li>
         </NavFooter>
-      </Navbar>
-
+      </Toolbar>
       <LoginDialog setUserData={setUserData} 
-              setShowLogin={setShowLogin}
-              loginDialogVisible={showLogin}/>
-
+        setShowLogin={setShowLogin}
+        loginDialogVisible={showLogin}
+      />
       <LogoutDialog setUserData={setUserData} 
-                      setShowLogout={setShowLogout} 
-                      logoutDialogVisible={showLogout}/>
-
-    </header>
+        setShowLogout={setShowLogout} 
+        logoutDialogVisible={showLogout}
+      />
+    </AppBar>
   )
   
 }
