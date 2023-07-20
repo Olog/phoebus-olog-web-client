@@ -26,18 +26,8 @@ import EntryEditor from './EntryEditor';
 import LogEntriesView from './LogEntriesView';
 import { useSelector } from 'react-redux';
 import { useGetLogbooksQuery, useGetTagsQuery } from 'services/ologApi';
-import styled from 'styled-components';
+import { Box } from '@mui/material';
 
-const ViewportContainer = styled.div`
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-`
-
-const ContentContainer = styled.main`
-    overflow: auto;
-    height: 100%;
-`
 /**
  * Entry point component.
  */
@@ -59,14 +49,23 @@ const App = () => {
     }
 
     return(
-        <ViewportContainer id='app-viewport'>
+        <Box id='app-viewport' 
+            sx={{
+                height: "100vh",
+                display: "flex",
+                flexDirection: "column"
+        }}>
             <Banner {...{
                 showLogin, setShowLogin,
                 showLogout, setShowLogout,
                 userData, setUserData,
                 setReplyAction
             }}/>
-            <ContentContainer id='app-content'>
+            <Box id='app-content' 
+                sx={{
+                    overflow: "auto",
+                    height: "100%"
+            }}>
                 <Routes>
                     <Route exact path="/" element={
                         <LogEntriesView {...{
@@ -96,8 +95,8 @@ const App = () => {
                         }}/>
                     } />
                 </Routes>
-            </ContentContainer>
-        </ViewportContainer>
+            </Box>
+        </Box>
     );
 }
 

@@ -1,9 +1,10 @@
 import { server } from "mocks/server";
 import { rest } from "msw";
 import { render, within } from "@testing-library/react";
-import theme from "config/theme";
+import theme, { styledComponentsTheme } from "config/theme";
 import { Provider } from "react-redux";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "@mui/material";
+import { ThemeProvider as StyledComponentsThemeProvider } from "styled-components";
 import { setupStore } from "../stores";
 
 const renderWithProviders = (
@@ -17,7 +18,9 @@ const renderWithProviders = (
     const Wrapper = ({children}) => {
         return  <Provider store={store}>
                     <ThemeProvider theme={theme}>
-                        {children}
+                        <StyledComponentsThemeProvider theme={styledComponentsTheme}>
+                            {children}
+                        </StyledComponentsThemeProvider>
                     </ThemeProvider>
                 </Provider>
     }

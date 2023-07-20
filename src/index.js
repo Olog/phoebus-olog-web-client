@@ -3,23 +3,26 @@ import { createRoot } from 'react-dom/client';
 import App from 'components/App';
 import { store } from './stores';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
-import theme from 'config/theme';
+import theme, { styledComponentsTheme } from 'config/theme';
 import GlobalStyle from 'config/GlobalStyle';
 import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material';
 
 const container = document.getElementById('root');
 const root = createRoot(container); 
 root.render(
     <Provider store={store} >
-        <ThemeProvider theme={theme}>
-            <GlobalStyle />
-            <ModalProvider>
-                <BrowserRouter>
-                    <App />
-                </BrowserRouter>
-            </ModalProvider>
+        <ThemeProvider theme={theme} >
+            <StyledComponentsThemeProvider theme={styledComponentsTheme}>
+                <GlobalStyle />
+                <ModalProvider>
+                    <BrowserRouter>
+                        <App />
+                    </BrowserRouter>
+                </ModalProvider>
+            </StyledComponentsThemeProvider>
         </ThemeProvider>
     </Provider>
 );

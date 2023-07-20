@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const StyledAnchor = styled.a`
-    left: -50%;
+    left: -150%;
     position: absolute;
     font-size: 1.5rem;
     background-color: ${({theme}) => theme.colors.light};
