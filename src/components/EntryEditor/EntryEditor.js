@@ -330,7 +330,7 @@ export const EntryEditor = ({
                         tags: formData.tags,
                         properties: formData.properties,
                         title: formData.title,
-                        level: formData.entryType.value,
+                        level: formData.entryType,
                         description: formData.description,
                         attachments: attachments
                     }
@@ -429,10 +429,10 @@ export const EntryEditor = ({
 
     return (
         <>
-                <LoadingOverlay
-                    active={createInProgress}
-                >
-                    <Container>
+            <LoadingOverlay
+                active={createInProgress}
+            >
+                <Container>
                     <h1>New Log Entry</h1>
                     <Form onSubmit={handleSubmit(onSubmit)} >
                         <span ref={topElem}></span>
@@ -441,15 +441,10 @@ export const EntryEditor = ({
                             label='Logbooks'
                             control={control}
                             defaultValue={[]}
-                            options={logbooks.map(it => (
-                                {label: it.name, value: it}
-                            ))}
-                            onSelection={value => value.map(it => (
-                                {label: it.name, value: it}
-                            ))}
-                            onSelectionChanged={(field, value) => 
-                                field.onChange(value.map(it => it.value))
-                            }
+                            options={logbooks}
+                            getOptionLabel={logbook => logbook.name}
+                            isOptionEqualToValue={ (option, value) => option.name === value.name }
+                            isMulti
                             rules={{
                                 validate: {
                                     notEmpty: val => val?.length > 0 || 'Select at least one logbook'
@@ -461,31 +456,17 @@ export const EntryEditor = ({
                             label='Tags'
                             control={control}
                             defaultValue={[]}
-                            options={tags.map(it => (
-                                {label: it.name, value: it}
-                            ))}
-                            onSelection={value => value.map(it => (
-                                {label: it.name, value: it}
-                            ))}
-                            onSelectionChanged={(field, value) => 
-                                field.onChange(value.map(it => it.value))
-                            }
+                            options={tags}
+                            getOptionLabel={tag => tag.name}
+                            isOptionEqualToValue={ (option, value) => option.name === value.name }
+                            isMulti
                         />
                         <MultiSelect 
                             name='entryType'
                             label='Entry Type'
                             control={control}
                             defaultValue={customization.defaultLevel}
-                            options={customization.levelValues.map(it => (
-                                { value: it, label: it }
-                            ))}
-                            onSelection={sel =>( 
-                                { value: sel, label: sel }
-                            )}
-                            onSelectionChanged={(field, sel) => 
-                                field.onChange(sel.value)
-                            }
-                            isMulti={false}
+                            options={customization.levelValues}
                         />
                         <TextInput 
                             name='title'
@@ -565,7 +546,7 @@ export const EntryEditor = ({
                             </Button>
                             {renderedProperties}    
                         </PropertiesContainer>
-                        <Button type='submit' variant="primary" disabled={userData.userName === "" || createInProgress} >Submit</Button>
+                        <Button type='submit' variant="primary" disabled={userData.userName === "" || createInProgress}>Submit</Button>
                     </Form>
                 </Container>
             </LoadingOverlay>

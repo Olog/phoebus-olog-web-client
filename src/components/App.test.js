@@ -1,9 +1,8 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import App from './App';
-import { screen, render, givenServerRespondsWithSearchRequest, waitFor, testEntry, within, resultList, getOptionItems, expectReactSelectSelection } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, waitFor, testEntry, within, resultList, getOptionItems, expectSelected, selectFromCombobox } from 'test-utils';
 import userEvent from '@testing-library/user-event';
-import selectEvent from 'react-select-event';
 import { MemoryRouter } from 'react-router-dom';
 import customization from 'utils/customization';
 import { ModalProvider } from 'styled-react-modal';
@@ -108,7 +107,7 @@ describe('Search Results', () => {
         await screen.findByRole('heading', {name: /advanced search/i})
     
         // select a tag
-        await selectEvent.select(await screen.findByLabelText(/Tags/i), ['foo']);
+        await selectFromCombobox({screen, user, label: 'tags', values: ['foo']});
     
         // then the results are updated
         expect(await screen.findByText("hmmm title")).toBeInTheDocument();
@@ -138,7 +137,8 @@ describe('Search Results', () => {
         await screen.findByRole('heading', {name: /advanced search/i})
     
         // select a logbook
-        await selectEvent.select(await screen.findByLabelText(/Logbooks/i), ['test controls']);
+        await selectFromCombobox({screen, user, label: 'logbooks', values: ['test controls']});
+        // await selectEvent.select(await screen.findByLabelText(/Logbooks/i), ['test controls']);
     
         // then the results are updated instantly
         expect(await screen.findByText("hmmm title")).toBeInTheDocument();
@@ -458,9 +458,8 @@ describe('Creating Log Entries', () => {
         expect(newLogEntryPageTitle).toBeInTheDocument();
     
         // fill in required information
-        const logbooksInput = screen.getByRole('combobox', {name: /logbooks/i});
-        await selectEvent.select(logbooksInput, ['test controls']);
-    
+        await selectFromCombobox({screen, user, label: 'logbooks', values: ['test controls']})
+
         const titleInput = screen.getByRole('textbox', {name: /title/i});
         await user.clear(titleInput);
         await user.type(titleInput, title);
@@ -570,9 +569,9 @@ describe('Log Entry Groups / Replies', () => {
         // and EntryType is given the default value
         const entryEditorPage = await screen.findByRole('heading', {name: /New Log Entry/i});
         expect(entryEditorPage).toBeInTheDocument();
-        await expectReactSelectSelection({screen, label: 'logbooks', selected: ['test controls'], notSelected: ['test operations']});
-        await expectReactSelectSelection({screen, label: 'tags', selected: ['bar', 'baz'], notSelected: ['foo']});
-        await expectReactSelectSelection({screen, label: 'entry type', selected: ['normal'], notSelected: customization.levelValues.filter(it => it !== 'Normal')})
+        await expectSelected({screen, label: 'logbooks', selected: ['test controls'], notSelected: ['test operations']});
+        await expectSelected({screen, label: 'tags', selected: ['bar', 'baz'], notSelected: ['foo']});
+        await expectSelected({screen, label: 'entry type', selected: 'Normal', notSelected: customization.levelValues.filter(it => it !== 'Normal')})
         const title = screen.getByRole('textbox', {name: /title/i});
         expect(title).toHaveValue('entry 1');
 
@@ -587,9 +586,9 @@ describe('Log Entry Groups / Replies', () => {
         // Then it is prepopulated with that log's information instead
         const entryEditorPage2 = await screen.findByRole('heading', {name: /New Log Entry/i});
         expect(entryEditorPage2).toBeInTheDocument();
-        await expectReactSelectSelection({screen, label: 'logbooks', selected: [], notSelected: ['test operations', 'test controls']});
-        await expectReactSelectSelection({screen, label: 'tags', selected: [], notSelected: ['foo', 'bar', 'baz']});
-        await expectReactSelectSelection({screen, label: 'entry type', selected: ['normal'], notSelected: customization.levelValues.filter(it => it !== 'Normal')})
+        await expectSelected({screen, label: 'logbooks', selected: [], notSelected: ['test operations', 'test controls']});
+        await expectSelected({screen, label: 'tags', selected: [], notSelected: ['foo', 'bar', 'baz']});
+        await expectSelected({screen, label: 'entry type', selected: 'Normal', notSelected: customization.levelValues.filter(it => it !== 'Normal')})
         const title2 = screen.getByRole('textbox', {name: /title/i});
         expect(title2).toHaveValue('entry 2');
 

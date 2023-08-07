@@ -1,8 +1,7 @@
-import { render, screen, waitFor } from "test-utils";
+import { render, screen, selectFromCombobox, waitFor } from "test-utils";
 import userEvent from '@testing-library/user-event';
 import { EntryEditor } from "./EntryEditor";
 import { MemoryRouter } from "react-router-dom";
-import selectEvent from "react-select-event";
 import { ModalProvider } from "styled-react-modal";
 
 test('when an image is uploaded, then it is displayed', async () => {
@@ -93,20 +92,22 @@ test('user cannot submit invalid log entries', async () => {
     await user.click(submitButton);
 
     // Then the title and logbooks fields have errors
-    const errorLogbookInput = await screen.findByRole('combobox', {name: /logbooks.*error/i});
-    expect(errorLogbookInput).toBeInTheDocument();
-    const errorTitleInput = screen.getByRole('textbox', {name: /title.*error/i});
-    expect(errorTitleInput).toBeInTheDocument();
+    // const errorLogbookInput = await screen.findByRole('combobox', {name: /logbooks.*error/i});
+    const logbookInputErrorMessage = await screen.findByText(/Select at least one logbook/i);
+    expect(logbookInputErrorMessage).toBeInTheDocument();
+    const titleInput = screen.getByRole('textbox', {name: /title/i});
+    const titleInputErrorMessage = await screen.findByText(/Please specify a title./i);
+    expect(titleInputErrorMessage).toBeInTheDocument();
 
     // If the user puts information in those fields
-    await selectEvent.select(errorLogbookInput, ['foo']);
-    await user.type(errorTitleInput, 'some value');
+    await selectFromCombobox({screen, user, label: 'logbooks', values: ['foo']});
+    await user.type(titleInput, 'some value');
 
     // Then the errors disappear (we already have a test case in App.test.js verifying log is created / redirect happens)
-    const logbookInput = await screen.findByRole('combobox', {name: /logbooks$/i});
-    expect(logbookInput).toBeInTheDocument();
-    const titleInput = await screen.findByRole('textbox', {name:  /title$/i});
-    expect(titleInput).toBeInTheDocument();
+    const cleanLogbookInput = screen.queryByText(/Select at least one logbook/i);
+    expect(cleanLogbookInput).not.toBeInTheDocument();
+    const cleanTitleInput = screen.queryByText(/Please specify a title./i);
+    expect(cleanTitleInput).not.toBeInTheDocument();
 
     // cleanup network resources
     unmount();

@@ -15,41 +15,44 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-import Select from 'react-select';
 import { useController } from 'react-hook-form';
-import LabeledInput from './LabeledInput';
-import styled from 'styled-components';
+import { Autocomplete, TextField, styled } from '@mui/material';
 
-const StyledLabeledInput = styled(LabeledInput)`
-    & .react-select-olog__control:hover,
-    & .react-select-olog__option:hover
-    {
-        cursor: pointer;
-    }
-`
+const MultiSelect = styled( ({name, label, control, rules, defaultValue, className, options=[], onChange, getOptionLabel, isOptionEqualToValue, isMulti, ...props}) => {
 
-const MultiSelect = ({name, label, control, rules, defaultValue, className, options=[], onSelection, onSelectionChanged, isMulti=true}) => {
-    const {field, fieldState} = useController({name, control, rules, defaultValue});
+    const {field, fieldState} = useController({name, control, rules, defaultValue: isMulti ? [] : null});
 
-    return (
-        <StyledLabeledInput {...{name, label, error: fieldState?.error?.message, className}} >
-            <Select
-                name={name}
-                inputId={name}
-                isMulti={isMulti}
-                placeholder={label}
-                options={options.filter(option => 
-                    ![...field.value].map(it => it.label).includes(option.label)
-                )}
-                onChange={value => onSelectionChanged(field, value)}
-                value={onSelection(field.value)}
-                className='react-select-container'
-                classNamePrefix='react-select-olog'
-            />
-        </StyledLabeledInput>
+    return (        
+        <Autocomplete 
+            className={className}
+            {...field}
+            id={field.name}
+            value={field.value}
+            onChange={onChange ? (e, value) => onChange(field, value) : (e, value) => field.onChange(value)}
+            options={options}
+            getOptionLabel={getOptionLabel}
+            isOptionEqualToValue={isOptionEqualToValue}
+            renderInput={(params) => 
+                <TextField 
+                    {...params} 
+                    label={label} 
+                    error={Boolean(fieldState?.error)} 
+                    helperText={fieldState.error ? `Error: ${fieldState?.error?.message}` : null} 
+                />
+            }
+            multiple={isMulti}
+            filterSelectedOptions={isMulti}
+            
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            disablePortal
+
+            {...props}
+        />
+
    )
     
-}
+})({})
 
 export default MultiSelect;
