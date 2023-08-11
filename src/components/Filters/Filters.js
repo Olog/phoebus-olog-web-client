@@ -28,16 +28,6 @@ import styled from 'styled-components';
 import Button from 'components/shared/Button';
 import { Stack } from '@mui/material';
 
-const StyledCollapse = styled(Collapse)`
-    height: 100%;
-`
-
-const Container = styled.div`
-    & h2 {
-        padding-bottom: 1rem;
-    }
-`
-
 const Form = styled.form`
     display: flex;
     flex-direction: column;
@@ -92,7 +82,7 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
     }
 
     return(
-        <StyledCollapse show={showFilters} onExiting={handleSubmit(onSubmit)} >
+        <Collapse show={showFilters} onExiting={handleSubmit(onSubmit)} >
             <Stack gap={0.5} padding={1} className={className} sx={{overflow: "auto"}} >
                 <h2 id="advanced-search">Advanced Search</h2>
                 <Form onSubmit={handleSubmit(onSubmit)} aria-labelledby='advanced-search' role='search' >
@@ -200,7 +190,7 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                     />
                 </Form>
             </Stack>
-        </StyledCollapse>
+        </Collapse>
     );
 }
 
