@@ -18,7 +18,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     *:focus-visible {
-        outline: 3px solid orange;
+        outline: 3px solid #006FE6;
         outline-offset: 1px;
         z-index: 9999;
     }

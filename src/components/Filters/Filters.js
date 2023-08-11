@@ -26,6 +26,7 @@ import WizardDateInput from 'components/shared/input/WizardDateInput';
 import RadioInput from 'components/shared/input/RadioInput';
 import styled from 'styled-components';
 import Button from 'components/shared/Button';
+import { Stack } from '@mui/material';
 
 const StyledCollapse = styled(Collapse)`
     height: 100%;
@@ -92,7 +93,7 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
 
     return(
         <StyledCollapse show={showFilters} onExiting={handleSubmit(onSubmit)} >
-            <Container style={{padding: "8px"}} className={className} >
+            <Stack gap={0.5} padding={1} className={className} sx={{overflow: "auto"}} >
                 <h2 id="advanced-search">Advanced Search</h2>
                 <Form onSubmit={handleSubmit(onSubmit)} aria-labelledby='advanced-search' role='search' >
                     {/* Hidden button handles submit-on-enter automatically */}
@@ -198,7 +199,7 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                         defaultValue=''
                     />
                 </Form>
-            </Container>
+            </Stack>
         </StyledCollapse>
     );
 }
