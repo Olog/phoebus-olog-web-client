@@ -104,13 +104,27 @@ export const givenServerRespondsWithSearchRequest = ({title, requestPredicate, d
  * instead of semantic html (such as selection and options). 
  * So, in order to test we are reduced to checking for presence of text within the page (rather than checking if e.g. an option is selected).
  */
-export const expectReactSelectSelection = async ({screen, label, selected, notSelected}) => {
-    const selectionInput = await screen.findByRole('combobox', {name: new RegExp(label, 'i')})
-    const selectionParentContainer = selectionInput.closest('div.react-select-olog__value-container');
-    for(let selectedItem of selected) {
-        expect(within(selectionParentContainer).getByText(new RegExp(selectedItem, 'i'))).toBeInTheDocument();
+export const expectSelected = async ({screen, label, selected, notSelected}) => {
+    const selectionInput = await screen.findByRole('combobox', {name: new RegExp(label, 'i')});
+    if(Array.isArray(selected)) {
+        const selectionParentContainer = selectionInput.closest('div.MuiFormControl-root');
+        for(let selectedItem of selected) {
+            expect(within(selectionParentContainer).getByRole('button', {name: new RegExp(selectedItem, 'i')})).toBeInTheDocument();
+        }
+        for(let notSelectedItem of notSelected) {
+            expect(within(selectionParentContainer).queryByRole('button', {name: new RegExp(notSelectedItem, 'i')})).not.toBeInTheDocument();
+        }
+    } else {
+        expect(selectionInput).toHaveValue(selected);
     }
-    for(let notSelectedItem of notSelected) {
-        expect(within(selectionParentContainer).queryByText(new RegExp(notSelectedItem, 'i'))).not.toBeInTheDocument();
+    
+}
+
+export const selectFromCombobox = async ({screen, user, label, values = []}) => {
+    const comboboxInput = await screen.findByRole('combobox', {name: new RegExp(label, 'i') });
+    await user.click(comboboxInput);
+    for(let value of values) {
+        const option = await screen.findByRole('option', {name: new RegExp(value, 'i') });
+        await user.click(option);
     }
 }

@@ -77,7 +77,6 @@ export const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogo
     <AppBar 
       component={"header"} 
       position="static" 
-      variant="outlined" 
       sx={{
         backgroundColor: "#343a40"
       }}
