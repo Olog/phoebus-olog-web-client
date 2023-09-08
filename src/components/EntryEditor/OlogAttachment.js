@@ -25,8 +25,16 @@
  export default class OlogAttachment{
     file: File;
     id: String;
+    filename: String;
+    fileMetadataDescription: String;
     constructor(file, id){
         this.file = file;
         this.id = id;
+        this.filename = file.name
+        if(file?.type?.startsWith("image")) {
+            this.fileMetadataDescription = "image";
+        } else {
+            this.fileMetadataDescription = "file";
+        }
     }
  }
