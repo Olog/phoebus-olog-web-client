@@ -23,10 +23,8 @@ import ologService from 'api/olog-service';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import ErrorMessage from 'components/shared/input/ErrorMessage';
-import styled from 'styled-components';
 import Submit from 'components/shared/input/Submit';
-
-const Form = styled.form``;
+import { Stack } from '@mui/material';
 
 const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
 
@@ -74,7 +72,7 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
         <Title>Sign In</Title>
       </Header>
       <Body>
-        <Form onSubmit={handleSubmit(login)}>
+        <Stack component="form" onSubmit={handleSubmit(login)} gap={1} marginY={2}>
           {/* Hidden button handles submit-on-enter automatically */}
           <Submit hidden />
           <TextInput 
@@ -88,10 +86,10 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
             label='Password'
             control={control}
             defaultValue=''
-            password
+            inputProps={{type: "password"}}
           />
           <ErrorMessage error={loginError} />
-        </Form>
+        </Stack>
       </Body>
       <Footer>
         <Button variant="primary" type="submit" onClick={handleSubmit(login)}>

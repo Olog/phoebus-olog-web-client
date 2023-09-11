@@ -27,11 +27,13 @@ import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import { useSearchLogsQuery } from 'services/ologApi';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import ServiceErrorBanner from 'components/ErrorBanner';
-import styled from 'styled-components';
+import styledComponentsStyled from 'styled-components';
 import Filters from 'components/Filters';
 import { desktop, mobile } from 'config/media';
+import { styled } from '@mui/material';
+import { grey } from '@mui/material/colors';
 
-const ContentContainer = styled.div`
+const ContentContainer = styledComponentsStyled.div`
     height: 100%;
     display: flex;
     gap: 0.5rem;
@@ -44,18 +46,17 @@ const ContentContainer = styled.div`
     `)}
 `
 
-const StyledFilters = styled(Filters)`
-    flex: 0 0 20%;
-    border: 1px solid ${({theme}) => theme.colors.light};
-    border-radius: 5px;
+const StyledFilters = styled(Filters)(({theme}) => ({
+    flex: "0 0 20%",
+    border: `1px solid ${grey[300]}`,
+    borderRadius: "5px",
+    [theme.breakpoints.down("sm")]: {
+        order: 9,
+        width: "100%"
+    }
+}));
 
-    ${mobile(`
-        order: 9;
-        width: 100%;
-    `)}
-`
-
-const StyledSearchResultList = styled(SearchResultList)`
+const StyledSearchResultList = styledComponentsStyled(SearchResultList)`
     flex: 0 0 30%;
     border: 1px solid ${({theme}) => theme.colors.light};
     border-radius: 5px;
@@ -66,7 +67,7 @@ const StyledSearchResultList = styled(SearchResultList)`
     `)}
 `
 
-const LogDetailsContainer = styled.div`
+const LogDetailsContainer = styledComponentsStyled.div`
     display: flex;
     flex-direction: column;
     flex: 1 0 0;

@@ -1,6 +1,7 @@
 import { StyledLabeledTextInput } from "components/shared/input/TextInput";
 import { useState } from "react";
 
+// TODO: Remove StyledLabeledTextInput once this is replaced!
 const PageSizeInput = ({initialValue=0, onValidChange=() => {}}) => {
 
     const [pageSize, setPageSize] = useState(initialValue);
