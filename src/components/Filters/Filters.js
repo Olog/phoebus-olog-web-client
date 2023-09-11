@@ -24,16 +24,8 @@ import Collapse from './Collapse';
 import TextInput from 'components/shared/input/TextInput';
 import WizardDateInput from 'components/shared/input/WizardDateInput';
 import RadioInput from 'components/shared/input/RadioInput';
-import styled from 'styled-components';
 import Button from 'components/shared/Button';
 import { Stack } from '@mui/material';
-
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    height: 100%;
-`
 
 /**
  * Component holding search criteria elements, i.e.
@@ -85,7 +77,12 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
         <Collapse show={showFilters} onExiting={handleSubmit(onSubmit)} >
             <Stack gap={0.5} padding={1} className={className} sx={{overflow: "auto"}} >
                 <h2 id="advanced-search">Advanced Search</h2>
-                <Form onSubmit={handleSubmit(onSubmit)} aria-labelledby='advanced-search' role='search' >
+                <Stack 
+                    component="form" 
+                    onSubmit={handleSubmit(onSubmit)}
+                    aria-labelledby='advanced-search' role='search' 
+                    gap={1}
+                >
                     {/* Hidden button handles submit-on-enter automatically */}
                     <Button type='submit' hidden >Submit</Button>
                     <TextInput 
@@ -188,7 +185,7 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                         control={control}
                         defaultValue=''
                     />
-                </Form>
+                </Stack>
             </Stack>
         </Collapse>
     );

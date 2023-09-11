@@ -22,10 +22,12 @@ import {useState} from 'react';
 import {searchParamsToQueryString, queryStringToSearchParameters} from 'utils/searchParams';
 import { useDispatch } from "react-redux";
 import { forceUpdateSearchParams } from "features/searchParamsReducer";
-import { StyledTextInput } from "components/shared/input/TextInput";
-import VisuallyHiddenText from "components/shared/VisuallyHiddenText";
+import { InputAdornment, Link, OutlinedInput, styled } from "@mui/material";
+import HelpIcon from '@mui/icons-material/Help';
 
-const SearchBoxInput = ({searchParams, showFilters, className}) => {
+const label = "Search Logs";
+
+const SearchBoxInput = styled(({searchParams, showFilters, className}) => {
 
     const [searchString, setSearchString] = useState("");
     const dispatch = useDispatch();
@@ -51,21 +53,36 @@ const SearchBoxInput = ({searchParams, showFilters, className}) => {
     }
 
     return (
-        <>
-            <VisuallyHiddenText><label htmlFor="search">Search</label></VisuallyHiddenText>
-            <StyledTextInput size="sm" 
-                name='search'
-                type='search'
-                disabled={showFilters}
-                placeholder="No search string"
-                style={{fontSize: "12px"}}
-                value={searchString}
-                onChange={(e) => onChange(e)}
-                onKeyDown={onKeyDown}
-                className={className}
-            />
-        </>
+        <OutlinedInput 
+            id="search"
+            disabled={showFilters}
+            placeholder="No search string"
+            value={searchString}
+            onChange={(e) => onChange(e)}
+            onKeyDown={onKeyDown}
+            inputProps={{
+                "type": "search",
+                
+                "aria-label": label
+            }}
+            endAdornment={
+                <InputAdornment position="end">
+                    <Link 
+                        href={`${process.env.REACT_APP_BASE_URL}/SearchHelp_en.html`} 
+                        target="_blank" 
+                        aria-label="Logbook Search Help Reference, opens in new tab"
+                        sx={{ 
+                            display: "flex",
+                            alignItems: "center"
+                        }}
+                    >
+                        <HelpIcon color="primary" />
+                    </Link>
+                </InputAdornment>
+            }
+            className={className}           
+        />
     );
-}
+})({});
 
 export default SearchBoxInput;

@@ -23,12 +23,10 @@ import TextInput from 'components/shared/input/TextInput';
 import { DroppableFileUploadInput } from 'components/shared/input/FileInput';
 import { useState } from 'react';
 import Button from 'components/shared/Button';
-import styled from 'styled-components';
+import styledStyledComponents from 'styled-components';
+import { Stack } from '@mui/material';
 
-const Form = styled.form`
-`
-
-const ImageContainer = styled.div`
+const ImageContainer = styledStyledComponents.div`
     max-height: 50vh;
     max-width: 50vw;
     & img {
@@ -130,66 +128,69 @@ const EmbedImageDialog = ({addEmbeddedImage, initialImage=null, setInitialImage,
         <Modal show={showEmbedImageDialog} 
             onClose={handleClose}
         >
-            <Form 
+            <Stack
+                component="form" 
                 onSubmit={handleSubmit}
+                gap={1}
             >
                 <Header closeButton onClose={handleClose}>
                     <Title>Add Embedded Image</Title>
                 </Header>
                 <Body>
-                    {imageAttachment 
-                    ?   <ImageContainer>
-                            <img src={URL.createObjectURL(imageAttachment)} alt={`preview of ${imageAttachment.name}`} />
-                        </ImageContainer>
-                    :   <DroppableFileUploadInput 
-                            onFileChanged={onFileChanged}
-                            id='embed-image-upload'
-                            dragLabel='Drag Image Here'
-                            browseLabel='Choose an Image or'
-                            maxFileSizeMb={maxFileSizeMb}
+                    <Stack gap={2} >
+                        {imageAttachment 
+                        ?   <ImageContainer>
+                                <img src={URL.createObjectURL(imageAttachment)} alt={`preview of ${imageAttachment.name}`} />
+                            </ImageContainer>
+                        :   <DroppableFileUploadInput 
+                                onFileChanged={onFileChanged}
+                                id='embed-image-upload'
+                                dragLabel='Drag Image Here'
+                                browseLabel='Choose an Image or'
+                                maxFileSizeMb={maxFileSizeMb}
+                            />
+                        }
+                        
+                        <TextInput 
+                            name='scalingFactor'
+                            label='Scaling Factor'
+                            control={control}
+                            defaultValue='1.0'
+                            rules={{
+                                validate: {
+                                    isCorrectRange: val => scalingFactorIsValid(val) || 'Scaling factor must be between 0 and 1'
+                                }
+                            }}
                         />
-                    }
-                    
-                    <TextInput 
-                        name='scalingFactor'
-                        label='Scaling Factor'
-                        control={control}
-                        defaultValue='1.0'
-                        rules={{
-                            validate: {
-                                isCorrectRange: val => scalingFactorIsValid(val) || 'Scaling factor must be between 0 and 1'
-                            }
-                        }}
-                    />
-                    <TextInput 
-                        name='imageWidth'
-                        label='Width'
-                        control={control}
-                        defaultValue='0.0'
-                        rules={{
-                            validate: {
-                                isPositive: val => dimensionIsValid(val) || 'Width must be a positive number'
-                            }
-                        }}
-                    />
-                    <TextInput 
-                        name='imageHeight'
-                        label='Height'
-                        control={control}
-                        defaultValue='0.0'
-                        rules={{
-                            validate: {
-                                isPositive: val => dimensionIsValid(val) || 'Height must be a positive number'
-                            }
-                        }}
-                    />
-                    
+                        <TextInput 
+                            name='imageWidth'
+                            label='Width'
+                            control={control}
+                            defaultValue='0.0'
+                            rules={{
+                                validate: {
+                                    isPositive: val => dimensionIsValid(val) || 'Width must be a positive number'
+                                }
+                            }}
+                        />
+                        <TextInput 
+                            name='imageHeight'
+                            label='Height'
+                            control={control}
+                            defaultValue='0.0'
+                            rules={{
+                                validate: {
+                                    isPositive: val => dimensionIsValid(val) || 'Height must be a positive number'
+                                }
+                            }}
+                        />
+                    </Stack>
                 </Body>
                 <Footer>
                     <Button variant="secondary" onClick={handleClose}>Cancel</Button>
                     <Button variant="primary" disabled={imageAttachment === null} onClick={handleSubmit}>Confirm Embed</Button>
                 </Footer>
-            </Form>
+            </Stack>
         </Modal>
     )
     

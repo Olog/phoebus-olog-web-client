@@ -45,6 +45,7 @@ import ExternalLink from 'components/shared/ExternalLink';
 import { APP_BASE_URL } from 'constants';
 import HtmlPreviewModal from './HtmlPreviewModal';
 import ErrorMessage from 'components/shared/input/ErrorMessage';
+import { Box, Stack } from '@mui/material';
 
 const Container = styled.div`
     padding: 1rem 0.5rem;
@@ -62,25 +63,7 @@ const Form = styled.form`
     gap: 0.5rem;
 `
 
-const DescriptionContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 1rem;
-`
-
 const DescriptionTextInput = styled(TextInput)`
-`
-
-const DescriptionContainerFooter = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 0.5rem;
-
-    & div {
-        display: flex;
-        gap: 1rem;
-    }
 `
 
 const ButtonContent = styled.div`
@@ -480,24 +463,24 @@ export const EntryEditor = ({
                                 }
                             }}
                         />
-                        <DescriptionContainer>
+                        <Stack gap={1}>
 
                             <DescriptionTextInput 
                                 name='description'
                                 label='Description'
                                 control={control}
                                 defaultValue=''
-                                textArea
-                                rows={10}
+                                multiline
+                                minRows={10}
                                 onPaste={handlePaste}
                             />
-                            <DescriptionContainerFooter>
-                                <div>
+                            <Stack direction="row" justifyContent="space-between">
+                                <Box>
                                     <ExternalLink href={`${APP_BASE_URL}/help/CommonmarkCheatsheet`} >
                                         <FaMarkdown />CommonMark Formatting Help
                                     </ExternalLink>
-                                </div>
-                                <div>
+                                </Box>
+                                <Stack direction="row">
                                     <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
                                             onClick={(e) => {
                                                 e.preventDefault();
@@ -514,9 +497,9 @@ export const EntryEditor = ({
                                             }}>
                                         Preview
                                     </Button>
-                                </div>
-                            </DescriptionContainerFooter>
-                        </DescriptionContainer>
+                                </Stack>
+                            </Stack>
+                        </Stack>
                         <DetachedLabel>Attachments <div style={{fontStyle: "italic", fontSize: "0.9em"}}>max size per file: {maxFileSizeMb}MB, max total size: {maxRequestSizeMb}MB</div></DetachedLabel>
                         <AttachmentsInputContainer>
                             <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>

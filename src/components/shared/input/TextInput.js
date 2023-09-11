@@ -1,16 +1,18 @@
 import React from "react";
 import { useController } from "react-hook-form";
-import styled from "styled-components"
+import styledComponentsStyled from "styled-components"
 import LabeledInput from "./LabeledInput"
+import { TextField } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-export const StyledInput = styled.input`
+export const StyledInput = styledComponentsStyled.input`
     width: 100%;
     padding: 0.5rem 1rem;
     border: solid 1px ${({theme}) => theme.colors.light};
     border-radius: 5px;
 `
 
-export const StyledTextArea = styled.textarea`
+export const StyledTextArea = styledComponentsStyled.textarea`
     width: 100%;
     padding: 0.5rem 1rem;
     border: solid 1px ${({theme}) => theme.colors.light};
@@ -57,26 +59,21 @@ export const StyledLabeledTextInput = React.forwardRef(({name, label, message, c
     );
 });
 
-export const TextInput = ({name, label, control, rules, defaultValue, className, textArea=false, rows=3, password=false, inlineLabel, ...props}) => {
+export const TextInput = styled(({name, label, control, rules, defaultValue, className, ...props}) => {
     
     const {field, fieldState} = useController({name, control, rules, defaultValue});
 
-    return <StyledLabeledTextInput 
-        {...{name, 
-            label, 
-            message: fieldState?.error?.message, 
-            className, 
-            textArea, 
-            rows, 
-            password, 
-            ref: field.ref, 
-            value:field.value, 
-            onChange:field.onChange,
-            inlineLabel,
-        }}
-        {...props}
-    />
+    return (
+        <TextField 
+            id={name}
+            label={label}
+            helperText={fieldState?.error?.message}
+            error={fieldState?.error}
+            {...field}
+            {...props}
+        />
+    );
     
-}
+})({});
 
 export default TextInput;
