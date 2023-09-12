@@ -22,8 +22,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - name: Clean and Build
-      run: ./scripts/clean-and-build.sh
+    - name: Install Dependencies and Build
+      run: ./scripts/install-dependencies-and-build.sh
     - name: Run Unit and Integration Tests
       run: ./scripts/test.sh
     - name: Run End-To-End Tests

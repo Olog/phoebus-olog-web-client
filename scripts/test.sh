@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-CI=true npm test 
+# Test the code
+CI=true npm test
