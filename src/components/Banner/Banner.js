@@ -103,7 +103,7 @@ export const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogo
         <NavFooter>
           <li>
             <MuiButton onClick={handleClick} variant="contained" >
-              {userData.userName ? userData.userName : 'Sign In'}
+              {userData?.userName ? userData.userName : 'Sign In'}
             </MuiButton>
           </li>
         </NavFooter>

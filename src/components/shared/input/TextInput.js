@@ -61,7 +61,7 @@ export const StyledLabeledTextInput = React.forwardRef(({name, label, message, c
 
 export const TextInput = styled(({name, label, control, rules, defaultValue, className, ...props}) => {
     
-    const {field, fieldState} = useController({name, control, rules, defaultValue});
+    const {field: {ref, ...field}, fieldState} = useController({name, control, rules, defaultValue});
 
     return (
         <TextField 
@@ -69,6 +69,7 @@ export const TextInput = styled(({name, label, control, rules, defaultValue, cla
             label={label}
             helperText={fieldState?.error?.message}
             error={fieldState?.error}
+            inputRef={field.ref}
             {...field}
             {...props}
         />
