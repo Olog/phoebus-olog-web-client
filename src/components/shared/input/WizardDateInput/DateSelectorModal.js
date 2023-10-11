@@ -21,10 +21,11 @@ import DatePicker from "./DatePicker";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Button from "components/shared/Button";
-import Modal, { Body, Footer, Header, Title } from 'components/shared/Modal';
+// import Modal, { Body, Footer, Header, Title } from 'components/shared/Modal';
 import TextInput from "components/shared/input/TextInput";
 import { dateToString } from "utils";
 import Submit from 'components/shared/input/Submit';
+import Modal from "components/shared/Modal";
 
 const Form = styled.form`
     padding: 1rem 0;
@@ -41,7 +42,7 @@ const DateSelectorModal = ({defaultValue, rules, title, show, setShow, onApply, 
     // This model gets its own form so that it can e.g. handle
     // validation and other features independently from 
     // update the calling field.
-    const {control, handleSubmit, formState, setFocus, setValue, watch} = useForm();
+    const {control, handleSubmit, formState, setValue, watch} = useForm();
     const [datetime] = watch(['datetime'])
 
     // Push datetime changes to text field
@@ -68,24 +69,12 @@ const DateSelectorModal = ({defaultValue, rules, title, show, setShow, onApply, 
         setShow(false);
     }
 
-    const onOpen = () => {
-        if(defaultValue) {
-            setValue('text', defaultValue);
-        }
-        // react-datetime-picker does *not* play nice
-        // so we need to set the focus on timeout
-        // to guarantee we set the focus
-        setTimeout(() => {
-            setFocus('text');
-        }, 1)
-    }
-
     return (
-        <Modal show={show} onClose={localOnClose} onOpen={onOpen}>
-            <Header onClose={localOnClose}>
-                <Title>{title}</Title>
-            </Header>
-            <Body>
+        <Modal 
+            open={show} 
+            onClose={localOnClose} 
+            title={title}
+            content={
                 <Form onSubmit={localOnApply}>
                     <Submit hidden />
                     <DatePicker 
@@ -103,16 +92,18 @@ const DateSelectorModal = ({defaultValue, rules, title, show, setShow, onApply, 
                         defaultValue={defaultValue}
                     />
                 </Form>
-            </Body>
-            <Footer>
-                <Button variant="primary" onClick={localOnApply}>
+            }
+            actions={
+                <>
+                    <Button variant="primary" onClick={localOnApply}>
                         Apply
-                </Button>
-                <Button variant="secondary" onClick={localOnClose}>
-                        Cancel
-                </Button>
-            </Footer>
-        </Modal>
+                    </Button>
+                    <Button variant="secondary" onClick={localOnClose}>
+                            Cancel
+                    </Button>
+                </>
+            }
+        />
     );
 }
 

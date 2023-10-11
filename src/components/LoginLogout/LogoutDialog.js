@@ -19,7 +19,7 @@
 import ologService from 'api/olog-service';
 import { useState } from 'react';
 import styled from 'styled-components';
-import Modal, { Body, Footer, Header, Title } from 'components/shared/Modal';
+import Modal from 'components/shared/Modal';
 import Button from 'components/shared/Button';
 import ErrorMessage from 'components/shared/input/ErrorMessage';
 import { useRef } from 'react';
@@ -49,32 +49,30 @@ const LogoutDialog = ({logoutDialogVisible, setShowLogout, setUserData}) => {
     });
   }
 
-  const handleOpen = () => {
-    logoutButtonRef.current?.focus();
-  }
-
   return(
-    <Modal show={logoutDialogVisible} onClose={hideLogout} onOpen={handleOpen}>
-      <Header onClose={hideLogout}>
-        <Title>Log out?</Title>
-      </Header>
-      <Body>
+    <Modal 
+      open={logoutDialogVisible} 
+      onClose={hideLogout} 
+      title="Log out?"
+      content={
         <Form>
           <br />
           <p>Would you like to logout?</p>
           <br />
           <ErrorMessage error={logoutError} />
         </Form>
-      </Body>
-      <Footer>
-        <Button variant="primary" onClick={logout} innerRef={logoutButtonRef} > 
-          Yes
-        </Button>
-        <Button variant="secondary" onClick={hideLogout} >
-          No
-        </Button>
-      </Footer>
-    </Modal>
+      }
+      actions={
+        <>
+          <Button variant="primary" onClick={logout} innerRef={logoutButtonRef} > 
+            Yes
+          </Button>
+          <Button variant="secondary" onClick={hideLogout} >
+            No
+          </Button>
+        </>
+      }
+    />
   )
 
 }

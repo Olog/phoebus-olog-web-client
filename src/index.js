@@ -4,7 +4,6 @@ import App from 'components/App';
 import { store } from './stores';
 import { Provider } from 'react-redux';
 import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-components';
-import { ModalProvider } from 'styled-react-modal';
 import theme, { styledComponentsTheme } from 'config/theme';
 import GlobalStyle from 'config/GlobalStyle';
 import { BrowserRouter } from 'react-router-dom';
@@ -17,11 +16,9 @@ root.render(
         <ThemeProvider theme={theme} >
             <StyledComponentsThemeProvider theme={styledComponentsTheme}>
                 <GlobalStyle />
-                <ModalProvider>
-                    <BrowserRouter>
-                        <App />
-                    </BrowserRouter>
-                </ModalProvider>
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
             </StyledComponentsThemeProvider>
         </ThemeProvider>
     </Provider>

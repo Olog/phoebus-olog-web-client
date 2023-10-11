@@ -17,7 +17,7 @@
  */
 
 import React, { useState } from 'react';
-import Modal, { Body, Footer, Header, Title } from '../shared/Modal';
+import Modal from '../shared/Modal';
 import Button from 'components/shared/Button';
 import ologService from 'api/olog-service';
 import { useForm } from 'react-hook-form';
@@ -28,10 +28,10 @@ import { Stack } from '@mui/material';
 
 const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
 
-  const {control, handleSubmit, reset, setFocus} = useForm();
+  const {control, handleSubmit, reset, resetField, setFocus} = useForm();
   const [loginError, setLoginError] = useState('');
 
-  const hideLogin = () => {
+  const closeAndReset = () => {
       setLoginError("");
       setShowLogin(false);
       // clear form data
@@ -46,32 +46,30 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
     
     ologService.post('/login', formData,  { withCredentials: true })
     .then(res => {
-      setLoginError("");
-      setUserData(res.data);
-      hideLogin();
-      }, error => { 
-        if(!error.response){
-          setLoginError("Login failed. Unable to connect to service.");
-        }
-        else if(error.response.status === 401) {
-          setLoginError("Login failed, invalid credentials.");
-        }
-        // clear form data
-        reset();
+        setLoginError("");
+        setUserData(res.data);
+        closeAndReset();
     })
-    .then(() => {
-      // clear form data
-      reset();
-    })
+    .catch((error) => {
+      console.error({error})
+      if(!error.response){
+        setLoginError("Login failed. Unable to connect to service.");
+      }
+      if(error.response.status === 401) {
+        setLoginError("Login failed, invalid credentials.");
+      }
+      // clear bad creds field
+      resetField("password");
+      setFocus('password', {shouldSelect: true});
+    });
   }
   
   return(
-
-    <Modal show={loginDialogVisible} onClose={hideLogin} onOpen={() => setFocus('username', {shouldSelect: true})}>
-      <Header onClose={hideLogin} >
-        <Title>Sign In</Title>
-      </Header>
-      <Body>
+    <Modal 
+      open={loginDialogVisible} 
+      onClose={closeAndReset} 
+      title="Sign In"
+      content={
         <Stack component="form" onSubmit={handleSubmit(login)} gap={1} marginY={2}>
           {/* Hidden button handles submit-on-enter automatically */}
           <Submit hidden />
@@ -90,16 +88,18 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
           />
           <ErrorMessage error={loginError} />
         </Stack>
-      </Body>
-      <Footer>
-        <Button variant="primary" type="submit" onClick={handleSubmit(login)}>
-          Login
-        </Button>
-        <Button variant="secondary" type="button" onClick={hideLogin}>
-          Cancel
-        </Button>
-      </Footer>
-    </Modal>
+      }
+      actions={
+        <>
+          <Button variant="primary" type="submit" onClick={handleSubmit(login)}>
+            Login
+          </Button>
+          <Button variant="secondary" type="button" onClick={closeAndReset}>
+            Cancel
+          </Button>        
+        </>
+      }
+    />
   )
 }
 

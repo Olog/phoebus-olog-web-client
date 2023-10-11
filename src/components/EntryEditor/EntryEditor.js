@@ -17,7 +17,7 @@
  */
 import ologService, { ologServiceWithRetry } from 'api/olog-service';
 import Button from '../shared/Button';
-import Modal, {Header, Title, Body} from 'components/shared/Modal';
+import Modal from 'components/shared/Modal';
 import { FaMarkdown, FaPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -234,6 +234,13 @@ export const EntryEditor = ({
             }
         }
     }, [formState])
+
+    // Close the Properties dialog if there are none left to select
+    useEffect(() => {
+        if(availableProperties?.length === properties?.length) {
+            setShowAddProperty(false);
+        }
+    }, [availableProperties, properties, setShowAddProperty]);
 
     /**
      * Appends an attachment object to the attachments form field
@@ -517,7 +524,7 @@ export const EntryEditor = ({
                         </AttachmentsInputContainer>
                         <DetachedLabel>Properties</DetachedLabel>
                         <PropertiesContainer>
-                            <Button variant="secondary" size="sm" onClick={(e) => {
+                            <Button variant="secondary" size="sm" disabled={availableProperties?.length === properties?.length} onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 setShowAddProperty(true);
@@ -533,18 +540,18 @@ export const EntryEditor = ({
                     </Form>
                 </Container>
             </LoadingOverlay>
-            <Modal show={showAddProperty} onClose={() => setShowAddProperty(false)}>
-                <Header onClose={() => setShowAddProperty(false)}>
-                    <Title>Add Property</Title>
-                </Header>
-                <Body>
+            <Modal 
+                open={showAddProperty} 
+                onClose={() => setShowAddProperty(false)}
+                title="Add Property"
+                content={
                     <PropertySelector 
                         availableProperties={availableProperties} 
                         selectedProperties={properties}
                         addProperty={appendProperty}
                     />
-                </Body>
-            </Modal>
+                }
+            />
             <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
                 setShowEmbedImageDialog={setShowEmbedImageDialog}
                 addEmbeddedImage={addEmbeddedImage}
