@@ -14,6 +14,9 @@ services:
       elasticsearch.network.host: fe-olog-elastic
       mongo.host: fe-olog-mongo
       elasticsearch.cluster.name: fe-olog-elastic-cluster
+      elasticsearch.index.create.timeout: 5m
+      elasticsearch.index.create.master_timeout: 5m
+
     # Ensure that the elastic server is up before starting olog.
     command: >
       /bin/bash -c "
