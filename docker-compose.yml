@@ -16,7 +16,7 @@ services:
       elasticsearch.cluster.name: fe-olog-elastic-cluster
       elasticsearch.index.create.timeout: 5m
       elasticsearch.index.create.master_timeout: 5m
-      elasticsearch.http.keep_alive_timeout_ms: 5m
+      elasticsearch.http.keep_alive_timeout_ms: 300000 
 
     # Ensure that the elastic server is up before starting olog.
     command: >
