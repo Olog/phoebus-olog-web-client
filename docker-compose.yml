@@ -21,7 +21,7 @@ services:
     # Ensure that the elastic server is up before starting olog.
     command: >
       /bin/bash -c "
-          while ! curl -s -f fe-olog-elastic:9200/_cluster/health?wait_for_status=yellow;
+          while ! curl -s -f fe-olog-elastic:9200/_cluster/health?wait_for_status=green;
         do
           echo Waiting for Elasticsearch;
           sleep 1;
