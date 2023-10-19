@@ -127,6 +127,9 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                         form={form}
                         defaultValue={getValues('start')}
                         onChange={(field, val) => onSearchParamFieldValueChanged(field, val, true)}
+                        DatePickerProps={{
+                            disableFuture: true
+                        }}
                         rules={{
                             validate: {
                                 timeParadox: val => {
@@ -147,6 +150,9 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                         form={form}
                         defaultValue={getValues('end')}
                         onChange={(field, val) => onSearchParamFieldValueChanged(field, val, true)}
+                        DatePickerProps={{
+                            disableFuture: true
+                        }}
                         rules={{
                             validate: {
                                 timeParadox: val => {
