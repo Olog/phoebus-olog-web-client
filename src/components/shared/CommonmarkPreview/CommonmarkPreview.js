@@ -19,8 +19,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Remarkable } from 'remarkable';
 import imageProcessor from 'utils/image-processor';
-import styled from 'styled-components';
 import HtmlContent from './HtmlContent';
+import { styled } from '@mui/material';
 
 const StyledHtmlContent = styled(HtmlContent)`
     padding: 0.5rem 0;
@@ -35,7 +35,7 @@ const StyledHtmlContent = styled(HtmlContent)`
  * attachedFile urls; ignored if there are no file objects.
  * @returns 
  */
-export const CommonmarkPreview = ({commonmarkSrc, attachedFiles, imageUrlPrefix}) => {
+export const CommonmarkPreview = styled(({commonmarkSrc, attachedFiles, imageUrlPrefix, className}) => {
     
     const [innerHtml, setInnerHtml] = useState("");
     
@@ -58,7 +58,7 @@ export const CommonmarkPreview = ({commonmarkSrc, attachedFiles, imageUrlPrefix}
     }, [commonmarkSrc, attachedFiles, imageUrlPrefix, remarkable])
 
     return(
-        <StyledHtmlContent html={{ __html: innerHtml }} /> 
+        <StyledHtmlContent className={className} html={{ __html: innerHtml }} /> 
     )
 
-}
+})({})

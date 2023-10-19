@@ -2,7 +2,6 @@ import React from "react";
 import { styledComponentsTheme, theme } from 'config/theme';
 import GlobalStyle from 'config/GlobalStyle';
 import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-components';
-import { ModalProvider } from "styled-react-modal";
 import { ThemeProvider } from "@mui/material";
 
 /** @type { import('@storybook/react').Preview } */
@@ -18,14 +17,12 @@ const preview = {
   },
   decorators: [
     (Story) => (
-      <ModalProvider>
-        <StyledComponentsThemeProvider theme={styledComponentsTheme}>
-          <GlobalStyle />
-          <ThemeProvider theme={theme} >
-            <Story />
-          </ThemeProvider>
-        </StyledComponentsThemeProvider>
-      </ModalProvider>
+      <StyledComponentsThemeProvider theme={styledComponentsTheme}>
+        <GlobalStyle />
+        <ThemeProvider theme={theme} >
+          <Story />
+        </ThemeProvider>
+      </StyledComponentsThemeProvider>
     )
   ]
 };

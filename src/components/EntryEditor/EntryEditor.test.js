@@ -2,7 +2,6 @@ import { render, screen, selectFromCombobox, waitFor } from "test-utils";
 import userEvent from '@testing-library/user-event';
 import { EntryEditor } from "./EntryEditor";
 import { MemoryRouter } from "react-router-dom";
-import { ModalProvider } from "styled-react-modal";
 
 test('when an image is uploaded, then it is displayed', async () => {
 
@@ -119,9 +118,7 @@ test('embed images successfully', async () => {
     const user = userEvent.setup();
     render(
         <MemoryRouter>
-            <ModalProvider>
-                <EntryEditor userData={{username: 'foo'}}/>
-            </ModalProvider>
+            <EntryEditor userData={{username: 'foo'}}/>
         </MemoryRouter>
     );
 

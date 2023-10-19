@@ -19,7 +19,8 @@ import { FaRegFile } from "react-icons/fa";
 import styled from 'styled-components';
 import { BsXCircle } from 'react-icons/bs';
 import { useState } from 'react';
-import Modal, { Header, Title } from 'components/shared/Modal';
+import Modal from 'components/shared/Modal';
+import { Stack, Typography } from "@mui/material";
 
 const Container = styled.div`
     height: 100%;
@@ -83,34 +84,6 @@ const Caption = styled.figcaption`
     text-overflow: ellipsis;
 `
 
-const StyledModal = styled(Modal)`
-    width: 90vw;
-    height: 90vh;
-
-    /** We need to target the focus-lock container
-     * and set its height so images preview nicely **/
-    & [data-focus-lock-disabled] {
-        height: 100%;
-    }
-`
-
-const ModalContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: 1rem;
-`
-
-const StyledBody = styled(ImageContainer)`
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    &:hover {
-        cursor: default;
-    }
-`
-
 const Attachment = ({attachment, removeAttachment, className}) => {
 
     const [showPreview, setShowPreview] = useState(false);
@@ -140,17 +113,17 @@ const Attachment = ({attachment, removeAttachment, className}) => {
                     <Caption>{attachment.file.name}</Caption>
                 </CaptionContainer>
             </Container>
-            <StyledModal show={showPreview} onClose={() => setShowPreview(false)}>
-                <ModalContent>
-                    <Header onClose={() => setShowPreview(false)}>
-                        <Title>{attachment.file.name}</Title>
-                    </Header>
-                    <StyledBody>
+            <Modal 
+                title={attachment.file.name}
+                content={
+                    <Stack alignItems="center">
                         {image}
-                        {isImage ? null : <div><i>(No preview available)</i></div>}
-                    </StyledBody>
-                </ModalContent>
-            </StyledModal>
+                        {isImage ? null : <Typography fontStyle="italic" >(No preview available)</Typography>}
+                    </Stack>
+                }
+                open={showPreview}
+                onClose={() => setShowPreview(false)}
+            />
         </>
     );
 }

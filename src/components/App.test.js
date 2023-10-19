@@ -5,7 +5,6 @@ import { screen, render, givenServerRespondsWithSearchRequest, waitFor, testEntr
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import customization from 'utils/customization';
-import { ModalProvider } from 'styled-react-modal';
 
 it('renders without crashing', async () => {
     const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
@@ -428,9 +427,7 @@ describe('Login/Logout', () => {
         // when rendered
         render(
             <MemoryRouter initialEntries={['/edit']}>
-                <ModalProvider>
-                    <App />
-                </ModalProvider>
+                <App />
             </MemoryRouter>
         );
     

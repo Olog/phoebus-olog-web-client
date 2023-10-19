@@ -1,13 +1,3 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from 'components/App';
-import { store } from './stores';
-import { Provider } from 'react-redux';
-import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-components';
-import { ModalProvider } from 'styled-react-modal';
-import theme, { styledComponentsTheme } from 'config/theme';
-import GlobalStyle from 'config/GlobalStyle';
-import { BrowserRouter } from 'react-router-dom';
 /**
  * Copyright (C) 2019 European Spallation Source ERIC.
  * <p>
@@ -26,6 +16,15 @@ import { BrowserRouter } from 'react-router-dom';
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from 'components/App';
+import { store } from './stores';
+import { Provider } from 'react-redux';
+import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-components';
+import theme, { styledComponentsTheme } from 'config/theme';
+import GlobalStyle from 'config/GlobalStyle';
+import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material';
 import LocalizationProvider from 'config/LocalizationProvider';
 
@@ -37,11 +36,9 @@ root.render(
             <StyledComponentsThemeProvider theme={styledComponentsTheme}>
                 <GlobalStyle />
                 <LocalizationProvider>
-                    <ModalProvider>
-                        <BrowserRouter>
-                            <App />
-                        </BrowserRouter>
-                    </ModalProvider>
+                    <BrowserRouter>
+                        <App />
+                    </BrowserRouter>
                 </LocalizationProvider>
             </StyledComponentsThemeProvider>
         </ThemeProvider>

@@ -17,35 +17,22 @@
  */
 
 import React from 'react';
-import Button from 'components/shared/Button';
-import Modal, { Body, Footer, Header } from '../shared/Modal';
-import styled from 'styled-components';
+import Modal from '../shared/Modal';
 import CommonmarkPreview from '../shared/CommonmarkPreview';
-
-const StyledModal = styled(Modal)`
-    max-width: 90vw;
-    max-height: 90vh;
-    width: 100%;
-    overflow: auto;
-`
 
 const HtmlPreviewModal = ({commonmarkSrc, attachedFiles, showHtmlPreview, setShowHtmlPreview}) => { 
 
     return (
-        <StyledModal 
-            show={showHtmlPreview}
+        <Modal
+            open={showHtmlPreview}
             onClose={() => setShowHtmlPreview(false)}
-        >
-            <Header onClose={() => setShowHtmlPreview(false)}>
-                <h2>Description Preview</h2>
-            </Header>
-            <Body>
-                <CommonmarkPreview {...{commonmarkSrc, attachedFiles}} />
-            </Body>
-            <Footer>
-                    <Button variant="secondary" onClick={() => setShowHtmlPreview(false)}>OK</Button>
-            </Footer> 
-        </StyledModal>
+            title="Description Preview"
+            content={<CommonmarkPreview {...{commonmarkSrc, attachedFiles}} />}
+            DialogProps={{
+                fullWidth: true,
+                maxWidth: "lg"
+            }}
+        />
     )
 }
 

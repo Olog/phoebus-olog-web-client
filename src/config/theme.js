@@ -39,7 +39,12 @@ theme = createTheme(theme, {
     palette: {
       essCyan: "#0099dc",
       essBlack: "#000000",
-      essWhite: "#ffffff",
+      essWhite: theme.palette.augmentColor({
+        color: {
+          main: "#ffffff"
+        },
+        name: "essWhite"
+      }), 
       essPurple: "#821482",
       essOrange: "#ff7d00",
       essForest: "#006646",
