@@ -14,10 +14,15 @@ services:
       elasticsearch.network.host: fe-olog-elastic
       mongo.host: fe-olog-mongo
       elasticsearch.cluster.name: fe-olog-elastic-cluster
+      elasticsearch.index.create.timeout: 5m
+      elasticsearch.index.create.master_timeout: 5m
+      elasticsearch.http.keep_alive_timeout_ms: "300000"
+      elasticsearch.http.socket_timeout_ms: "300000" 
+
     # Ensure that the elastic server is up before starting olog.
     command: >
       /bin/bash -c "
-          while ! curl -s -f fe-olog-elastic:9200/_cluster/health?wait_for_status=yellow;
+          while ! curl -s -f fe-olog-elastic:9200/_cluster/health?wait_for_status=green;
         do
           echo Waiting for Elasticsearch;
           sleep 1;
@@ -38,9 +43,10 @@ services:
       cluster.name: fe-olog-elastic-cluster
       bootstrap.memory_lock: "true"
       discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      ES_JAVA_OPTS: "-Xms1024m -Xmx1024m"
       xpack.security.enabled: "false"
       xpack.security.http.ssl.enabled: "false"
+      ingest.geoip.downloader.enabled: "false"
     ports:
       - 9200:9200
     volumes:
