@@ -17,38 +17,16 @@
  */
 
 import { useMediaQuery } from 'react-responsive';
-import styled from 'styled-components';
-import { PaginationItem, Next, Pagination, Prev } from 'components/Pagination';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import PageSizeInput from './PageSizeInput';
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 0.5rem;
-`
-
-const PageSizeContainer = styled.div`
-
-`
-
-const PaginationContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-`
-
-const PagePosition = styled.div`
-    white-space: nowrap;
-`
+import { Box, Pagination, Stack, Typography } from '@mui/material';
 
 const PaginationBar = ({searchResults, searchPageParams}) => {
 
     const [pageCount, setPageCount] = useState(0);
-    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const [currentPageIndex, setCurrentPageIndex] = useState(1);
     const dispatch = useDispatch();
     
     useEffect(() => {
@@ -71,78 +49,40 @@ const PaginationBar = ({searchResults, searchPageParams}) => {
         }
     }, [currentPageIndex, dispatch, searchPageParams]);
 
-    const goToPage = (pageNumber) => {
-        if(pageNumber >= 0) {
-            setCurrentPageIndex(pageNumber);
-        };
-    }
 
-    const isMobile = useMediaQuery({ query: '(max-width: 539px)' })
+    const isMobile = useMediaQuery({ query: '(max-width: 539px)' });
 
     let maxPaginationItems = 6;
     if(isMobile) {
         maxPaginationItems = 3;
     }
 
-    const renderPaginationItems = () => {
-
-        let paginationPage = Math.floor(currentPageIndex / maxPaginationItems);
-
-        let firstIndex = paginationPage * maxPaginationItems;
-        let pagesToRender = Math.min(pageCount - firstIndex, maxPaginationItems);
-        let lastIndex = firstIndex + (pagesToRender);
-
-        let items = [];
-        for(let i = firstIndex; i < lastIndex; i++){
-            const isCurrentPage = i === currentPageIndex;
-            items.push(<PaginationItem
-                key={i} 
-                active={isCurrentPage}
-                onClick={() => {
-                    if(!isCurrentPage) {
-                        goToPage(i)
-                    }
-                }}
-                label={`Page ${i+1}`}
-            >
-                {i + 1}
-            </PaginationItem>)
-        }
-        return items;
-    }
-
-    const prevDisabled = currentPageIndex === 0;
-    const nextDisabled = currentPageIndex + 1 === pageCount;
-    const onClickPreviousPage = () => {
-        if(!prevDisabled) {
-            goToPage(currentPageIndex - 1);
-        }
-    }
-    const onClickNextPage = () => {
-        if(!nextDisabled) {
-            goToPage(currentPageIndex + 1);
-        }
-    }
+    let paginationPage = Math.floor(currentPageIndex / maxPaginationItems);
+    let firstIndex = paginationPage * maxPaginationItems;
+    const pagesToRender = Math.min(pageCount - firstIndex, maxPaginationItems);
 
     return (
-        <Container>
-            <PageSizeContainer>
+        <Stack padding={1} >
+            <Box>
                 <PageSizeInput 
                     initialValue={searchPageParams.size}
                     onValidChange={(value) => dispatch(updateSearchPageParams({...searchPageParams, size: value}))}
                 />
-            </PageSizeContainer>
+            </Box>
             {pageCount >= 2 ? 
-                <PaginationContainer>
-                    <Pagination>
-                        <Prev onClick={onClickPreviousPage} disabled={prevDisabled} />
-                        {renderPaginationItems()}
-                        <Next onClick={onClickNextPage} disabled={nextDisabled} />
-                    </Pagination>
-                    <PagePosition>{`${currentPageIndex + 1} / ${pageCount}`}</PagePosition>
-                </PaginationContainer>
+                <Stack flexDirection="row" alignItems="center" justifyContent="center" gap={0.5}>
+                    <Pagination 
+                        page={currentPageIndex + 1}
+                        count={pagesToRender}
+                        onChange={(event, value) => { setCurrentPageIndex(value - 1)}}
+                        variant="outlined"
+                        shape="rounded"
+                        color="primary"
+                    />
+                    <Typography fontSize={"0.875rem"}>{`${currentPageIndex + 1} / ${pageCount}`}</Typography>
+                </Stack>
             : null}
-        </Container>
+        </Stack>
     );
 }
 

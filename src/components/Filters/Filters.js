@@ -24,8 +24,7 @@ import Collapse from './Collapse';
 import TextInput from 'components/shared/input/TextInput';
 import WizardDateInput from 'components/shared/input/WizardDateInput';
 import RadioInput from 'components/shared/input/RadioInput';
-import Button from 'components/shared/Button';
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -84,7 +83,7 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                     gap={1}
                 >
                     {/* Hidden button handles submit-on-enter automatically */}
-                    <Button type='submit' hidden >Submit</Button>
+                    <Button type="submit" hidden />
                     <TextInput 
                         name='title'
                         label='Title'

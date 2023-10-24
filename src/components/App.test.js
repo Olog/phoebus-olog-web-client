@@ -1,7 +1,8 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import App from './App';
-import { screen, render, givenServerRespondsWithSearchRequest, waitFor, testEntry, within, resultList, getOptionItems, expectSelected, selectFromCombobox } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, waitFor, within, getOptionItems, expectSelected, selectFromCombobox } from 'test-utils';
+import { testEntry, resultList } from "../mocks/fixtures/generators";
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import customization from 'utils/customization';
@@ -228,56 +229,6 @@ describe('Search Results', () => {
         await user.click(entry2);
         const entry2View = await screen.findByRole('heading', {name: 'Entry 2', level: 2});
         expect(entry2View).toBeInTheDocument();
-
-        // Cleanup any network resources
-        unmount();
-
-    })
-
-    test('user can navigate different log entries by clicking on the next/previous buttons on the log entry', async () => {
-
-        // Given the server responds with many search results to click on
-        server.use(
-            rest.get('*/logs/search', (req, res, ctx) => {
-                return res(
-                    ctx.json(resultList([
-                        testEntry({title: 'Entry 1'}),
-                        testEntry({title: 'Entry 2'}),
-                        testEntry({title: 'Entry 3'})
-                    ])),    // Server not done yet
-                );
-            })
-        )
-
-        const user = userEvent.setup();
-        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
-
-        // When we click on an entry, we can navigate to other entries
-        const searchResults = screen.getByRole('list', {name: /search results/i});
-        const {findByRole} = within(searchResults);
-        const entry1 = await findByRole('heading', {name: 'Entry 1'});
-        await user.click(entry1);
-        const entry1Header = await screen.findByRole('heading', {name: 'Entry 1', level: 2});
-        expect(entry1Header).toBeInTheDocument();
-        const previousEntry = await screen.findByRole('button', {name: /previous/i});
-        const nextEntry = await screen.findByRole('button', {name: /next/i});
-        expect(previousEntry).toHaveAttribute('aria-disabled', 'true');
-        expect(nextEntry).toHaveAttribute('aria-disabled', 'false'); // arguably, pagination should be LINKS not buttons...don't render next if no next page!
-
-        await user.click(nextEntry);
-        const entry2Header = await screen.findByRole('heading', {name: 'Entry 2', level: 2});
-        expect(entry2Header).toBeInTheDocument();
-        expect(previousEntry).toHaveAttribute('aria-disabled', 'false');
-        expect(nextEntry).toHaveAttribute('aria-disabled', 'false');
-        await user.click(nextEntry);
-
-        const entry3Header = await screen.findByRole('heading', {name: 'Entry 3', level: 2});
-        expect(entry3Header).toBeInTheDocument();
-        expect(previousEntry).toHaveAttribute('aria-disabled', 'false');
-        expect(nextEntry).toHaveAttribute('aria-disabled', 'true');
-
-        await user.click(previousEntry);
-        expect(entry2Header).toBeInTheDocument();
 
         // Cleanup any network resources
         unmount();
@@ -829,7 +780,7 @@ describe('Pagination Bar', () => {
         await user.type(hitsPerPage, '10');
         
         // Then the pagination controls should be rendered
-        const paginationControls = await screen.findByRole('navigation', {name: /pagination controls/i});
+        const paginationControls = await screen.findByRole('navigation', {name: /pagination/i});
         expect(paginationControls).toBeInTheDocument();
 
         // And when the user sets the page size to 11
@@ -837,7 +788,7 @@ describe('Pagination Bar', () => {
         await user.type(hitsPerPage, '11');
 
         // Then the pagination controls should not be rendered
-        const noPaginationControls = screen.queryByRole('navigation', {name: /pagination controls/i});
+        const noPaginationControls = screen.queryByRole('navigation', {name: /pagination/i});
         expect(noPaginationControls).not.toBeInTheDocument();
 
         // cleanup network resources

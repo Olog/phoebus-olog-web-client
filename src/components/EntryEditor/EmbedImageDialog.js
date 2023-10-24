@@ -22,8 +22,7 @@ import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import { DroppableFileUploadInput } from 'components/shared/input/FileInput';
 import { useState } from 'react';
-import Button from "../shared/Button";
-import { ImageList, ImageListItem, Stack } from '@mui/material';
+import { Button, ImageList, ImageListItem, Stack } from '@mui/material';
 
 const EmbedImageDialog = ({addEmbeddedImage, initialImage=null, setInitialImage, showEmbedImageDialog, setShowEmbedImageDialog, maxFileSizeMb}) => {
 
@@ -176,8 +175,8 @@ const EmbedImageDialog = ({addEmbeddedImage, initialImage=null, setInitialImage,
             }
             actions={
                 <>
-                    <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-                    <Button variant="primary" disabled={imageAttachment === null} onClick={handleSubmit}>Confirm Embed</Button>
+                    <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+                    <Button color="primary" variant="contained" disabled={imageAttachment === null} onClick={handleSubmit}>Confirm Embed</Button>
                 </>
             }
         />

@@ -16,15 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from '../shared/Modal';
-import Button from 'components/shared/Button';
 import ologService from 'api/olog-service';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import ErrorMessage from 'components/shared/input/ErrorMessage';
-import Submit from 'components/shared/input/Submit';
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 
 const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
 
@@ -63,6 +61,10 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
       setFocus('password', {shouldSelect: true});
     });
   }
+
+  useEffect(() => {
+    reset();
+  }, [reset]);
   
   return(
     <Modal 
@@ -72,7 +74,7 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
       content={
         <Stack component="form" onSubmit={handleSubmit(login)} gap={1} marginY={2}>
           {/* Hidden button handles submit-on-enter automatically */}
-          <Submit hidden />
+          <Button type="submit" hidden tabIndex={-1}/>
           <TextInput 
             name='username'
             label='Username'
@@ -91,10 +93,10 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
       }
       actions={
         <>
-          <Button variant="primary" type="submit" onClick={handleSubmit(login)}>
+          <Button variant="contained" type="submit" onClick={handleSubmit(login)}>
             Login
           </Button>
-          <Button variant="secondary" type="button" onClick={closeAndReset}>
+          <Button variant="outlined" type="button" onClick={closeAndReset}>
             Cancel
           </Button>        
         </>

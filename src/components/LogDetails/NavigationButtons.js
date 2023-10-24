@@ -16,30 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import { useState, useEffect } from 'react';
-// import Button from 'react-bootstrap/Button';
-import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
-// import Tooltip from 'react-bootstrap/Tooltip';
-// import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
-import styled from 'styled-components';
-import Button from 'components/shared/Button';
-import VisuallyHiddenText from 'components/shared/VisuallyHiddenText';
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-`
-
-const NavButton = styled(Button)`
-    padding: 0.5rem 1rem;;
-`
+import { Button, Stack } from '@mui/material';
 
 const NavigationButtons = ({
     currentLogEntry,
-    searchResults
+    searchResults,
+    ...props
 }) => { 
 
     const navigate = useNavigate();
@@ -66,24 +53,22 @@ const NavigationButtons = ({
     }, [currentLogEntry, searchResults]);
 
     return (
-        <Container>
-            <NavButton 
-                variant='primary'
+        <Stack flexDirection="row" gap={1} {...props}>
+            <Button 
+                variant="contained"
                 disabled={!previousLogEntry}
                 onClick={() => navigateToLogEntry(previousLogEntry)}
             >
-                <FaArrowLeft aria-hidden />
-                <VisuallyHiddenText>previous</VisuallyHiddenText>
-            </NavButton>
-            <NavButton 
-                variant='primary'
+                <ArrowBackIcon titleAccess="previous log entry" />
+            </Button>
+            <Button 
+                variant="contained"
                 disabled={!nextLogEntry}
                 onClick={() => navigateToLogEntry(nextLogEntry)}
             >
-                <FaArrowRight aria-hidden />
-                <VisuallyHiddenText>next</VisuallyHiddenText>
-            </NavButton>
-        </Container>
+                <ArrowForwardIcon titleAccess="next log entry" />
+            </Button>
+        </Stack>
     )
 
 }

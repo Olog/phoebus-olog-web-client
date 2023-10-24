@@ -1,5 +1,6 @@
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, resultList, testEntry, within } from "test-utils";
+import { render, screen, within } from "test-utils";
+import { resultList, testEntry } from "../../mocks/fixtures/generators";
 import SearchResultList from "./SearchResultList";
 
 test('grouped items include a grouped icon', () => {
