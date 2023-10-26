@@ -1,5 +1,6 @@
 import { MemoryRouter } from 'react-router-dom';
-import {render, testEntry, screen } from 'test-utils';
+import {render, screen } from 'test-utils';
+import { testEntry } from 'mocks/fixtures/generators';
 import LogDetails from '.';
 
 test('Show/Hide Group button is displayed if part of a group', () => {

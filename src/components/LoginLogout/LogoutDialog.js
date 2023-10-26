@@ -20,9 +20,9 @@ import ologService from 'api/olog-service';
 import { useState } from 'react';
 import styled from 'styled-components';
 import Modal from 'components/shared/Modal';
-import Button from 'components/shared/Button';
 import ErrorMessage from 'components/shared/input/ErrorMessage';
 import { useRef } from 'react';
+import { Button } from '@mui/material';
 
 const Form = styled.form``;
 
@@ -64,11 +64,11 @@ const LogoutDialog = ({logoutDialogVisible, setShowLogout, setUserData}) => {
       }
       actions={
         <>
-          <Button variant="primary" onClick={logout} innerRef={logoutButtonRef} > 
-            Yes
+          <Button variant="contained" onClick={logout} innerRef={logoutButtonRef} > 
+            Logout
           </Button>
-          <Button variant="secondary" onClick={hideLogout} >
-            No
+          <Button variant="outlined" onClick={hideLogout} >
+            Cancel
           </Button>
         </>
       }

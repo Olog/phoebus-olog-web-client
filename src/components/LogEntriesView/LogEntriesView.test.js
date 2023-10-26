@@ -2,7 +2,9 @@ import userEvent from '@testing-library/user-event';
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import { MemoryRouter } from 'react-router-dom';
-import { render, resultList, screen, testEntry } from 'test-utils';
+import { render, screen } from 'test-utils';
+import { resultList } from "../../mocks/fixtures/generators";
+import { testEntry } from "../../mocks/fixtures/generators";
 import LogEntriesView from '.';
 
 test('when user submits search many times, search is performed many times (no caching)', async () => {

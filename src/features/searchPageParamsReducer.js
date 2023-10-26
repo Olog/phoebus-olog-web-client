@@ -2,17 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "universal-cookie";
 import customization from "utils/customization";
 
-const cookies = new Cookies();
-const initialState = cookies.get(customization.searchPageParamsCookie) || {
-    sort: "down",
+export const defaultSearchPageParamsState = {
+    sort: customization.defaultSortDirection,
     from: 0,
     size: customization.defaultPageSize
-};
-cookies.set(customization.searchPageParamsCookie, initialState, {path: '/', maxAge: '100000000'});
+}
+const cookies = new Cookies();
 
 export const searchPageParamsSlice = createSlice({
     name: "searchPageParams",
-    initialState,
+    initialState: defaultSearchPageParamsState,
     reducers: {
         updateSearchPageParams: (state, action) => {
             const searchPageParams = action.payload;

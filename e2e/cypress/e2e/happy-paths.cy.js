@@ -16,24 +16,29 @@ describe('Happy Paths', () => {
     cy.visit('/');
 
     // Perform a search that should return the seed data (Should see 35 results from the seeding <30 seconds ago)
-    cy.findByRole('searchbox', {name: /Search Logs/i}).clear().type('start=5 min{Enter}');
+    cy.findByRole('searchbox', {name: /Search Logs/i}).clear().type('start=1 min{Enter}');
 
     // Set the page size as expected
-    cy.findByRole('textbox', {name: /hits per page/i}).clear().type('30{Enter}');
+    cy.findByRole("button", {name: /hits per page/i}).click();
+    cy.findByRole("option", {name: /30/i}).click();
 
-    // We should see two pages of results
-    cy.findByRole('button', {name: /page 1/i}).should('exist');
-    cy.findByRole('button', {name: /page 2/i}).should('exist');
-    cy.findByRole('button', {name: /page 3/i}).should('not.exist');
-
-    // With entries 6-35 on the first page
-    cy.findByRole('heading', {name: /entry #35/i}).should('exist');
-    cy.findByRole('heading', {name: /entry #31/i}).should('exist');
+    // Entries 6-35 should appear on the first page with scrolling
+    // (datagrid only renders the rows in the viewport, not all of them at once, for better performance)
+    cy.findByRole('row', {name: /entry #35/i}).should('exist');
+    cy.findByRole('row', {name: /entry #30/i}).scrollIntoView();
+    cy.findByRole('row', {name: /entry #25/i}).scrollIntoView();
+    cy.findByRole('row', {name: /entry #20/i}).scrollIntoView();
+    cy.findByRole('row', {name: /entry #15/i}).scrollIntoView();
+    cy.findByRole('row', {name: /entry #10/i}).scrollIntoView();
+    cy.findByRole('row', {name: /entry #6/i}).scrollIntoView().should("exist");
 
     // And entries 1-5 on the second page
-    cy.findByRole('button', {name: /page 2/i}).click();
-    cy.findByRole('heading', {name: /entry #1/i}).should('exist');
-    cy.findByRole('heading', {name: /entry #5/i}).should('exist');
+    cy.findByRole("button", {name: /next page/}).click();
+    cy.findByRole('row', {name: /entry #1/i}).should('exist');
+    cy.findByRole('row', {name: /entry #5/i}).should('exist');
+
+    // And there should be no more pages
+    cy.findByRole("button", {name: /next page/}).should("be.disabled");
 
   })
 

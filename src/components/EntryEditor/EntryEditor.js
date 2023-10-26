@@ -16,9 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import ologService, { ologServiceWithRetry } from 'api/olog-service';
-import Button from '../shared/Button';
 import Modal from 'components/shared/Modal';
-import { FaMarkdown, FaPlus } from 'react-icons/fa';
+import { FaMarkdown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Attachment from 'components/Attachment';
@@ -45,7 +44,8 @@ import ExternalLink from 'components/shared/ExternalLink';
 import { APP_BASE_URL } from 'constants';
 import HtmlPreviewModal from './HtmlPreviewModal';
 import ErrorMessage from 'components/shared/input/ErrorMessage';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 const Container = styled.div`
     padding: 1rem 0.5rem;
@@ -64,12 +64,6 @@ const Form = styled.form`
 `
 
 const DescriptionTextInput = styled(TextInput)`
-`
-
-const ButtonContent = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 `
 
 const AttachmentsInputContainer = styled.div`
@@ -487,21 +481,11 @@ export const EntryEditor = ({
                                         <FaMarkdown />CommonMark Formatting Help
                                     </ExternalLink>
                                 </Box>
-                                <Stack direction="row">
-                                    <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setShowEmbedImageDialog(true);
-                                            }}>
+                                <Stack direction="row" gap={1}>
+                                    <Button variant="outlined" onClick={() => setShowEmbedImageDialog(true) } >
                                         Embed Image
                                     </Button>
-                                    <Button variant="secondary" size="sm" style={{marginLeft: "5px"}}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setShowHtmlPreview(true)
-                                            }}>
+                                    <Button variant="outlined" onClick={(e) => setShowHtmlPreview(true) } >
                                         Preview
                                     </Button>
                                 </Stack>
@@ -524,19 +508,17 @@ export const EntryEditor = ({
                         </AttachmentsInputContainer>
                         <DetachedLabel>Properties</DetachedLabel>
                         <PropertiesContainer>
-                            <Button variant="secondary" size="sm" disabled={availableProperties?.length === properties?.length} onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setShowAddProperty(true);
-                            }}>
-                                <ButtonContent>
-                                    <FaPlus className="add-button"/>
-                                    <span>Add Property</span>
-                                </ButtonContent>
+                            <Button 
+                                variant="outlined"
+                                disabled={availableProperties?.length === properties?.length} 
+                                onClick={() => { setShowAddProperty(true)}}
+                                startIcon={<AddIcon />}
+                            >
+                                Add Property
                             </Button>
                             {renderedProperties}    
                         </PropertiesContainer>
-                        <Button type='submit' variant="primary" disabled={userData.userName === "" || createInProgress}>Submit</Button>
+                        <Button type='submit' variant="contained" disabled={userData.userName === "" || createInProgress}>Submit</Button>
                     </Form>
                 </Container>
             </LoadingOverlay>

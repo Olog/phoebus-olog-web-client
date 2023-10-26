@@ -15,9 +15,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import { Button } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
-import Button from 'components/shared/Button';
 
 const PropertyRow = styled.div`
     display: flex;
@@ -40,7 +40,7 @@ const PropertySelector = ({selectedProperties, availableProperties, addProperty}
         <PropertyRow key={row.name}>
             <div>{row.name}</div>
             <Button 
-                variant='primary'
+                variant="contained"
                 onClick={() => addProperty(row)}
             >
                 Add

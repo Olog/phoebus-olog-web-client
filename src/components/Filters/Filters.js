@@ -24,8 +24,8 @@ import Collapse from './Collapse';
 import TextInput from 'components/shared/input/TextInput';
 import WizardDateInput from 'components/shared/input/WizardDateInput';
 import RadioInput from 'components/shared/input/RadioInput';
-import Button from 'components/shared/Button';
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
+import customization from 'utils/customization';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -36,8 +36,8 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
     const dispatch = useDispatch();
     const searchParams = useSelector(state => state.searchParams);
     const searchPageParams = useSelector(state => state.searchPageParams);
-    const form = useForm({defaultValues: {...searchParams}});
-
+    const form = useForm({defaultValues: {...searchParams, sort: searchPageParams.sort}});
+    
     const { control, handleSubmit, getValues } = form;
     
     const onSubmit = (data) => {
@@ -84,7 +84,7 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                     gap={1}
                 >
                     {/* Hidden button handles submit-on-enter automatically */}
-                    <Button type='submit' hidden >Submit</Button>
+                    <Button type="submit" hidden />
                     <TextInput 
                         name='title'
                         label='Title'
@@ -171,7 +171,7 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                         name='sort'
                         label='Sort'
                         control={control}
-                        defaultValue={searchPageParams.sort || 'down'}
+                        defaultValue={searchPageParams.sort || customization.defaultSortDirection}
                         options={[
                             {
                                 label: 'Sort descending on date',

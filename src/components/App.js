@@ -27,10 +27,12 @@ import LogEntriesView from './LogEntriesView';
 import { useSelector } from 'react-redux';
 import { useGetLogbooksQuery, useGetTagsQuery } from 'services/ologApi';
 import { Box } from '@mui/material';
+import Initialize from './Initialize';
 
 /**
  * Entry point component.
  */
+
 const App = () => {
 
     const [userData, setUserData] = useState({userName: "", roles: []});
@@ -55,47 +57,49 @@ const App = () => {
                 display: "flex",
                 flexDirection: "column"
         }}>
-            <Banner {...{
-                showLogin, setShowLogin,
-                showLogout, setShowLogout,
-                userData, setUserData,
-                setReplyAction
-            }}/>
-            <Box id='app-content' 
-                sx={{
-                    overflow: "auto",
-                    height: "100%"
-            }}>
-                <Routes>
-                    <Route exact path="/" element={
-                        <LogEntriesView {...{
-                            tags, 
-                            logbooks,
-                            userData,
-                            setReplyAction, 
-                            currentLogEntry
-                        }}/>
-                    } />
-                    <Route exact path="/logs/:id" element={
-                        <LogEntriesView {...{
-                            tags, 
-                            logbooks,
-                            userData,
-                            setReplyAction, 
-                            currentLogEntry
-                        }}/>
-                    } />
-                    <Route path="/edit" element={
-                        <EntryEditor {...{
-                            tags,
-                            logbooks,
-                            replyAction, setReplyAction,
-                            userData, setUserData,
-                            setShowLogin
-                        }}/>
-                    } />
-                </Routes>
-            </Box>
+            <Initialize>
+                <Banner {...{
+                    showLogin, setShowLogin,
+                    showLogout, setShowLogout,
+                    userData, setUserData,
+                    setReplyAction
+                }}/>
+                <Box id='app-content' 
+                    sx={{
+                        overflow: "auto",
+                        height: "100%"
+                }}>
+                    <Routes>
+                        <Route exact path="/" element={
+                            <LogEntriesView {...{
+                                tags, 
+                                logbooks,
+                                userData,
+                                setReplyAction, 
+                                currentLogEntry
+                            }}/>
+                        } />
+                        <Route exact path="/logs/:id" element={
+                            <LogEntriesView {...{
+                                tags, 
+                                logbooks,
+                                userData,
+                                setReplyAction, 
+                                currentLogEntry
+                            }}/>
+                        } />
+                        <Route path="/edit" element={
+                            <EntryEditor {...{
+                                tags,
+                                logbooks,
+                                replyAction, setReplyAction,
+                                userData, setUserData,
+                                setShowLogin
+                            }}/>
+                        } />
+                    </Routes>
+                </Box>
+            </Initialize>
         </Box>
     );
 }
