@@ -5,7 +5,6 @@ import LocalizationProvider from "../config/LocalizationProvider";
 import GlobalStyle from "config/GlobalStyle";
 
 export const AppWrapper = ({store, theme, styledComponentsTheme, children}) => {
-    console.log({store})
     return (
         <Provider store={store}>
             <ThemeProvider theme={theme}>

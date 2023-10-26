@@ -24,7 +24,7 @@ const Header = styled.button`
 
 const Icon = styled(FaChevronRight)`
     transition: all 100ms;
-    ${({show}) => show ? `
+    ${({$isOpen}) => $isOpen ? `
         transform: rotate(90deg);
     ` : ''}
 `
@@ -42,7 +42,7 @@ const Collapse = ({title, active=false, className, children}) => {
     return (
         <Container className={className}>
             <Header onClick={handleClick} aria-expanded={show}>
-                <Icon show={show} aria-hidden='true' />
+                <Icon $isOpen={show} aria-hidden='true' />
                 {title}
             </Header>
             {show ? <Body>{children}</Body> : null}

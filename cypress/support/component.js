@@ -30,12 +30,9 @@ import { theme, styledComponentsTheme } from "../../src/config/theme";
 
 // Cypress.Commands.add('mount', mount);
 Cypress.Commands.add('mount', (component, options = {}) => {
-
-    console.log("MOUNT")
+    
     // Use the default store if one is not provided
     const { preloadedState = {}, store = setupStore(preloadedState), WrapperProps={} } = options;
-
-    console.log({store})
   
     // const wrapped = <Provider store={reduxStore}>{component}</Provider>
     // return mount(wrapped, mountOptions)
@@ -50,4 +47,10 @@ Cypress.Commands.add('mount', (component, options = {}) => {
         </AppWrapper>,
         options
     )
+})
+
+beforeEach(() => {
+    // currently we use cookies to store search state
+    // so these need to be cleared between tests
+    cy.clearAllCookies();
 })

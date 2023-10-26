@@ -119,8 +119,6 @@ export const EntryEditor = ({
      setShowLogin=() => {}
     }) => {
 
-        console.log({replyAction})
-
     const topElem = useRef();
     const { control, handleSubmit, getValues, setValue, watch, formState } = useForm();
     const { fields: attachments, remove: removeAttachment, append: appendAttachment } = useFieldArray({

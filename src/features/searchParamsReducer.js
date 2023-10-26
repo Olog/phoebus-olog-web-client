@@ -4,8 +4,9 @@ import customization from "utils/customization";
 import {v4 as uuidv4} from 'uuid';
 
 const cookies = new Cookies();
-const initialState = cookies.get(customization.searchParamsCookie) || {...customization.defaultSearchParams};
-cookies.set(customization.searchParamsCookie, initialState, {path: '/', maxAge: '100000000'}); 
+// const initialState = cookies.get(customization.searchParamsCookie) || {...customization.defaultSearchParams};
+// cookies.set(customization.searchParamsCookie, initialState, {path: '/', maxAge: '100000000'}); 
+export const defaultSearchParamsState = {...customization.defaultSearchParams};
 
 const removeEmptyKeys = (obj, exceptions=[]) => {
     const copy = {...obj};
@@ -26,7 +27,7 @@ const removeEmptyKeys = (obj, exceptions=[]) => {
 
 export const searchParamsSlice = createSlice({
     name: 'searchParams',
-    initialState,
+    initialState: defaultSearchParamsState,
     reducers: {
         updateSearchParams: (state, action) => {
             const searchParams = removeEmptyKeys(action.payload);

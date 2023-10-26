@@ -53,10 +53,12 @@ let customization = {
      * Default search params
      */
     defaultSearchParams: {start: "12 hours", end: "now"},
+    defaultSortDirection: "down",
 
     /**
      * Default page size in search
      */
+    defaultRowsPerPageOptions: [10, 30, 50],
     defaultPageSize: 30,
 
     /**

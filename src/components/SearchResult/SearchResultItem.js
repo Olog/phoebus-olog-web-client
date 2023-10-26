@@ -15,55 +15,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import { FaPaperclip, FaReply } from "react-icons/fa";
-import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
-import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
+import React from 'react';
 import { formatFullDateTime, getLogEntryGroupId } from 'utils';
-import { useNavigate } from "react-router-dom";
+import { Stack, Typography, styled } from "@mui/material";
+import ReplyIcon from '@mui/icons-material/Reply';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
-const LogInfoContainer = styled.li`
-    
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.25rem;
-
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.10);
-        cursor: pointer;
-    }
-
-
-    ${({selected}) => selected ? `
-        background-color: #c8e0f4;
-        border-left: 2px solid #333;
-        padding-left: 0.5rem;
-    ` : ''}
-
-    transition: padding 100ms ease;
-
-`
-
-const LogInfo = styled.div`
+const LogInfo = styled("div")`
     display: flex;
     justify-content: space-between;
     font-size: 0.75rem;
 `
 
-const HeaderInfo = styled(LogInfo)`
-    gap: 0.5rem;
+const SearchResultItem = ({log}) => {
 
-    h3, & {
-        font-size: 1rem;
-        font-weight: normal;
-    }
-`
-
-const SearchResultItem = ({log, currentLogEntry}) => {
-
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
     const isGroupEntry = getLogEntryGroupId(log.properties);
 
     const formatDescription = (description) => {
@@ -75,26 +40,15 @@ const SearchResultItem = ({log, currentLogEntry}) => {
         return description.substring(0, length) + ellipsis;
     }
 
-    const handleClick = () => {
-        dispatch(updateCurrentLogEntry(log));
-        navigate(`/logs/${log.id}`);
-    }
-
     return (
-        <LogInfoContainer 
-            grouped={getLogEntryGroupId(log.properties) !== null} 
-            selected={currentLogEntry && currentLogEntry.id === log.id}
-            onClick={handleClick}
-            isGroupEntry={isGroupEntry}
-            aria-labelledby={log.id}
-        >
-            <HeaderInfo >
-                <h3 id={log.id}>{log.title}</h3>
-                <HeaderInfo>
-                    <p>{isGroupEntry ? <FaReply aria-label='grouped' role='status' /> : null}</p>
-                    <p>{log.attachments && log.attachments.length  !== 0 ? <FaPaperclip aria-label='has attachments' role='status' /> : null}</p>
-                </HeaderInfo>
-            </HeaderInfo>
+        <Stack width="100%">
+            <Stack flexDirection="row" justifyContent="space-between">
+                <Typography variant="body1" component="h3" >{log.title}</Typography>
+                <Stack flexDirection="row" >
+                    {isGroupEntry ? <ReplyIcon titleAccess="grouped" role="status" /> : null}
+                    {log.attachments && log.attachments.length  !== 0 ? <AttachFileIcon titleAccess='has attachments' role='status' /> : null}
+                </Stack>
+            </Stack>
             <LogInfo>
                 <p>{log.owner}</p>
                 <p>{formatFullDateTime(log.createdDate)}</p>
@@ -103,7 +57,7 @@ const SearchResultItem = ({log, currentLogEntry}) => {
                 <p>{formatDescription(log.description)}</p>
                 <p>{log.id}</p>
             </LogInfo>
-        </LogInfoContainer>
+        </Stack>
     )
     
 }
