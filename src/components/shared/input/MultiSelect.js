@@ -50,8 +50,7 @@ const MultiSelect = styled( ({name, label, control, rules, defaultValue, classNa
 
             {...props}
         />
-
-   )
+    )
     
 })({})
 

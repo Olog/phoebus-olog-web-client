@@ -17,7 +17,6 @@
  */
 import SearchResultItem from './SearchResultItem';
 import SearchBox from './SearchBox';
-import styled from 'styled-components';
 import { sortLogsDateCreated } from 'utils';
 import { Divider, LinearProgress, Stack, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -49,10 +48,6 @@ const LoadingOverlay = (props) => {
       />
     );
 };
-
-const StyledSearchBox = styled(SearchBox)`
-    flex: 0 0 auto;
-`
 
 /**
  * Pane showing search query input and a the list of log entries 
@@ -121,14 +116,13 @@ const SearchResultList = ({
 
     return(
         <Stack className={className}>
-            <StyledSearchBox {...{searchParams, showFilters, setShowFilters}} />
+            <SearchBox {...{searchParams, showFilters, setShowFilters}} />
             <Divider />
             <DataGrid 
                 aria-label="Search Results"
                 columns={columns}
                 rows={rows}
                 slots={{
-                    // columnHeaders: (props) => null,
                     noRowsOverlay: NoRowsOverlay,
                     noResultsOverlay: NoRowsOverlay,
                     loadingOverlay: LoadingOverlay
@@ -143,7 +137,7 @@ const SearchResultList = ({
                     }
                   }}
                 loading={searchInProgress}
-                rowHeight={90}
+                rowHeight={70}
                 onRowClick={handleClick}
                 paginationMode="server"
                 pagination={true}

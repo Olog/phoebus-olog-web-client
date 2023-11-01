@@ -18,8 +18,8 @@
 
 import React, { useEffect } from "react";
 
-import {useState} from 'react';
-import {searchParamsToQueryString, queryStringToSearchParameters} from 'utils/searchParams';
+import { useState } from 'react';
+import { searchParamsToQueryString, queryStringToSearchParameters } from 'utils/searchParams';
 import { useDispatch } from "react-redux";
 import { forceUpdateSearchParams } from "features/searchParamsReducer";
 import { InputAdornment, Link, OutlinedInput, styled } from "@mui/material";

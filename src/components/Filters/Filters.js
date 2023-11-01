@@ -169,16 +169,16 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                     />
                     <RadioInput 
                         name='sort'
-                        label='Sort'
+                        label='Sort By Date'
                         control={control}
                         defaultValue={searchPageParams.sort || customization.defaultSortDirection}
                         options={[
                             {
-                                label: 'Sort descending on date',
+                                label: 'descending',
                                 value: 'down'
                             },
                             {
-                                label: 'Sort ascending on date',
+                                label: 'ascending',
                                 value: 'up'
                             }
                         ]}

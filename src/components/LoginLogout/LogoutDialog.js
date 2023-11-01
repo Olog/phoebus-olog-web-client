@@ -20,9 +20,8 @@ import ologService from 'api/olog-service';
 import { useState } from 'react';
 import styled from 'styled-components';
 import Modal from 'components/shared/Modal';
-import ErrorMessage from 'components/shared/input/ErrorMessage';
 import { useRef } from 'react';
-import { Button } from '@mui/material';
+import { Alert, Button } from '@mui/material';
 
 const Form = styled.form``;
 
@@ -59,7 +58,7 @@ const LogoutDialog = ({logoutDialogVisible, setShowLogout, setUserData}) => {
           <br />
           <p>Would you like to logout?</p>
           <br />
-          <ErrorMessage error={logoutError} />
+          {logoutError ? <Alert severity="error">{logoutError}</Alert> : null}
         </Form>
       }
       actions={

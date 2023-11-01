@@ -1,9 +1,8 @@
 import { useRef, useState } from "react";
-import styled from "styled-components";
 import { MdFileUpload } from "react-icons/md";
-import ErrorMessage from "./ErrorMessage";
+import { Typography, styled } from "@mui/material";
 
-const StyledDroppableFileUploadArea = styled.div`
+const StyledDroppableFileUploadArea = styled("div")`
     width: 100%;
     height: 100%;
     display: flex;
@@ -30,7 +29,7 @@ const StyledDroppableFileUploadArea = styled.div`
 
 `
 
-const StyledClickableArea = styled.div`
+const StyledClickableArea = styled("div")`
     height: 100%;
     width: 100%;
     display: flex;
@@ -43,7 +42,7 @@ const StyledClickableArea = styled.div`
 export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple, accept, dragLabel, browseLabel, maxFileSizeMb}) => {
 
     const fileInputRef = useRef();
-    const [error, setError] = useState(null);
+    const [error, setError] = useState("");
 
     // Validates the filesize (if applicable)
     // And invokes the filechange callback if valid
@@ -76,13 +75,11 @@ export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple
 
     const handleDragEnter = (event) => {
         event.preventDefault();
-        // event.stopPropagation();
         dragAreaRef.current.classList.add('dragging-over')
     }
 
     const handleDragLeave = (event) => {
         event.preventDefault();
-        // event.stopPropagation();
         dragAreaRef.current.classList.remove('dragging-over')
     }
 
@@ -115,7 +112,7 @@ export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple
                 accept={accept}
                 hidden
             />
-            <ErrorMessage error={error} />
+            {error ? <Typography variant="body2" fontStyle="italic" color="error">{error}</Typography> : null}
         </StyledDroppableFileUploadArea>
     )
 }
