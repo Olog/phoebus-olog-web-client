@@ -21,8 +21,7 @@ import Modal from '../shared/Modal';
 import ologService from 'api/olog-service';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
-import ErrorMessage from 'components/shared/input/ErrorMessage';
-import { Button, Stack } from '@mui/material';
+import { Alert, Button, Stack } from '@mui/material';
 
 const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
 
@@ -88,7 +87,7 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
             defaultValue=''
             inputProps={{type: "password"}}
           />
-          <ErrorMessage error={loginError} />
+          {loginError ? <Alert severity="error">{loginError}</Alert> : null}
         </Stack>
       }
       actions={

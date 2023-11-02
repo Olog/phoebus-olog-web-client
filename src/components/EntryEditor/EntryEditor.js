@@ -43,8 +43,7 @@ import { useRef } from 'react';
 import ExternalLink from 'components/shared/ExternalLink';
 import { APP_BASE_URL } from 'constants';
 import HtmlPreviewModal from './HtmlPreviewModal';
-import ErrorMessage from 'components/shared/input/ErrorMessage';
-import { Box, Stack, Button } from '@mui/material';
+import { Box, Stack, Button, Alert } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 const Container = styled.div`
@@ -504,7 +503,10 @@ export const EntryEditor = ({
                                 />
                                 { renderedAttachments }
                             </RenderedAttachmentsContainer>
-                            { formState?.errors?.attachments ? <ErrorMessage error={formState?.errors?.attachments?.root.message}/> : null } 
+                            { formState?.errors?.attachments ? 
+                                <Alert severity="error">{formState?.errors?.attachments?.root.message}</Alert>
+                                : null 
+                            } 
                         </AttachmentsInputContainer>
                         <DetachedLabel>Properties</DetachedLabel>
                         <PropertiesContainer>

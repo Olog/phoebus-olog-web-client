@@ -112,7 +112,7 @@ const ButtonDatePicker = ({slots, ButtonFieldProps, ...props}) => {
                 layout: {
                     sx: {
                         [`.${pickersLayoutClasses.actionBar}`]: {
-                            "button:first-child": {
+                            "button:first-of-type": {
                                 marginRight: "auto"
                             }
                         }
