@@ -17,17 +17,12 @@
  */
 import ologService, { ologServiceWithRetry } from 'api/olog-service';
 import Modal from 'components/shared/Modal';
-import { FaMarkdown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import Attachment from 'components/Attachment';
 import customization from 'utils/customization';
-import EmbedImageDialog from './EmbedImageDialog';
-import OlogAttachment from './OlogAttachment';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
 import { checkSession } from 'api/olog-service';
-import {removeImageMarkup, ologClientInfoHeader } from 'utils';
+import { ologClientInfoHeader } from 'utils';
 import LoadingOverlay from 'components/shared/LoadingOverlay';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -38,13 +33,10 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist'
 import TextInput from 'components/shared/input/TextInput';
 import styled from 'styled-components';
-import { DroppableFileUploadInput } from 'components/shared/input/FileInput';
 import { useRef } from 'react';
-import ExternalLink from 'components/shared/ExternalLink';
-import { APP_BASE_URL } from 'constants';
-import HtmlPreviewModal from './HtmlPreviewModal';
-import { Box, Stack, Button, Alert } from '@mui/material';
+import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import Description from './Description';
 
 const Container = styled.div`
     padding: 1rem 0.5rem;
@@ -60,40 +52,6 @@ const Form = styled.form`
     flex-direction: column;
     overflow: auto;
     gap: 0.5rem;
-`
-
-const DescriptionTextInput = styled(TextInput)`
-`
-
-const AttachmentsInputContainer = styled.div`
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-`
-
-const RenderedAttachmentsContainer = styled.div`
-    display: grid;
-    place-items: center;
-    grid-template-columns: repeat(auto-fill, 10rem);
-    grid-template-rows: repeat(auto-fill, 10rem);
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    border: solid 1px ${({theme}) => theme.colors.light};
-    border-radius: 5px;
-
-    ${({hasAttachments}) => hasAttachments ? '' : `
-        display: flex;
-    `}
-`
-
-const StyledAttachment = styled(Attachment)`
-    border: solid 1px ${({theme}) => theme.colors.light};
-    border-radius: 5px;
-    height: 100%;
-    width: 100%;
 `
 
 const PropertiesContainer = styled.div`
@@ -119,40 +77,21 @@ export const EntryEditor = ({
     }) => {
 
     const topElem = useRef();
-    const { control, handleSubmit, getValues, setValue, watch, formState } = useForm();
-    const { fields: attachments, remove: removeAttachment, append: appendAttachment } = useFieldArray({
-        control,
-        name: 'attachments',
-        keyName: 'reactHookFormId', // default is 'id', which would override OlogAttachment#id
-        rules: {
-            validate: {
-                maxRequestSize: (attachments) => {
-                    const total = attachments.map(it => it?.file?.size || 0).reduce((prev, curr) => curr + prev, 0);
-                    const max = maxRequestSizeMb*1000000;
-                    return total < max || `Attachments exceed total maximum upload size of ${maxRequestSizeMb}MB` 
-                },
-                maxFileSize: (attachments) => {
-                    const max = maxFileSizeMb*1000000;
-                    const results = attachments.filter(it => it?.file?.size > max).map(it => it?.file?.name);
-                    return results.length === 0 || `Attachments exceed max filesize (${maxFileSizeMb}MB): ${results}`
-                }
-            }
+    const { control, handleSubmit, getValues, setValue, watch, formState } = useForm({
+        defaultValues: {
+            attachments: []
         }
-    })
+    });
+    const attachments = watch("attachments");
+
     const { fields: properties, remove: removeProperty, append: appendProperty, update: updateProperty } = useFieldArray({
         control,
         name: 'properties',
         keyName: 'reactHookFormId' // default is 'id', which would override OlogAttachment#id
     })
-    // File input HTML element ref allows us to hide
-    // the element and click it from e.g. a button
-    const [initialImage, setInitialImage] = useState(null);
+
     const [createInProgress, setCreateInProgress] = useState(false);
-    const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
-    const [showHtmlPreview, setShowHtmlPreview] = useState(false);
     const [showAddProperty, setShowAddProperty] = useState(false);
-    const [maxRequestSizeMb, setMaxRequestSizeMb] = useState(customization.defaultMaxRequestSizeMb)
-    const [maxFileSizeMb, setMaxFileSizeMb] = useState(customization.defaultMaxFileSizeMb)
     const {data: availableProperties} = useGetPropertiesQuery();
     const currentLogEntry = useSelector(state => state.currentLogEntry);
 
@@ -187,20 +126,6 @@ export const EntryEditor = ({
             });
         }
     }, [setShowLogin, setReplyAction])
-
-    // Get the max attachment filesize 
-    useEffect(() => {
-        ologService.get('/')
-            .then(res => {
-                const {data} = res;
-                setMaxRequestSizeMb(data?.serverConfig?.maxRequestSize || customization.defaultMaxRequestSizeMb);
-                setMaxFileSizeMb(data?.serverConfig?.maxFileSize || customization.defaultMaxFileSizeMb);
-            })
-            .catch(() => {
-                setMaxRequestSizeMb(customization.defaultMaxRequestSizeMb);
-                setMaxFileSizeMb(customization.defaultMaxFileSizeMb);
-            })
-    }, []);
     
     /**
      * If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
@@ -234,48 +159,6 @@ export const EntryEditor = ({
             setShowAddProperty(false);
         }
     }, [availableProperties, properties, setShowAddProperty]);
-
-    /**
-     * Appends an attachment object to the attachments form field
-     * @param {*} event 
-     */
-    const onFileChanged = (files) => {
-        if(files) {
-            // note event.target.files is a FileList, not an array! But we can convert it
-            Array.from(files).forEach(file => {
-                appendAttachment(new OlogAttachment(file, uuidv4()));
-            });
-        }
-    }
-
-    /**
-     * When an attachment is removed, update the internal state
-     * and also remove any embeds found in the description
-     */
-    const onAttachmentRemoved = (attachment, index) => {
-        
-        let description = getValues('description') || '';
-        if(description.indexOf(attachment.id) > -1){  // Find potential markup referencing the attachment
-            let updatedDescription = removeImageMarkup(description, attachment.id);
-            setValue('description', updatedDescription);
-        }
-        removeAttachment(index);
-    }
-    
-    /**
-     * Inserts image markup into the description field
-     * @param {*} file 
-     * @param {*} width 
-     * @param {*} height 
-     */
-    const addEmbeddedImage = (file, width, height) => {
-        const id = uuidv4();
-        appendAttachment(new OlogAttachment(file, id));
-        const imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
-        let description = getValues('description') || '';
-        description += imageMarkup;
-        setValue('description', description, {shouldDirty: false, shouldTouch: false, shouldValidate: false});
-    }
 
     /**
      * Update a property value and its attributes
@@ -377,13 +260,6 @@ export const EntryEditor = ({
         }
     }
 
-    /**
-     * If attachments are present, creates a wrapper containing an array of Attachment components
-     */
-    const renderedAttachments = attachments.map((attachment, index) => {
-        return <StyledAttachment key={index} attachment={attachment} removeAttachment={() => onAttachmentRemoved(attachment, index)}/>
-    });
-
     const renderedProperties = properties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
         return (
             <PropertyEditor key={index}
@@ -393,22 +269,6 @@ export const EntryEditor = ({
                 updateAttributeValue={updateAttributeValue}/>
         );
     })
-
-    const handlePaste = (e) => {
-        const items = e.clipboardData.items;
-        let imageFile = null;
-        for(let item of items) {
-            if(item.kind === 'file' && item.type.match(/^image/)) {
-                imageFile = item.getAsFile();
-            }
-        }
-        if(imageFile) {
-            setInitialImage(imageFile);
-            setShowEmbedImageDialog(true);
-            // prevent paste of image 'text'
-            e.preventDefault();
-        }
-    }
 
     return (
         <>
@@ -463,51 +323,12 @@ export const EntryEditor = ({
                                 }
                             }}
                         />
-                        <Stack gap={1}>
-
-                            <DescriptionTextInput 
-                                name='description'
-                                label='Description'
-                                control={control}
-                                defaultValue=''
-                                multiline
-                                minRows={10}
-                                onPaste={handlePaste}
-                            />
-                            <Stack direction="row" justifyContent="space-between">
-                                <Box>
-                                    <ExternalLink href={`${APP_BASE_URL}/help/CommonmarkCheatsheet`} >
-                                        <FaMarkdown />CommonMark Formatting Help
-                                    </ExternalLink>
-                                </Box>
-                                <Stack direction="row" gap={1}>
-                                    <Button variant="outlined" onClick={() => setShowEmbedImageDialog(true) } >
-                                        Embed Image
-                                    </Button>
-                                    <Button variant="outlined" onClick={(e) => setShowHtmlPreview(true) } >
-                                        Preview
-                                    </Button>
-                                </Stack>
-                            </Stack>
-                        </Stack>
-                        <DetachedLabel>Attachments <div style={{fontStyle: "italic", fontSize: "0.9em"}}>max size per file: {maxFileSizeMb}MB, max total size: {maxRequestSizeMb}MB</div></DetachedLabel>
-                        <AttachmentsInputContainer>
-                            <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>
-                                <DroppableFileUploadInput 
-                                    onFileChanged={onFileChanged}
-                                    id='attachments-upload'
-                                    dragLabel='Drag Here'
-                                    browseLabel='Choose File(s) or'
-                                    multiple
-                                    maxFileSizeMb={maxFileSizeMb}
-                                />
-                                { renderedAttachments }
-                            </RenderedAttachmentsContainer>
-                            { formState?.errors?.attachments ? 
-                                <Alert severity="error">{formState?.errors?.attachments?.root.message}</Alert>
-                                : null 
-                            } 
-                        </AttachmentsInputContainer>
+                        <Description 
+                            control={control}
+                            formState={formState}
+                            setValue={setValue}
+                            getValues={getValues}
+                        />
                         <DetachedLabel>Properties</DetachedLabel>
                         <PropertiesContainer>
                             <Button 
@@ -535,19 +356,6 @@ export const EntryEditor = ({
                         addProperty={appendProperty}
                     />
                 }
-            />
-            <EmbedImageDialog showEmbedImageDialog={showEmbedImageDialog} 
-                setShowEmbedImageDialog={setShowEmbedImageDialog}
-                addEmbeddedImage={addEmbeddedImage}
-                initialImage={initialImage}
-                setInitialImage={setInitialImage}
-                maxFileSizeMb={maxFileSizeMb}
-            />
-            <HtmlPreviewModal 
-                showHtmlPreview={showHtmlPreview}
-                setShowHtmlPreview={setShowHtmlPreview}
-                commonmarkSrc={getValues('description')}
-                attachedFiles={attachments}
             />
         </>
     );
