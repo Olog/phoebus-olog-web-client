@@ -19,28 +19,38 @@
 import React, { useEffect } from "react";
 
 import { useState } from 'react';
-import { searchParamsToQueryString, queryStringToSearchParameters } from 'utils/searchParams';
+import { useSanitizedSearchParams, withoutCacheBust } from 'utils/searchParams';
 import { useDispatch } from "react-redux";
 import { forceUpdateSearchParams } from "features/searchParamsReducer";
 import { InputAdornment, Link, OutlinedInput, styled } from "@mui/material";
 import HelpIcon from '@mui/icons-material/Help';
-
-const label = "Search Logs";
+import { removeEmptyKeys } from "utils";
 
 const SearchBoxInput = styled(({searchParams, showFilters, className}) => {
 
     const [searchString, setSearchString] = useState("");
     const dispatch = useDispatch();
+    const { 
+        toSearchParams, 
+        toQueryString 
+    } = useSanitizedSearchParams();
 
+    // On updates to the searchParams, update the text of
+    // the search box to include those params, but don't
+    // show any empty values ("tags=") or the cacheBust param
     useEffect(() => {
         if(searchParams) {
-            const copy = {...searchParams};
-            if(copy.cacheBust) {
-                delete copy.cacheBust;
-            }
-            setSearchString(searchParamsToQueryString(copy));
+            setSearchString(
+                toQueryString(
+                    removeEmptyKeys(
+                        withoutCacheBust(
+                            searchParams
+                        )
+                    )
+                )
+            );
         }
-    }, [searchParams]);
+    }, [searchParams, toQueryString]);
 
     const onChange = (event) => {
         setSearchString(event.target.value);
@@ -48,7 +58,8 @@ const SearchBoxInput = styled(({searchParams, showFilters, className}) => {
 
     const onKeyDown = (event) => {
         if(event.key === 'Enter') {
-            dispatch(forceUpdateSearchParams(queryStringToSearchParameters(searchString)));
+            const sanitizedSearchParams = toSearchParams(searchString);
+            dispatch(forceUpdateSearchParams(sanitizedSearchParams));
         }
     }
 
@@ -62,8 +73,7 @@ const SearchBoxInput = styled(({searchParams, showFilters, className}) => {
             onKeyDown={onKeyDown}
             inputProps={{
                 "type": "search",
-                
-                "aria-label": label
+                "aria-label": "Search Logs"
             }}
             endAdornment={
                 <InputAdornment position="end">

@@ -63,7 +63,7 @@ describe("Attachments Features", () => {
 
     });
 
-    it.only("should embed images successfully", () => {
+    it("should embed images successfully", () => {
 
         cy.mount(<Template />);
 
@@ -83,7 +83,7 @@ describe("Attachments Features", () => {
 
         // Then the description markup is updated and image appears in the attachments
         cy.findByRole("textbox", {name: /description/i}).invoke("val").then(val => {
-            expect(val).match(/^some text.*\!\[\]/);
+            expect(val).match(/^some text.*!\[\]/);
         });
         cy.findByRole("img", {name: "test500x100.jpg"}).should("exist");
 

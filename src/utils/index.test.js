@@ -204,15 +204,6 @@ test('getLogEntryGroupMissing', () => {
     expect(result).toBeNull();
 });
 
-test('queryStringToSearchParameters', () => {
-    let query = "start=b&end=D&foo=bar";
-    let map = queryStringToSearchParameters(query);
-
-    expect(map['start']).toBe('b');
-    // Unsupported query params should be undefined
-    expect(map['foo']).toBeUndefined();
-});
-
 test('dateToString', () => {
     let now = new Date();
     let string = dateToString(now);

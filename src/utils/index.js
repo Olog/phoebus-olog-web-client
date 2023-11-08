@@ -180,3 +180,20 @@ export const delay = (duration) => {
         }, duration)
     })
 }
+
+export const removeEmptyKeys = (obj, exceptions=[]) => {
+    const copy = {...obj};
+    for(let key of Object.keys(copy).filter(it => exceptions.indexOf(it) === -1)) {
+        const val = copy[key];
+        if(Array.isArray(val) && val.length === 0) {
+            delete copy[key];
+            continue;
+        }
+        if(typeof val === 'string' || val instanceof String) {
+            if(val.trim() === '') {
+                delete copy[key]
+            }
+        }
+    }
+    return copy;
+}

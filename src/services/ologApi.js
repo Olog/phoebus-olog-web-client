@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ologClientInfoHeader } from "utils";
+import { withoutCacheBust } from "utils/searchParams";
 
 export const ologApi = createApi({
     reducerPath: 'ologApi',
@@ -8,15 +9,16 @@ export const ologApi = createApi({
     endpoints: builder => ({
         searchLogs: builder.query({
             query: ({searchParams, searchPageParams}) => {
-                // Clean up any cache busting from forced dispatching;
-                // we don't need to send those params to the server.
-                const cleanSearchParams = {...searchParams};
-                if(cleanSearchParams.cacheBust) {
-                    delete cleanSearchParams.cacheBust; 
-                }
                 return {
                     url: '/logs/search',
-                    params: {...cleanSearchParams, ...searchPageParams},
+                    params: { 
+                        // remove cache bust so we don't send it to the server
+                        // we must do it *here* rather than where useSearchLogsQuery
+                        // is called because we want repeated searches of the same
+                        // search to trigger calling the api (e.g. polling)
+                        ...withoutCacheBust(searchParams), 
+                        ...searchPageParams
+                    },
                     headers: {...ologClientInfoHeader()}
                 }
             }

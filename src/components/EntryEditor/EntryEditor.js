@@ -37,6 +37,8 @@ import { useRef } from 'react';
 import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import Description from './Description';
+import LogbooksMultiSelect from 'components/shared/input/managed/LogbooksMultiSelect';
+import TagsMultiSelect from 'components/shared/input/managed/TagsMultiSelect';
 
 const Container = styled.div`
     padding: 1rem 0.5rem;
@@ -279,30 +281,16 @@ export const EntryEditor = ({
                     <h1>New Log Entry</h1>
                     <Form onSubmit={handleSubmit(onSubmit)} >
                         <span ref={topElem}></span>
-                        <MultiSelect
-                            name='logbooks'
-                            label='Logbooks'
+                        <LogbooksMultiSelect 
                             control={control}
-                            defaultValue={[]}
-                            options={logbooks}
-                            getOptionLabel={logbook => logbook.name}
-                            isOptionEqualToValue={ (option, value) => option.name === value.name }
-                            isMulti
                             rules={{
                                 validate: {
                                     notEmpty: val => val?.length > 0 || 'Select at least one logbook'
                                 }
                             }}
                         />
-                        <MultiSelect 
-                            name='tags'
-                            label='Tags'
+                        <TagsMultiSelect 
                             control={control}
-                            defaultValue={[]}
-                            options={tags}
-                            getOptionLabel={tag => tag.name}
-                            isOptionEqualToValue={ (option, value) => option.name === value.name }
-                            isMulti
                         />
                         <MultiSelect 
                             name='entryType'

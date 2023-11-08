@@ -18,15 +18,32 @@
 
 import {queryStringToSearchParameters, searchParamsToQueryString} from './searchParams';
 
+const buildTags = (names) => {
+    return names.map(name => ({
+        name, 
+        state: "Active"
+    }))
+}
+
+const buildLogbooks = (names) => {
+    return names.map(name => ({
+        name, 
+        owner: "test owner",
+        state: "Active"
+    }))
+}
+
 test('search params to query string: string', () => {
     
     const searchParams = {
         "foo": "bar",
-        "baz": "billy"
+        "baz": "billy",
+        "tags": buildTags(["foo"]),
+        "logbooks": buildTags(["bar"])
     }
 
-    let actual = searchParamsToQueryString(searchParams);
-    let expected = "foo=bar&baz=billy";
+    let actual = searchParamsToQueryString({searchParams});
+    let expected = "foo=bar&baz=billy&tags=foo&logbooks=bar";
     expect(actual).toBe(expected);
 
 });
@@ -36,23 +53,27 @@ test('search params to query string: list', () => {
     const searchParams = {
         "foo": "bar",
         "baz": ["billy", "bob", "cookie monster"],
-        "whoops": "oh well"
+        "whoops": "oh well",
+        "tags": buildTags(["foo", "bar"]),
+        "logbooks": buildTags(["baz", "whee"])
     }
 
-    let actual = searchParamsToQueryString(searchParams);
-    let expected = "foo=bar&baz=billy,bob,cookie monster&whoops=oh well";
+    let actual = searchParamsToQueryString({searchParams});
+    let expected = "foo=bar&baz=billy,bob,cookie monster&whoops=oh well&tags=foo,bar&logbooks=baz,whee";
     expect(actual).toBe(expected);
 
 });
 
 test('query string to search params: string', () => {
     
-    const searchParamsString = "tags=bar&logbooks=billy";
+    const queryString = "tags=bar&logbooks=billy";
+    const availableTags = buildTags(["bar"]);
+    const availableLogbooks = buildLogbooks(["billy"]);
 
-    let actual = queryStringToSearchParameters(searchParamsString);
+    let actual = queryStringToSearchParameters({queryString, availableTags, availableLogbooks});
     let expected = {
-        "tags": "bar",
-        "logbooks": "billy"
+        "tags": availableTags.filter(it => it.name === "bar"),
+        "logbooks": availableLogbooks.filter(it => it.name === "billy")
     };
     expect(actual).toEqual(expected);
 
@@ -60,12 +81,14 @@ test('query string to search params: string', () => {
 
 test('query string to search params: list', () => {
 
-    const searchParamsString = "tags=bar&logbooks=billy,bob,cookie monster&level=oh well";
+    const queryString = "tags=bar&logbooks=billy,bob,cookie monster&level=oh well";
+    const availableTags = buildTags(["bar"]);
+    const availableLogbooks = buildLogbooks(["billy", "bob", "cookie monster"]);
 
-    let actual = queryStringToSearchParameters(searchParamsString);
+    let actual = queryStringToSearchParameters({queryString, availableTags, availableLogbooks});
     let expected = {
-        "tags": "bar",
-        "logbooks": ["billy", "bob", "cookie monster"],
+        "tags": availableTags.filter(it => it.name === "bar"),
+        "logbooks": availableLogbooks.filter(it => ["billy", "bob", "cookie monster"].includes(it.name) ),
         "level": "oh well"
     };
     expect(actual).toEqual(expected);
@@ -74,13 +97,13 @@ test('query string to search params: list', () => {
 
 test('query string to search params: unsupported keywords are ignored', () => {
 
-    const searchParamsString = "tags=bar&logbooks=billy&fooey=bluey&level=oh well"; // note the unsupported param fooey
+    const queryString = "fooey=bluey&level=oh well"; // note the unsupported param fooey
 
-    let actual = queryStringToSearchParameters(searchParamsString);
+    let actual = queryStringToSearchParameters({queryString});
     let expected = {
-        "tags": "bar",
-        "logbooks": "billy",
-        "level": "oh well"
+        level: "oh well",
+        logbooks: [],
+        tags: []
     };
     expect(actual).toEqual(expected);
 

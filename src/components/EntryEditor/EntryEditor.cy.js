@@ -7,17 +7,25 @@ describe("Entry Editor", () => {
     it("invalid log entries are forbidden", () => {
 
         // Given logbooks to select
-        const logbooks = [
-            {name: "foo", owner: null, state: "Active"},
-            {name: "bar", owner: null, state: "Active"},
-            {name: "baz", owner: null, state: "Active"}
-        ];
+        cy.intercept(
+            'GET',
+            '**/logbooks',
+            {
+                statusCode: 200,
+                body: [
+                    {name: "foo", owner: null, state: "Active"},
+                    {name: "bar", owner: null, state: "Active"},
+                    {name: "baz", owner: null, state: "Active"}
+                ]
+            }
+          );
+
         const logbookError = /error: select at least one logbook/i;
         const titleError = /please specify a title/i;
 
         cy.mount(
             <MemoryRouter>
-                <EntryEditor userData={{username: "foo"}} logbooks={logbooks} />
+                <EntryEditor userData={{username: "foo"}} />
             </MemoryRouter> 
         );
 

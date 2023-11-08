@@ -36,19 +36,10 @@ import Initialize from './Initialize';
 const App = () => {
 
     const [userData, setUserData] = useState({userName: "", roles: []});
-    const {data: tags = [], error: tagsError} = useGetTagsQuery();
-    const {data: logbooks = [], error: logbooksError} = useGetLogbooksQuery();
     const [replyAction, setReplyAction] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
     const currentLogEntry = useSelector(state => state.currentLogEntry);
-
-    if(tagsError) {
-        console.error("Unable to fetch tags", tagsError);
-    }
-    if(logbooksError) {
-        console.error("Unable to fetch tags", logbooksError);
-    }
 
     return(
         <Box id='app-viewport' 
@@ -72,8 +63,6 @@ const App = () => {
                     <Routes>
                         <Route exact path="/" element={
                             <LogEntriesView {...{
-                                tags, 
-                                logbooks,
                                 userData,
                                 setReplyAction, 
                                 currentLogEntry
@@ -81,8 +70,6 @@ const App = () => {
                         } />
                         <Route exact path="/logs/:id" element={
                             <LogEntriesView {...{
-                                tags, 
-                                logbooks,
                                 userData,
                                 setReplyAction, 
                                 currentLogEntry
@@ -90,8 +77,6 @@ const App = () => {
                         } />
                         <Route path="/edit" element={
                             <EntryEditor {...{
-                                tags,
-                                logbooks,
                                 replyAction, setReplyAction,
                                 userData, setUserData,
                                 setShowLogin

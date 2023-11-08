@@ -16,7 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import queryString from 'query-string';
+import queryStringParser from 'query-string';
+import { useCallback } from 'react';
+import { useGetLogbooksQuery, useGetTagsQuery } from 'services/ologApi';
+import {v4 as uuidv4} from 'uuid';
 
 const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties", "attachments"];
 
@@ -26,21 +29,35 @@ const options = {
     encode: false
 }
 
+const asArray = (obj) => {
+    if(obj === null || obj === undefined) {
+        return [];
+    }
+    return Array.isArray(obj) ? obj : [obj];
+}
+
 /**
  * Constructs a map of search parameters from the specified query string. Note that some filtering is
  * applied: unsupported key words are ignored.
  * @param {*} query 
  * @returns 
  */
- export function queryStringToSearchParameters(query) {
+ export function queryStringToSearchParameters({queryString, availableTags=[], availableLogbooks=[]}) {
     
-    let result = queryString.parse(query, options);
+    let result = queryStringParser.parse(queryString, options);
+
+    // Remove unsupported keys
     for(let key of Object.keys(result)) {
         if(!supportedKeys.includes(key)) {
             delete result[key];
         }
     }
 
+    // populate tags and logbooks
+    result.tags = availableTags.filter(it => asArray(result?.tags).includes(it.name));
+    result.logbooks = availableLogbooks.filter(it => asArray(result?.logbooks).includes(it.name));
+
+    // Return sanitized result
     return result;
 
 }
@@ -48,6 +65,46 @@ const options = {
 /**
  * Constructs a query string from the search parameter map.
  */
-export function searchParamsToQueryString(map){
-    return queryString.stringify(map, options);
+export function searchParamsToQueryString({searchParams}){
+    const copy = {...searchParams};
+    copy.tags = searchParams?.tags?.map(it => it.name)
+    copy.logbooks = searchParams?.logbooks?.map(it => it.name);
+    
+    return queryStringParser.stringify(copy, options);
+}
+
+export function withCacheBust(searchParams) {
+    return {
+        ...searchParams,
+        cacheBust: uuidv4()
+    }
+}
+
+export function withoutCacheBust(searchParams) {
+    const copy = {...searchParams};
+    if(copy.cacheBust) {
+        delete copy.cacheBust;
+    }
+    return copy;
+}
+
+export const useSanitizedSearchParams = () => {
+
+    // todo: display toast on error to let user know tags or logbooks couldn't be fetched
+    const {data: tags = []} = useGetTagsQuery();
+    const {data: logbooks = []} = useGetLogbooksQuery();
+
+    const toSearchParams = useCallback((input) => {
+        return queryStringToSearchParameters({queryString: input, availableTags: tags, availableLogbooks: logbooks})
+    }, [tags, logbooks]);
+
+    const toQueryString = useCallback((input) => {
+        return searchParamsToQueryString({searchParams: input})
+    }, []);
+
+    return {
+        toSearchParams,
+        toQueryString
+    }
+    
 }

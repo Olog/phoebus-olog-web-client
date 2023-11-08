@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import {useState, useEffect } from 'react';
+import {useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import ologService from 'api/olog-service';
 import LogDetails from 'components/LogDetails';
@@ -32,6 +32,7 @@ import Filters from 'components/Filters';
 import { desktop, mobile } from 'config/media';
 import { styled } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { removeEmptyKeys } from 'utils';
 
 const ContentContainer = styledComponentsStyled.div`
     height: 100%;
@@ -85,8 +86,6 @@ const LogDetailsContainer = styledComponentsStyled.div`
 `
 
 const LogEntriesView = ({
-    tags, 
-    logbooks, 
     userData,
     setReplyAction, 
     currentLogEntry
@@ -98,6 +97,23 @@ const LogEntriesView = ({
     const dispatch = useDispatch();
     const searchParams = useSelector(state => state.searchParams);
     const searchPageParams = useSelector(state => state.searchPageParams);
+    const searchLogsQuery = useMemo(() => {
+        
+        const sanitizedSearchParams = {...searchParams};
+        if(searchParams.tags) {
+            sanitizedSearchParams.tags = searchParams.tags.map(it => it.name);
+        }
+        if(searchParams.logbooks) {
+            sanitizedSearchParams.logbooks = searchParams.logbooks.map(it => it.name);
+        }
+
+        return {
+            searchParams: removeEmptyKeys(sanitizedSearchParams),
+            searchPageParams
+        };
+
+    }, [searchParams, searchPageParams]);
+
     const {         
         data: searchResults={
             logs: [],
@@ -105,7 +121,7 @@ const LogEntriesView = ({
         },
         error: searchResultError, 
         isFetching: searchInProgress 
-    } = useSearchLogsQuery({searchParams, searchPageParams}, {
+    } = useSearchLogsQuery(searchLogsQuery, {
         pollingInterval: customization.defaultSearchFrequency,
         refetchOnMountOrArgChange: true
     });
@@ -177,8 +193,6 @@ const LogEntriesView = ({
             {searchResultError ? <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError}/> : null}
             <ContentContainer id='log-entries-view-content'>
                 <StyledFilters {...{
-                    logbooks,
-                    tags,
                     showFilters
                 }}/>
                 <StyledSearchResultList {...{
