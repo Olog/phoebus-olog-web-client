@@ -10,13 +10,6 @@ const GlobalStyle = createGlobalStyle`
     ol, ul {
         list-style: none;
     }
-    a {
-        text-decoration: none;
-    }
-    a:visited {
-        color: inherit;
-    }
-
     *:focus-visible {
         outline: 3px solid #006FE6;
         outline-offset: 1px;

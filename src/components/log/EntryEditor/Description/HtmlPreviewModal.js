@@ -17,8 +17,8 @@
  */
 
 import React from 'react';
-import Modal from '../../shared/Modal';
-import CommonmarkPreview from '../../shared/CommonmarkPreview';
+import Modal from '../../../shared/Modal';
+import CommonmarkPreview from '../../../shared/CommonmarkPreview';
 
 const HtmlPreviewModal = ({commonmarkSrc, attachedFiles, showHtmlPreview, setShowHtmlPreview}) => { 
 

@@ -22,12 +22,13 @@ import {
   Routes
 } from "react-router-dom";
 import Banner from './Banner';
-import EntryEditor from './EntryEditor';
 import LogEntriesView from './LogEntriesView';
 import { useSelector } from 'react-redux';
-import { useGetLogbooksQuery, useGetTagsQuery } from 'services/ologApi';
 import { Box } from '@mui/material';
 import Initialize from './Initialize';
+import EditLogView from 'views/EditLogView';
+import CreateLogView from 'views/CreateLogView';
+import ReplyLogView from 'views/ReplyLogView';
 
 /**
  * Entry point component.
@@ -36,7 +37,6 @@ import Initialize from './Initialize';
 const App = () => {
 
     const [userData, setUserData] = useState({userName: "", roles: []});
-    const [replyAction, setReplyAction] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
     const currentLogEntry = useSelector(state => state.currentLogEntry);
@@ -52,8 +52,7 @@ const App = () => {
                 <Banner {...{
                     showLogin, setShowLogin,
                     showLogout, setShowLogout,
-                    userData, setUserData,
-                    setReplyAction
+                    userData, setUserData
                 }}/>
                 <Box id='app-content' 
                     sx={{
@@ -64,22 +63,22 @@ const App = () => {
                         <Route exact path="/" element={
                             <LogEntriesView {...{
                                 userData,
-                                setReplyAction, 
                                 currentLogEntry
                             }}/>
+                        } />
+                        <Route exact path="/logs/create" element={
+                            <CreateLogView {...{setShowLogin}} />
+                        } />
+                        <Route exact path="/logs/:id/edit" element={
+                            <EditLogView {...{setShowLogin}} />
+                        } />
+                        <Route exact path="/logs/:id/reply" element={
+                            <ReplyLogView {...{setShowLogin}}/>
                         } />
                         <Route exact path="/logs/:id" element={
                             <LogEntriesView {...{
                                 userData,
-                                setReplyAction, 
                                 currentLogEntry
-                            }}/>
-                        } />
-                        <Route path="/edit" element={
-                            <EntryEditor {...{
-                                replyAction, setReplyAction,
-                                userData, setUserData,
-                                setShowLogin
                             }}/>
                         } />
                     </Routes>

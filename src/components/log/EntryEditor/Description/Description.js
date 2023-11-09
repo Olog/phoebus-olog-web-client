@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Attachment from "components/Attachment";
 import { removeImageMarkup } from 'utils';
 import TextInput from "components/shared/input/TextInput";
-import ExternalLink from "components/shared/ExternalLink";
+import { ExternalLink } from "components/shared/ExternalLink";
 import { FaMarkdown } from "react-icons/fa";
 import { APP_BASE_URL } from "constants";
 import EmbedImageDialog from "./EmbedImageDialog";
@@ -153,9 +153,17 @@ const Description = ({control, formState, getValues, setValue }) => {
             />
             <Stack direction="row" justifyContent="space-between">
                 <Box>
-                    <ExternalLink href={`${APP_BASE_URL}/help/CommonmarkCheatsheet`} >
-                        <FaMarkdown />CommonMark Formatting Help
-                    </ExternalLink>
+                    <ExternalLink href={`${APP_BASE_URL}/help/CommonmarkCheatsheet`} 
+                        text={
+                            <Stack flexDirection="row" gap={0.5} alignItems="center">
+                                <FaMarkdown />
+                                <Typography component="span">
+                                    CommonMark Formatting Help
+                                </Typography>
+                            </Stack>
+                        }
+                        label="CommonMark Formatting Help"
+                    />
                 </Box>
                 <Stack direction="row" gap={1}>
                     <Button variant="outlined" onClick={() => setShowEmbedImageDialog(true) } >

@@ -23,8 +23,8 @@ import ologService from '../../api/olog-service';
 import packageInfo from '../../../package.json';
 import { useEffect } from 'react';
 import SkipToContent from 'components/shared/SkipToContent';
-import { AppBar, Toolbar, Typography, styled } from '@mui/material';
-import MuiButton from "components/shared/MuiButton";
+import { AppBar, Toolbar, Typography, Button, styled, Link as MuiLink } from '@mui/material';
+import { InternalButtonLink } from "components/shared/InternalLink";
 
 const NavHeader = styled("ul")`
   display: flex;
@@ -39,7 +39,7 @@ const NavFooter = styled("ul")`
  * Banner component with controls to create log entry, log book or tag. Plus
  * button for signing in/out. 
  */
-export const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, setShowLogout, setReplyAction}) => {
+export const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogout, setShowLogout}) => {
 
   useEffect(() => {
 
@@ -89,22 +89,22 @@ export const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogo
         <SkipToContent href='#app-content'>Skip to Main Content</SkipToContent>
         <NavHeader>
           <li>
-            <Link to="/" aria-label='home'>
+            <MuiLink component={Link} to="/" aria-label='home' sx={{ color: "essWhite.main", textDecoration: "none !important"}}>
               <Typography variant="h6" component="p">{packageInfo.name}</Typography>
               <Typography variant="body2">{packageInfo.version}</Typography>
-            </Link>
+            </MuiLink>
           </li>
           <li>
-            <MuiButton component={Link} to="/edit" variant="contained" >
+            <InternalButtonLink to="/logs/create" variant="contained" >
               New Log Entry
-            </MuiButton>      
+            </InternalButtonLink>      
           </li>
         </NavHeader>
         <NavFooter>
           <li>
-            <MuiButton onClick={handleClick} variant="contained" >
+            <Button onClick={handleClick} variant="contained" >
               {userData?.userName ? userData.userName : 'Sign In'}
-            </MuiButton>
+            </Button>
           </li>
         </NavFooter>
       </Toolbar>

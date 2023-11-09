@@ -37,6 +37,11 @@ export const ologApi = createApi({
             query: () => ({
                 url: '/properties'
             })
+        }),
+        getLogbook: builder.query({
+            query: ({id}) => ({
+                url: `/logs/${id}`
+            })
         })
     })
 });
@@ -45,5 +50,6 @@ export const {
     useSearchLogsQuery,
     useGetTagsQuery,
     useGetLogbooksQuery,
-    useGetPropertiesQuery
+    useGetPropertiesQuery,
+    useGetLogbookQuery
 } = ologApi;

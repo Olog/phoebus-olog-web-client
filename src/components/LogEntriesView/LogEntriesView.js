@@ -87,7 +87,6 @@ const LogDetailsContainer = styledComponentsStyled.div`
 
 const LogEntriesView = ({
     userData,
-    setReplyAction, 
     currentLogEntry
 }) => {
 
@@ -175,7 +174,6 @@ const LogEntriesView = ({
                         currentLogEntry, 
                         logGroupRecords, setLogGroupRecords, 
                         userData, 
-                        setReplyAction,
                         searchResults
                     }}/>
         } else {

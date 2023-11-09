@@ -1,6 +1,26 @@
 import React from "react";
 import { EntryEditor } from "./EntryEditor";
 import { MemoryRouter } from "react-router-dom";
+import { useForm } from "react-hook-form";
+
+const Template = (props) => {
+
+    const form = useForm({
+        defaultValues: {
+            attachments: []
+        }
+    });
+
+    const onSubmit = (data) => {
+        console.log({data})
+    }
+
+    const submitDisabled = false;
+
+    return (
+        <EntryEditor {...{form, title: "Test Entry Editor", onSubmit, submitDisabled}} />
+    )
+}
 
 describe("Entry Editor", () => {
     
@@ -24,9 +44,7 @@ describe("Entry Editor", () => {
         const titleError = /please specify a title/i;
 
         cy.mount(
-            <MemoryRouter>
-                <EntryEditor userData={{username: "foo"}} />
-            </MemoryRouter> 
+            <Template />
         );
 
         // If user tries to submit a logbook without entering any information

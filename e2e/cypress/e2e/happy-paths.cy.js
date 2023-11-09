@@ -3,9 +3,9 @@ import {v4 as uuidv4} from 'uuid';
 
 describe('Happy Paths', () => {
 
-  before(() => {
-    cy.task('db:seed');
-  })
+  // before(() => {
+  //   cy.task('db:seed');
+  // })
 
   after(() => cy.screenshot());
 
@@ -42,9 +42,9 @@ describe('Happy Paths', () => {
 
   })
 
-  it('Can login and create a log entry', () => {
+  const title = 'title ' + uuidv4();
 
-    const title = 'title ' + uuidv4();
+  it.only('Can login and create a log entry', () => {
 
     // navigate to the main page
     // NOTE: set CYPRESS_baseUrl to the frontend location!
@@ -58,7 +58,8 @@ describe('Happy Paths', () => {
 
     // create and submit a new log entry
     cy.findByRole('link', {name: /new log entry/i}).click();
-    cy.findByLabelText(/logbooks/i).type('control{downArrow}{enter}');
+    cy.findByLabelText(/logbooks/i).type('e2e-tests{downArrow}{enter}');
+    cy.findByLabelText(/tags/i).type('e2e-test-tag{downArrow}{enter}');
     cy.findByRole('textbox', {name: /title/i}).type(title);
     cy.findByRole('textbox', {name: /description/i}).type('my custom description');
     cy.get('input[type=file]').selectFile('cypress/fixtures/testImage.jpg', {force: true});
@@ -66,6 +67,41 @@ describe('Happy Paths', () => {
 
     // expect to find the entry we created
     cy.findByRole('heading', {name: title, level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
+    cy.findByRole('button', {name: /attachments/i}).click();
+    cy.findByRole('img', {name: /testImage/i}).should('exist');
+
+  })
+
+  it.only('Can reply to an existing log entry', () => {
+
+    // navigate to the main page
+    // NOTE: set CYPRESS_baseUrl to the frontend location!
+    cy.visit('/');
+
+    // login
+    cy.findByRole('button', {name: /sign in/i}).click()
+    cy.findByRole('textbox', {name: /username/i}).type('admin')
+    cy.findByLabelText(/password/i).type('adminPass');
+    cy.findByRole('button', {name: /login/i}).click();
+
+    // find an existing log entry
+    cy.findByRole('heading', {name: title, level: 3}).click();
+    cy.findByRole("link", {name: /reply/i}).click();
+
+    // It should be pre-populated with the title, logbooks, tags, and default for entry type
+    cy.findByRole('textbox', {name: /title/i}).should("have.value", title)
+    cy.findByRole("button", {name: "e2e-tests"}).should("exist");
+    cy.findByRole("button", {name: "e2e-test-tag"}).should("exist");
+    cy.findByRole("combobox", {name: /entry type/i}).should("have.value", "Normal");
+
+    // Update our reply, including adding an attachment
+    cy.findByRole('textbox', {name: /title/i}).type(" my reply");
+    cy.findByRole('textbox', {name: /description/i}).type('my custom reply');
+    cy.get('input[type=file]').selectFile('cypress/fixtures/testImage.jpg', {force: true});
+    cy.findByRole('button', {name: /submit/i}).click();
+
+    // expect to find the reply we created
+    cy.findByRole('heading', {name: title + " my reply", level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
 

@@ -17,7 +17,7 @@
  */
 
 import React, { useEffect } from 'react';
-import Modal from '../../shared/Modal';
+import Modal from '../../../shared/Modal';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import { DroppableFileUploadInput } from 'components/shared/input/FileInput';

@@ -50,6 +50,11 @@ let customization = {
     log_entry_groups_support: true,
 
     /**
+     * Specifies whether to support editing of log entries.
+     */
+    log_edit_support: true,
+
+    /**
      * Default search params
      */
     defaultSearchParams: {start: "12 hours", end: "now"},
