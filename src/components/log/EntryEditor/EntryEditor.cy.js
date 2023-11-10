@@ -1,6 +1,5 @@
 import React from "react";
 import { EntryEditor } from "./EntryEditor";
-import { MemoryRouter } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 const Template = (props) => {

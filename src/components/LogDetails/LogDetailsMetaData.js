@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
- import React, { Component } from 'react';
+ import React from 'react';
  import OlogMoment from './OlogMoment';
  import customization from 'utils/customization';
 import styled from 'styled-components';
@@ -41,48 +41,52 @@ const Value = styled.div`
     font-weight: bold;
 `
 
-class LogDetailsMetaData extends Component {
-  
-    render () {        
+const LogDetailsMetaData = ({currentLogRecord}) => {
         
-        const logbooks = this.props.currentLogRecord && this.props.currentLogRecord.logbooks.slice().sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            if(index === this.props.currentLogRecord.logbooks.length - 1){
-                return(<span key={index}>{row.name}</span>);
-            }
-            else{
-                return (<span key={index}>{row.name},&nbsp;</span>);
-            }    
-        });
+    const logbooks = currentLogRecord && currentLogRecord.logbooks.slice().sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
+        if(index === currentLogRecord.logbooks.length - 1){
+            return(<span key={index}>{row.name}</span>);
+        }
+        else{
+            return (<span key={index}>{row.name},&nbsp;</span>);
+        }    
+    });
+
+    const tags = currentLogRecord && currentLogRecord.tags.slice().sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
+        if(index === currentLogRecord.tags.length - 1){
+            return(<span key={index}>{row.name}</span>);
+        }
+        else{
+            return (<span key={index}>{row.name},&nbsp;</span>);
+        } 
+    });    
     
-        const tags = this.props.currentLogRecord && this.props.currentLogRecord.tags.slice().sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-            if(index === this.props.currentLogRecord.tags.length - 1){
-                return(<span key={index}>{row.name}</span>);
-            }
-            else{
-                return (<span key={index}>{row.name},&nbsp;</span>);
-            } 
-        });    
-        
-        return (
-            <Container>
-                <DetailRow>
-                    <Key>Author</Key><Value>{this.props.currentLogRecord.owner}</Value>
-                </DetailRow>
-                <DetailRow>
-                    <Key>Created</Key><Value><OlogMoment date={this.props.currentLogRecord.createdDate}/></Value>
-                </DetailRow>
-                <DetailRow>
-                    <Key>Logbooks</Key><Value>{logbooks}</Value>
-                </DetailRow>
-                <DetailRow>
-                    <Key>Tags</Key><Value>{tags}</Value>
-                </DetailRow>
-                <DetailRow>
-                    <Key>{customization.level}</Key><Value>{this.props.currentLogRecord.level}</Value>
-                </DetailRow>
-            </Container>
-        );
-    }
-  }
-   
-  export default LogDetailsMetaData;
+    return (
+        <Container>
+            <DetailRow>
+                <Key>Author</Key><Value>{currentLogRecord.owner}</Value>
+            </DetailRow>
+            <DetailRow>
+                <Key>Created</Key>
+                <Value>
+                    { currentLogRecord.modifyDate 
+                        ? <span><OlogMoment date={currentLogRecord.modifyDate}/> (edited)</span>
+                        : <OlogMoment date={currentLogRecord.createdDate}/>
+                    }
+                </Value>
+            </DetailRow>
+            <DetailRow>
+                <Key>Logbooks</Key><Value>{logbooks}</Value>
+            </DetailRow>
+            <DetailRow>
+                <Key>Tags</Key><Value>{tags}</Value>
+            </DetailRow>
+            <DetailRow>
+                <Key>{customization.level}</Key><Value>{currentLogRecord.level}</Value>
+            </DetailRow>
+        </Container>
+    );
+
+}
+
+export default LogDetailsMetaData;

@@ -23,7 +23,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useGetPropertiesQuery } from 'services/ologApi';
 import MultiSelect from 'components/shared/input/MultiSelect';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import styled from 'styled-components';
 import { useRef } from 'react';
@@ -63,16 +63,10 @@ const PropertiesContainer = styled.div`
 
 const DetachedLabel = styled.label``
 
-export const EntryEditor = ({form, title, onSubmit, submitDisabled}) => {
+export const EntryEditor = ({form, title, onSubmit, submitDisabled, attachmentsDisabled}) => {
 
     const topElem = useRef();
-    // const { control, handleSubmit, getValues, setValue, formState } = useForm({
-    //     defaultValues: {
-    //         attachments: []
-    //     }
-    // });
-    const { control, handleSubmit, getValues, setValue, formState } = form;
-    // const attachments = watch("attachments");
+    const { control, handleSubmit, formState } = form;
 
     const { fields: properties, remove: removeProperty, append: appendProperty, update: updateProperty } = useFieldArray({
         control,
@@ -80,59 +74,8 @@ export const EntryEditor = ({form, title, onSubmit, submitDisabled}) => {
         keyName: 'reactHookFormId' // default is 'id', which would override OlogAttachment#id
     })
 
-    // const [createInProgress, setCreateInProgress] = useState(false);
     const [showAddProperty, setShowAddProperty] = useState(false);
     const {data: availableProperties} = useGetPropertiesQuery();
-    // const currentLogEntry = useSelector(state => state.currentLogEntry);
-
-    // const navigate = useNavigate();
-
-    // /**
-    //  * Save/restore form data
-    //  */
-    // const {clear: clearFormData } =  useFormPersist( 'entryEditorFormData', {
-    //     watch,
-    //     setValue,
-    //     storage: window.localStorage,
-    //     exclude: 'attachments', // serializing files is unsupported due to security risks
-    // });
-
-    // /**
-    //  * Show login if no session
-    //  */
-    // useEffect(() => {
-    //     const promise = checkSession();
-    //     if(!promise){
-    //         setShowLogin(true);
-    //     }
-    //     else{
-    //         promise.then(data => {
-    //             if(!data){
-    //                 setShowLogin(true);
-    //             }
-    //             else{
-    //                 //setReplyAction(false);
-    //             }
-    //         });
-    //     }
-    // }, [setShowLogin, setReplyAction])
-    
-    // /**
-    //  * If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
-    //  * Copy relevant fields to the state of this class EXCEPT FOR entryType/level.
-    //  * May or may not exist in the template.
-    //  */
-    // useEffect(() => {
-        
-    //     if(replyAction && currentLogEntry){
-    //         clearFormData();
-    //         setValue('logbooks', currentLogEntry.logbooks)
-    //         setValue('tags', currentLogEntry.tags);
-    //         setValue('entryType', customization.defaultLevel);
-    //         setValue('title', currentLogEntry.title);
-    //     }
-    //     // eslint-disable-next-line 
-    // }, [replyAction, currentLogEntry, setValue]);
 
     // Scroll to top if there are field errors
     useEffect(() => {
@@ -164,92 +107,6 @@ export const EntryEditor = ({form, title, onSubmit, submitDisabled}) => {
         updateProperty(index, copyOfProperty);
     }
 
-    // const onSubmit = (formData) => {
-
-    //     const promise = checkSession();
-    //     if(!promise){
-    //         setUserData({});
-    //         setCreateInProgress(false);
-    //         return;
-    //     }
-    //     else{
-    //         promise.then(data => {
-    //             if(!data){
-    //                 setUserData({});
-    //                 setCreateInProgress(false);
-    //                 return;
-    //             }
-    //             else{
-    //                 setCreateInProgress(true);
-    //                 const logEntry = {
-    //                     logbooks: formData.logbooks,
-    //                     tags: formData.tags,
-    //                     properties: formData.properties,
-    //                     title: formData.title,
-    //                     level: formData.entryType,
-    //                     description: formData.description,
-    //                     attachments: attachments
-    //                 }
-    //                 // This FormData object will contain both the log entry and all attached files, if any
-    //                 let multipartFormData = new FormData();
-    //                 // Append all files. Each is added with name "files", and that is actually OK
-    //                 for (let i = 0; i < attachments.length; i++) {
-    //                     multipartFormData.append("files", attachments[i].file, attachments[i].file.name);
-    //                 }
-    //                 // Log entry must be added as JSON blob, otherwise the content type cannot be set.
-    //                 multipartFormData.append("logEntry", new Blob([JSON.stringify(logEntry)], {type: 'application/json'}));
-
-    //                 // Need to set content type for the request "multipart/form-data"
-    //                 let requestHeaders = ologClientInfoHeader();
-    //                 requestHeaders["Content-Type"] = "multipart/form-data";
-    //                 requestHeaders["Accept"] = "application/json";
-                    
-    //                 let url = replyAction ? 
-    //                     `/logs/multipart?markup=commonmark&inReplyTo=${currentLogEntry.id}` :
-    //                     `/logs/multipart?markup=commonmark`;
-    //                 // Upload the full monty, i.e. log entry and all attachment files, in one single request.
-    //                 ologService.put(url, multipartFormData, { withCredentials: true, headers: requestHeaders})
-    //                     .then(async res => {
-    //                         // Wait until the new log entry is available in the search results
-    //                         await ologServiceWithRetry({
-    //                             method: 'GET',
-    //                             path: `/logs/search?title=${res.data.title}&end=now`,
-    //                             retries: 5,
-    //                             retryCondition: (retryRes) => {
-    //                                 // Retry if the entry we created isn't in the search results yet
-    //                                 // Or if it does show in search but the attachments haven't been associated to it yet
-    //                                 // (the server sometimes responds with the entry but has an empty attachments field)
-    //                                 const found = retryRes?.data?.logs.find(it => `${it.id}` === `${res.data.id}`);
-    //                                 const hasAllAttachments = found?.attachments?.length === attachments.length;
-    //                                 const willRetry = !found || (found && !hasAllAttachments)
-    //                                 return willRetry;
-    //                             },
-    //                             retryDelay: (count) => count*200
-    //                         });
-    //                         clearFormData();
-    //                         setCreateInProgress(false);
-    //                         setReplyAction(false);
-    //                         navigate('/');
-
-    //                     })
-    //                     .catch(error => {
-    //                         if(error.response && (error.response.status === 401 || error.response.status === 403)){
-    //                             alert('You are currently not authorized to create a log entry.')
-    //                         }
-    //                         else if(error.response && error.response.status === 413){ // 413 = payload too large
-    //                             alert(error.response.data); // Message set in data by server
-    //                         }
-    //                         else if(error.response && (error.response.status >= 500)){
-    //                             alert('Failed to create log entry.')
-    //                         }
-    //                         setCreateInProgress(false);
-    //                     });
-    //                 return;
-    //             }
-    //         });
-    //     }
-    // }
-
     const renderedProperties = properties.filter(property => property.name !== "Log Entry Group").map((property, index) => {
         return (
             <PropertyEditor key={index}
@@ -262,66 +119,59 @@ export const EntryEditor = ({form, title, onSubmit, submitDisabled}) => {
 
     return (
         <>
-            {/* <LoadingOverlay
-                active={createInProgress}
-            > */}
-                <Container>
-                    <h1>{title}</h1>
-                    <Form onSubmit={handleSubmit(onSubmit)} >
-                        <span ref={topElem}></span>
-                        <LogbooksMultiSelect 
-                            control={control}
-                            rules={{
-                                validate: {
-                                    notEmpty: val => val?.length > 0 || 'Select at least one logbook'
-                                }
-                            }}
-                        />
-                        <TagsMultiSelect 
-                            control={control}
-                        />
-                        <MultiSelect 
-                            name='entryType'
-                            label='Entry Type'
-                            control={control}
-                            defaultValue={customization.defaultLevel}
-                            options={customization.levelValues}
-                        />
-                        <TextInput 
-                            name='title'
-                            label='Title'
-                            control={control}
-                            defaultValue=''
-                            rules={{
-                                required: {
-                                    value: true,
-                                    message: 'Please specify a title.'
-                                }
-                            }}
-                        />
-                        <Description 
-                            control={control}
-                            formState={formState}
-                            setValue={setValue}
-                            getValues={getValues}
-                        />
-                        <DetachedLabel>Properties</DetachedLabel>
-                        <PropertiesContainer>
-                            <Button 
-                                variant="outlined"
-                                disabled={availableProperties?.length === properties?.length} 
-                                onClick={() => { setShowAddProperty(true)}}
-                                startIcon={<AddIcon />}
-                            >
-                                Add Property
-                            </Button>
-                            {renderedProperties}    
-                        </PropertiesContainer>
-                        {/* <Button type='submit' variant="contained" disabled={userData.userName === "" || createInProgress}>Submit</Button> */}
-                        <Button type='submit' variant="contained" disabled={submitDisabled}>Submit</Button>
-                    </Form>
-                </Container>
-            {/* </LoadingOverlay> */}
+            <Container>
+                <h1>{title}</h1>
+                <Form onSubmit={handleSubmit(onSubmit)} >
+                    <span ref={topElem}></span>
+                    <LogbooksMultiSelect 
+                        control={control}
+                        rules={{
+                            validate: {
+                                notEmpty: val => val?.length > 0 || 'Select at least one logbook'
+                            }
+                        }}
+                    />
+                    <TagsMultiSelect 
+                        control={control}
+                    />
+                    <MultiSelect 
+                        name='entryType'
+                        label='Entry Type'
+                        control={control}
+                        defaultValue={customization.defaultLevel}
+                        options={customization.levelValues}
+                    />
+                    <TextInput 
+                        name='title'
+                        label='Title'
+                        control={control}
+                        defaultValue=''
+                        rules={{
+                            required: {
+                                value: true,
+                                message: 'Please specify a title.'
+                            }
+                        }}
+                    />
+                    <Description 
+                        form={form}
+                        attachmentsDisabled={attachmentsDisabled}
+                    />
+                    <DetachedLabel>Properties</DetachedLabel>
+                    <PropertiesContainer>
+                        <Button 
+                            variant="outlined"
+                            disabled={availableProperties?.length === properties?.length} 
+                            onClick={() => { setShowAddProperty(true)}}
+                            startIcon={<AddIcon />}
+                        >
+                            Add Property
+                        </Button>
+                        {renderedProperties}    
+                    </PropertiesContainer>
+                    <Button type='submit' variant="contained" disabled={submitDisabled}>Submit</Button>
+                </Form>
+            </Container>
             <Modal 
                 open={showAddProperty} 
                 onClose={() => setShowAddProperty(false)}

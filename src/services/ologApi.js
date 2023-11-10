@@ -4,7 +4,10 @@ import { withoutCacheBust } from "utils/searchParams";
 
 export const ologApi = createApi({
     reducerPath: 'ologApi',
-    baseQuery: fetchBaseQuery({baseUrl: process.env.REACT_APP_BASE_URL}), // e.g. http://localhost:8080/Olog
+    baseQuery: fetchBaseQuery({
+        baseUrl: process.env.REACT_APP_BASE_URL,    // e.g. http://localhost:8080/Olog
+        credentials: "include"                      // send credentials with requests
+    }),
     keepUnusedDataFor: 0, // Don't cache anything
     endpoints: builder => ({
         searchLogs: builder.query({
@@ -42,6 +45,11 @@ export const ologApi = createApi({
             query: ({id}) => ({
                 url: `/logs/${id}`
             })
+        }),
+        getUser: builder.query({
+            query: () => ({
+                url: "/user"
+            })
         })
     })
 });
@@ -51,5 +59,6 @@ export const {
     useGetTagsQuery,
     useGetLogbooksQuery,
     useGetPropertiesQuery,
-    useGetLogbookQuery
+    useGetLogbookQuery,
+    useGetUserQuery
 } = ologApi;

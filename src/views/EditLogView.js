@@ -8,7 +8,11 @@ const EditLogView = ({setShowLogin}) => {
     const { id } = useParams();
 
     return (
-        <LogContainer id={id} setShowLogin={setShowLogin} renderLog={log => <EditLog log={log} />} />
+        <LogContainer 
+            id={id} 
+            setShowLogin={setShowLogin} 
+            renderLog={({log, isAuthenticated}) => <EditLog {...{log, isAuthenticated}} />} 
+        />
     );
 }
 export default EditLogView;

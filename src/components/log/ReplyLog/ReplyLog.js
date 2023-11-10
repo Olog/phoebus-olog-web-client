@@ -7,7 +7,7 @@ import ologService, { checkSession, ologServiceWithRetry } from "api/olog-servic
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
 
-const ReplyLog = ({log}) => {
+const ReplyLog = ({log, isAuthenticated}) => {
 
     const [createInProgress, setCreateInProgress] = useState(false);
     const navigate = useNavigate();
@@ -92,13 +92,13 @@ const ReplyLog = ({log}) => {
                         })
                         .catch(error => {
                             if(error.response && (error.response.status === 401 || error.response.status === 403)){
-                                alert('You are currently not authorized to create a log entry.')
+                                alert('You are currently not authorized to reply to a log entry.')
                             }
                             else if(error.response && error.response.status === 413){ // 413 = payload too large
                                 alert(error.response.data); // Message set in data by server
                             }
                             else if(error.response && (error.response.status >= 500)){
-                                alert('Failed to create log entry.')
+                                alert('Failed to reply to log entry.')
                             }
                             setCreateInProgress(false);
                         });
@@ -108,13 +108,11 @@ const ReplyLog = ({log}) => {
         }
     }
 
-    const submitDisabled = false;
-
     return (
         <LoadingOverlay
             active={createInProgress}
         >
-            <EntryEditor {...{form, title: `Reply to Log "${log?.title}" (id ${log?.id})`, onSubmit, submitDisabled}} />
+            <EntryEditor {...{form, title: `Reply to Log "${log?.title}" (id ${log?.id})`, onSubmit, submitDisabled: !isAuthenticated}} />
         </LoadingOverlay>
     );
 

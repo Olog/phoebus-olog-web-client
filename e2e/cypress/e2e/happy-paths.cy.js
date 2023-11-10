@@ -1,11 +1,12 @@
 import {v4 as uuidv4} from 'uuid';
 
+let title = 'title ' + uuidv4();
 
 describe('Happy Paths', () => {
 
-  // before(() => {
-  //   cy.task('db:seed');
-  // })
+  before(() => {
+    cy.task('db:seed');
+  })
 
   after(() => cy.screenshot());
 
@@ -42,9 +43,7 @@ describe('Happy Paths', () => {
 
   })
 
-  const title = 'title ' + uuidv4();
-
-  it.only('Can login and create a log entry', () => {
+  it('Can login and create a log entry', () => {
 
     // navigate to the main page
     // NOTE: set CYPRESS_baseUrl to the frontend location!
@@ -72,7 +71,7 @@ describe('Happy Paths', () => {
 
   })
 
-  it.only('Can reply to an existing log entry', () => {
+  it('Can reply to an existing log entry', () => {
 
     // navigate to the main page
     // NOTE: set CYPRESS_baseUrl to the frontend location!
@@ -96,12 +95,41 @@ describe('Happy Paths', () => {
 
     // Update our reply, including adding an attachment
     cy.findByRole('textbox', {name: /title/i}).type(" my reply");
+    title += " my reply";
     cy.findByRole('textbox', {name: /description/i}).type('my custom reply');
     cy.get('input[type=file]').selectFile('cypress/fixtures/testImage.jpg', {force: true});
     cy.findByRole('button', {name: /submit/i}).click();
 
     // expect to find the reply we created
-    cy.findByRole('heading', {name: title + " my reply", level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
+    cy.findByRole('heading', {name: title, level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
+    cy.findByRole('button', {name: /attachments/i}).click();
+    cy.findByRole('img', {name: /testImage/i}).should('exist');
+
+  })
+
+  it('Can edit an existing log entry', () => {
+
+    // navigate to the main page
+    // NOTE: set CYPRESS_baseUrl to the frontend location!
+    cy.visit('/');
+
+    // login
+    cy.findByRole('button', {name: /sign in/i}).click()
+    cy.findByRole('textbox', {name: /username/i}).type('admin')
+    cy.findByLabelText(/password/i).type('adminPass');
+    cy.findByRole('button', {name: /login/i}).click();
+
+    // find an existing log entry
+    cy.findByRole('heading', {name: title, level: 3}).click();
+    cy.findByRole("link", {name: /edit/i}).click();
+
+    // Edit our log's title
+    title += " (EDITED)";
+    cy.findByRole('textbox', {name: /title/i}).clear().type(title);
+    cy.findByRole('button', {name: /submit/i}).click();
+
+    // expect to find the edit to our log but have the same id as before
+    cy.findByRole('heading', {name: title, level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
 

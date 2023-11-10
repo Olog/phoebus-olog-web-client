@@ -1,11 +1,10 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import App from './App';
-import { screen, render, givenServerRespondsWithSearchRequest, waitFor, within, getOptionItems, expectSelected, selectFromCombobox } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, waitFor, within, selectFromCombobox } from 'test-utils';
 import { testEntry, resultList } from "../mocks/fixtures/generators";
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import customization from 'utils/customization';
 
 it('renders without crashing', async () => {
     const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);

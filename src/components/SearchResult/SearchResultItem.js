@@ -17,7 +17,7 @@
  */
 import React from 'react';
 import { formatFullDateTime, getLogEntryGroupId } from 'utils';
-import { Stack, Typography, styled } from "@mui/material";
+import { Stack, Tooltip, Typography, styled } from "@mui/material";
 import ReplyIcon from '@mui/icons-material/Reply';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 
@@ -43,7 +43,16 @@ const SearchResultItem = ({log}) => {
     return (
         <Stack width="100%">
             <Stack flexDirection="row" justifyContent="space-between">
-                <Typography variant="body1" component="h3" >{log.title}</Typography>
+                <Tooltip title={log.title}>
+                    <Typography 
+                        variant="body1" 
+                        component="h3" 
+                        noWrap
+                        textOverflow="ellipsis"
+                    >
+                        {log.title}
+                    </Typography>
+                </Tooltip>
                 <Stack flexDirection="row" >
                     {isGroupEntry ? <ReplyIcon titleAccess="grouped" role="status" /> : null}
                     {log.attachments && log.attachments.length  !== 0 ? <AttachFileIcon titleAccess='has attachments' role='status' /> : null}
@@ -51,7 +60,7 @@ const SearchResultItem = ({log}) => {
             </Stack>
             <LogInfo>
                 <p>{log.owner}</p>
-                <p>{formatFullDateTime(log.createdDate)}</p>
+                <p>{log.modifyDate ? `${formatFullDateTime(log.modifyDate)} (edited)` : formatFullDateTime(log.createdDate)}</p>
             </LogInfo>
             <LogInfo>
                 <p>{formatDescription(log.description)}</p>

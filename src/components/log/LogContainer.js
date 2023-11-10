@@ -1,29 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useGetLogbookQuery } from "services/ologApi";
 import { ServerErrorPage } from "components/ErrorPage";
 import { LinearProgress } from "@mui/material";
-import { checkSession } from "api/olog-service";
+import useIsAuthenticated from "hooks/useIsAuthenticated";
 
 const LogContainer = ({id, renderLog, setShowLogin}) => {
 
     const { data: log, isLoading, error } = useGetLogbookQuery({id});
-
-    /**
-     * Show login if no session
-     */
-    useEffect(() => {
-        const promise = checkSession();
-        if(!promise){
-            setShowLogin(true);
-        }
-        else{
-            promise.then(data => {
-                if(!data){
-                    setShowLogin(true);
-                }
-            });
-        }
-    }, [setShowLogin])
+    
+    const [isAuthenticated] = useIsAuthenticated({setShowLogin});
 
     if(isLoading) {
         return <LinearProgress width="100%" />
@@ -37,7 +22,7 @@ const LogContainer = ({id, renderLog, setShowLogin}) => {
     }
 
     return (
-        renderLog(log)
+        renderLog({log, isAuthenticated})
     );
 }
 export default LogContainer;

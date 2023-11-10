@@ -25,6 +25,7 @@ import Collapse from 'components/shared/Collapse';
 import { ListGroupItem } from 'components/shared/ListGroup';
 import CommonmarkPreview from 'components/shared/CommonmarkPreview';
 import customization from 'utils/customization';
+import AttachmentImage, { isImage } from 'components/Attachment/AttachmentImage';
 
 const Container = styled.div`
     padding: 0.5rem;
@@ -57,7 +58,7 @@ const Description = styled(CommonmarkPreview)`
     overflow: auto;
 `
 
-const AttachmentImage = styled.img`
+const StyledAttachmentImage = styled(AttachmentImage)`
     width: 100%;
 
     &:hover {
@@ -70,19 +71,19 @@ const LogEntrySingleView = ({currentLogEntry, className}) => {
     const attachments = currentLogEntry.attachments.map((attachment, index) => {
         const url = `${process.env.REACT_APP_BASE_URL}/attachment/` + attachment.id;
         
-        if(attachment.fileMetadataDescription.startsWith('image')){
-            return(
+        if(isImage(attachment)) {
+            return (
                 <ListGroupItem key={index}>
-                    <AttachmentImage 
+                    <StyledAttachmentImage 
                         onClick={() => {
-                            let w = window.open("", attachment.filename);
-                            w.document.open();
-                            w.document.write('<html><head><title>' + attachment.filename + '</title></head>');
-                            w.document.write('<body><p><img src=\'' + url + '\'></p></body></html>');
-                            w.document.close();
-                        }}
-                        src={url}
-                        alt={attachment.filename}
+                                let w = window.open("", attachment.filename);
+                                w.document.open();
+                                w.document.write('<html><head><title>' + attachment.filename + '</title></head>');
+                                w.document.write('<body><p><img src=\'' + url + '\'></p></body></html>');
+                                w.document.close();
+                            }
+                        }
+                        attachment={attachment}
                     />
                 </ListGroupItem>
             )
@@ -93,9 +94,9 @@ const LogEntrySingleView = ({currentLogEntry, className}) => {
                         {attachment.filename}
                     </a>
                 </ListGroupItem>
-            )}
+            )
         }
-    );
+    });
     
     const properties = currentLogEntry.properties
         .filter(property => property.name !== 'Log Entry Group')

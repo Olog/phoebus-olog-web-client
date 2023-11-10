@@ -8,7 +8,11 @@ const ReplyLogView = ({setShowLogin}) => {
     const { id } = useParams();
 
     return (
-        <LogContainer id={id} setShowLogin={setShowLogin} renderLog={log => <ReplyLog log={log} />} />
+        <LogContainer 
+            id={id} 
+            setShowLogin={setShowLogin} 
+            renderLog={({log, isAuthenticated}) => <ReplyLog {...{log, isAuthenticated}} />} 
+        />
     );
 }
 export default ReplyLogView;

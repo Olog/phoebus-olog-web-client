@@ -6,7 +6,7 @@ import { useFieldArray } from "react-hook-form";
 import customization from "utils/customization";
 import OlogAttachment from "./OlogAttachment";
 import { v4 as uuidv4 } from 'uuid';
-import Attachment from "components/Attachment";
+import Attachment from "components/Attachment/Attachment";
 import { removeImageMarkup } from 'utils';
 import TextInput from "components/shared/input/TextInput";
 import { ExternalLink } from "components/shared/ExternalLink";
@@ -28,7 +28,9 @@ const RenderedAttachmentsContainer = styled("div")(({hasAttachments, theme}) => 
     borderRadius: "5px"
 }));
 
-const Description = ({control, formState, getValues, setValue }) => {
+const Description = ({form, attachmentsDisabled }) => {
+
+    const {control, formState, getValues, setValue } = form;
     
     const [maxRequestSizeMb, setMaxRequestSizeMb] = useState(customization.defaultMaxRequestSizeMb);
     const [maxFileSizeMb, setMaxFileSizeMb] = useState(customization.defaultMaxFileSizeMb);
@@ -84,6 +86,9 @@ const Description = ({control, formState, getValues, setValue }) => {
     }
 
     const handlePaste = (e) => {
+        if(attachmentsDisabled) {
+            return;
+        }
         const items = e.clipboardData.items;
         let imageFile = null;
         for(let item of items) {
@@ -137,6 +142,7 @@ const Description = ({control, formState, getValues, setValue }) => {
                     key={index} 
                     attachment={attachment} 
                     removeAttachment={() => onAttachmentRemoved(attachment, index)}
+                    disabled={attachmentsDisabled}
                 />
     });
 
@@ -166,7 +172,7 @@ const Description = ({control, formState, getValues, setValue }) => {
                     />
                 </Box>
                 <Stack direction="row" gap={1}>
-                    <Button variant="outlined" onClick={() => setShowEmbedImageDialog(true) } >
+                    <Button variant="outlined" disabled={attachmentsDisabled} onClick={() => setShowEmbedImageDialog(true) } >
                         Embed Image
                     </Button>
                     <Button variant="outlined" onClick={(e) => setShowHtmlPreview(true) } >
@@ -175,8 +181,8 @@ const Description = ({control, formState, getValues, setValue }) => {
                 </Stack>
             </Stack>
             <Stack>
-                <FormLabel>Attachments</FormLabel>
-                <Typography>max size per file: {maxFileSizeMb}MB, max total size: {maxRequestSizeMb}MB</Typography>
+                <FormLabel htmlFor="attachments-upload">{!attachmentsDisabled ? "Attachments" : "Attachments (Disabled)"}</FormLabel>
+                {!attachmentsDisabled ? <Typography>max size per file: {maxFileSizeMb}MB, max total size: {maxRequestSizeMb}MB</Typography> : null}
                 <Stack>
                     <Grid>
                     <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>
@@ -187,6 +193,7 @@ const Description = ({control, formState, getValues, setValue }) => {
                             browseLabel='Choose File(s) or'
                             multiple
                             maxFileSizeMb={maxFileSizeMb}
+                            disabled={attachmentsDisabled}
                         />
                         { renderedAttachments }
                     </RenderedAttachmentsContainer>

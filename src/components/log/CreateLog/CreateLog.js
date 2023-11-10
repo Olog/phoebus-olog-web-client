@@ -7,7 +7,7 @@ import ologService, { checkSession, ologServiceWithRetry } from "api/olog-servic
 import { ologClientInfoHeader } from "utils";
 import LoadingOverlay from "components/shared/LoadingOverlay";
 
-const CreateLog = () => {
+const CreateLog = ({isAuthenticated}) => {
 
     const [createInProgress, setCreateInProgress] = useState(false);
 
@@ -28,8 +28,6 @@ const CreateLog = () => {
         storage: window.localStorage,
         exclude: 'attachments', // serializing files is unsupported due to security risks
     });
-
-    const submitDisabled = false;
 
     const onSubmit = (formData) => {
 
@@ -115,7 +113,7 @@ const CreateLog = () => {
         <LoadingOverlay
             active={createInProgress}
         >
-            <EntryEditor {...{form, title: "Create New Log", onSubmit, submitDisabled}} />
+            <EntryEditor {...{form, title: "Create New Log", onSubmit, submitDisabled: !isAuthenticated}} />
         </LoadingOverlay>
     );
 }

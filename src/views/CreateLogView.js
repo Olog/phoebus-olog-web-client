@@ -1,28 +1,13 @@
-import { checkSession } from "api/olog-service";
+import React from "react";
 import CreateLog from "components/log/CreateLog";
-import React, { useEffect } from "react";
+import useIsAuthenticated from "hooks/useIsAuthenticated";
 
 const CreateLogView = ({setShowLogin}) => {
 
-    /**
-     * Show login if no session
-     */
-    useEffect(() => {
-        const promise = checkSession();
-        if(!promise){
-            setShowLogin(true);
-        }
-        else{
-            promise.then(data => {
-                if(!data){
-                    setShowLogin(true);
-                }
-            });
-        }
-    }, [setShowLogin])
-
+    const [isAuthenticated] = useIsAuthenticated({setShowLogin});
+   
     return (
-        <CreateLog />
+        <CreateLog {...{isAuthenticated}} />
     );
 }
 export default CreateLogView;
