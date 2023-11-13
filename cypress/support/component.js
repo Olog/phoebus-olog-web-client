@@ -23,8 +23,7 @@ import { mount } from 'cypress/react18'
 
 // Example use:
 // cy.mount(<MyComponent />)
-
-import { setupStore } from "../../src/stores";
+import { setupStore } from "../../src/features/store";
 import { AppWrapper } from "../../src/test-utils/wrappers";
 import { theme, styledComponentsTheme } from "../../src/config/theme";
 

@@ -17,13 +17,25 @@
  */
 
 import axios from "axios";
-import { APP_BASE_URL } from "constants";
-import { delay } from "utils";
+import customization from "config/customization";
 
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
-const ologService = axios.create({
-    baseURL: APP_BASE_URL
+const ologAxiosApi = axios.create({
+    baseURL: customization.APP_BASE_URL
 });
+
+/**
+ * A wrapper around setTimeout that allows awaiting a delay.
+ * @param {number} duration duration in milliseconds to delay.
+ * @returns a resolvable Promise.
+ */
+const delay = (duration) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, duration)
+    })
+}
 
 /**
  * Perform an Olog Service request with a retry policy
@@ -35,14 +47,14 @@ const ologService = axios.create({
  * @param {function} retryDelay     Function taking the current retry count and returning the milliseconds to delay the retry.
  * @returns HTTP response that does not match the retry condition 
  */
-export const ologServiceWithRetry = async ({method, path, options, retries=5, retryCondition = () => true, retryDelay = (count) => 30}) => {
+export const ologAxiosApiWithRetry = async ({method, path, options, retries=5, retryCondition = () => true, retryDelay = (count) => 30}) => {
 
     let retryCount = 0;
     let shouldRetry = true;
     let res = null;
     while(shouldRetry && retryCount < retries) { 
         try {
-            res = await ologService.request({method, url: path, ...options});
+            res = await ologAxiosApi.request({method, url: path, ...options});
         } catch (e) {
             res = e;
         }
@@ -60,9 +72,9 @@ export const ologServiceWithRetry = async ({method, path, options, retries=5, re
 export function checkSession () {
     // Try to get user data from back-end.
     // If server returns user data with non-null userName, there is a valid session.
-    return ologService.get('/user', { withCredentials: true })
+    return ologAxiosApi.get('/user', { withCredentials: true })
             .then(res => {return res.data})
             .catch(err => console.warn("Unable to check login session: ", err));
 }
 
-export default ologService;
+export default ologAxiosApi;

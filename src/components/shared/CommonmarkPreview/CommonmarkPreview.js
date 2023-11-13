@@ -18,7 +18,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Remarkable } from 'remarkable';
-import imageProcessor from 'utils/image-processor';
+import imageProcessor from 'components/shared/CommonmarkPreview/image-processor';
 import HtmlContent from './HtmlContent';
 import { styled } from '@mui/material';
 

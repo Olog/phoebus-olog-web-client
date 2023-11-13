@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import ologService from 'api/olog-service';
+import ologAxiosApi from 'api/axios-olog-service';
 import { useState } from 'react';
 import styled from 'styled-components';
 import Modal from 'components/shared/Modal';
@@ -36,7 +36,7 @@ const LogoutDialog = ({logoutDialogVisible, setShowLogout, setUserData}) => {
   }
 
   const logout = () => {
-    ologService.get('/logout', { withCredentials: true })
+    ologAxiosApi.get('/logout', { withCredentials: true })
       .then(res => {
         setLogoutError('');
         setUserData({userName: "", roles: []});

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useGetUserQuery } from "services/ologApi";
+import { useGetUserQuery } from "api/ologApi";
 
 const useIsAuthenticated = ({setShowLogin}) => {
 

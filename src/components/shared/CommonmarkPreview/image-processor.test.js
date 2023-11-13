@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import { Remarkable } from 'remarkable';
-import imageProcessor, {matchImage, matchSizeDefinition, processImage} from './image-processor';
+import imageProcessor, { matchImage, matchSizeDefinition } from './image-processor';
 
 test('Image markup conversion', () => {
     let remarkable = new Remarkable('full', {

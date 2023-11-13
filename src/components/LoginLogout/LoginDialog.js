@@ -18,7 +18,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Modal from '../shared/Modal';
-import ologService from 'api/olog-service';
+import ologAxiosApi from 'api/axios-olog-service';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import { Alert, Button, Stack } from '@mui/material';
@@ -41,7 +41,7 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
     formData.append("username", data.username);
     formData.append("password", data.password);
     
-    ologService.post('/login', formData,  { withCredentials: true })
+    ologAxiosApi.post('/login', formData,  { withCredentials: true })
     .then(res => {
         setLoginError("");
         setUserData(res.data);

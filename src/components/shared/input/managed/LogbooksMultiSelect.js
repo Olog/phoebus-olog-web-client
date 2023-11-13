@@ -1,7 +1,7 @@
 import React from "react";
 import MultiSelect from "../MultiSelect";
 import { styled } from "@mui/material";
-import { useGetLogbooksQuery } from "services/ologApi";
+import { useGetLogbooksQuery } from "api/ologApi";
 
 const LogbooksMultiSelect = styled(({control, className, ...props}) => {
 

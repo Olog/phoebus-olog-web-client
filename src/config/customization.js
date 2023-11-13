@@ -40,10 +40,7 @@ let customization = {
      * Default "level" for new log entries
      */
     defaultLevel: "Normal",
-    /**
-     * Base URL pointing to the Olog service. Required in order to support imbedded into the description (body) of a log entry.
-     */
-    urlPrefix: `${process.env.REACT_APP_BASE_URL}/`,
+    
     /**
      * Specifies whether to support grouping of log entries.
      */
@@ -85,7 +82,12 @@ let customization = {
      * Max total attachment upload size and individual file size (MB)
      */
     defaultMaxRequestSizeMb: 100,
-    defaultMaxFileSizeMb: 50
+    defaultMaxFileSizeMb: 50,
+
+    /**
+     * Base URL pointing to the Olog service. Required in order to support imbedded into the description (body) of a log entry.
+     */
+    APP_BASE_URL: process.env.REACT_APP_BASE_URL, // e.g. http://localhost:8080/Olog
 }
 
 export default customization;

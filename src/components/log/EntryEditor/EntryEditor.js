@@ -16,12 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import Modal from 'components/shared/Modal';
-import customization from 'utils/customization';
+import customization from 'config/customization';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { useGetPropertiesQuery } from 'services/ologApi';
+import { useGetPropertiesQuery } from 'api/ologApi';
 import MultiSelect from 'components/shared/input/MultiSelect';
 import { useFieldArray } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';

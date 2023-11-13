@@ -18,13 +18,13 @@
 
 import React from 'react';
 import ListGroup from 'components/shared/ListGroup';
-import Properties from './Properties';
+import Properties from '../Properties/Properties';
 import LogDetailsMetaData from './LogDetailsMetaData';
 import styled from 'styled-components';
 import Collapse from 'components/shared/Collapse';
 import { ListGroupItem } from 'components/shared/ListGroup';
 import CommonmarkPreview from 'components/shared/CommonmarkPreview';
-import customization from 'utils/customization';
+import customization from 'config/customization';
 import AttachmentImage, { isImage } from 'components/Attachment/AttachmentImage';
 
 const Container = styled.div`
@@ -49,7 +49,7 @@ const Ruler = styled.hr`
     margin: 0.5rem 0;
 `
 
-const Description = styled(CommonmarkPreview)`
+const StyledCommonmarkPreview = styled(CommonmarkPreview)`
     width: 100%;
     padding-top: 0.5rem;
     padding-bottom: 1rem;
@@ -69,7 +69,7 @@ const StyledAttachmentImage = styled(AttachmentImage)`
 const LogEntrySingleView = ({currentLogEntry, className}) => {
     
     const attachments = currentLogEntry.attachments.map((attachment, index) => {
-        const url = `${process.env.REACT_APP_BASE_URL}/attachment/` + attachment.id;
+        const url = `${customization.APP_BASE_URL}/attachment/` + attachment.id;
         
         if(isImage(attachment)) {
             return (
@@ -111,7 +111,7 @@ const LogEntrySingleView = ({currentLogEntry, className}) => {
             <Ruler />
             <LogDetailsMetaData currentLogRecord={currentLogEntry}/>
             <Ruler />
-            <Description commonmarkSrc={currentLogEntry.source} imageUrlPrefix={customization.urlPrefix} />
+            <StyledCommonmarkPreview commonmarkSrc={currentLogEntry.source} imageUrlPrefix={customization.APP_BASE_URL + "/"} />
             <Collapse title='Attachments'>
                 {currentLogEntry.attachments.length > 0 
                     ? <ListGroup>

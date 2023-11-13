@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetLogbookQuery } from "services/ologApi";
+import { useGetLogbookQuery } from "api/ologApi";
 import { ServerErrorPage } from "components/ErrorPage";
 import { LinearProgress } from "@mui/material";
 import useIsAuthenticated from "hooks/useIsAuthenticated";

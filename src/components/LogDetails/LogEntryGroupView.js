@@ -18,14 +18,15 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import ologService from 'api/olog-service';
+import ologAxiosApi from 'api/axios-olog-service';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
-import {getLogEntryGroupId, sortLogsDateCreated} from 'utils';
 import GroupHeader from './GroupHeader';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import CommonmarkPreview from 'components/shared/CommonmarkPreview';
-import customization from 'utils/customization';
+import customization from 'config/customization';
+import { getLogEntryGroupId } from '../Properties/utils';
+import { sortLogsDateCreated } from 'components/log/sort';
 
 const Container = styled.div`
     display: flex;
@@ -58,7 +59,7 @@ const LogEntryGroupView = ({currentLogEntry, logGroupRecords, setLogGroupRecords
 
     useEffect(() => {
         const signal = new AbortController();
-        ologService.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(currentLogEntry.properties)}`, { signal })
+        ologAxiosApi.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(currentLogEntry.properties)}`, { signal })
         .then(res => {
             let sortedResult = sortLogsDateCreated(res.data, false);
             setLogGroupRecords(sortedResult);
@@ -79,7 +80,7 @@ const LogEntryGroupView = ({currentLogEntry, logGroupRecords, setLogGroupRecords
         return(
             <GroupContainer key={index} onClick={() => showLog(row)} >
                 <GroupHeader logEntry={row} />
-                <CommonmarkPreview commonmarkSrc={row.source} imageUrlPrefix={customization.urlPrefix} />
+                <CommonmarkPreview commonmarkSrc={row.source} imageUrlPrefix={customization.APP_BASE_URL + "/"} />
             </GroupContainer>
         );
     });

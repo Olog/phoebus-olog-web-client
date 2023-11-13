@@ -1,7 +1,7 @@
 import { Provider } from "react-redux";
 import { ThemeProvider } from "@mui/material";
 import { ThemeProvider as StyledComponentsThemeProvider } from "styled-components";
-import LocalizationProvider from "../config/LocalizationProvider";
+import { LocalizationProvider } from "../config/localization";
 import GlobalStyle from "config/GlobalStyle";
 
 export const AppWrapper = ({store, theme, styledComponentsTheme, children}) => {

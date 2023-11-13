@@ -16,10 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React from 'react';
-import { formatFullDateTime, getLogEntryGroupId } from 'utils';
 import { Stack, Tooltip, Typography, styled } from "@mui/material";
 import ReplyIcon from '@mui/icons-material/Reply';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { formatFullDateTime } from 'config/localization';
+import { getLogEntryGroupId } from 'components/Properties/utils';
 
 const LogInfo = styled("div")`
     display: flex;

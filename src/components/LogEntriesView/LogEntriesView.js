@@ -18,13 +18,13 @@
 
 import {useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import ologService from 'api/olog-service';
+import ologAxiosApi from 'api/axios-olog-service';
 import LogDetails from 'components/LogDetails';
 import SearchResultList from 'components/SearchResult/SearchResultList';
-import customization from 'utils/customization';
+import customization from 'config/customization';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
-import { useSearchLogsQuery } from 'services/ologApi';
+import { useSearchLogsQuery } from 'api/ologApi';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import ServiceErrorBanner from 'components/ErrorBanner';
 import styledComponentsStyled from 'styled-components';
@@ -32,7 +32,7 @@ import Filters from 'components/Filters';
 import { desktop, mobile } from 'config/media';
 import { styled } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { removeEmptyKeys } from 'utils';
+import { removeEmptyKeys } from 'api/ologApi';
 
 const ContentContainer = styledComponentsStyled.div`
     height: 100%;
@@ -146,7 +146,7 @@ const LogEntriesView = ({
         if(!searchResults?.logs?.find(it => `${it.id}` === `${logId}`)) {
             const signal = new AbortController();
             if(logId > 0) {
-                ologService.get(`/logs/${logId}`, {signal})
+                ologAxiosApi.get(`/logs/${logId}`, {signal})
                 .then(res => {
                     dispatch(updateCurrentLogEntry(res.data));
                 })

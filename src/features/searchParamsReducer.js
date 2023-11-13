@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "universal-cookie";
-import customization from "utils/customization";
-import { withCacheBust } from "utils/searchParams";
+import customization from "config/customization";
+import { withCacheBust } from "hooks/useSanitizedSearchParams";
 
 const cookies = new Cookies();
 // const initialState = cookies.get(customization.searchParamsCookie) || {...customization.defaultSearchParams};

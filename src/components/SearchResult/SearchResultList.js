@@ -17,15 +17,15 @@
  */
 import SearchResultItem from './SearchResultItem';
 import SearchBox from './SearchBox';
-import { sortLogsDateCreated } from 'utils';
 import { Divider, LinearProgress, Stack, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
-import customization from 'utils/customization';
+import customization from 'config/customization';
 import { useCallback, useMemo, useState } from 'react';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
+import { sortLogsDateCreated } from 'components/log/sort';
 
 const NoRowsOverlay = (props) => {
     return (

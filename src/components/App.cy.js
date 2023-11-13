@@ -1,7 +1,7 @@
 import { MemoryRouter } from "react-router-dom";
 import App from "./App";
 import { resultList, testEntry } from "../mocks/fixtures/generators";
-import customization from "utils/customization";
+import customization from "config/customization";
 import { defaultSearchPageParamsState } from "features/searchPageParamsReducer";
 import { defaultSearchParamsState } from "features/searchParamsReducer";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import MultiSelect from "../MultiSelect";
 import { styled } from "@mui/material";
-import { useGetTagsQuery } from "services/ologApi";
+import { useGetTagsQuery } from "api/ologApi";
 
 const TagsMultiSelect = styled(({control, className, ...props}) => {
 

@@ -24,7 +24,7 @@ import TextInput from 'components/shared/input/TextInput';
 import WizardDateInput from 'components/shared/input/WizardDateInput';
 import RadioInput from 'components/shared/input/RadioInput';
 import { Button, Stack } from '@mui/material';
-import customization from 'utils/customization';
+import customization from 'config/customization';
 import TagsMultiSelect from 'components/shared/input/managed/TagsMultiSelect';
 import LogbooksMultiSelect from 'components/shared/input/managed/LogbooksMultiSelect';
 

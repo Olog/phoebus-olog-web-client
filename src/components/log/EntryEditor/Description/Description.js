@@ -1,19 +1,18 @@
 import { Alert, Box, Button, FormLabel, Grid, Stack, Typography, styled } from "@mui/material";
-import ologService from "api/olog-service";
+import ologAxiosApi from "api/axios-olog-service";
 import DroppableFileUploadInput from "components/shared/input/FileInput";
 import React, { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
-import customization from "utils/customization";
+import customization from "config/customization";
 import OlogAttachment from "./OlogAttachment";
 import { v4 as uuidv4 } from 'uuid';
 import Attachment from "components/Attachment/Attachment";
-import { removeImageMarkup } from 'utils';
 import TextInput from "components/shared/input/TextInput";
 import { ExternalLink } from "components/shared/ExternalLink";
 import { FaMarkdown } from "react-icons/fa";
-import { APP_BASE_URL } from "constants";
 import EmbedImageDialog from "./EmbedImageDialog";
 import HtmlPreviewModal from "./HtmlPreviewModal";
+import removeImageMarkup from "./removeImageMarkup";
 
 const RenderedAttachmentsContainer = styled("div")(({hasAttachments, theme}) => ({
     display: hasAttachments ? "grid" : "flex",
@@ -121,7 +120,7 @@ const Description = ({form, attachmentsDisabled }) => {
 
     // Get the max attachment filesize 
     useEffect(() => {
-        ologService.get('/')
+        ologAxiosApi.get('/')
             .then(res => {
                 const {data} = res;
                 setMaxRequestSizeMb(data?.serverConfig?.maxRequestSize || customization.defaultMaxRequestSizeMb);
@@ -159,7 +158,7 @@ const Description = ({form, attachmentsDisabled }) => {
             />
             <Stack direction="row" justifyContent="space-between">
                 <Box>
-                    <ExternalLink href={`${APP_BASE_URL}/help/CommonmarkCheatsheet`} 
+                    <ExternalLink href={`${customization.APP_BASE_URL}/help/CommonmarkCheatsheet`} 
                         text={
                             <Stack flexDirection="row" gap={0.5} alignItems="center">
                                 <FaMarkdown />

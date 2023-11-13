@@ -4,7 +4,7 @@ import { defaultSearchParamsState, updateSearchParams } from "features/searchPar
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
-import customization from "utils/customization";
+import customization from "config/customization";
 
 const cookies = new Cookies();
 

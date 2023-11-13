@@ -19,12 +19,13 @@
 import React, { useEffect } from "react";
 
 import { useState } from 'react';
-import { useSanitizedSearchParams, withoutCacheBust } from 'utils/searchParams';
+import useSanitizedSearchParams, { withoutCacheBust } from 'hooks/useSanitizedSearchParams';
 import { useDispatch } from "react-redux";
 import { forceUpdateSearchParams } from "features/searchParamsReducer";
 import { InputAdornment, Link, OutlinedInput, styled } from "@mui/material";
 import HelpIcon from '@mui/icons-material/Help';
-import { removeEmptyKeys } from "utils";
+import { removeEmptyKeys } from "api/ologApi";
+import customization from "config/customization";
 
 const SearchBoxInput = styled(({searchParams, showFilters, className}) => {
 
@@ -78,7 +79,7 @@ const SearchBoxInput = styled(({searchParams, showFilters, className}) => {
             endAdornment={
                 <InputAdornment position="end">
                     <Link 
-                        href={`${process.env.REACT_APP_BASE_URL}/SearchHelp_en.html`} 
+                        href={`${customization.APP_BASE_URL}/SearchHelp_en.html`} 
                         target="_blank" 
                         aria-label="Logbook Search Help Reference, opens in new tab"
                         sx={{ 

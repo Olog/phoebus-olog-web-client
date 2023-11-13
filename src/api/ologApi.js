@@ -1,11 +1,33 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ologClientInfoHeader } from "utils";
-import { withoutCacheBust } from "utils/searchParams";
+import { withoutCacheBust } from "hooks/useSanitizedSearchParams";
+import customization from "config/customization";
+import packageInfo from '../../package.json';
+
+export function ologClientInfoHeader() {
+    return {"X-Olog-Client-Info": "Olog Web " + packageInfo.version + " on " + window.navigator.userAgent}
+}
+
+export const removeEmptyKeys = (obj, exceptions=[]) => {
+    const copy = {...obj};
+    for(let key of Object.keys(copy).filter(it => exceptions.indexOf(it) === -1)) {
+        const val = copy[key];
+        if(Array.isArray(val) && val.length === 0) {
+            delete copy[key];
+            continue;
+        }
+        if(typeof val === 'string' || val instanceof String) {
+            if(val.trim() === '') {
+                delete copy[key]
+            }
+        }
+    }
+    return copy;
+}
 
 export const ologApi = createApi({
     reducerPath: 'ologApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: process.env.REACT_APP_BASE_URL,    // e.g. http://localhost:8080/Olog
+        baseUrl: customization.APP_BASE_URL,    // e.g. http://localhost:8080/Olog
         credentials: "include"                      // send credentials with requests
     }),
     keepUnusedDataFor: 0, // Don't cache anything

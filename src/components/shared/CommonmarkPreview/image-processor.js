@@ -30,7 +30,7 @@
  * path to the image resource is relative in the markup, but must be changed
  * to an absolute path. Client code should add this plugin like so:
  * 
- * remarkable.use(imageProcessor, {urlPrefix: 'http://foo.com/bar/'});
+ * remarkable.use(imageProcessor, {urlPrefix: 'http://foo.com/bar'});
  */
 var urlPrefix = '';
 

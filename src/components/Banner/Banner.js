@@ -19,7 +19,7 @@
 import {Link} from "react-router-dom";
 import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
-import ologService from '../../api/olog-service';
+import ologAxiosApi from '../../api/axios-olog-service';
 import packageInfo from '../../../package.json';
 import { useEffect } from 'react';
 import SkipToContent from 'components/shared/SkipToContent';
@@ -46,7 +46,7 @@ export const Banner = ({userData, setUserData, showLogin, setShowLogin, showLogo
     // Try to get user data from back-end.
     // If server returns user data with non-null userName, there is a valid session.
     const signal = new AbortController();
-    ologService.get('/user', { withCredentials: true, signal})
+    ologAxiosApi.get('/user', { withCredentials: true, signal})
         .then(res => {
             // As long as there is a session cookie, the response SHOULD contain
             // user data. Check for status just in case...

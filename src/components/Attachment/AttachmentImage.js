@@ -1,6 +1,7 @@
 import { Stack, styled } from "@mui/material";
 import React from "react";
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import customization from "config/customization";
 
 export const isLocalFile = (attachment) => {
     return Boolean(attachment?.file);
@@ -52,7 +53,7 @@ export const RemoteImage = styled(({attachment, className, ...props}) => {
     if(isImage(attachment)) {
         return (
             <img 
-                src={`${process.env.REACT_APP_BASE_URL}/attachment/` + attachment.id} 
+                src={`${customization.APP_BASE_URL}/attachment/` + attachment.id} 
                 alt={alt}
                 className={className}
                 {...props}

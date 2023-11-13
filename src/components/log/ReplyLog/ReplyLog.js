@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
-import customization from "utils/customization";
-import { ologClientInfoHeader } from "utils";
-import ologService, { checkSession, ologServiceWithRetry } from "api/olog-service";
+import customization from "config/customization";
+import { ologClientInfoHeader } from "api/ologApi";
+import ologAxiosApi, { checkSession, ologAxiosApiWithRetry } from "api/axios-olog-service";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
 
@@ -69,10 +69,10 @@ const ReplyLog = ({log, isAuthenticated}) => {
                     
                     let url = `/logs/multipart?markup=commonmark&inReplyTo=${log.id}`
                     // Upload the full monty, i.e. log entry and all attachment files, in one single request.
-                    ologService.put(url, multipartFormData, { withCredentials: true, headers: requestHeaders})
+                    ologAxiosApi.put(url, multipartFormData, { withCredentials: true, headers: requestHeaders})
                         .then(async res => {
                             // Wait until the new log entry is available in the search results
-                            await ologServiceWithRetry({
+                            await ologAxiosApiWithRetry({
                                 method: 'GET',
                                 path: `/logs/search?title=${res.data.title}&end=now`,
                                 retries: 5,

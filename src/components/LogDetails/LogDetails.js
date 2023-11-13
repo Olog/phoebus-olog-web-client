@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React from 'react';
-import customization from 'utils/customization';
-import { getLogEntryGroupId } from 'utils';
+import customization from 'config/customization';
+import { getLogEntryGroupId } from '../Properties/utils';
 import LogEntryGroupView from './LogEntryGroupView';
 import LogEntrySingleView from './LogEntrySingleView';
 import { useHref, useLocation } from "react-router-dom";

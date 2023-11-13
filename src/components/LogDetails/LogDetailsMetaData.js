@@ -18,7 +18,7 @@
 
  import React from 'react';
  import OlogMoment from './OlogMoment';
- import customization from 'utils/customization';
+ import customization from 'config/customization';
 import styled from 'styled-components';
 
 const Container = styled.div`
