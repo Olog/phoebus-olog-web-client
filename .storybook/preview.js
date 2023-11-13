@@ -1,8 +1,5 @@
 import React from "react";
-import { styledComponentsTheme, theme } from 'config/theme';
-import GlobalStyle from 'config/GlobalStyle';
-import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-components';
-import { ThemeProvider } from "@mui/material";
+import { MuiThemeProvider, StyledComponentsThemeProvider } from "../src/providers"
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
@@ -17,11 +14,10 @@ const preview = {
   },
   decorators: [
     (Story) => (
-      <StyledComponentsThemeProvider theme={styledComponentsTheme}>
-        <GlobalStyle />
-        <ThemeProvider theme={theme} >
+      <StyledComponentsThemeProvider>
+        <MuiThemeProvider>
           <Story />
-        </ThemeProvider>
+        </MuiThemeProvider>
       </StyledComponentsThemeProvider>
     )
   ]

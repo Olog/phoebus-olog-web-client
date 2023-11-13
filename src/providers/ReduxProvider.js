@@ -15,25 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import { store } from "features/store";
+import { Provider } from "react-redux";
 
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from 'components/App';
-import { BrowserRouter } from 'react-router-dom';
-import { MuiThemeProvider, StyledComponentsThemeProvider, LocalizationProvider, ReduxProvider } from 'providers';
-
-const container = document.getElementById('root');
-const root = createRoot(container); 
-root.render(
-    <ReduxProvider>
-        <MuiThemeProvider>
-            <StyledComponentsThemeProvider>
-                <LocalizationProvider>
-                    <BrowserRouter>
-                        <App />
-                    </BrowserRouter>
-                </LocalizationProvider>
-            </StyledComponentsThemeProvider>
-        </MuiThemeProvider>
-    </ReduxProvider>
-);
+const ReduxProvider = ({children, ...props}) => {
+    return (
+        <Provider store={store} {...props}>
+            {children}
+        </Provider>
+    )
+}
+export default ReduxProvider;

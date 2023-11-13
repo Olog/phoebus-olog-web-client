@@ -1,4 +1,4 @@
-const { dateToString } = require("./localization");
+const { dateToString } = require("./moment");
 
 test('dateToString', () => {
     let now = new Date();

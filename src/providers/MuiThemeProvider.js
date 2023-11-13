@@ -15,25 +15,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import { ThemeProvider } from "@mui/material";
+import theme from "config/theme";
 
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from 'components/App';
-import { BrowserRouter } from 'react-router-dom';
-import { MuiThemeProvider, StyledComponentsThemeProvider, LocalizationProvider, ReduxProvider } from 'providers';
+const MuiThemeProvider = ({children, ...props}) => {
+    return (
+        <ThemeProvider theme={theme} {...props}>
+            {children}
+        </ThemeProvider>
+    )
+};
 
-const container = document.getElementById('root');
-const root = createRoot(container); 
-root.render(
-    <ReduxProvider>
-        <MuiThemeProvider>
-            <StyledComponentsThemeProvider>
-                <LocalizationProvider>
-                    <BrowserRouter>
-                        <App />
-                    </BrowserRouter>
-                </LocalizationProvider>
-            </StyledComponentsThemeProvider>
-        </MuiThemeProvider>
-    </ReduxProvider>
-);
+export default MuiThemeProvider;

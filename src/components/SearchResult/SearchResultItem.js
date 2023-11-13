@@ -19,7 +19,7 @@ import React from 'react';
 import { Stack, Tooltip, Typography, styled } from "@mui/material";
 import ReplyIcon from '@mui/icons-material/Reply';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { formatFullDateTime } from 'config/localization';
+import { formatFullDateTime } from 'lib/moment';
 import { getLogEntryGroupId } from 'components/Properties/utils';
 
 const LogInfo = styled("div")`

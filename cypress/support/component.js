@@ -25,7 +25,6 @@ import { mount } from 'cypress/react18'
 // cy.mount(<MyComponent />)
 import { setupStore } from "../../src/features/store";
 import { AppWrapper } from "../../src/test-utils/wrappers";
-import { theme, styledComponentsTheme } from "../../src/config/theme";
 
 // Cypress.Commands.add('mount', mount);
 Cypress.Commands.add('mount', (component, options = {}) => {
@@ -33,13 +32,10 @@ Cypress.Commands.add('mount', (component, options = {}) => {
     // Use the default store if one is not provided
     const { preloadedState = {}, store = setupStore(preloadedState), WrapperProps={} } = options;
   
-    // const wrapped = <Provider store={reduxStore}>{component}</Provider>
     // return mount(wrapped, mountOptions)
     return mount(
         <AppWrapper 
             store={store}
-            styledComponentsTheme={styledComponentsTheme}
-            theme={theme}
             {...WrapperProps}
         >
             {component}
