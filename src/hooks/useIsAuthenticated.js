@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react"
-import { useGetUserQuery } from "api/ologApi";
+import { useShowLogin, useUser } from "features/authSlice";
 
-const useIsAuthenticated = ({setShowLogin}) => {
+const useIsAuthenticated = () => {
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const {data: user, error } = useGetUserQuery();
+    const {setShowLogin} = useShowLogin();
+    const user = useUser();
 
     /**
      * Show login if no session
@@ -13,18 +14,11 @@ const useIsAuthenticated = ({setShowLogin}) => {
         if(user) {
             setIsAuthenticated(true);
             setShowLogin(false);
-        } 
-        // We get an HTTP 404 if there is 
-        // no active session / aren't authenticated
-        if(error) {
-            if(error.status === 404) {
-                setIsAuthenticated(false);
-                setShowLogin(true);
-            } else {
-                console.error("Unexpected error while checking authentication", error);
-            }
+        } else {
+            setIsAuthenticated(false);
+            setShowLogin(true);
         }
-    }, [error, setIsAuthenticated, setShowLogin, user]);
+    }, [setShowLogin, user]);
 
     return [isAuthenticated];
 

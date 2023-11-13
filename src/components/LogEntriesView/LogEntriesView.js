@@ -86,7 +86,6 @@ const LogDetailsContainer = styledComponentsStyled.div`
 `
 
 const LogEntriesView = ({
-    userData,
     currentLogEntry
 }) => {
 
@@ -173,7 +172,6 @@ const LogEntriesView = ({
                         showGroup, setShowGroup, 
                         currentLogEntry, 
                         logGroupRecords, setLogGroupRecords, 
-                        userData, 
                         searchResults
                     }}/>
         } else {

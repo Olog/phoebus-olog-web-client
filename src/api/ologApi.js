@@ -28,7 +28,8 @@ export const ologApi = createApi({
     reducerPath: 'ologApi',
     baseQuery: fetchBaseQuery({
         baseUrl: customization.APP_BASE_URL,    // e.g. http://localhost:8080/Olog
-        credentials: "include"                      // send credentials with requests
+        credentials: "include",                      // send credentials with requests
+        headers: {...ologClientInfoHeader()}
     }),
     keepUnusedDataFor: 0, // Don't cache anything
     endpoints: builder => ({
@@ -43,8 +44,7 @@ export const ologApi = createApi({
                         // search to trigger calling the api (e.g. polling)
                         ...withoutCacheBust(searchParams), 
                         ...searchPageParams
-                    },
-                    headers: {...ologClientInfoHeader()}
+                    }
                 }
             }
         }),
@@ -72,6 +72,26 @@ export const ologApi = createApi({
             query: () => ({
                 url: "/user"
             })
+        }),
+        login: builder.mutation({
+            query: ({username, password}) => {
+                const bodyFormData = new FormData();
+                bodyFormData.append("username", username);
+                bodyFormData.append("password", password);
+
+                return {
+                    url: "/login",
+                    method: 'POST',
+                    body: bodyFormData,
+                    formData: true
+                }
+            }
+        }),
+        logout: builder.mutation({
+            query: () => ({
+                url: "/logout",
+                method: "GET" // yes this is a GET...
+            })
         })
     })
 });
@@ -82,5 +102,7 @@ export const {
     useGetLogbooksQuery,
     useGetPropertiesQuery,
     useGetLogbookQuery,
-    useGetUserQuery
+    useGetUserQuery,
+    useLoginMutation,
+    useLogoutMutation
 } = ologApi;

@@ -4,11 +4,11 @@ import { ServerErrorPage } from "components/ErrorPage";
 import { LinearProgress } from "@mui/material";
 import useIsAuthenticated from "hooks/useIsAuthenticated";
 
-const LogContainer = ({id, renderLog, setShowLogin}) => {
+const LogContainer = ({id, renderLog}) => {
 
     const { data: log, isLoading, error } = useGetLogbookQuery({id});
     
-    const [isAuthenticated] = useIsAuthenticated({setShowLogin});
+    const [isAuthenticated] = useIsAuthenticated();
 
     if(isLoading) {
         return <LinearProgress width="100%" />

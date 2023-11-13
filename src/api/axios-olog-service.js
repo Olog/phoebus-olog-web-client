@@ -69,12 +69,4 @@ export const ologAxiosApiWithRetry = async ({method, path, options, retries=5, r
     return res;
 }
 
-export function checkSession () {
-    // Try to get user data from back-end.
-    // If server returns user data with non-null userName, there is a valid session.
-    return ologAxiosApi.get('/user', { withCredentials: true })
-            .then(res => {return res.data})
-            .catch(err => console.warn("Unable to check login session: ", err));
-}
-
 export default ologAxiosApi;

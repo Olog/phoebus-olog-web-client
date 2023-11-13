@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Route,
   Routes
@@ -36,9 +36,6 @@ import ReplyLogView from 'views/ReplyLogView';
 
 const App = () => {
 
-    const [userData, setUserData] = useState({userName: "", roles: []});
-    const [showLogin, setShowLogin] = useState(false);
-    const [showLogout, setShowLogout] = useState(false);
     const currentLogEntry = useSelector(state => state.currentLogEntry);
 
     return(
@@ -49,11 +46,7 @@ const App = () => {
                 flexDirection: "column"
         }}>
             <Initialize>
-                <Banner {...{
-                    showLogin, setShowLogin,
-                    showLogout, setShowLogout,
-                    userData, setUserData
-                }}/>
+                <Banner />
                 <Box id='app-content' 
                     sx={{
                         overflow: "auto",
@@ -62,22 +55,20 @@ const App = () => {
                     <Routes>
                         <Route exact path="/" element={
                             <LogEntriesView {...{
-                                userData,
                                 currentLogEntry
                             }}/>
                         } />
                         <Route exact path="/logs/create" element={
-                            <CreateLogView {...{setShowLogin}} />
+                            <CreateLogView />
                         } />
                         <Route exact path="/logs/:id/edit" element={
-                            <EditLogView {...{setShowLogin}} />
+                            <EditLogView />
                         } />
                         <Route exact path="/logs/:id/reply" element={
-                            <ReplyLogView {...{setShowLogin}}/>
+                            <ReplyLogView />
                         } />
                         <Route exact path="/logs/:id" element={
                             <LogEntriesView {...{
-                                userData,
                                 currentLogEntry
                             }}/>
                         } />

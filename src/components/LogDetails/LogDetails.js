@@ -25,6 +25,7 @@ import NavigationButtons from './NavigationButtons';
 import styled from 'styled-components';
 import { Button, Divider, Stack } from '@mui/material';
 import { InternalButtonLink } from 'components/shared/InternalLink';
+import { useUser } from 'features/authSlice';
 
 
 const Container = styled.div`
@@ -53,15 +54,16 @@ const LogDetails = ({
     showGroup, setShowGroup, 
     currentLogEntry,
     logGroupRecords, setLogGroupRecords, 
-    userData, 
     searchResults,
     className
 }) => {
 
+    const user = useUser();
+
     const renderedEditButton = customization.log_edit_support ? 
         <InternalButtonLink 
             to={`/logs/${currentLogEntry?.id}/edit`}
-            disabled={!userData || !userData.userName}
+            disabled={!user || !user.userName}
             variant="contained"
         >
             Edit
@@ -71,7 +73,7 @@ const LogDetails = ({
         <InternalButtonLink
             to={`/logs/${currentLogEntry?.id}/reply`}
             variant="contained"
-            disabled={!userData || !userData.userName}
+            disabled={!user || !user.userName}
             sx={{height: "100%"}}
         >
             Reply
@@ -97,7 +99,7 @@ const LogDetails = ({
     ?   <StyledLogEntryGroupView {...{
             showGroup, setShowGroup, 
             currentLogEntry,
-            userData, 
+            user, 
             logGroupRecords, setLogGroupRecords, 
         }}/> 
     :   <StyledLogEntrySingleView 

@@ -20,7 +20,7 @@ const EditLog = ({log, isAuthenticated}) => {
 
     const onSubmit = (formData) => {
 
-        if(!formData){
+        if(!formData || !isAuthenticated){
             setEditInProgress(false);
             return;
         }

@@ -3,14 +3,13 @@ import LogContainer from "components/log/LogContainer";
 import React from "react";
 import { useParams } from "react-router-dom";
 
-const ReplyLogView = ({setShowLogin}) => {
+const ReplyLogView = () => {
 
     const { id } = useParams();
 
     return (
         <LogContainer 
             id={id} 
-            setShowLogin={setShowLogin} 
             renderLog={({log, isAuthenticated}) => <ReplyLog {...{log, isAuthenticated}} />} 
         />
     );
