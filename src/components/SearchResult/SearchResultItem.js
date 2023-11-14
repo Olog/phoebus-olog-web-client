@@ -61,7 +61,7 @@ const SearchResultItem = ({log}) => {
             </Stack>
             <LogInfo>
                 <p>{log.owner}</p>
-                <p>{log.modifyDate ? `${formatFullDateTime(log.modifyDate)} (edited)` : formatFullDateTime(log.createdDate)}</p>
+                <p>{formatFullDateTime(log.createdDate)}</p>
             </LogInfo>
             <LogInfo>
                 <p>{formatDescription(log.description)}</p>

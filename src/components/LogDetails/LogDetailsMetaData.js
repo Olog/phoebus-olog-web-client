@@ -20,6 +20,8 @@
  import OlogMoment from './OlogMoment';
  import customization from 'config/customization';
 import styled from 'styled-components';
+import { Link } from '@mui/material';
+import { Link as RouterLink } from "react-router-dom";
 
 const Container = styled.div`
     font-size: 0.8rem;
@@ -70,7 +72,7 @@ const LogDetailsMetaData = ({currentLogRecord}) => {
                 <Key>Created</Key>
                 <Value>
                     { currentLogRecord.modifyDate 
-                        ? <span><OlogMoment date={currentLogRecord.modifyDate}/> (edited)</span>
+                        ? <span><OlogMoment date={currentLogRecord.modifyDate}/> <Link component={RouterLink} to={`/logs/${currentLogRecord.id}/history`}>(edited)</Link></span>
                         : <OlogMoment date={currentLogRecord.createdDate}/>
                     }
                 </Value>

@@ -58,6 +58,11 @@ export const ologApi = createApi({
                 url: '/logbooks'
             })
         }),
+        getArchivedLogbooks: builder.query({
+            query: ({id}) => ({
+                url: `logs/archived/${id}`
+            })
+        }),
         getProperties: builder.query({
             query: () => ({
                 url: '/properties'
@@ -100,6 +105,7 @@ export const {
     useSearchLogsQuery,
     useGetTagsQuery,
     useGetLogbooksQuery,
+    useGetArchivedLogbooksQuery,
     useGetPropertiesQuery,
     useGetLogbookQuery,
     useGetUserQuery,

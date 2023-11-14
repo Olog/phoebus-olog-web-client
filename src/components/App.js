@@ -29,6 +29,7 @@ import Initialize from './Initialize';
 import EditLogView from 'views/EditLogView';
 import CreateLogView from 'views/CreateLogView';
 import ReplyLogView from 'views/ReplyLogView';
+import LogHistoryView from 'views/LogHistoryView';
 
 /**
  * Entry point component.
@@ -66,6 +67,9 @@ const App = () => {
                         } />
                         <Route exact path="/logs/:id/reply" element={
                             <ReplyLogView />
+                        } />
+                        <Route exact path="/logs/:id/history" element={
+                            <LogHistoryView />
                         } />
                         <Route exact path="/logs/:id" element={
                             <LogEntriesView {...{
