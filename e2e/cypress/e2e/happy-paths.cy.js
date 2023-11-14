@@ -59,6 +59,7 @@ describe('Happy Paths', () => {
     cy.findByRole('link', {name: /new log entry/i}).click();
     cy.findByLabelText(/logbooks/i).type('e2e-tests{downArrow}{enter}');
     cy.findByLabelText(/tags/i).type('e2e-test-tag{downArrow}{enter}');
+    cy.findByLabelText(/entry type/i).type('incident{downArrow}{enter}');
     cy.findByRole('textbox', {name: /title/i}).type(title);
     cy.findByRole('textbox', {name: /description/i}).type('my custom description');
     cy.get('input[type=file]').selectFile('cypress/fixtures/testImage.jpg', {force: true});
@@ -66,6 +67,9 @@ describe('Happy Paths', () => {
 
     // expect to find the entry we created
     cy.findByRole('heading', {name: title, level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
+    cy.findByTestId("meta-logbooks").invoke("text").should("match", /e2e-tests/i);
+    cy.findByTestId("meta-tags").invoke("text").should("match", /e2e-test-tag/i);
+    cy.findByTestId("meta-entrytype").invoke("text").should("match", /incident/i);
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
 
@@ -97,11 +101,17 @@ describe('Happy Paths', () => {
     cy.findByRole('textbox', {name: /title/i}).type(" my reply");
     title += " my reply";
     cy.findByRole('textbox', {name: /description/i}).type('my custom reply');
+    cy.findByLabelText(/logbooks/i).type('controls{downArrow}{enter}');
+    cy.findByLabelText(/tags/i).type('alarm{downArrow}{enter}');
+    cy.findByLabelText(/entry type/i).type('shift start{downArrow}{enter}');
     cy.get('input[type=file]').selectFile('cypress/fixtures/testImage.jpg', {force: true});
     cy.findByRole('button', {name: /submit/i}).click();
 
     // expect to find the reply we created
     cy.findByRole('heading', {name: title, level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
+    cy.findByTestId("meta-logbooks").invoke("text").should("match", /controls.*e2e-tests/i);
+    cy.findByTestId("meta-tags").invoke("text").should("match", /alarm.*e2e-test-tag/i);
+    cy.findByTestId("meta-entrytype").invoke("text").should("match", /shift start/i);
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
 
@@ -123,13 +133,19 @@ describe('Happy Paths', () => {
     cy.findByRole('heading', {name: title, level: 3}).click();
     cy.findByRole("link", {name: /edit/i}).click();
 
-    // Edit our log's title
+    // Edit our log
     title += " (EDITED)";
     cy.findByRole('textbox', {name: /title/i}).clear().type(title);
+    cy.findByLabelText(/logbooks/i).type('operations{downArrow}{enter}');
+    cy.findByRole("button", {name: /alarm/i}).click();
+    cy.findByLabelText(/entry type/i).type('shift end{downArrow}{enter}');
     cy.findByRole('button', {name: /submit/i}).click();
 
     // expect to find the edit to our log but have the same id as before
     cy.findByRole('heading', {name: title, level: 3, timeout: 10000}).click(); // increased timeout due to server performance changes
+    cy.findByTestId("meta-logbooks").invoke("text").should("match", /controls.*e2e-tests.*operations/i);
+    cy.findByTestId("meta-tags").invoke("text").should("match", /e2e-test-tag/i);
+    cy.findByTestId("meta-entrytype").invoke("text").should("match", /shift end/i);
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
 

@@ -15,7 +15,7 @@ const EditLog = ({log, isAuthenticated}) => {
         defaultValues: {
             attachments: []
         },
-        values: {...log}
+        values: {...log, entryType: log.level}
     });
 
     const onSubmit = (formData) => {

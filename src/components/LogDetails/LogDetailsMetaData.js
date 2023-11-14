@@ -66,11 +66,11 @@ const LogDetailsMetaData = ({currentLogRecord}) => {
     return (
         <Container>
             <DetailRow>
-                <Key>Author</Key><Value>{currentLogRecord.owner}</Value>
+                <Key>Author</Key><Value data-testid="meta-author">{currentLogRecord.owner}</Value>
             </DetailRow>
             <DetailRow>
                 <Key>Created</Key>
-                <Value>
+                <Value data-testid="meta-created">
                     { currentLogRecord.modifyDate 
                         ? <span><OlogMoment date={currentLogRecord.modifyDate}/> <Link component={RouterLink} to={`/logs/${currentLogRecord.id}/history`}>(edited)</Link></span>
                         : <OlogMoment date={currentLogRecord.createdDate}/>
@@ -78,13 +78,13 @@ const LogDetailsMetaData = ({currentLogRecord}) => {
                 </Value>
             </DetailRow>
             <DetailRow>
-                <Key>Logbooks</Key><Value>{logbooks}</Value>
+                <Key>Logbooks</Key><Value data-testid="meta-logbooks">{logbooks}</Value>
             </DetailRow>
             <DetailRow>
-                <Key>Tags</Key><Value>{tags}</Value>
+                <Key>Tags</Key><Value data-testid="meta-tags">{tags}</Value>
             </DetailRow>
             <DetailRow>
-                <Key>{customization.level}</Key><Value>{currentLogRecord.level}</Value>
+                <Key>{customization.level}</Key><Value data-testid="meta-entrytype">{currentLogRecord.level}</Value>
             </DetailRow>
         </Container>
     );
