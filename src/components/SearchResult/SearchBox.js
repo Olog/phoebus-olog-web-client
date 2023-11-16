@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import SearchBoxInput from "./SearchBoxInput"
+import SearchBoxInput from "../shared/input/managed/SearchBoxInput"
 import { Link, Stack } from "@mui/material"
 
 const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {

@@ -16,15 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import {useState, useEffect } from 'react';
+import {useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import ologService from 'api/olog-service';
+import ologAxiosApi from 'api/axios-olog-service';
 import LogDetails from 'components/LogDetails';
 import SearchResultList from 'components/SearchResult/SearchResultList';
-import customization from 'utils/customization';
+import customization from 'config/customization';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
-import { useSearchLogsQuery } from 'services/ologApi';
+import { useSearchLogsQuery } from 'api/ologApi';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import ServiceErrorBanner from 'components/ErrorBanner';
 import styledComponentsStyled from 'styled-components';
@@ -32,6 +32,7 @@ import Filters from 'components/Filters';
 import { desktop, mobile } from 'config/media';
 import { styled } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { removeEmptyKeys } from 'api/ologApi';
 
 const ContentContainer = styledComponentsStyled.div`
     height: 100%;
@@ -85,10 +86,6 @@ const LogDetailsContainer = styledComponentsStyled.div`
 `
 
 const LogEntriesView = ({
-    tags, 
-    logbooks, 
-    userData,
-    setReplyAction, 
     currentLogEntry
 }) => {
 
@@ -98,6 +95,23 @@ const LogEntriesView = ({
     const dispatch = useDispatch();
     const searchParams = useSelector(state => state.searchParams);
     const searchPageParams = useSelector(state => state.searchPageParams);
+    const searchLogsQuery = useMemo(() => {
+        
+        const sanitizedSearchParams = {...searchParams};
+        if(searchParams.tags) {
+            sanitizedSearchParams.tags = searchParams.tags.map(it => it.name);
+        }
+        if(searchParams.logbooks) {
+            sanitizedSearchParams.logbooks = searchParams.logbooks.map(it => it.name);
+        }
+
+        return {
+            searchParams: removeEmptyKeys(sanitizedSearchParams),
+            searchPageParams
+        };
+
+    }, [searchParams, searchPageParams]);
+
     const {         
         data: searchResults={
             logs: [],
@@ -105,7 +119,7 @@ const LogEntriesView = ({
         },
         error: searchResultError, 
         isFetching: searchInProgress 
-    } = useSearchLogsQuery({searchParams, searchPageParams}, {
+    } = useSearchLogsQuery(searchLogsQuery, {
         pollingInterval: customization.defaultSearchFrequency,
         refetchOnMountOrArgChange: true
     });
@@ -131,7 +145,7 @@ const LogEntriesView = ({
         if(!searchResults?.logs?.find(it => `${it.id}` === `${logId}`)) {
             const signal = new AbortController();
             if(logId > 0) {
-                ologService.get(`/logs/${logId}`, {signal})
+                ologAxiosApi.get(`/logs/${logId}`, {signal})
                 .then(res => {
                     dispatch(updateCurrentLogEntry(res.data));
                 })
@@ -158,8 +172,6 @@ const LogEntriesView = ({
                         showGroup, setShowGroup, 
                         currentLogEntry, 
                         logGroupRecords, setLogGroupRecords, 
-                        userData, 
-                        setReplyAction,
                         searchResults
                     }}/>
         } else {
@@ -177,8 +189,6 @@ const LogEntriesView = ({
             {searchResultError ? <ServiceErrorBanner title="Search Error" serviceName="logbook" error={searchResultError}/> : null}
             <ContentContainer id='log-entries-view-content'>
                 <StyledFilters {...{
-                    logbooks,
-                    tags,
                     showFilters
                 }}/>
                 <StyledSearchResultList {...{

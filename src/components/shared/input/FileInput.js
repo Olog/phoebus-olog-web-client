@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { MdFileUpload } from "react-icons/md";
-import { Typography, styled } from "@mui/material";
+import { Box, Typography, styled } from "@mui/material";
+import BackupIcon from '@mui/icons-material/Backup';
+import CloudOffIcon from '@mui/icons-material/CloudOff';
 
 const StyledDroppableFileUploadArea = styled("div")`
     width: 100%;
@@ -12,7 +13,7 @@ const StyledDroppableFileUploadArea = styled("div")`
     border: 5px dashed #ddd;
     border-radius: 20px;
     padding: 1rem;
-    color: #777;
+    color: ${({theme, disabled}) => disabled ? theme.palette.grey[400] : theme.palette.grey[600]};
 
     &.dragging-over {
         border-color: #777;
@@ -20,7 +21,7 @@ const StyledDroppableFileUploadArea = styled("div")`
     }
 
     &:hover {
-        cursor: pointer;
+        cursor: ${({disabled}) => disabled ? "not-allowed" : "pointer"};
     }
 
     & input {
@@ -39,7 +40,7 @@ const StyledClickableArea = styled("div")`
     text-align: center;
 `
 
-export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple, accept, dragLabel, browseLabel, maxFileSizeMb}) => {
+export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple, accept, dragLabel, browseLabel, maxFileSizeMb, disabled}) => {
 
     const fileInputRef = useRef();
     const [error, setError] = useState("");
@@ -75,6 +76,9 @@ export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple
 
     const handleDragEnter = (event) => {
         event.preventDefault();
+        if(disabled) {
+            return;
+        }
         dragAreaRef.current.classList.add('dragging-over')
     }
 
@@ -85,6 +89,9 @@ export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple
 
     const handleDrop = (event) => {
         event.preventDefault();
+        if(disabled) {
+            return;
+        }
         const dataTransfer = event.dataTransfer;
         internalOnFileChanged(dataTransfer.files);
         dragAreaRef.current.classList.remove('dragging-over')
@@ -98,10 +105,19 @@ export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple
             onDragOver={handleDragEnter} 
             onDragLeave={handleDragLeave}
             className={className}
+            disabled={disabled}
         >
             <StyledClickableArea onClick={onClick}>
-                <MdFileUpload size={'5rem'}/>
-                <label htmlFor={id} >{browseLabel} <strong>{dragLabel}</strong></label>
+                {/* <MdFileUpload size={'5rem'}/> */}
+                <Box fontSize="5rem">
+                    {disabled ? <CloudOffIcon fontSize="inherit" /> : <BackupIcon fontSize="inherit"/> }
+                </Box>
+                <label htmlFor={id} >
+                    {disabled ?
+                        "File Upload Disabled"
+                        : <>{browseLabel} <strong>  {dragLabel}</strong></> }
+                </label>
+
             </StyledClickableArea>
             <input
                 id={id}
@@ -111,6 +127,7 @@ export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple
                 multiple={multiple}
                 accept={accept}
                 hidden
+                disabled={disabled}
             />
             {error ? <Typography variant="body2" fontStyle="italic" color="error">{error}</Typography> : null}
         </StyledDroppableFileUploadArea>

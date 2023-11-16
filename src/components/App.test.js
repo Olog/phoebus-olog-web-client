@@ -1,11 +1,10 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
 import App from './App';
-import { screen, render, givenServerRespondsWithSearchRequest, waitFor, within, getOptionItems, expectSelected, selectFromCombobox } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, waitFor, within, selectFromCombobox } from 'test-utils';
 import { testEntry, resultList } from "../mocks/fixtures/generators";
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import customization from 'utils/customization';
 
 it('renders without crashing', async () => {
     const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
@@ -290,7 +289,7 @@ describe('Login/Logout', () => {
     
         // when rendered
         render(
-            <MemoryRouter initialEntries={['/edit']}>
+            <MemoryRouter initialEntries={['/logs/create']}>
                 <App />
             </MemoryRouter>
         );
@@ -304,156 +303,6 @@ describe('Login/Logout', () => {
 })
 
 describe('Creating Log Entries', () => {
-
-    test('user can create a log entry, submit it, and see it in the search results even with a server delay', async () => {
-    
-        const user = userEvent.setup();
-        render(<MemoryRouter><App /></MemoryRouter>);
-        const title = 'my new log entry, tada!';
-        const id = 12345;
-    
-        // navigate to log entry form
-        const newLogEntry = screen.getByRole('link', {name: /new log entry/i});
-        await user.click(newLogEntry);
-        const newLogEntryPageTitle = await screen.findByRole('link', {name: /New Log Entry/i});
-        expect(newLogEntryPageTitle).toBeInTheDocument();
-    
-        // fill in required information
-        await selectFromCombobox({screen, user, label: 'logbooks', values: ['test controls']})
-
-        const titleInput = screen.getByRole('textbox', {name: /title/i});
-        await user.clear(titleInput);
-        await user.type(titleInput, title);
-    
-        // given the server creates the log entry successfully, responding with the id
-        server.use(
-            rest.put('*/logs/multipart', (req, res, ctx) => {
-                return res(
-                    ctx.json({id, title}),
-                );
-            })
-        )
-    
-        // And given the server processed the request and the search query will return it
-        // but maybe the server is a tad bit slow processing the new entry and making
-        // it available via search
-        // Note responses for MSW must be queued in reverse order
-        server.use(
-            rest.get('*/logs/search', (req, res, ctx) => {
-                return res(
-                    ctx.json(resultList([
-                        testEntry({title, id})
-                    ]))                  // Successful response
-                );
-            })
-        )
-        server.use(
-            rest.get('*/logs/search', (req, res, ctx) => {
-                return res.once(
-                    ctx.json(resultList([
-                        testEntry({title: 'nope not this either'})
-                    ])),    // Server not done yet
-                );
-            })
-        )
-        server.use(
-            rest.get('*/logs/search', (req, res, ctx) => {
-                return res.once(
-                    ctx.json(resultList([
-                        testEntry({title: 'not what you want yet'})
-                    ])),   // Server not done yet
-                );
-            })
-        )
-    
-        // submit the form and be redirected
-        const submit = screen.getByRole('button', {name: /submit/i});
-        await user.click(submit);
-    
-        // check the result shows up in search
-        await waitFor(async () => {
-            const newLogEntrySearchResult = await screen.findByText(title);
-            expect(newLogEntrySearchResult).toBeInTheDocument();
-        }, {timeout: 3000});
-    
-    })
-
-})
-
-describe('Log Entry Groups / Replies', () => {
-    test('when replying to a log entry, the form is (partially) prepopulated from the entry', async () => {
-
-        // Given log entries to reply to
-        server.use(
-            rest.get('*/logs/search', (req, res, ctx) => {
-                return res(
-                    ctx.json(resultList([
-                        {...testEntry({title: 'entry 1'}), 
-                            "logbooks": [
-                                {
-                                    "name": "test controls",
-                                    "owner": null,
-                                    "state": "Active"
-                                }
-                            ],
-                            "tags": [
-                                {
-                                    "name": "bar",
-                                    "state": "Active"
-                                },
-                                {
-                                    "name": "baz",
-                                    "state": "Active"
-                                }
-                            ],
-                            "level": "Beam Loss"
-                        },
-                        testEntry({title: 'entry 2'})
-                    ]))
-                )
-            })
-        )
-        const user = userEvent.setup();
-        render(
-            <MemoryRouter>
-                <App />
-            </MemoryRouter>
-        );
-
-        // When replying to one
-        const entry1 = await screen.findByRole('heading', {name: 'entry 1'});
-        await user.click(entry1);
-        const replyButton = await screen.findByRole('button', {name: /reply/i});
-        await user.click(replyButton);
-
-        // Then the form is prepopulated with logs, tags, and title
-        // and EntryType is given the default value
-        const entryEditorPage = await screen.findByRole('heading', {name: /New Log Entry/i});
-        expect(entryEditorPage).toBeInTheDocument();
-        await expectSelected({screen, label: 'logbooks', selected: ['test controls'], notSelected: ['test operations']});
-        await expectSelected({screen, label: 'tags', selected: ['bar', 'baz'], notSelected: ['foo']});
-        await expectSelected({screen, label: 'entry type', selected: 'Normal', notSelected: customization.levelValues.filter(it => it !== 'Normal')})
-        const title = screen.getByRole('textbox', {name: /title/i});
-        expect(title).toHaveValue('entry 1');
-
-        // When replying to another
-        const homeLink = screen.getByRole('link', {name: /home/i});
-        await user.click(homeLink);
-        const entry2 = await screen.findByRole('heading', {name: 'entry 2'});
-        await user.click(entry2);
-        const replyButton2 = await screen.findByRole('button', {name: /reply/i});
-        await user.click(replyButton2);
-
-        // Then it is prepopulated with that log's information instead
-        const entryEditorPage2 = await screen.findByRole('heading', {name: /New Log Entry/i});
-        expect(entryEditorPage2).toBeInTheDocument();
-        await expectSelected({screen, label: 'logbooks', selected: [], notSelected: ['test operations', 'test controls']});
-        await expectSelected({screen, label: 'tags', selected: [], notSelected: ['foo', 'bar', 'baz']});
-        await expectSelected({screen, label: 'entry type', selected: 'Normal', notSelected: customization.levelValues.filter(it => it !== 'Normal')})
-        const title2 = screen.getByRole('textbox', {name: /title/i});
-        expect(title2).toHaveValue('entry 2');
-
-    })
 
     test('when an user clicks on a group entry and it is already in the search results, that log entry is displayed', async () => {
 

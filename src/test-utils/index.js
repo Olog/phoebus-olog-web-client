@@ -19,10 +19,9 @@
 import { server } from "mocks/server";
 import { rest } from "msw";
 import { render, within } from "@testing-library/react";
-import { setupStore } from "../stores";
+import { setupStore } from "../features/store";
 import { resultList, testEntry } from "../mocks/fixtures/generators";
 import { AppWrapper } from "./wrappers";
-import { theme, styledComponentsTheme } from "../config/theme";
 
 const renderWithProviders = (
     ui, 
@@ -34,7 +33,7 @@ const renderWithProviders = (
 ) => {
     const Wrapper = ({children}) => {
         return (
-            <AppWrapper {...{store, theme, styledComponentsTheme}} >
+            <AppWrapper store={store} >
                 {children}
             </AppWrapper>
         )

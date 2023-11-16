@@ -1,19 +1,62 @@
-import styled from "styled-components";
+import { Button, Link as MuiLink } from "@mui/material";
+import React from "react";
 
-const StyledExternalLink = styled.a`
-    display: flex;
-    gap: 0.25rem;
-    align-items: center;
+const Link = ({
+  LinkComponent = MuiLink,
+  href,
+  text,
+  label,
+  newTab = true,
+  className,
+  ...props
+}) => {
+  return (
+    <LinkComponent
+      href={href}
+      target={newTab ? "_blank" : "_self"}
+      aria-label={`${label ?? text}${newTab ? ". Opens in new tab" : ""}`}
+      className={className}
+      {...props}
+    >
+      {text}
+    </LinkComponent>
+  );
+};
 
-    &, & > * {
-        color: ${({theme}) => theme.colors.primary} !important;
-        font-style: italic;
-        text-decoration: underline;
-    }
-`
+export const ExternalLink = ({
+  href,
+  label,
+  text,
+  newTab,
+  className,
+  ...props
+}) => {
+  return (
+    <Link
+      {...{ href, label, text, newTab, className }}
+      {...props}
+    >
+      {text}
+    </Link>
+  );
+};
 
-const ExternalLink = ({href, children}) => {
-    return <StyledExternalLink href={href} rel="noopener noreferrer" target='_blank' >{children}</StyledExternalLink>
-}
-
-export default ExternalLink;
+export const ExternalButtonLink = ({
+  href,
+  label,
+  text,
+  newTab,
+  className,
+  ...props
+}) => {
+  return (
+    <Link
+      LinkComponent={Button}
+      component={MuiLink}
+      {...{ href, label, text, newTab, className }}
+      {...props}
+    >
+      {text}
+    </Link>
+  );
+};

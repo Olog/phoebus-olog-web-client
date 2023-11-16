@@ -16,14 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React from 'react';
-import customization from 'utils/customization';
-import {getLogEntryGroupId} from 'utils';
+import customization from 'config/customization';
+import { getLogEntryGroupId } from '../Properties/utils';
 import LogEntryGroupView from './LogEntryGroupView';
 import LogEntrySingleView from './LogEntrySingleView';
-import {Link, useHref, useLocation} from "react-router-dom";
+import { useHref, useLocation } from "react-router-dom";
 import NavigationButtons from './NavigationButtons';
 import styled from 'styled-components';
 import { Button, Divider, Stack } from '@mui/material';
+import { InternalButtonLink } from 'components/shared/InternalLink';
+import { useUser } from 'features/authSlice';
 
 
 const Container = styled.div`
@@ -52,23 +54,30 @@ const LogDetails = ({
     showGroup, setShowGroup, 
     currentLogEntry,
     logGroupRecords, setLogGroupRecords, 
-    userData, 
-    setReplyAction,
     searchResults,
     className
 }) => {
 
+    const user = useUser();
+
+    const renderedEditButton = customization.log_edit_support ? 
+        <InternalButtonLink 
+            to={`/logs/${currentLogEntry?.id}/edit`}
+            disabled={!user || !user.userName}
+            variant="contained"
+        >
+            Edit
+        </InternalButtonLink> : null;
+
     const renderedReplyButton = customization.log_entry_groups_support ?
-        <Link to="/edit">
-            <Button 
-                variant="contained"
-                disabled={!userData || !userData.userName}
-                onClick={() => setReplyAction(true)}
-                sx={{height: "100%"}}
-            >
-                Reply
-            </Button>
-        </Link> : null;
+        <InternalButtonLink
+            to={`/logs/${currentLogEntry?.id}/reply`}
+            variant="contained"
+            disabled={!user || !user.userName}
+            sx={{height: "100%"}}
+        >
+            Reply
+        </InternalButtonLink> : null;
 
     const currentPath = useHref(useLocation());
 
@@ -90,8 +99,7 @@ const LogDetails = ({
     ?   <StyledLogEntryGroupView {...{
             showGroup, setShowGroup, 
             currentLogEntry,
-            userData, 
-            setReplyAction, 
+            user, 
             logGroupRecords, setLogGroupRecords, 
         }}/> 
     :   <StyledLogEntrySingleView 
@@ -106,6 +114,7 @@ const LogDetails = ({
                     searchResults,
                 }} order={0}/>
                 <Stack flexDirection="row" gap={1} order={2} sx={{flexBasis: ["100%", "auto"]}}>
+                    {renderedEditButton}
                     {renderedReplyButton}
                     {renderedShowGroupButton}
                 </Stack>

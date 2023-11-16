@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import { useController } from 'react-hook-form';
-import { Autocomplete, TextField, styled } from '@mui/material';
+import { Autocomplete, CircularProgress, TextField, styled } from '@mui/material';
 
 const MultiSelect = styled( ({name, label, control, rules, defaultValue, className, options=[], onChange, getOptionLabel, isOptionEqualToValue, isMulti, ...props}) => {
 
@@ -38,6 +38,20 @@ const MultiSelect = styled( ({name, label, control, rules, defaultValue, classNa
                     label={label} 
                     error={Boolean(fieldState?.error)} 
                     helperText={fieldState.error ? `Error: ${fieldState?.error?.message}` : null} 
+                    InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {props?.loading ? (
+                              <CircularProgress
+                                color="inherit"
+                                size={20}
+                              />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        )
+                    }}
                 />
             }
             multiple={isMulti}

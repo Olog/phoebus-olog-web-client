@@ -18,60 +18,69 @@
 
 import React, { useEffect, useState } from 'react';
 import Modal from '../shared/Modal';
-import ologService from 'api/olog-service';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import { Alert, Button, Stack } from '@mui/material';
+import { useLoginMutation } from 'api/ologApi';
+import { useShowLogin } from 'features/authSlice';
 
-const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
+const LoginDialog = () => {
 
   const {control, handleSubmit, reset, resetField, setFocus} = useForm();
-  const [loginError, setLoginError] = useState('');
+  const [loginErrorMessage, setLoginErrorMessage] = useState("");
+  const [login, { isSuccess, error }] = useLoginMutation();
+  const {showLogin, setShowLogin} = useShowLogin();
 
   const closeAndReset = () => {
-      setLoginError("");
+      setLoginErrorMessage("")
       setShowLogin(false);
       // clear form data
       reset();
   }
 
-  const login = (data) => {
-    
-    const formData = new FormData();
-    formData.append("username", data.username);
-    formData.append("password", data.password);
-    
-    ologService.post('/login', formData,  { withCredentials: true })
-    .then(res => {
-        setLoginError("");
-        setUserData(res.data);
-        closeAndReset();
-    })
-    .catch((error) => {
-      console.error({error})
-      if(!error.response){
-        setLoginError("Login failed. Unable to connect to service.");
-      }
-      if(error.response.status === 401) {
-        setLoginError("Login failed, invalid credentials.");
-      }
-      // clear bad creds field
-      resetField("password");
-      setFocus('password', {shouldSelect: true});
-    });
+  const handleLogin = (data) => {
+    const {username, password} = data;
+    login({username, password});
   }
 
+  // close the window if login was successful
   useEffect(() => {
-    reset();
-  }, [reset]);
+    if(isSuccess) {
+      reset();
+      setLoginErrorMessage("");
+      setShowLogin(false);
+    }
+  }, [isSuccess, setShowLogin, reset]);
+
+  // set error message on errors
+  useEffect(() => {
+    if(error) {
+      if(error.status === "FETCH_ERROR"){
+        setLoginErrorMessage("Login failed. Unable to connect to service.");
+      }
+      if(error.status === 401) {
+        setLoginErrorMessage("Login failed, invalid credentials.");
+      }
+      // clear bad creds field & bring focus to it
+      resetField("password");
+      setFocus('password', {shouldSelect: true});
+    }
+  }, [error, resetField, setFocus])
   
+  // reset the form when re-shown
+  useEffect(() => {
+    if(showLogin) {
+      reset();
+    }
+  }, [reset, showLogin])
+
   return(
     <Modal 
-      open={loginDialogVisible} 
+      open={showLogin}
       onClose={closeAndReset} 
       title="Sign In"
       content={
-        <Stack component="form" onSubmit={handleSubmit(login)} gap={1} marginY={2}>
+        <Stack component="form" onSubmit={handleSubmit(handleLogin)} gap={1} marginY={2}>
           {/* Hidden button handles submit-on-enter automatically */}
           <Button type="submit" hidden tabIndex={-1}/>
           <TextInput 
@@ -87,17 +96,17 @@ const LoginDialog = ({setUserData, setShowLogin, loginDialogVisible}) => {
             defaultValue=''
             inputProps={{type: "password"}}
           />
-          {loginError ? <Alert severity="error">{loginError}</Alert> : null}
+          {loginErrorMessage ? <Alert severity="error">{loginErrorMessage}</Alert> : null}
         </Stack>
       }
       actions={
         <>
-          <Button variant="contained" type="submit" onClick={handleSubmit(login)}>
-            Login
-          </Button>
           <Button variant="outlined" type="button" onClick={closeAndReset}>
             Cancel
           </Button>        
+          <Button variant="contained" type="submit" onClick={handleSubmit(handleLogin)}>
+            Login
+          </Button>
         </>
       }
     />

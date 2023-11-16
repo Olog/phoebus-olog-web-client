@@ -16,10 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import React from 'react';
-import { formatFullDateTime, getLogEntryGroupId } from 'utils';
-import { Stack, Typography, styled } from "@mui/material";
+import { Stack, Tooltip, Typography, styled } from "@mui/material";
 import ReplyIcon from '@mui/icons-material/Reply';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { formatFullDateTime } from 'lib/moment';
+import { getLogEntryGroupId } from 'components/Properties/utils';
 
 const LogInfo = styled("div")`
     display: flex;
@@ -43,7 +44,16 @@ const SearchResultItem = ({log}) => {
     return (
         <Stack width="100%">
             <Stack flexDirection="row" justifyContent="space-between">
-                <Typography variant="body1" component="h3" >{log.title}</Typography>
+                <Tooltip title={log.title}>
+                    <Typography 
+                        variant="body1" 
+                        component="h3" 
+                        noWrap
+                        textOverflow="ellipsis"
+                    >
+                        {log.title}
+                    </Typography>
+                </Tooltip>
                 <Stack flexDirection="row" >
                     {isGroupEntry ? <ReplyIcon titleAccess="grouped" role="status" /> : null}
                     {log.attachments && log.attachments.length  !== 0 ? <AttachFileIcon titleAccess='has attachments' role='status' /> : null}

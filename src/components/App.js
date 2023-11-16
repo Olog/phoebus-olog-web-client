@@ -16,18 +16,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Route,
   Routes
 } from "react-router-dom";
 import Banner from './Banner';
-import EntryEditor from './EntryEditor';
 import LogEntriesView from './LogEntriesView';
 import { useSelector } from 'react-redux';
-import { useGetLogbooksQuery, useGetTagsQuery } from 'services/ologApi';
 import { Box } from '@mui/material';
 import Initialize from './Initialize';
+import EditLogView from 'views/EditLogView';
+import CreateLogView from 'views/CreateLogView';
+import ReplyLogView from 'views/ReplyLogView';
+import LogHistoryView from 'views/LogHistoryView';
 
 /**
  * Entry point component.
@@ -35,20 +37,7 @@ import Initialize from './Initialize';
 
 const App = () => {
 
-    const [userData, setUserData] = useState({userName: "", roles: []});
-    const {data: tags = [], error: tagsError} = useGetTagsQuery();
-    const {data: logbooks = [], error: logbooksError} = useGetLogbooksQuery();
-    const [replyAction, setReplyAction] = useState(false);
-    const [showLogin, setShowLogin] = useState(false);
-    const [showLogout, setShowLogout] = useState(false);
     const currentLogEntry = useSelector(state => state.currentLogEntry);
-
-    if(tagsError) {
-        console.error("Unable to fetch tags", tagsError);
-    }
-    if(logbooksError) {
-        console.error("Unable to fetch tags", logbooksError);
-    }
 
     return(
         <Box id='app-viewport' 
@@ -58,12 +47,7 @@ const App = () => {
                 flexDirection: "column"
         }}>
             <Initialize>
-                <Banner {...{
-                    showLogin, setShowLogin,
-                    showLogout, setShowLogout,
-                    userData, setUserData,
-                    setReplyAction
-                }}/>
+                <Banner />
                 <Box id='app-content' 
                     sx={{
                         overflow: "auto",
@@ -72,29 +56,24 @@ const App = () => {
                     <Routes>
                         <Route exact path="/" element={
                             <LogEntriesView {...{
-                                tags, 
-                                logbooks,
-                                userData,
-                                setReplyAction, 
                                 currentLogEntry
                             }}/>
+                        } />
+                        <Route exact path="/logs/create" element={
+                            <CreateLogView />
+                        } />
+                        <Route exact path="/logs/:id/edit" element={
+                            <EditLogView />
+                        } />
+                        <Route exact path="/logs/:id/reply" element={
+                            <ReplyLogView />
+                        } />
+                        <Route exact path="/logs/:id/history" element={
+                            <LogHistoryView />
                         } />
                         <Route exact path="/logs/:id" element={
                             <LogEntriesView {...{
-                                tags, 
-                                logbooks,
-                                userData,
-                                setReplyAction, 
                                 currentLogEntry
-                            }}/>
-                        } />
-                        <Route path="/edit" element={
-                            <EntryEditor {...{
-                                tags,
-                                logbooks,
-                                replyAction, setReplyAction,
-                                userData, setUserData,
-                                setShowLogin
                             }}/>
                         } />
                     </Routes>

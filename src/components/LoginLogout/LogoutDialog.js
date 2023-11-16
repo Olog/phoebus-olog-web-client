@@ -16,58 +16,61 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import ologService from 'api/olog-service';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal from 'components/shared/Modal';
-import { useRef } from 'react';
 import { Alert, Button } from '@mui/material';
+import { useLogoutMutation } from 'api/ologApi';
+import { useShowLogout } from 'features/authSlice';
 
 const Form = styled.form``;
 
-const LogoutDialog = ({logoutDialogVisible, setShowLogout, setUserData}) => {
+const LogoutDialog = () => {
 
-  const [logoutError, setLogoutError] = useState("");
-  const logoutButtonRef = useRef();
+  const [logoutErrorMessage, setLogoutErrorMessage] = useState("");
+  const [logout, { isSuccess, error}] = useLogoutMutation();
+  const {showLogout, setShowLogout} = useShowLogout();
 
   const hideLogout = () => {
-      setLogoutError("");
+      setLogoutErrorMessage("");
       setShowLogout(false);
   }
 
-  const logout = () => {
-    ologService.get('/logout', { withCredentials: true })
-      .then(res => {
-        setLogoutError('');
-        setUserData({userName: "", roles: []});
-        hideLogout();
-      }, error => { 
-        if(!error.response){
-          setLogoutError("Logout failed. Unable to connect to service.");
-        }
-    });
-  }
+  // On logout success, close dialog
+  useEffect(() => {
+    if(isSuccess) {
+      setShowLogout(false);
+    }
+  }, [isSuccess, setShowLogout])
+
+  // On error, update error message
+  useEffect(() => {
+    if(error) {
+      if(error.status === "FETCH_ERROR"){
+        setLogoutErrorMessage("Logout failed. Unable to connect to service.");
+      }
+    }
+  }, [error])
 
   return(
     <Modal 
-      open={logoutDialogVisible} 
-      onClose={hideLogout} 
+      open={showLogout} 
       title="Log out?"
       content={
         <Form>
           <br />
           <p>Would you like to logout?</p>
           <br />
-          {logoutError ? <Alert severity="error">{logoutError}</Alert> : null}
+          {logoutErrorMessage ? <Alert severity="error">{logoutErrorMessage}</Alert> : null}
         </Form>
       }
       actions={
         <>
-          <Button variant="contained" onClick={logout} innerRef={logoutButtonRef} > 
-            Logout
-          </Button>
           <Button variant="outlined" onClick={hideLogout} >
             Cancel
+          </Button>
+          <Button variant="contained" onClick={logout} > 
+            Logout
           </Button>
         </>
       }

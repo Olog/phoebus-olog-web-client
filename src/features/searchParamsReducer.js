@@ -1,36 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "universal-cookie";
-import customization from "utils/customization";
-import {v4 as uuidv4} from 'uuid';
+import customization from "config/customization";
+import { withCacheBust } from "hooks/useSanitizedSearchParams";
 
 const cookies = new Cookies();
 // const initialState = cookies.get(customization.searchParamsCookie) || {...customization.defaultSearchParams};
 // cookies.set(customization.searchParamsCookie, initialState, {path: '/', maxAge: '100000000'}); 
 export const defaultSearchParamsState = {...customization.defaultSearchParams};
 
-const removeEmptyKeys = (obj, exceptions=[]) => {
-    const copy = {...obj};
-    for(let key of Object.keys(copy).filter(it => exceptions.indexOf(it) === -1)) {
-        const val = copy[key];
-        if(Array.isArray(val) && val.length === 0) {
-            delete copy[key];
-            continue;
-        }
-        if(typeof val === 'string' || val instanceof String) {
-            if(val.trim() === '') {
-                delete copy[key]
-            }
-        }
-    }
-    return copy;
-}
-
 export const searchParamsSlice = createSlice({
     name: 'searchParams',
     initialState: defaultSearchParamsState,
     reducers: {
         updateSearchParams: (state, action) => {
-            const searchParams = removeEmptyKeys(action.payload);
+            const searchParams = action.payload;
             cookies.set(customization.searchParamsCookie, searchParams, {path: '/', maxAge: '100000000'}); 
             return searchParams;
         }
@@ -43,10 +26,7 @@ export const searchParamsSlice = createSlice({
 // So we force a change by adding a cacheBust param (which must be
 // later removed before an API call)
 export const forceUpdateSearchParams = (searchParams) => {
-    return updateSearchParams({
-        ...searchParams,
-        cacheBust: uuidv4()
-    })
+    return updateSearchParams(withCacheBust(searchParams));
 }
 
 export const { updateSearchParams } = searchParamsSlice.actions;

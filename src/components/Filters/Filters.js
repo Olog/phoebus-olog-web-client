@@ -15,7 +15,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import MultiSelect from 'components/shared/input/MultiSelect';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { forceUpdateSearchParams } from 'features/searchParamsReducer';
@@ -25,26 +24,29 @@ import TextInput from 'components/shared/input/TextInput';
 import WizardDateInput from 'components/shared/input/WizardDateInput';
 import RadioInput from 'components/shared/input/RadioInput';
 import { Button, Stack } from '@mui/material';
-import customization from 'utils/customization';
+import customization from 'config/customization';
+import TagsMultiSelect from 'components/shared/input/managed/TagsMultiSelect';
+import LogbooksMultiSelect from 'components/shared/input/managed/LogbooksMultiSelect';
 
 /**
  * Component holding search criteria elements, i.e.
  * logbooks, tags and time range.
  */
-const Filters = ({showFilters, logbooks, tags, className}) => {
+const Filters = ({showFilters, className}) => {
 
     const dispatch = useDispatch();
     const searchParams = useSelector(state => state.searchParams);
     const searchPageParams = useSelector(state => state.searchPageParams);
-    const form = useForm({defaultValues: {...searchParams, sort: searchPageParams.sort}});
+    const form = useForm({
+        defaultValues: {...searchParams, sort: searchPageParams.sort},
+        values: {...searchParams, sort: searchPageParams.sort}
+    });
     
     const { control, handleSubmit, getValues } = form;
     
     const onSubmit = (data) => {
         const updatedSearchParams = {
-            ...data, 
-            logbooks: typeof data?.logbooks === 'string' ? [data.logbooks] : data.logbooks ?? [],
-            tags: typeof data?.tags === 'string' ? [data.tags] : data.tags ?? []
+            ...data
         };
         if(data.sort) {
             delete updatedSearchParams.sort;
@@ -97,23 +99,13 @@ const Filters = ({showFilters, logbooks, tags, className}) => {
                         control={control}
                         defaultValue=''
                     />
-                    <MultiSelect 
-                        name='logbooks'
-                        label='Logbooks'
+                    <LogbooksMultiSelect 
                         control={control}
-                        defaultValue={[]}
-                        options={logbooks?.map(it => it.name) ?? []}
                         onChange={(field, value) => onSearchParamFieldValueChanged(field, value, true)}
-                        isMulti
                     />
-                    <MultiSelect 
-                        name='tags'
-                        label='Tags'
+                    <TagsMultiSelect 
                         control={control}
-                        defaultValue={[]}
-                        options={tags?.map(it => it.name) ?? []}
                         onChange={(field, value) => onSearchParamFieldValueChanged(field, value, true)}
-                        isMulti
                     />
                     <TextInput 
                         name='owner'
