@@ -1,13 +1,12 @@
 import { server } from 'mocks/server';
 import { rest } from 'msw';
-import App from './App';
-import { screen, render, givenServerRespondsWithSearchRequest, waitFor, within, selectFromCombobox } from 'test-utils';
+import { screen, render, givenServerRespondsWithSearchRequest, within, selectFromCombobox } from 'test-utils/rtl-utils';
 import { testEntry, resultList } from "../mocks/fixtures/generators";
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { TestRouteProvider } from 'test-utils/router-utils';
 
 it('renders without crashing', async () => {
-    const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
+    const { unmount } = render(<TestRouteProvider />);
 
     // cleanup lingering network resources
     unmount();
@@ -17,7 +16,7 @@ describe('Search Results', () => {
 
     it('renders with a default search result', async () => {
     
-        render(<MemoryRouter><App /></MemoryRouter>);
+        render(<TestRouteProvider />);
     
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
@@ -27,7 +26,7 @@ describe('Search Results', () => {
 
         // Given app is rendered with default search results
         const user = userEvent.setup();
-        render(<MemoryRouter><App /></MemoryRouter>);
+        render(<TestRouteProvider />);
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
         // When user selects the search box and hits enter
@@ -59,7 +58,7 @@ describe('Search Results', () => {
     
         // Given app is rendered with default search results
         const user = userEvent.setup();
-        render(<MemoryRouter><App /></MemoryRouter>);
+        render(<TestRouteProvider />);
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
         // And given the server will respond with updated search results
@@ -91,7 +90,7 @@ describe('Search Results', () => {
     
         // Given app is rendered with default search results
         const user = userEvent.setup();
-        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
+        const { unmount } = render(<TestRouteProvider />);
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
         // Given the server responds with updated search results
@@ -120,7 +119,7 @@ describe('Search Results', () => {
     
         // Given app is rendered with default search results
         const user = userEvent.setup();
-        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
+        const { unmount } = render(<TestRouteProvider />);
         expect(await screen.findByText("example entry")).toBeInTheDocument();
     
         // When user opens the filter bar, and updates the query without closing it
@@ -162,9 +161,7 @@ describe('Search Results', () => {
 
         // When navigated to that log directly
         const { unmount } = render(
-            <MemoryRouter initialEntries={[`/logs/${id}`]}>
-                <App />
-            </MemoryRouter>
+            <TestRouteProvider initialEntries={[`/logs/${id}`]} />
         );
 
         // Then we expect to find that entry on the page
@@ -190,9 +187,7 @@ describe('Search Results', () => {
 
         // When navigated to that log directly
         const { unmount } = render(
-            <MemoryRouter initialEntries={[`/logs/${id}`]}>
-                <App />
-            </MemoryRouter>
+            <TestRouteProvider initialEntries={[`/logs/${id}`]} />
         );
 
         // Then we expect to find that entry on the page
@@ -218,7 +213,7 @@ describe('App Errors', () => {
         );
     
         // When rendered
-        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
+        const { unmount } = render(<TestRouteProvider />);
     
         // Then an error message is present
         expect(await screen.findByText(/Search Error/i)).toBeInTheDocument();
@@ -244,7 +239,7 @@ describe('Login/Logout', () => {
         );
     
         // When rendered
-        const { unmount } = render(<MemoryRouter><App /></MemoryRouter>);
+        const { unmount } = render(<TestRouteProvider />);
     
         // Then the user is logged out
         expect(await screen.findByRole('button', {name: /Sign In/i})).toBeInTheDocument();
@@ -269,7 +264,7 @@ describe('Login/Logout', () => {
         );
     
         // When rendered
-        render(<MemoryRouter><App /></MemoryRouter>);
+        render(<TestRouteProvider />);
     
         // Then the user is logged in 
         expect(await screen.findByRole('button', {name:/garfieldHatesMondays/i})).toBeInTheDocument();
@@ -289,9 +284,7 @@ describe('Login/Logout', () => {
     
         // when rendered
         render(
-            <MemoryRouter initialEntries={['/logs/create']}>
-                <App />
-            </MemoryRouter>
+            <TestRouteProvider initialEntries={['/logs/create']} />
         );
     
         // then login is displayed
@@ -351,11 +344,7 @@ describe('Creating Log Entries', () => {
         )
 
         const user = userEvent.setup();
-        const { unmount } = render(
-            <MemoryRouter>
-                <App />
-            </MemoryRouter>
-        );
+        const { unmount } = render(<TestRouteProvider />);
 
         // When user navigates to the group view and clicks and entry
         const entry1Result = await screen.findByRole('heading', {name: entry1.title});
@@ -432,11 +421,7 @@ describe('Creating Log Entries', () => {
         )
         
         const user = userEvent.setup();
-        const { unmount } = render(
-            <MemoryRouter>
-                <App />
-            </MemoryRouter>
-        );
+        const { unmount } = render(<TestRouteProvider />);
 
         // When user navigates to the group view and clicks and entry
         const entry1Result = await screen.findByRole('heading', {name: entry1.title});

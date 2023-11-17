@@ -85,9 +85,9 @@ const LogDetailsContainer = styledComponentsStyled.div`
     `)}
 `
 
-const LogEntriesView = ({
-    currentLogEntry
-}) => {
+const LogEntriesView = () => {
+
+    const currentLogEntry = useSelector(state => state.currentLogEntry);
 
     const [showFilters, setShowFilters] = useState(false);
     const [showGroup, setShowGroup] = useState(false);

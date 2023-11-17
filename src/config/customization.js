@@ -88,6 +88,11 @@ let customization = {
      * Base URL pointing to the Olog service. Required in order to support imbedded into the description (body) of a log entry.
      */
     APP_BASE_URL: process.env.REACT_APP_BASE_URL, // e.g. http://localhost:8080/Olog
+
+    /**
+     * Enable/Disable the beta feature
+     */
+    ENABLE_BETA: process.env.REACT_APP_ENABLE_BETA === "true"
 }
 
 export default customization;
