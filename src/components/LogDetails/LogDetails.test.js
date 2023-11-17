@@ -1,5 +1,5 @@
 import { MemoryRouter } from 'react-router-dom';
-import {render, screen } from 'test-utils';
+import {render, screen } from 'test-utils/rtl-utils';
 import { testEntry } from 'mocks/fixtures/generators';
 import LogDetails from '.';
 

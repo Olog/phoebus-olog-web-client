@@ -24,6 +24,8 @@ import SkipToContent from 'components/shared/SkipToContent';
 import { AppBar, Toolbar, Typography, Button, styled, Link as MuiLink } from '@mui/material';
 import { InternalButtonLink } from "components/shared/InternalLink";
 import { useShowLogin, useShowLogout, useUser } from "features/authSlice";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import customization from "config/customization";
 
 const NavHeader = styled("ul")`
   display: flex;
@@ -33,6 +35,7 @@ const NavHeader = styled("ul")`
 const NavFooter = styled("ul")`
   display: flex;
   align-items: center;
+  gap: 1rem;
 `
 /**
  * Banner component with controls to create log entry, log book or tag. Plus
@@ -75,12 +78,24 @@ export const Banner = () => {
             </MuiLink>
           </li>
           <li>
-            <InternalButtonLink to="/logs/create" variant="contained" >
+            <InternalButtonLink to="/logs/create" variant="contained">
               New Log Entry
             </InternalButtonLink>      
           </li>
         </NavHeader>
         <NavFooter>
+          {customization.ENABLE_BETA ? 
+            <li>
+              <InternalButtonLink
+                to="/beta"
+                variant="contained"
+                aria-label="Navigate to Beta App"
+                endIcon={<AutoAwesomeIcon />}
+              >
+                Try Beta UI! 
+              </InternalButtonLink>
+            </li> : null
+          }
           <li>
             <Button onClick={handleClick} variant="contained" >
               {user?.userName ? user.userName : 'Sign In'}

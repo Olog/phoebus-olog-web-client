@@ -1,9 +1,8 @@
-import { MemoryRouter } from "react-router-dom";
-import App from "./App";
 import { resultList, testEntry } from "../mocks/fixtures/generators";
 import customization from "config/customization";
 import { defaultSearchPageParamsState } from "features/searchPageParamsReducer";
 import { defaultSearchParamsState } from "features/searchParamsReducer";
+import { TestRouteProvider } from "test-utils/router-utils";
 
 describe('App.cy.js', () => {
 
@@ -23,7 +22,7 @@ describe('App.cy.js', () => {
       }
     );
 
-    cy.mount(<MemoryRouter><App /></MemoryRouter>);
+    cy.mount(<TestRouteProvider />);
 
     // We can click the header from the result list to open its details
     cy.findByRole('grid', {name: /search results/i})
@@ -66,7 +65,7 @@ describe('App.cy.js', () => {
         }
       );
 
-      cy.mount(<MemoryRouter><App /></MemoryRouter>);
+      cy.mount(<TestRouteProvider />);
       
       // The user will see search results in descending order by default (newest date first)
       const descendingTitles = ['log entry 3', 'log entry 2', 'log entry 1'];
@@ -114,7 +113,7 @@ describe('App.cy.js', () => {
     ));
     
     // Then when the user loads the page
-    cy.mount(<MemoryRouter><App /></MemoryRouter>);
+    cy.mount(<TestRouteProvider />);
 
     // The search bar shows their existing search
     cy.findByRole("searchbox", {name: /search logs/i}).invoke("val").should("include", title);

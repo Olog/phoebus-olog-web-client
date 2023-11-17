@@ -6,8 +6,8 @@ describe('SearchResultListItem.cy.js', () => {
     it('grouped item includes a grouped icon', () => {
         // Given log with grouped items
         const log = {
-                ...testEntry({title:'grouped entry'}), 
-                "properties": [
+            ...testEntry({title:'grouped entry'}), 
+            "properties": [
                 {
                     "name": "Log Entry Group",
                     "owner": null,
@@ -20,7 +20,8 @@ describe('SearchResultListItem.cy.js', () => {
                         }
                     ]
                 }
-            ]};
+            ]
+        };
 
         cy.mount(
             <MemoryRouter>
@@ -57,7 +58,8 @@ describe('SearchResultListItem.cy.js', () => {
                     "filename": "Screenshot 2023-01-17 at 10.17.44.png",
                     "fileMetadataDescription": "image/png"
                 }
-            ]};
+            ]
+        };
 
         cy.mount(
             <MemoryRouter>
