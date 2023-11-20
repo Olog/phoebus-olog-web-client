@@ -16,25 +16,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 /**
  * Simple wrapper for a File object and a (pre-defined) id. The use case is when
  * adding an embedded image into the body/description markup: a unique id must be
  * determined at that point and later referenced when uploading the attachment.
  */
- export default class OlogAttachment{
-    file: File;
-    id: String;
-    filename: String;
-    fileMetadataDescription: String;
-    constructor(file, id){
-        this.file = file;
-        this.id = id;
-        this.filename = file.name
-        if(file?.type?.startsWith("image")) {
-            this.fileMetadataDescription = "image";
-        } else {
-            this.fileMetadataDescription = "file";
-        }
+export default class OlogAttachment {
+  file; // File
+  id; // String
+  filename; // String
+  fileMetadataDescription; // String
+  constructor(file, id) {
+    this.file = file;
+    this.id = id;
+    this.filename = file.name;
+    if (file?.type?.startsWith("image")) {
+      this.fileMetadataDescription = "image";
+    } else {
+      this.fileMetadataDescription = "file";
     }
- }
+  }
+}

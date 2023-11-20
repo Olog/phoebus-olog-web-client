@@ -15,50 +15,51 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import styled from 'styled-components';
-import Collapse from 'components/shared/Collapse';
+import React from "react";
+import styled from "styled-components";
+import Collapse from "components/shared/Collapse";
 
 const StyledCollapse = styled(Collapse)`
-    padding-left: 1rem;
-`
+  padding-left: 1rem;
+`;
 
 const Container = styled.div`
-    & > *:nth-child(2n) {
-        background-color: ${({theme}) => theme.colors.light};
-    }
-`
+  & > *:nth-child(2n) {
+    background-color: ${({ theme }) => theme.colors.light};
+  }
+`;
 
 const Attribute = styled.div`
-    display: flex;
-    gap: 0.5rem;
-`
+  display: flex;
+  gap: 0.5rem;
+`;
 
 const AttributeKey = styled.div`
-    font-weight: bold;
-    min-width: 3.5rem;
-    text-align: right;
-`
+  font-weight: bold;
+  min-width: 3.5rem;
+  text-align: right;
+`;
 
 const AttributeValue = styled.div`
-    font-style: italic;
-`
+  font-style: italic;
+`;
 
-const Properties = ({property}) => {
-    
-    const renderedProperties = property.attributes.map((a, index) => (
-        <Attribute key={index}>
-            <AttributeKey>{a.name}:</AttributeKey>
-            <AttributeValue>{a.value}</AttributeValue>
-        </Attribute>
-    ))
+const Properties = ({ property }) => {
+  const renderedProperties = property.attributes.map((a, index) => (
+    <Attribute key={index}>
+      <AttributeKey>{a.name}:</AttributeKey>
+      <AttributeValue>{a.value}</AttributeValue>
+    </Attribute>
+  ));
 
-    return(
-        <StyledCollapse active={true} title={property.name} >
-            <Container>
-                {renderedProperties}
-            </Container>
-        </StyledCollapse>
-    )
-}
+  return (
+    <StyledCollapse
+      active
+      title={property.name}
+    >
+      <Container>{renderedProperties}</Container>
+    </StyledCollapse>
+  );
+};
 
 export default Properties;

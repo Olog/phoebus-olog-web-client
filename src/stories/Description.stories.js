@@ -4,22 +4,24 @@ import React from "react";
 import { useForm } from "react-hook-form";
 
 export default {
-    title: "inputs/Description",
-    component: Description
-}
+  title: "inputs/Description",
+  component: Description
+};
 
 const Template = (props) => {
-    const form = useForm();
+  const form = useForm();
 
-    return (
-        <Stack padding={1}>
-            <Description {...{form}} {...props} />
-        </Stack>
-    )
-    
-}
+  return (
+    <Stack padding={1}>
+      <Description
+        {...{ form }}
+        {...props}
+      />
+    </Stack>
+  );
+};
 
 export const Default = (args) => <Template {...args} />;
 Default.args = {
-    attachmentsDisabled: false
-}
+  attachmentsDisabled: false
+};

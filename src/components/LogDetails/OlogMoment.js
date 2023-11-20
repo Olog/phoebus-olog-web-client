@@ -15,19 +15,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React from 'react'
-import Moment from 'react-moment'
-import moment from 'moment'
+import React from "react";
+import Moment from "react-moment";
+import moment from "moment";
 
-class OlogMoment extends Moment{
-
-    render(){
-        return(
-            <>
-                {moment(this.props.date).isValid() ? <Moment format="YYYY-MM-DD HH:mm:ss">{this.props.date}</Moment> : "n/a"}
-            </>
-        )
-    }
+class OlogMoment extends Moment {
+  render() {
+    return (
+      <>
+        {moment(this.props.date).isValid() ? (
+          <Moment format="YYYY-MM-DD HH:mm:ss">{this.props.date}</Moment>
+        ) : (
+          "n/a"
+        )}
+      </>
+    );
+  }
 }
 
 export default OlogMoment;

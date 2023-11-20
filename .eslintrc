@@ -1,0 +1,100 @@
+{
+  "plugins": [
+    "react",
+    "import",
+    "cypress"
+  ],
+  "extends": [
+    "react-app",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:cypress/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "cypress/unsafe-to-chain-command": "off",
+    "block-scoped-var": "error",
+    "consistent-this": ["error", "self"],
+    "constructor-super": "off",
+    "default-case": "error",
+    "dot-notation": "error",
+    "eqeqeq": ["error", "always", {"null": "ignore"}],
+    "guard-for-in": "error",
+    "import/no-unresolved": "error",
+    "no-array-constructor": "error",
+    "no-caller": "error",
+    "no-catch-shadow": "error",
+    "no-console": [
+      "warn", {
+        "allow": [
+          "warn",
+          "error",
+          "info",
+          "debug"
+        ]
+      }
+    ],
+    "no-constant-condition": "warn",
+    "no-eval": "error",
+    "no-extend-native": "error",
+    "no-extra-bind": "error",
+    "no-implied-eval": "error",
+    "no-iterator": "error",
+    "no-label-var": "error",
+    "no-labels": "error",
+    "no-lone-blocks": "error",
+    "no-loop-func": "error",
+    "no-nested-ternary": "off",
+    "no-new-func": "error",
+    "no-new-object": "error",
+    "no-new-wrappers": "error",
+    "no-new": "error",
+    "no-octal-escape": "error",
+    "no-proto": "error",
+    "no-script-url": "error",
+    "no-self-compare": "error",
+    "no-sequences": "error",
+    "no-undef-init": "error",
+    "no-unused-expressions": "error",
+    "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": true }],
+    "operator-assignment": ["error", "always"],
+    "quotes": ["error", "double", {"avoidEscape": true}],
+    "radix": "error",
+    "spaced-comment": "error",
+    "yoda": "error",
+    "react/display-name": "off",
+    "react/jsx-boolean-value": "warn",
+    "react/jsx-no-bind": "off",
+    "react/jsx-no-duplicate-props": "warn",
+    "react/jsx-no-undef": "warn",
+    "react/jsx-uses-react": "warn",
+    "react/jsx-uses-vars": "error",
+    "react/no-danger": "warn",
+    "react/no-did-mount-set-state": "warn",
+    "react/no-did-update-set-state": "warn",
+    "react/no-direct-mutation-state": "warn",
+    "react/no-multi-comp": ["warn", { "ignoreStateless": true }],
+    "react/no-unknown-property": "error",
+    "react/prefer-es6-class": "warn",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "warn",
+    "react/self-closing-comp": "warn"
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.stories.*"
+      ],
+      "rules": {
+        "import/no-anonymous-default-export": "off"
+      }
+    }
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    }
+  }
+}

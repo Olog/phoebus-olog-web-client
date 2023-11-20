@@ -125,6 +125,22 @@ Run end-to-end tests headlessly (from the main project directory):
 ./scripts/e2e-test.sh
 ```
 
+### Static Checks / Linting
+This project uses pre-commit to check (and mostly automatically fix) many formatting and other static problems.
+
+Install the pre-commit hook via:
+```
+pre-commit install
+```
+
+And run via:
+```
+git add <your files>
+pre-commit run -a
+```
+
+Checks also run during CI/CD. You can read more about pre-commit at [Pre-Commit's Docs](https://pre-commit.com/)
+
 ## Deployment
 
 The below instructions apply to a deployment scenario where a web server hosts the (static) web client resources, and at the same time acts as a reverse proxy resolving calls to the Phoebus Olog backend (which need not run on the same host).

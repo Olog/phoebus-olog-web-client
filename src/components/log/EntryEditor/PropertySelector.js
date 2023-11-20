@@ -15,45 +15,47 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import { Button } from '@mui/material';
-import React from 'react';
-import styled from 'styled-components';
+import { Button } from "@mui/material";
+import React from "react";
+import styled from "styled-components";
 
 const PropertyRow = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+`;
 
 const Container = styled.div`
-    padding: 1rem;
-`
+  padding: 1rem;
+`;
 
-const PropertySelector = ({selectedProperties, availableProperties, addProperty}) => {
-
-    const isAlreadySelected = (propertyName) => {
-        return selectedProperties.filter(prop => prop.name === propertyName).length > 0;
-    }
-
-    const rows = availableProperties.filter(row => !isAlreadySelected(row.name)).map( row => 
-        <PropertyRow key={row.name}>
-            <div>{row.name}</div>
-            <Button 
-                variant="contained"
-                onClick={() => addProperty(row)}
-            >
-                Add
-            </Button>
-        </PropertyRow>
+const PropertySelector = ({
+  selectedProperties,
+  availableProperties,
+  addProperty
+}) => {
+  const isAlreadySelected = (propertyName) => {
+    return (
+      selectedProperties.filter((prop) => prop.name === propertyName).length > 0
     );
-        
-    
-    return(
-        <Container>
-            {rows}
-        </Container>
-    )
-}
+  };
+
+  const rows = availableProperties
+    .filter((row) => !isAlreadySelected(row.name))
+    .map((row) => (
+      <PropertyRow key={row.name}>
+        <div>{row.name}</div>
+        <Button
+          variant="contained"
+          onClick={() => addProperty(row)}
+        >
+          Add
+        </Button>
+      </PropertyRow>
+    ));
+
+  return <Container>{rows}</Container>;
+};
 
 export default PropertySelector;

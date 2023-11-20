@@ -21,7 +21,7 @@ import customization from "config/customization";
 
 // Need axios for back-end access as the "fetch" API does not support CORS cookies.
 const ologAxiosApi = axios.create({
-    baseURL: customization.APP_BASE_URL
+  baseURL: customization.APP_BASE_URL
 });
 
 /**
@@ -30,12 +30,12 @@ const ologAxiosApi = axios.create({
  * @returns a resolvable Promise.
  */
 const delay = (duration) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve();
-        }, duration)
-    })
-}
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, duration);
+  });
+};
 
 /**
  * Perform an Olog Service request with a retry policy
@@ -45,28 +45,34 @@ const delay = (duration) => {
  * @param {number} retries          number of maximum retries.
  * @param {function} retryCondition Function taking the current response and returning true if the call should be retried.
  * @param {function} retryDelay     Function taking the current retry count and returning the milliseconds to delay the retry.
- * @returns HTTP response that does not match the retry condition 
+ * @returns HTTP response that does not match the retry condition
  */
-export const ologAxiosApiWithRetry = async ({method, path, options, retries=5, retryCondition = () => true, retryDelay = (count) => 30}) => {
-
-    let retryCount = 0;
-    let shouldRetry = true;
-    let res = null;
-    while(shouldRetry && retryCount < retries) { 
-        try {
-            res = await ologAxiosApi.request({method, url: path, ...options});
-        } catch (e) {
-            res = e;
-        }
-        if(retryCondition(res)) {
-            shouldRetry = true;
-        } else {
-            shouldRetry = false;
-        }
-        retryCount++;
-        await delay(retryDelay(retryCount));
+export const ologAxiosApiWithRetry = async ({
+  method,
+  path,
+  options,
+  retries = 5,
+  retryCondition = () => true,
+  retryDelay = (count) => 30
+}) => {
+  let retryCount = 0;
+  let shouldRetry = true;
+  let res = null;
+  while (shouldRetry && retryCount < retries) {
+    try {
+      res = await ologAxiosApi.request({ method, url: path, ...options });
+    } catch (e) {
+      res = e;
     }
-    return res;
-}
+    if (retryCondition(res)) {
+      shouldRetry = true;
+    } else {
+      shouldRetry = false;
+    }
+    retryCount++;
+    await delay(retryDelay(retryCount));
+  }
+  return res;
+};
 
 export default ologAxiosApi;

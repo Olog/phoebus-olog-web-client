@@ -16,36 +16,35 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useEffect, useState } from 'react';
-import Modal from '../shared/Modal';
-import { useForm } from 'react-hook-form';
-import TextInput from 'components/shared/input/TextInput';
-import { Alert, Button, Stack } from '@mui/material';
-import { useLoginMutation } from 'api/ologApi';
-import { useShowLogin } from 'features/authSlice';
+import React, { useEffect, useState } from "react";
+import Modal from "../shared/Modal";
+import { useForm } from "react-hook-form";
+import TextInput from "components/shared/input/TextInput";
+import { Alert, Button, Stack } from "@mui/material";
+import { useLoginMutation } from "api/ologApi";
+import { useShowLogin } from "features/authSlice";
 
 const LoginDialog = () => {
-
-  const {control, handleSubmit, reset, resetField, setFocus} = useForm();
+  const { control, handleSubmit, reset, resetField, setFocus } = useForm();
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
   const [login, { isSuccess, error }] = useLoginMutation();
-  const {showLogin, setShowLogin} = useShowLogin();
+  const { showLogin, setShowLogin } = useShowLogin();
 
   const closeAndReset = () => {
-      setLoginErrorMessage("")
-      setShowLogin(false);
-      // clear form data
-      reset();
-  }
+    setLoginErrorMessage("");
+    setShowLogin(false);
+    // clear form data
+    reset();
+  };
 
   const handleLogin = (data) => {
-    const {username, password} = data;
-    login({username, password});
-  }
+    const { username, password } = data;
+    login({ username, password });
+  };
 
   // close the window if login was successful
   useEffect(() => {
-    if(isSuccess) {
+    if (isSuccess) {
       reset();
       setLoginErrorMessage("");
       setShowLogin(false);
@@ -54,63 +53,82 @@ const LoginDialog = () => {
 
   // set error message on errors
   useEffect(() => {
-    if(error) {
-      if(error.status === "FETCH_ERROR"){
+    if (error) {
+      if (error.status === "FETCH_ERROR") {
         setLoginErrorMessage("Login failed. Unable to connect to service.");
       }
-      if(error.status === 401) {
+      if (error.status === 401) {
         setLoginErrorMessage("Login failed, invalid credentials.");
       }
       // clear bad creds field & bring focus to it
       resetField("password");
-      setFocus('password', {shouldSelect: true});
+      setFocus("password", { shouldSelect: true });
     }
-  }, [error, resetField, setFocus])
-  
+  }, [error, resetField, setFocus]);
+
   // reset the form when re-shown
   useEffect(() => {
-    if(showLogin) {
+    if (showLogin) {
       reset();
     }
-  }, [reset, showLogin])
+  }, [reset, showLogin]);
 
-  return(
-    <Modal 
+  return (
+    <Modal
       open={showLogin}
-      onClose={closeAndReset} 
+      onClose={closeAndReset}
       title="Sign In"
       content={
-        <Stack component="form" onSubmit={handleSubmit(handleLogin)} gap={1} marginY={2}>
+        <Stack
+          component="form"
+          onSubmit={handleSubmit(handleLogin)}
+          gap={1}
+          marginY={2}
+        >
           {/* Hidden button handles submit-on-enter automatically */}
-          <Button type="submit" hidden tabIndex={-1}/>
-          <TextInput 
-            name='username'
-            label='Username'
-            control={control}
-            defaultValue=''
+          <Button
+            type="submit"
+            hidden
+            tabIndex={-1}
           />
-          <TextInput 
-            name='password'
-            label='Password'
+          <TextInput
+            name="username"
+            label="Username"
             control={control}
-            defaultValue=''
-            inputProps={{type: "password"}}
+            defaultValue=""
           />
-          {loginErrorMessage ? <Alert severity="error">{loginErrorMessage}</Alert> : null}
+          <TextInput
+            name="password"
+            label="Password"
+            control={control}
+            defaultValue=""
+            inputProps={{ type: "password" }}
+          />
+          {loginErrorMessage ? (
+            <Alert severity="error">{loginErrorMessage}</Alert>
+          ) : null}
         </Stack>
       }
       actions={
         <>
-          <Button variant="outlined" type="button" onClick={closeAndReset}>
+          <Button
+            variant="outlined"
+            type="button"
+            onClick={closeAndReset}
+          >
             Cancel
-          </Button>        
-          <Button variant="contained" type="submit" onClick={handleSubmit(handleLogin)}>
+          </Button>
+          <Button
+            variant="contained"
+            type="submit"
+            onClick={handleSubmit(handleLogin)}
+          >
             Login
           </Button>
         </>
       }
     />
-  )
-}
+  );
+};
 
 export default LoginDialog;

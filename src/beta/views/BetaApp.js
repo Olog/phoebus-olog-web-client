@@ -21,30 +21,41 @@ import Initialize from "components/Initialize";
 import React from "react";
 
 const BetaApp = () => {
-
-    return (
-        <Initialize>
-            {/* Stub for initial merge of beta feature */}
-            <Stack height="100vh" padding={2} alignItems="center" justifyContent="center" >
-                <Paper 
-                    elevation={24}
-                    square={false}
-                    sx={{
-                        paddingY: 10,
-                        paddingX: 20, 
-                        backgroundColor: "primary.main",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "essWhite.main"
-                    }}
-                >
-                    <Typography component="h1" variant="h3">Welcome to the Beta App</Typography>
-                    <Typography>This is a placeholder and will be updated as features are added</Typography>
-                </Paper>
-            </Stack>
-        </Initialize>
-    )
-}
+  return (
+    <Initialize>
+      {/* Stub for initial merge of beta feature */}
+      <Stack
+        height="100vh"
+        padding={2}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Paper
+          elevation={24}
+          square={false}
+          sx={{
+            paddingY: 10,
+            paddingX: 20,
+            backgroundColor: "primary.main",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "essWhite.main"
+          }}
+        >
+          <Typography
+            component="h1"
+            variant="h3"
+          >
+            Welcome to the Beta App
+          </Typography>
+          <Typography>
+            This is a placeholder and will be updated as features are added
+          </Typography>
+        </Paper>
+      </Stack>
+    </Initialize>
+  );
+};
 export default BetaApp;

@@ -31,100 +31,102 @@ const propTypes = {
   subtitleProps: object
 };
 
-const ErrorPage = styled(({
-  title,
-  subtitle,
-  details,
-  SecondaryActionComponent,
-  supportHref,
-  titleProps,
-  subtitleProps,
-  className
-}) => {
-  const [showDetails, setShowDetails] = useState(false);
-  const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
+const ErrorPage = styled(
+  ({
+    title,
+    subtitle,
+    details,
+    SecondaryActionComponent,
+    supportHref,
+    titleProps,
+    subtitleProps,
+    className
+  }) => {
+    const [showDetails, setShowDetails] = useState(false);
+    const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const toggleDetails = () => {
-    setShowDetails(!showDetails);
-  };
+    const toggleDetails = () => {
+      setShowDetails(!showDetails);
+    };
 
-  return (
-    <>
-      <Box
-        className={className}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        gap={2}
-      >
-        <Typography
-          variant="h3"
-          {...subtitleProps}
-        >
-          {subtitle}
-        </Typography>
-        <Typography
-          variant="h2"
-          {...titleProps}
-        >
-          {title}
-        </Typography>
-        {details ? (
-          <Accordion
-            expanded={showDetails}
-            onChange={toggleDetails}
-            sx={{ maxWidth: isDesktop ? "50%" : "100%" }}
-          >
-            <AccordionSummary
-              id="error-details-header"
-              aria-controls="error-details-content"
-              expandIcon={<ExpandMoreIcon />}
-            >
-              <Typography variant="body1">
-                {showDetails ? "Hide Details" : "Show Details"}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails
-              sx={{
-                whiteSpace: "pre",
-                overflow: "scroll"
-              }}
-            >
-              <Typography
-                variant="body2"
-                fontFamily="monospace"
-              >
-                {details}
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-        ) : null}
+    return (
+      <>
         <Box
+          className={className}
           display="flex"
-          justifyContent="center"
+          flexDirection="column"
+          alignItems="center"
           gap={2}
         >
-          {SecondaryActionComponent ?? (
-            <InternalButtonLink
-              variant="contained"
-              to="/"
+          <Typography
+            variant="h3"
+            {...subtitleProps}
+          >
+            {subtitle}
+          </Typography>
+          <Typography
+            variant="h2"
+            {...titleProps}
+          >
+            {title}
+          </Typography>
+          {details ? (
+            <Accordion
+              expanded={showDetails}
+              onChange={toggleDetails}
+              sx={{ maxWidth: isDesktop ? "50%" : "100%" }}
             >
-              Return to Home
-            </InternalButtonLink>
-          )}
-
-          {supportHref ? (
-            <ExternalButtonLink
-              href={supportHref}
-              text="Contact Support"
-              variant="outlined"
-            />
+              <AccordionSummary
+                id="error-details-header"
+                aria-controls="error-details-content"
+                expandIcon={<ExpandMoreIcon />}
+              >
+                <Typography variant="body1">
+                  {showDetails ? "Hide Details" : "Show Details"}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails
+                sx={{
+                  whiteSpace: "pre",
+                  overflow: "scroll"
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  fontFamily="monospace"
+                >
+                  {details}
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
           ) : null}
+          <Box
+            display="flex"
+            justifyContent="center"
+            gap={2}
+          >
+            {SecondaryActionComponent ?? (
+              <InternalButtonLink
+                variant="contained"
+                to="/"
+              >
+                Return to Home
+              </InternalButtonLink>
+            )}
+
+            {supportHref ? (
+              <ExternalButtonLink
+                href={supportHref}
+                text="Contact Support"
+                variant="outlined"
+              />
+            ) : null}
+          </Box>
         </Box>
-      </Box>
-    </>
-  );
-})({})
+      </>
+    );
+  }
+)({});
 ErrorPage.propTypes = propTypes;
 
 export default ErrorPage;

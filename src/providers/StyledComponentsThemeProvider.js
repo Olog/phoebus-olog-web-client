@@ -15,10 +15,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import React from "react";
 import { styledComponentsTheme } from "config/theme";
 import { ThemeProvider } from "styled-components";
-
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
     * {
@@ -37,14 +37,16 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const StyledComponentsThemeProvider = ({children, ...props}) => {
-
-    return (
-        <ThemeProvider theme={styledComponentsTheme} {...props}>
-                <GlobalStyle />
-                {children}
-        </ThemeProvider>
-    )
-}
+const StyledComponentsThemeProvider = ({ children, ...props }) => {
+  return (
+    <ThemeProvider
+      theme={styledComponentsTheme}
+      {...props}
+    >
+      <GlobalStyle />
+      {children}
+    </ThemeProvider>
+  );
+};
 
 export default StyledComponentsThemeProvider;

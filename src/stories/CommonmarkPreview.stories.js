@@ -1,10 +1,10 @@
-import React from "react";
+/* eslint-disable no-useless-escape */
 import CommonmarkPreview from "components/shared/CommonmarkPreview";
 
 export default {
-    title: "Common/CommonmarkPreview",
-    component: CommonmarkPreview
-}
+  title: "Common/CommonmarkPreview",
+  component: CommonmarkPreview
+};
 
 const source = `# Heading 1
 ## Heading 2
@@ -26,11 +26,11 @@ Resized Image:
 ![Stretched React Logo](./logo192.png){width=200 height=50}
 
 BlockQuotes:
-> *Lorem ipsum dolor sit amet consectetur adipisicing 
-elit. Voluptas, quasi ut voluptates quo necessitatibus similique 
+> *Lorem ipsum dolor sit amet consectetur adipisicing
+elit. Voluptas, quasi ut voluptates quo necessitatibus similique
 blanditiis illo, repellat enim error quidem qui quam, ab recusandae!*
 
-Horizontal Rule: 
+Horizontal Rule:
 
 ---
 
@@ -43,7 +43,7 @@ Unordered List:
             * Sweet
             * Spicy
     * Objects
-        * Fire Hydrant 
+        * Fire Hydrant
 * Green
 * Blue
 
@@ -64,7 +64,7 @@ Ordered List:
     1. Summary
     1. Closing
 
-This is \`inline code\` whereas the below is: 
+This is \`inline code\` whereas the below is:
 
 \`\`\`
 // Block Code
@@ -80,10 +80,10 @@ Table:
 |---------------|---------------|
 | Table Cell 11 | Table Cell 12 |
 | Table Cell 21 | Table Cell 22 |
-`; 
+`;
 
 export const Default = {
-    args: {
-        commonmarkSrc: source
-    }
+  args: {
+    commonmarkSrc: source
+  }
 };

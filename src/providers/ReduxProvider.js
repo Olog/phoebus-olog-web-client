@@ -15,14 +15,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import React from "react";
 import { store } from "features/store";
 import { Provider } from "react-redux";
 
-const ReduxProvider = ({children, ...props}) => {
-    return (
-        <Provider store={store} {...props}>
-            {children}
-        </Provider>
-    )
-}
+const ReduxProvider = ({ children, ...props }) => {
+  return (
+    <Provider
+      store={store}
+      {...props}
+    >
+      {children}
+    </Provider>
+  );
+};
 export default ReduxProvider;

@@ -16,24 +16,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React from 'react';
-import Modal from '../../../shared/Modal';
-import CommonmarkPreview from '../../../shared/CommonmarkPreview';
+import React from "react";
+import Modal from "../../../shared/Modal";
+import CommonmarkPreview from "../../../shared/CommonmarkPreview";
 
-const HtmlPreviewModal = ({commonmarkSrc, attachedFiles, showHtmlPreview, setShowHtmlPreview}) => { 
-
-    return (
-        <Modal
-            open={showHtmlPreview}
-            onClose={() => setShowHtmlPreview(false)}
-            title="Description Preview"
-            content={<CommonmarkPreview {...{commonmarkSrc, attachedFiles}} />}
-            DialogProps={{
-                fullWidth: true,
-                maxWidth: "lg"
-            }}
-        />
-    )
-}
+const HtmlPreviewModal = ({
+  commonmarkSrc,
+  attachedFiles,
+  showHtmlPreview,
+  setShowHtmlPreview
+}) => {
+  return (
+    <Modal
+      open={showHtmlPreview}
+      onClose={() => setShowHtmlPreview(false)}
+      title="Description Preview"
+      content={<CommonmarkPreview {...{ commonmarkSrc, attachedFiles }} />}
+      DialogProps={{
+        fullWidth: true,
+        maxWidth: "lg"
+      }}
+    />
+  );
+};
 
 export default HtmlPreviewModal;

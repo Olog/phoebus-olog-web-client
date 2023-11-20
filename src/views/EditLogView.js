@@ -4,14 +4,15 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 const EditLogView = () => {
+  const { id } = useParams();
 
-    const { id } = useParams();
-
-    return (
-        <LogContainer 
-            id={id} 
-            renderLog={({log, isAuthenticated}) => <EditLog {...{log, isAuthenticated}} />} 
-        />
-    );
-}
+  return (
+    <LogContainer
+      id={id}
+      renderLog={({ log, isAuthenticated }) => (
+        <EditLog {...{ log, isAuthenticated }} />
+      )}
+    />
+  );
+};
 export default EditLogView;

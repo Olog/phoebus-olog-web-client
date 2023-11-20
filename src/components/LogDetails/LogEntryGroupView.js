@@ -16,83 +16,96 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import ologAxiosApi from 'api/axios-olog-service';
-import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
-import GroupHeader from './GroupHeader';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import CommonmarkPreview from 'components/shared/CommonmarkPreview';
-import customization from 'config/customization';
-import { getLogEntryGroupId } from '../Properties/utils';
-import { sortLogsDateCreated } from 'components/log/sort';
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import ologAxiosApi from "api/axios-olog-service";
+import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
+import GroupHeader from "./GroupHeader";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import CommonmarkPreview from "components/shared/CommonmarkPreview";
+import customization from "config/customization";
+import { getLogEntryGroupId } from "../Properties/utils";
+import { sortLogsDateCreated } from "components/log/sort";
 
 const Container = styled.div`
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 0.5rem;
-    overflow: auto;
-`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem;
+  overflow: auto;
+`;
 
 const GroupContainer = styled.li`
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    cursor: pointer;
-    width: 100%;
-    
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.20); 
-    }
-`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  cursor: pointer;
+  width: 100%;
 
- /**
- * Merged view of all log entries 
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+`;
+
+/**
+ * Merged view of all log entries
  */
-const LogEntryGroupView = ({currentLogEntry, logGroupRecords, setLogGroupRecords, className}) => {
+const LogEntryGroupView = ({
+  currentLogEntry,
+  logGroupRecords,
+  setLogGroupRecords,
+  className
+}) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  useEffect(() => {
+    const signal = new AbortController();
+    ologAxiosApi
+      .get(
+        `/logs?properties=Log Entry Group.id.${getLogEntryGroupId(
+          currentLogEntry.properties
+        )}`,
+        { signal }
+      )
+      .then((res) => {
+        let sortedResult = sortLogsDateCreated(res.data, false);
+        setLogGroupRecords(sortedResult);
+      })
+      .catch((e) => console.error("Could not fetch logs by group", e));
 
-    useEffect(() => {
-        const signal = new AbortController();
-        ologAxiosApi.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(currentLogEntry.properties)}`, { signal })
-        .then(res => {
-            let sortedResult = sortLogsDateCreated(res.data, false);
-            setLogGroupRecords(sortedResult);
-        })
-        .catch(e => console.error("Could not fetch logs by group", e));
+    return () => {
+      signal.abort();
+    };
+  }, [currentLogEntry.properties, setLogGroupRecords]);
 
-        return () => {
-            signal.abort();
-        }
-    }, [currentLogEntry.properties, setLogGroupRecords]);
+  const showLog = (log) => {
+    dispatch(updateCurrentLogEntry(log));
+    navigate(`/logs/${log.id}`);
+  };
 
-    const showLog = (log) => {
-        dispatch(updateCurrentLogEntry(log));
-        navigate(`/logs/${log.id}`);
-    }
-
-    const logGroupItems = logGroupRecords.map((row, index) => {
-        return(
-            <GroupContainer key={index} onClick={() => showLog(row)} >
-                <GroupHeader logEntry={row} />
-                <CommonmarkPreview commonmarkSrc={row.source} imageUrlPrefix={customization.APP_BASE_URL + "/"} />
-            </GroupContainer>
-        );
-    });
-
-    return(
-        <Container className={className}>
-            <ol aria-label='Group Entries' >
-                {logGroupItems}
-            </ol>
-        </Container>
+  const logGroupItems = logGroupRecords.map((row, index) => {
+    return (
+      <GroupContainer
+        key={index}
+        onClick={() => showLog(row)}
+      >
+        <GroupHeader logEntry={row} />
+        <CommonmarkPreview
+          commonmarkSrc={row.source}
+          imageUrlPrefix={customization.APP_BASE_URL + "/"}
+        />
+      </GroupContainer>
     );
-    
-}
+  });
+
+  return (
+    <Container className={className}>
+      <ol aria-label="Group Entries">{logGroupItems}</ol>
+    </Container>
+  );
+};
 
 export default LogEntryGroupView;

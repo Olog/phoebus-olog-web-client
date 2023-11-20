@@ -17,82 +17,82 @@
  */
 
 let customization = {
-    /**
-     * The name of the "level" (legacy name) meta data field.
-     */
-    level: "Entry Type",
-    /**
-     * Values for the "level" drop-down.
-     */
-    levelValues: [
-        "Normal",
-        "Shift Start",
-        "Shift End",
-        "Fault",
-        "Beam Loss",
-        "Beam Configuration",
-        "Crew",
-        "Expert Intervention Call",
-        "Incident"
-    ],
+  /**
+   * The name of the "level" (legacy name) meta data field.
+   */
+  level: "Entry Type",
+  /**
+   * Values for the "level" drop-down.
+   */
+  levelValues: [
+    "Normal",
+    "Shift Start",
+    "Shift End",
+    "Fault",
+    "Beam Loss",
+    "Beam Configuration",
+    "Crew",
+    "Expert Intervention Call",
+    "Incident"
+  ],
 
-    /**
-     * Default "level" for new log entries
-     */
-    defaultLevel: "Normal",
-    
-    /**
-     * Specifies whether to support grouping of log entries.
-     */
-    log_entry_groups_support: true,
+  /**
+   * Default "level" for new log entries
+   */
+  defaultLevel: "Normal",
 
-    /**
-     * Specifies whether to support editing of log entries.
-     */
-    log_edit_support: true,
+  /**
+   * Specifies whether to support grouping of log entries.
+   */
+  log_entry_groups_support: true,
 
-    /**
-     * Default search params
-     */
-    defaultSearchParams: {start: "12 hours", end: "now"},
-    defaultSortDirection: "down",
+  /**
+   * Specifies whether to support editing of log entries.
+   */
+  log_edit_support: true,
 
-    /**
-     * Default page size in search
-     */
-    defaultRowsPerPageOptions: [10, 30, 50],
-    defaultPageSize: 30,
+  /**
+   * Default search params
+   */
+  defaultSearchParams: { start: "12 hours", end: "now" },
+  defaultSortDirection: "down",
 
-    /**
-     * Default frequency of background search, in milliseconds
-     */
-    defaultSearchFrequency: 30000,
+  /**
+   * Default page size in search
+   */
+  defaultRowsPerPageOptions: [10, 30, 50],
+  defaultPageSize: 30,
 
-    /**
-     * Name of the cookie that stores the current search string
-     */
-    searchParamsCookie: 'searchParams',
+  /**
+   * Default frequency of background search, in milliseconds
+   */
+  defaultSearchFrequency: 30000,
 
-    /**
-     * Name of the cookie that stores the current search string
-     */
-    searchPageParamsCookie: 'searchPageParams',
+  /**
+   * Name of the cookie that stores the current search string
+   */
+  searchParamsCookie: "searchParams",
 
-    /**
-     * Max total attachment upload size and individual file size (MB)
-     */
-    defaultMaxRequestSizeMb: 100,
-    defaultMaxFileSizeMb: 50,
+  /**
+   * Name of the cookie that stores the current search string
+   */
+  searchPageParamsCookie: "searchPageParams",
 
-    /**
-     * Base URL pointing to the Olog service. Required in order to support imbedded into the description (body) of a log entry.
-     */
-    APP_BASE_URL: process.env.REACT_APP_BASE_URL, // e.g. http://localhost:8080/Olog
+  /**
+   * Max total attachment upload size and individual file size (MB)
+   */
+  defaultMaxRequestSizeMb: 100,
+  defaultMaxFileSizeMb: 50,
 
-    /**
-     * Enable/Disable the beta feature
-     */
-    ENABLE_BETA: process.env.REACT_APP_ENABLE_BETA === "true"
-}
+  /**
+   * Base URL pointing to the Olog service. Required in order to support imbedded into the description (body) of a log entry.
+   */
+  APP_BASE_URL: process.env.REACT_APP_BASE_URL, // e.g. http://localhost:8080/Olog
+
+  /**
+   * Enable/Disable the beta feature
+   */
+  ENABLE_BETA: process.env.REACT_APP_ENABLE_BETA === "true"
+};
 
 export default customization;

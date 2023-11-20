@@ -15,36 +15,41 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import React from "react";
+import SearchBoxInput from "../shared/input/managed/SearchBoxInput";
+import { Link, Stack } from "@mui/material";
 
-import SearchBoxInput from "../shared/input/managed/SearchBoxInput"
-import { Link, Stack } from "@mui/material"
+const SearchBox = ({
+  searchParams,
+  showFilters,
+  setShowFilters,
+  className
+}) => {
+  const toggleFilters = (e) => {
+    setShowFilters(!showFilters);
+  };
 
-const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
-
-    const toggleFilters = (e) => {
-        setShowFilters(!showFilters)
-    }
-    
-    return (
-        <Stack gap={0.5} padding={1}>
-            <SearchBoxInput
-                {...{searchParams, showFilters, isFetching: true}}
-            />
-            <Link 
-                component="button"
-                type="button"
-                onClick={(e) => toggleFilters(e)} 
-                aria-expanded={showFilters}
-                sx={{
-                    fontStyle: "italic",
-                    width: "max-content",
-                    alignSelf: "flex-end"
-                }}
-            >
-                {showFilters ? "Hide Advanced Search" : "Show Advanced Search"}
-            </Link>
-        </Stack>
-    );
-}
+  return (
+    <Stack
+      gap={0.5}
+      padding={1}
+    >
+      <SearchBoxInput {...{ searchParams, showFilters, isFetching: true }} />
+      <Link
+        component="button"
+        type="button"
+        onClick={(e) => toggleFilters(e)}
+        aria-expanded={showFilters}
+        sx={{
+          fontStyle: "italic",
+          width: "max-content",
+          alignSelf: "flex-end"
+        }}
+      >
+        {showFilters ? "Hide Advanced Search" : "Show Advanced Search"}
+      </Link>
+    </Stack>
+  );
+};
 
 export default SearchBox;

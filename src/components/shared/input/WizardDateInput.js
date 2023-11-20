@@ -16,153 +16,197 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { useState } from "react";
-import { Button, DialogActions, IconButton, InputAdornment, TextField, styled } from "@mui/material";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import React, { useState } from "react";
+import {
+  Button,
+  DialogActions,
+  IconButton,
+  InputAdornment,
+  TextField,
+  styled
+} from "@mui/material";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useController } from "react-hook-form";
 import { DateTimePicker, pickersLayoutClasses } from "@mui/x-date-pickers";
 import { useLocaleText } from "@mui/x-date-pickers/internals";
 
-const DATE_FORMAT = 'YYYY-MM-DD HH:mm';
+const DATE_FORMAT = "YYYY-MM-DD HH:mm";
 
-const CustomActionBar = ({ onAccept, onClear, onCancel, onSetToday, actions, ...other }) => {
+const CustomActionBar = ({
+  onAccept,
+  onClear,
+  onCancel,
+  onSetToday,
+  actions,
+  ...other
+}) => {
+  const localeText = useLocaleText();
 
-    const localeText = useLocaleText();
-
-    if (actions == null || actions.length === 0) {
+  if (actions == null || actions.length === 0) {
     return null;
-    }
+  }
 
-    const buttons = actions?.map((actionType) => {
+  const buttons = actions?.map((actionType) => {
     switch (actionType) {
-        case 'clear':
+      case "clear":
         return (
-            <Button onClick={onClear} key={actionType} variant="contained">
-                {localeText.clearButtonLabel}
-            </Button>
+          <Button
+            onClick={onClear}
+            key={actionType}
+            variant="contained"
+          >
+            {localeText.clearButtonLabel}
+          </Button>
         );
 
-        case 'cancel':
+      case "cancel":
         return (
-            <Button onClick={onCancel} key={actionType} variant="contained" color="secondary">
-                {localeText.cancelButtonLabel}
-            </Button>
+          <Button
+            onClick={onCancel}
+            key={actionType}
+            variant="contained"
+            color="secondary"
+          >
+            {localeText.cancelButtonLabel}
+          </Button>
         );
 
-        case 'accept':
+      case "accept":
         return (
-            <Button onClick={onAccept} key={actionType} variant="contained">
-                {localeText.okButtonLabel}
-            </Button>
+          <Button
+            onClick={onAccept}
+            key={actionType}
+            variant="contained"
+          >
+            {localeText.okButtonLabel}
+          </Button>
         );
 
-        case 'today':
+      case "today":
         return (
-            <Button onClick={onSetToday} key={actionType} variant="contained" color="secondary">
-                {localeText.todayButtonLabel}
-            </Button>
+          <Button
+            onClick={onSetToday}
+            key={actionType}
+            variant="contained"
+            color="secondary"
+          >
+            {localeText.todayButtonLabel}
+          </Button>
         );
 
-        default:
+      default:
         return null;
     }
-    });
+  });
 
-    return <DialogActions {...other}>{buttons}</DialogActions>;
-}
+  return <DialogActions {...other}>{buttons}</DialogActions>;
+};
 
 const ButtonField = ({
-    setOpen,
-    id,
-    disabled,
-    InputProps: { ref } = {},
-    inputProps: { 'aria-label': ariaLabel } = {}
+  setOpen,
+  id,
+  disabled,
+  InputProps: { ref } = {},
+  inputProps: { "aria-label": ariaLabel } = {}
 }) => {
-    
-    return (
-      <IconButton
-        variant="outlined"
-        id={id}
-        disabled={disabled}
-        ref={ref}
-        aria-label={ariaLabel}
-        onClick={() => setOpen?.((prev) => !prev)}
-      >
-        <CalendarMonthIcon color="primary" />
-      </IconButton>
-    );
-}
+  return (
+    <IconButton
+      variant="outlined"
+      id={id}
+      disabled={disabled}
+      ref={ref}
+      aria-label={ariaLabel}
+      onClick={() => setOpen?.((prev) => !prev)}
+    >
+      <CalendarMonthIcon color="primary" />
+    </IconButton>
+  );
+};
 
-const ButtonDatePicker = ({slots, ButtonFieldProps, ...props}) => {
+const ButtonDatePicker = ({ slots, ButtonFieldProps, ...props }) => {
+  const [open, setOpen] = useState(false);
 
-    const [open, setOpen] = useState(false);
-  
-    return (
-        <DateTimePicker
-            slots={{ 
-                field: ButtonField,
-                actionBar: CustomActionBar,
-                ...slots
-            }} 
-            slotProps={{ 
-                field: { setOpen, ...ButtonFieldProps},
-                actionBar: {
-                    actions: ["today", "cancel", "accept"],
-                },
-                layout: {
-                    sx: {
-                        [`.${pickersLayoutClasses.actionBar}`]: {
-                            "button:first-of-type": {
-                                marginRight: "auto"
-                            }
-                        }
-                    }
-                }
-            }}
-            open={open}
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
-            format={DATE_FORMAT}
-            ampm={false}
-            {...props}
-        />
-    );
-}
+  return (
+    <DateTimePicker
+      slots={{
+        field: ButtonField,
+        actionBar: CustomActionBar,
+        ...slots
+      }}
+      slotProps={{
+        field: { setOpen, ...ButtonFieldProps },
+        actionBar: {
+          actions: ["today", "cancel", "accept"]
+        },
+        layout: {
+          sx: {
+            [`.${pickersLayoutClasses.actionBar}`]: {
+              "button:first-of-type": {
+                marginRight: "auto"
+              }
+            }
+          }
+        }
+      }}
+      open={open}
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      format={DATE_FORMAT}
+      ampm={false}
+      {...props}
+    />
+  );
+};
 
-const WizardDateInput = styled(({name, label, form, rules, defaultValue, onChange, className, DatePickerProps, ...props}) => {
-
-    const {control} = form;
-    const {field: {ref, ...field}, fieldState} = useController({name, control, rules, defaultValue});
+const WizardDateInput = styled(
+  ({
+    name,
+    label,
+    form,
+    rules,
+    defaultValue,
+    onChange,
+    className,
+    DatePickerProps,
+    ...props
+  }) => {
+    const { control } = form;
+    const {
+      field: { ref, ...field },
+      fieldState
+    } = useController({ name, control, rules, defaultValue });
 
     const onAccept = (momentDate) => {
-        onChange(field, momentDate.format(DATE_FORMAT));
-    }
+      onChange(field, momentDate.format(DATE_FORMAT));
+    };
 
     return (
-        <TextField 
-            id={name}
-            label={label}
-            helperText={fieldState?.error?.message}
-            error={fieldState?.error}
-            inputRef={field.ref}
-            InputProps={{
-                endAdornment:
-                    <InputAdornment position="end">
-                        <ButtonDatePicker 
-                            onAccept={onAccept} 
-                            ButtonFieldProps={{
-                                inputProps: {
-                                    "aria-label": `Select Absolute ${label ?? "Date/Time"}`
-                                }
-                            }}
-                            {...DatePickerProps}
-                        />
-                    </InputAdornment>
-            }}
-            {...field}
-            {...props}
-        />
-    )
-})({})
+      <TextField
+        id={name}
+        label={label}
+        helperText={fieldState?.error?.message}
+        error={fieldState?.error}
+        inputRef={field.ref}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <ButtonDatePicker
+                onAccept={onAccept}
+                ButtonFieldProps={{
+                  inputProps: {
+                    "aria-label": `Select Absolute ${label ?? "Date/Time"}`
+                  }
+                }}
+                {...DatePickerProps}
+              />
+            </InputAdornment>
+          )
+        }}
+        {...field}
+        {...props}
+      />
+    );
+  }
+)({});
 
 export default WizardDateInput;

@@ -16,20 +16,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { MuiThemeProvider, StyledComponentsThemeProvider, LocalizationProvider, ReduxProvider, RouterProvider } from 'providers';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import {
+  MuiThemeProvider,
+  StyledComponentsThemeProvider,
+  LocalizationProvider,
+  ReduxProvider,
+  RouterProvider
+} from "providers";
 
-const container = document.getElementById('root');
-const root = createRoot(container); 
+const container = document.getElementById("root");
+const root = createRoot(container);
 root.render(
-    <ReduxProvider>
-        <MuiThemeProvider>
-            <StyledComponentsThemeProvider>
-                <LocalizationProvider>
-                    <RouterProvider />
-                </LocalizationProvider>
-            </StyledComponentsThemeProvider>
-        </MuiThemeProvider>
-    </ReduxProvider>
+  <ReduxProvider>
+    <MuiThemeProvider>
+      <StyledComponentsThemeProvider>
+        <LocalizationProvider>
+          <RouterProvider />
+        </LocalizationProvider>
+      </StyledComponentsThemeProvider>
+    </MuiThemeProvider>
+  </ReduxProvider>
 );

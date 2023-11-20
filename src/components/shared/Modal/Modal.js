@@ -15,61 +15,80 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import React from "react";
+import {
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  IconButton,
+  Stack,
+  Typography,
+  styled
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
-import { Box, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Stack, Typography, styled } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
-
-const ModalTitle = styled(({onClose, className, children}) => {
-    return (
-        <Stack 
-            className={className}
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-            backgroundColor="primary.main"
-            color="essWhite.main"
-            paddingX={2}
-            paddingY={1}
-        >
-            {typeof children === "string" ? <Typography>{children}</Typography> : <>{children}</>}
-            <IconButton 
-                variant="outlined"
-                onClick={onClose} 
-                aria-label="Close Dialog" 
-                edge="end"
-            >
-                <CloseIcon fontSize="medium" color="essWhite"/>
-            </IconButton>
-        </Stack>
-    )
+const ModalTitle = styled(({ onClose, className, children }) => {
+  return (
+    <Stack
+      className={className}
+      flexDirection="row"
+      justifyContent="space-between"
+      alignItems="center"
+      backgroundColor="primary.main"
+      color="essWhite.main"
+      paddingX={2}
+      paddingY={1}
+    >
+      {typeof children === "string" ? (
+        <Typography>{children}</Typography>
+      ) : (
+        <>{children}</>
+      )}
+      <IconButton
+        variant="outlined"
+        onClick={onClose}
+        aria-label="Close Dialog"
+        edge="end"
+      >
+        <CloseIcon
+          fontSize="medium"
+          color="essWhite"
+        />
+      </IconButton>
+    </Stack>
+  );
 })({});
 
-const Modal = ({title, content, actions, open, onClose, className, DialogProps={}}) => {
-
-    return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-            fullWidth={true}
-            maxWidth="sm"
-            {...DialogProps}
-        >
-            { title ? <ModalTitle onClose={onClose}>{title}</ModalTitle> : null }
-            <DialogContent 
-                className={className}
-            >
-                {typeof content === "string" ? 
-                    <DialogContentText>
-                        {content}
-                    </DialogContentText>
-                    : <Box>
-                        {content}
-                      </Box>
-                }        
-            </DialogContent>
-            { actions ? <DialogActions>{actions}</DialogActions> : null }
-        </Dialog>
-    )
+const Modal = ({
+  title,
+  content,
+  actions,
+  open,
+  onClose,
+  className,
+  DialogProps = {}
+}) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      {...DialogProps}
+    >
+      {title ? <ModalTitle onClose={onClose}>{title}</ModalTitle> : null}
+      <DialogContent className={className}>
+        {typeof content === "string" ? (
+          <DialogContentText>{content}</DialogContentText>
+        ) : (
+          <Box>{content}</Box>
+        )}
+      </DialogContent>
+      {actions ? <DialogActions>{actions}</DialogActions> : null}
+    </Dialog>
+  );
 };
 
 export default Modal;

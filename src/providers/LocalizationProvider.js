@@ -15,15 +15,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+import React from "react";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { LocalizationProvider as MuiLocalizationProvider } from '@mui/x-date-pickers';
+import { LocalizationProvider as MuiLocalizationProvider } from "@mui/x-date-pickers";
 
-const LocalizationProvider = ({children, ...props}) => {
-
-    return (
-        <MuiLocalizationProvider dateAdapter={AdapterMoment} {...props} >
-            {children}
-        </MuiLocalizationProvider>
-    )
-}
-export default LocalizationProvider
+const LocalizationProvider = ({ children, ...props }) => {
+  return (
+    <MuiLocalizationProvider
+      dateAdapter={AdapterMoment}
+      {...props}
+    >
+      {children}
+    </MuiLocalizationProvider>
+  );
+};
+export default LocalizationProvider;

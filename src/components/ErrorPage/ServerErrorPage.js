@@ -12,25 +12,27 @@ const propTypes = {
   supportHref: string
 };
 
-const ServerErrorPage = styled(({ message, status, supportHref, className }) => {
-  // Define some fallback messages if none provided
-  if (!message) {
-    if (status?.toString().startsWith("5")) {
-      message = "Whoops, looks like you broke the internet 😬";
-    } else {
-      message = "Page not found";
+const ServerErrorPage = styled(
+  ({ message, status, supportHref, className }) => {
+    // Define some fallback messages if none provided
+    if (!message) {
+      if (status?.toString().startsWith("5")) {
+        message = "Whoops, looks like you broke the internet 😬";
+      } else {
+        message = "Page not found";
+      }
     }
-  }
 
-  return (
-    <ErrorPage
-      title={message}
-      subtitle={status}
-      supportHref={supportHref}
-      className={className}
-    />
-  );
-})({})
+    return (
+      <ErrorPage
+        title={message}
+        subtitle={status}
+        supportHref={supportHref}
+        className={className}
+      />
+    );
+  }
+)({});
 ServerErrorPage.propTypes = propTypes;
 
 export default ServerErrorPage;
