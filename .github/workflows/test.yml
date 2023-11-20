@@ -17,6 +17,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Setup pre-commit
+      uses: actions/setup-python@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -24,23 +26,7 @@ jobs:
         cache: 'npm'
     - name: Install Dependencies and Build
       run: ./scripts/install-dependencies-and-build.sh
+    - name: Run static checks
+      uses: pre-commit/action@v3.0.0
     - name: Run Unit and Integration Tests
       run: ./scripts/test.sh
-  static-checks:
-    timeout-minutes: 5
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x, 20.x]
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Setup pre-commit
-      uses: actions/setup-python@v3
-    - name: Run pre-commit
-      uses: pre-commit/action@v3.0.0
