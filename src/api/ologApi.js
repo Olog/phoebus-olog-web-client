@@ -20,6 +20,9 @@ export const removeEmptyKeys = (obj, exceptions=[]) => {
                 delete copy[key]
             }
         }
+        if(val === undefined || val === null) {
+            delete copy[key]
+        }
     }
     return copy;
 }

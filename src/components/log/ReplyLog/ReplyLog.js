@@ -24,7 +24,7 @@ const ReplyLog = ({log, isAuthenticated}) => {
              */
             logbooks: log?.logbooks ?? [],
             tags: log?.tags ?? [],
-            entryType: customization.defaultLevel,
+            level: customization.defaultLevel,
             title: log?.title,
         }
     });
@@ -42,7 +42,7 @@ const ReplyLog = ({log, isAuthenticated}) => {
             tags: formData.tags,
             properties: formData.properties,
             title: formData.title,
-            level: formData.entryType,
+            level: formData.level,
             description: formData.description,
             attachments: formData.attachments
         }

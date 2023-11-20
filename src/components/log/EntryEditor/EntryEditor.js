@@ -16,13 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import Modal from 'components/shared/Modal';
-import customization from 'config/customization';
 import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useGetPropertiesQuery } from 'api/ologApi';
-import MultiSelect from 'components/shared/input/MultiSelect';
 import { useFieldArray } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import styled from 'styled-components';
@@ -32,6 +30,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Description from './Description';
 import LogbooksMultiSelect from 'components/shared/input/managed/LogbooksMultiSelect';
 import TagsMultiSelect from 'components/shared/input/managed/TagsMultiSelect';
+import EntryTypeSelect from 'components/shared/input/managed/EntryTypeSelect';
 
 const Container = styled.div`
     padding: 1rem 0.5rem;
@@ -134,12 +133,15 @@ export const EntryEditor = ({form, title, onSubmit, submitDisabled, attachmentsD
                     <TagsMultiSelect 
                         control={control}
                     />
-                    <MultiSelect 
+                    {/* <MultiSelect 
                         name='entryType'
                         label='Entry Type'
                         control={control}
                         defaultValue={customization.defaultLevel}
                         options={customization.levelValues}
+                    /> */}
+                    <EntryTypeSelect 
+                        control={control}
                     />
                     <TextInput 
                         name='title'

@@ -42,7 +42,7 @@ const CreateLog = ({isAuthenticated}) => {
             tags: formData.tags,
             properties: formData.properties,
             title: formData.title,
-            level: formData.entryType,
+            level: formData.level,
             description: formData.description,
             attachments: formData.attachments
         }
