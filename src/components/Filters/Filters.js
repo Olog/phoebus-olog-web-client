@@ -27,6 +27,7 @@ import { Button, Stack } from '@mui/material';
 import customization from 'config/customization';
 import TagsMultiSelect from 'components/shared/input/managed/TagsMultiSelect';
 import LogbooksMultiSelect from 'components/shared/input/managed/LogbooksMultiSelect';
+import EntryTypeSelect from 'components/shared/input/managed/EntryTypeSelect';
 
 /**
  * Component holding search criteria elements, i.e.
@@ -98,6 +99,10 @@ const Filters = ({showFilters, className}) => {
                         label='Text'
                         control={control}
                         defaultValue=''
+                    />
+                    <EntryTypeSelect 
+                        control={control}
+                        onChange={(field, value) => onSearchParamFieldValueChanged(field, value, true)}
                     />
                     <LogbooksMultiSelect 
                         control={control}
