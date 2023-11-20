@@ -9,7 +9,7 @@ const EntryTypeSelect = styled(({control, className, ...props}) => {
         <MultiSelect 
             className={className}
             name='level'
-            label='Entry Type'
+            label={customization.level ?? "Entry Type"}
             control={control}
             defaultValue={customization.defaultLevel}
             options={customization.levelValues}
