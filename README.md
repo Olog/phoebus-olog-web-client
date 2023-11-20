@@ -34,13 +34,14 @@ Available:
 * List view for search results.
 * Properties editor.
 * HTML preview of log entry, including embedded images.
+* Editing log entries
 
 Backlog:
 * Localization.
 
 ## Site customization
 
-The file `customization.js` contains customizable items. Please review its contents and adjust to your needs.
+The file `src/config/customization.js` contains customizable items. Please review its contents and adjust to your needs.
 
 ## Development 
 
@@ -108,7 +109,7 @@ End-to-end testing is run via [Cypress](https://www.cypress.io/), and is provide
 
 You can run tests interactively (this will open cypress, a browser, etc. and execute the tests live) or you can run them headlessly one-time via docker compose (videos of the tests are made available in the `cypress/videos` and `cypress/screenshots` folders, and is ignored by git)
 
-Run end-to-end tests interactively:
+Run end-to-end tests interactively (opens Cypress's test runner in a new window):
 
 ```
 # (start the backend services in one console)
@@ -130,9 +131,11 @@ The below instructions apply to a deployment scenario where a web server hosts t
 
 1. Review the file `customization.js`. It contains a few values defining text resources that might differ between sites. If you need different values, update according to your needs, but please do not commit the changes.
 
-1. Build the deployment artifacts:\
-   `>REACT_APP_BASE_URL=Olog/ npm run-script build`\
-   Note that the `REACT_APP_BASE_URL=Olog/` portion of the command is needed in order to override whatever value in the `.env` file. The actual value will depend on 
+1. Build the deployment artifacts (`REACT_APP_*` variables must be set during build; they are compile-time variables):
+   ```
+   REACT_APP_BASE_URL=Olog/ npm run-script build
+   ``` 
+   Note that setting `REACT_APP_BASE_URL` is needed in order to override whatever value in the `.env` file. The actual value will depend on 
    how the web application is deployed.
    
    This will generate files in the `build` directory, all of which must be copied to the target web server. Publish the web client resource under the root context, i.e. the URL `http://<host>/` shall resolve to the file `index.html` found in the build output.
