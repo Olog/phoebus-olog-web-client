@@ -214,6 +214,7 @@ const Description = ({form, attachmentsDisabled }) => {
                 showHtmlPreview={showHtmlPreview}
                 setShowHtmlPreview={setShowHtmlPreview}
                 commonmarkSrc={getValues('description')}
+                useRemoteAttachments={attachmentsDisabled}
                 attachedFiles={attachments ?? []}
             />
         </Stack>

@@ -19,15 +19,30 @@
 import React from 'react';
 import Modal from '../../../shared/Modal';
 import CommonmarkPreview from '../../../shared/CommonmarkPreview';
+import customization from 'config/customization';
 
-const HtmlPreviewModal = ({commonmarkSrc, attachedFiles, showHtmlPreview, setShowHtmlPreview}) => { 
+const HtmlPreviewModal = ({commonmarkSrc, attachedFiles, showHtmlPreview, setShowHtmlPreview, useRemoteAttachments}) => { 
+
+    const CommonmarkPreviewArgs = {
+        commonmarkSrc
+    }
+
+    // If using remote attachments (e.g. editing an existing entry)
+    // then set the prefix and don't include any files (there aren't any!)
+    if(useRemoteAttachments) {
+        CommonmarkPreviewArgs.imageUrlPrefix = customization.APP_BASE_URL + "/";
+    } 
+    // Otherwise, use the attached files that should exist
+    else {
+        CommonmarkPreviewArgs.attachedFiles = attachedFiles;
+    }
 
     return (
         <Modal
             open={showHtmlPreview}
             onClose={() => setShowHtmlPreview(false)}
             title="Description Preview"
-            content={<CommonmarkPreview {...{commonmarkSrc, attachedFiles}} />}
+            content={<CommonmarkPreview {...CommonmarkPreviewArgs} />}
             DialogProps={{
                 fullWidth: true,
                 maxWidth: "lg"

@@ -48,12 +48,12 @@ var allAttachedFiles = [];
  * Returns a Attachment object based on given id.
  */
 export function getFileObject(id, attachedFiles){
-    for (var i = 0; i < attachedFiles.length; i++){
+    for (let i = 0; i < attachedFiles.length; i++){
         if (attachedFiles[i].id === id) {
             return attachedFiles[i];
         }
     }
-        return null;
+    return null;
 }
 /**
  * Matches a string against the commonmark image markup specification, i.e.
