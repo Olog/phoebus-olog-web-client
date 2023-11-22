@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
-import { useEditLogMutation } from "api/ologApi";
-import { verifyLogExists } from "api/axios-olog-service";
+import { ologApi, useVerifyLogExists } from "api/ologApi";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
 
@@ -10,7 +9,8 @@ const EditLog = ({log, isAuthenticated}) => {
 
     const navigate = useNavigate();
     const [editInProgress, setEditInProgress] = useState(false);
-    const [editLog] = useEditLogMutation();
+    const [editLog] = ologApi.endpoints.editLog.useMutation();
+    const verifyLogExists = useVerifyLogExists();
 
     const form = useForm({
         defaultValues: {
@@ -47,7 +47,7 @@ const EditLog = ({log, isAuthenticated}) => {
                 setEditInProgress(false);
                 navigate(`/logs/${log.id}`);
             } catch (error) {
-                console.log("An error occured while checking log was edited", error);
+                console.error("An error occured while checking log was edited", error);
             }
         } catch (error) {
             if(error.response && (error.response.status === 401 || error.response.status === 403)){

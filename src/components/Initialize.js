@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
 import customization from "config/customization";
-import { useGetUserQuery } from "api/ologApi";
+import { ologApi } from "api/ologApi";
 
 const cookies = new Cookies();
 
@@ -15,7 +15,7 @@ const Initialize = ({children}) => {
     const [ready, setReady] = useState(false);
 
     // attempt to fetch current user if logged in
-    useGetUserQuery({
+    ologApi.endpoints.getUser.useQuery({
         pollingInterval: customization.defaultSearchFrequency
     });
 

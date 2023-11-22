@@ -18,7 +18,6 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import ologAxiosApi from 'api/axios-olog-service';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import GroupHeader from './GroupHeader';
 import styled from 'styled-components';
@@ -27,6 +26,7 @@ import CommonmarkPreview from 'components/shared/CommonmarkPreview';
 import customization from 'config/customization';
 import { getLogEntryGroupId } from '../Properties/utils';
 import { sortLogsDateCreated } from 'components/log/sort';
+import { ologApi } from 'api/ologApi';
 
 const Container = styled.div`
     display: flex;
@@ -56,20 +56,23 @@ const LogEntryGroupView = ({currentLogEntry, logGroupRecords, setLogGroupRecords
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [ getLogGroup ] = ologApi.endpoints.getLogGroup.useLazyQuery();
 
     useEffect(() => {
-        const signal = new AbortController();
-        ologAxiosApi.get(`/logs?properties=Log Entry Group.id.${getLogEntryGroupId(currentLogEntry.properties)}`, { signal })
-        .then(res => {
-            let sortedResult = sortLogsDateCreated(res.data, false);
-            setLogGroupRecords(sortedResult);
-        })
-        .catch(e => console.error("Could not fetch logs by group", e));
+        const res = getLogGroup({groupId: getLogEntryGroupId(currentLogEntry?.properties)})
+        res.unwrap()
+            .then(data => {
+                const sortedResult = sortLogsDateCreated([...data], false);
+                setLogGroupRecords(sortedResult);
+            })
+            .catch(error => {
+                console.error("Could not fetch logs by group", error);
+            })
 
         return () => {
-            signal.abort();
+            res.abort();
         }
-    }, [currentLogEntry.properties, setLogGroupRecords]);
+    }, [currentLogEntry?.properties, getLogGroup, setLogGroupRecords])
 
     const showLog = (log) => {
         dispatch(updateCurrentLogEntry(log));

@@ -1,5 +1,4 @@
 import { Alert, Box, Button, FormLabel, Grid, Stack, Typography, styled } from "@mui/material";
-import ologAxiosApi from "api/axios-olog-service";
 import DroppableFileUploadInput from "components/shared/input/FileInput";
 import React, { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
@@ -13,6 +12,7 @@ import { FaMarkdown } from "react-icons/fa";
 import EmbedImageDialog from "./EmbedImageDialog";
 import HtmlPreviewModal from "./HtmlPreviewModal";
 import removeImageMarkup from "./removeImageMarkup";
+import { ologApi } from "api/ologApi";
 
 const RenderedAttachmentsContainer = styled("div")(({hasAttachments, theme}) => ({
     display: hasAttachments ? "grid" : "flex",
@@ -56,6 +56,10 @@ const Description = ({form, attachmentsDisabled }) => {
             }
         }
     })
+
+    const {
+        data: serverInfo
+    } = ologApi.endpoints.getServerInfo.useQuery();
 
     /**
      * Appends an attachment object to the attachments form field
@@ -118,20 +122,13 @@ const Description = ({form, attachmentsDisabled }) => {
         setValue('description', description, {shouldDirty: false, shouldTouch: false, shouldValidate: false});
     }
 
-    // Get the max attachment filesize 
+    // Set the max attachment filesize 
     useEffect(() => {
-        ologAxiosApi.get('/')
-            .then(res => {
-                const {data} = res;
-                setMaxRequestSizeMb(data?.serverConfig?.maxRequestSize || customization.defaultMaxRequestSizeMb);
-                setMaxFileSizeMb(data?.serverConfig?.maxFileSize || customization.defaultMaxFileSizeMb);
-            })
-            .catch(() => {
-                setMaxRequestSizeMb(customization.defaultMaxRequestSizeMb);
-                setMaxFileSizeMb(customization.defaultMaxFileSizeMb);
-            })
-    }, []);
-    
+        if(serverInfo) {
+            setMaxRequestSizeMb(serverInfo.serverConfig?.maxRequestSize ?? customization.defaultMaxRequestSizeMb);
+            setMaxFileSizeMb(serverInfo.serverConfig?.maxFileSize ?? customization.defaultMaxFileSizeMb);
+        }
+    }, [serverInfo]);
 
     /**
      * If attachments are present, creates a wrapper containing an array of Attachment components

@@ -1,4 +1,4 @@
-const { removeEmptyKeys } = require("./ologApi");
+import { removeEmptyKeys } from "./ologApi";
 
 test("Empty lists are removed", () => {
 

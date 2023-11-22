@@ -1,11 +1,11 @@
 import React from "react";
 import MultiSelect from "../MultiSelect";
 import { styled } from "@mui/material";
-import { useGetTagsQuery } from "api/ologApi";
+import { ologApi } from "api/ologApi";
 
 const TagsMultiSelect = styled(({control, className, ...props}) => {
 
-    const {data: tags = [], isLoading} = useGetTagsQuery();
+    const {data: tags = [], isLoading} = ologApi.endpoints.getTags.useQuery();
 
     return (
         <MultiSelect 

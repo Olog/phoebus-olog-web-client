@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import {useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import ologAxiosApi from 'api/axios-olog-service';
 import LogDetails from 'components/LogDetails';
 import SearchResultList from 'components/SearchResult/SearchResultList';
 import customization from 'config/customization';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
-import { useSearchLogsQuery } from 'api/ologApi';
+import { ologApi, removeEmptyKeys } from 'api/ologApi';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import ServiceErrorBanner from 'components/ErrorBanner';
 import styledComponentsStyled from 'styled-components';
@@ -32,7 +31,6 @@ import Filters from 'components/Filters';
 import { desktop, mobile } from 'config/media';
 import { styled } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { removeEmptyKeys } from 'api/ologApi';
 
 const ContentContainer = styledComponentsStyled.div`
     height: 100%;
@@ -91,6 +89,7 @@ const LogEntriesView = () => {
 
     const [showFilters, setShowFilters] = useState(false);
     const [showGroup, setShowGroup] = useState(false);
+    const [logGroupRecords, setLogGroupRecords] = useState([]);
     
     const dispatch = useDispatch();
     const searchParams = useSelector(state => state.searchParams);
@@ -119,7 +118,7 @@ const LogEntriesView = () => {
         },
         error: searchResultError, 
         isFetching: searchInProgress 
-    } = useSearchLogsQuery(searchLogsQuery, {
+    } = ologApi.endpoints.searchLogs.useQuery(searchLogsQuery, {
         pollingInterval: customization.defaultSearchFrequency,
         refetchOnMountOrArgChange: true,
         refetchOnFocus: true
@@ -127,8 +126,7 @@ const LogEntriesView = () => {
     if(searchResultError) {
         console.error("An error occurred while fetching search results", searchResultError);
     }
-
-    const [logGroupRecords, setLogGroupRecords] = useState([]);
+    const [getLog, {data: getLogResult, error: getLogError}] = ologApi.endpoints.getLog.useLazyQuery();
 
     const {id: logId } = useParams();
 
@@ -140,30 +138,34 @@ const LogEntriesView = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
-    // if viewing a specific log entry, then retrieve it
+    // If viewing a specific log entry, then retrieve it
+    // Otherwise clear the current entry
     useEffect(() => {
-        // If the entry isn't already in the search results, then fetch it
-        const signal = new AbortController();
         if(logId > 0) {
-            ologAxiosApi.get(`/logs/${logId}`, {signal})
-            .then(res => {
-                console.log({log: res.data})
-                dispatch(updateCurrentLogEntry(res.data));
-            })
-            .catch(e => {
-                console.error(`Could not find log id ${logId}`, e);
-                dispatch(updateCurrentLogEntry(null));
-            })
+            const result = getLog({id: logId});
+            return () => {
+                result.abort();
+            }
         } else {
             dispatch(updateCurrentLogEntry(null));
         }
-        return () => {
-            signal.abort();
-        }
-        // if(!searchResults?.logs?.find(it => `${it.id}` === `${logId}`)) {
-        // }
 
-    }, [logId, dispatch])
+    }, [dispatch, getLog, logId])
+
+    // When the log entry is received, update the current entry to it
+    // Otherwise clear the current entry
+    useEffect(() => {
+
+        if(getLogResult) {
+            dispatch(updateCurrentLogEntry(getLogResult));
+        }
+
+        if(getLogError) {
+            dispatch(updateCurrentLogEntry(null));
+        }
+
+
+    }, [getLogResult, getLogError, dispatch])
 
     useEffect(() => {
         setShowGroup(false);

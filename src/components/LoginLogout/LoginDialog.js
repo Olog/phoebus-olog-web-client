@@ -21,14 +21,14 @@ import Modal from '../shared/Modal';
 import { useForm } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import { Alert, Button, Stack } from '@mui/material';
-import { useLoginMutation } from 'api/ologApi';
+import { ologApi } from 'api/ologApi';
 import { useShowLogin } from 'features/authSlice';
 
 const LoginDialog = () => {
 
   const {control, handleSubmit, reset, resetField, setFocus} = useForm();
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
-  const [login, { isSuccess, error }] = useLoginMutation();
+  const [login, { isSuccess, error }] = ologApi.endpoints.login.useMutation();
   const {showLogin, setShowLogin} = useShowLogin();
 
   const closeAndReset = () => {

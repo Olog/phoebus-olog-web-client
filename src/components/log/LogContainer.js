@@ -1,12 +1,12 @@
 import React from "react";
-import { useGetLogbookQuery } from "api/ologApi";
+import { ologApi } from "api/ologApi";
 import { ServerErrorPage } from "components/ErrorPage";
 import { LinearProgress } from "@mui/material";
 import useIsAuthenticated from "hooks/useIsAuthenticated";
 
 const LogContainer = ({id, renderLog}) => {
 
-    const { data: log, isLoading, error } = useGetLogbookQuery({id});
+    const { data: log, isLoading, error } = ologApi.endpoints.getLog.useQuery({id});
     
     const [isAuthenticated] = useIsAuthenticated();
 

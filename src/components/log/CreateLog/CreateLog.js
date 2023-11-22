@@ -4,13 +4,13 @@ import EntryEditor from "../EntryEditor";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
-import { useCreateLogMutation } from "api/ologApi";
-import { verifyLogExists } from "api/axios-olog-service";
+import { ologApi, useVerifyLogExists } from "api/ologApi";
 
 const CreateLog = ({isAuthenticated}) => {
 
     const [createInProgress, setCreateInProgress] = useState(false);
-    const [createLog] = useCreateLogMutation();
+    const [createLog] = ologApi.endpoints.createLog.useMutation();
+    const verifyLogExists = useVerifyLogExists();
 
     const form = useForm({
         defaultValues: {
@@ -57,7 +57,7 @@ const CreateLog = ({isAuthenticated}) => {
                 setCreateInProgress(false);
                 navigate(`/logs/${data.id}`);
             } catch (error) {
-                console.log("An error occured while checking log was created", error);
+                console.error("An error occured while checking log was created", error);
             }
         } catch (error) {
             if(error.response && (error.response.status === 401 || error.response.status === 403)){
