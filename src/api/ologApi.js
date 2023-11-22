@@ -76,6 +76,36 @@ export const ologApi = createApi({
                 url: `/logs/${id}`
             })
         }),
+        createLog: builder.mutation({
+            query: ({log, replyTo}) => {
+
+                const bodyFormData = new FormData();
+
+                // Append all files. Each is added with name "files", and that is actually OK
+                if(log.attachments && log.attachments.length > 0) {
+                    for (let i = 0; i < log.attachments.length; i++) {
+                        bodyFormData.append("files", log.attachments[i].file, log.attachments[i].file.name);
+                    }
+                }
+                // Log entry must be added as JSON blob, otherwise the content type cannot be set.
+                bodyFormData.append("logEntry", new Blob([JSON.stringify(log)], {type: 'application/json'}));
+
+                return {
+                    url: `/logs/multipart?markup=commonmark${replyTo ? `&inReplyTo=${replyTo}` : ""}`,
+                    method: 'PUT',
+                    body: bodyFormData,
+                    formData: true
+                }
+
+            }
+        }),
+        editLog: builder.mutation({
+            query: ({log}) => ({
+                url: `/logs/${log.id}?markup=commonmark`,
+                method: 'POST',
+                body: log
+            })
+        }),
         getUser: builder.query({
             query: () => ({
                 url: "/user"
@@ -111,6 +141,8 @@ export const {
     useGetArchivedLogbooksQuery,
     useGetPropertiesQuery,
     useGetLogbookQuery,
+    useCreateLogMutation,
+    useEditLogMutation,
     useGetUserQuery,
     useLoginMutation,
     useLogoutMutation

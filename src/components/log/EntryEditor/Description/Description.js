@@ -44,13 +44,13 @@ const Description = ({form, attachmentsDisabled }) => {
         rules: {
             validate: {
                 maxRequestSize: (attachments) => {
-                    const total = attachments?.map(it => it?.file?.size || 0)?.reduce((prev, curr) => curr + prev, 0);
+                    const total = attachments?.map(it => it?.file?.size || 0)?.reduce((prev, curr) => curr + prev, 0) ?? 0;
                     const max = maxRequestSizeMb*1000000;
                     return total < max || `Attachments exceed total maximum upload size of ${maxRequestSizeMb}MB` 
                 },
                 maxFileSize: (attachments) => {
                     const max = maxFileSizeMb*1000000;
-                    const results = attachments?.filter(it => it?.file?.size > max)?.map(it => it?.file?.name);
+                    const results = attachments?.filter(it => it?.file?.size > max)?.map(it => it?.file?.name) ?? [];
                     return results.length === 0 || `Attachments exceed max filesize (${maxFileSizeMb}MB): ${results}`
                 }
             }
@@ -214,6 +214,7 @@ const Description = ({form, attachmentsDisabled }) => {
                 showHtmlPreview={showHtmlPreview}
                 setShowHtmlPreview={setShowHtmlPreview}
                 commonmarkSrc={getValues('description')}
+                useRemoteAttachments={attachmentsDisabled}
                 attachedFiles={attachments ?? []}
             />
         </Stack>

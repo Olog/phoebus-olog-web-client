@@ -9,16 +9,41 @@ describe('App.cy.js', () => {
   it('can navigate different log entries by clicking on the next/previous buttons on the log entry', () => {
 
     // Given the server responds with many search results to click on
+    const entry1 = testEntry({title: 'Entry 1'});
+    const entry2 = testEntry({title: 'Entry 2'});
+    const entry3 = testEntry({title: 'Entry 3'});
     cy.intercept(
       'GET',
       '**/logs/search*',
       {
         statusCode: 200,
         body: resultList([
-          testEntry({title: 'Entry 1'}),
-          testEntry({title: 'Entry 2'}),
-          testEntry({title: 'Entry 3'})
+          entry1, entry2, entry3
         ])
+      }
+    );
+    cy.intercept(
+      'GET',
+      `**/logs/${entry1.id}`,
+      {
+        statusCode: 200,
+        body: entry1
+      }
+    );
+    cy.intercept(
+      'GET',
+      `**/logs/${entry2.id}`,
+      {
+        statusCode: 200,
+        body: entry2
+      }
+    );
+    cy.intercept(
+      'GET',
+      `**/logs/${entry3.id}`,
+      {
+        statusCode: 200,
+        body: entry3
       }
     );
 
@@ -32,17 +57,17 @@ describe('App.cy.js', () => {
 
     // Once clicked, the details page is opened (level 2 header)
     // And we can navigate to the next entry but not the previous one
-    cy.findByRole('heading', {name: 'Entry 1', level: 2}).should("exist");
+    cy.findByRole('heading', {name: 'Entry 1', level: 3}).should("exist");
     cy.findByRole('button', {name: /previous log entry/i}).should("be.disabled");
     cy.findByRole('button', {name: /next log entry/i}).should("not.be.disabled").click();
     
     // Once viewing the second entry, we can navigate to the previous or next entry
-    cy.findByRole('heading', {name: 'Entry 2', level: 2}).should("exist");
+    cy.findByRole('heading', {name: 'Entry 2', level: 3}).should("exist");
     cy.findByRole('button', {name: /previous log entry/i}).should("not.be.disabled");
     cy.findByRole('button', {name: /next log entry/i}).should("not.be.disabled").click();
 
     // Once viewing the last entry we can navigate to the previous but not last entry
-    cy.findByRole('heading', {name: 'Entry 3', level: 2}).should("exist");
+    cy.findByRole('heading', {name: 'Entry 3', level: 3}).should("exist");
     cy.findByRole('button', {name: /previous log entry/i}).should("not.be.disabled");
     cy.findByRole('button', {name: /next log entry/i}).should("be.disabled");
 
@@ -124,6 +149,56 @@ describe('App.cy.js', () => {
     // and sort should be set to cookie value
     cy.findByRole('button', {name: /show advanced search/i}).click();
     cy.findByRole('radio', {name: /ascending/i}).should("be.checked");
+
+  })
+
+  it("can view a log directly, even when not in search results list", () => {
+    
+    // Given nothing in search results 
+    cy.intercept(
+      'GET',
+      '**/logs/search*',
+      {
+        statusCode: 200,
+        body: resultList([])
+      }
+    );
+
+    // But a log exists
+    const log = testEntry({title: 'Some Log Entry'});
+    cy.intercept(
+      'GET',
+      `**/logs/${log.id}`,
+      {
+        statusCode: 200,
+        body: log
+      }
+    );
+
+    // When navigating to a log directly
+    cy.mount(<TestRouteProvider initialEntries={[`/logs/${log.id}`]} />)
+
+    // Then we can view it
+    cy.findByRole('heading', {name: testEntry.title, level: 2}).should("exist");
+
+  })
+
+  it("cannot view a log directly if it doesn't exist", () => {
+    
+    // Given a log doesn't exist
+    cy.intercept(
+      'GET',
+      `**/logs/**`,
+      {
+        statusCode: 404
+      }
+    );
+
+    // When navigating to a log directly
+    cy.mount(<TestRouteProvider initialEntries={[`/logs/12345abcde12345`]} />)
+
+    // Then we get an error
+    cy.findByRole('heading', {name: /log record .* not found/i}).should("exist");
 
   })
 

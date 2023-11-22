@@ -121,7 +121,8 @@ const LogEntriesView = () => {
         isFetching: searchInProgress 
     } = useSearchLogsQuery(searchLogsQuery, {
         pollingInterval: customization.defaultSearchFrequency,
-        refetchOnMountOrArgChange: true
+        refetchOnMountOrArgChange: true,
+        refetchOnFocus: true
     });
     if(searchResultError) {
         console.error("An error occurred while fetching search results", searchResultError);
@@ -142,24 +143,27 @@ const LogEntriesView = () => {
     // if viewing a specific log entry, then retrieve it
     useEffect(() => {
         // If the entry isn't already in the search results, then fetch it
-        if(!searchResults?.logs?.find(it => `${it.id}` === `${logId}`)) {
-            const signal = new AbortController();
-            if(logId > 0) {
-                ologAxiosApi.get(`/logs/${logId}`, {signal})
-                .then(res => {
-                    dispatch(updateCurrentLogEntry(res.data));
-                })
-                .catch(e => {
-                    console.error(`Could not find log id ${logId}`, e);
-                    dispatch(updateCurrentLogEntry(null));
-                })
-            }
-            return () => {
-                signal.abort();
-            }
+        const signal = new AbortController();
+        if(logId > 0) {
+            ologAxiosApi.get(`/logs/${logId}`, {signal})
+            .then(res => {
+                console.log({log: res.data})
+                dispatch(updateCurrentLogEntry(res.data));
+            })
+            .catch(e => {
+                console.error(`Could not find log id ${logId}`, e);
+                dispatch(updateCurrentLogEntry(null));
+            })
+        } else {
+            dispatch(updateCurrentLogEntry(null));
         }
+        return () => {
+            signal.abort();
+        }
+        // if(!searchResults?.logs?.find(it => `${it.id}` === `${logId}`)) {
+        // }
 
-    }, [searchResults, logId, dispatch])
+    }, [logId, dispatch])
 
     useEffect(() => {
         setShowGroup(false);
