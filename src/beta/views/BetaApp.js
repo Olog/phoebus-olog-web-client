@@ -16,35 +16,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { Paper, Stack, Typography } from "@mui/material";
-import Initialize from "components/Initialize";
 import React from "react";
+import AppNavBar from "beta/components/AppNavBar";
+import Initialize from "components/Initialize";
+import { Outlet } from "react-router-dom";
+import { ThemeProvider } from "beta/providers";
+import { Stack } from "@mui/material";
 
 const BetaApp = () => {
 
     return (
-        <Initialize>
-            {/* Stub for initial merge of beta feature */}
-            <Stack height="100vh" padding={2} alignItems="center" justifyContent="center" >
-                <Paper 
-                    elevation={24}
-                    square={false}
-                    sx={{
-                        paddingY: 10,
-                        paddingX: 20, 
-                        backgroundColor: "primary.main",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "essWhite.main"
-                    }}
-                >
-                    <Typography component="h1" variant="h3">Welcome to the Beta App</Typography>
-                    <Typography>This is a placeholder and will be updated as features are added</Typography>
-                </Paper>
-            </Stack>
-        </Initialize>
+        <ThemeProvider>
+            <Initialize>
+                <Stack height="100dvh" width="100dvw">
+                    <AppNavBar />
+                    <Outlet />
+                </Stack>
+            </Initialize>
+        </ThemeProvider>
     )
 }
 export default BetaApp;
