@@ -1,9 +1,9 @@
 import { Box, Button, Chip, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
-import UserAvatar from "../UserAvatar";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { useShowLogout } from "features/authSlice";
+import UserAvatar from "beta/components/common/UserAvatar";
 
 const UserMenu = ({user}) => {
 
@@ -28,7 +28,7 @@ const UserMenu = ({user}) => {
                     <Stack gap={0.5}>
                         <Typography>Roles</Typography>
                         { user?.roles
-                            ? user.roles.map(role => <Chip label={role} color="secondary" />)
+                            ? user.roles.map(role => <Chip label={role} color="secondary" key={role} />)
                             : <Typography variant="body2" fontStyle="italic">(No roles)</Typography>
                         }
                     </Stack>

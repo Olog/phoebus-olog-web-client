@@ -17,7 +17,7 @@
  */
 
 import React from "react";
-import AppNavBar from "beta/components/AppNavBar";
+import AppNavBar from "beta/components/navigation/AppNavBar";
 import Initialize from "components/Initialize";
 import { Outlet } from "react-router-dom";
 import { ThemeProvider } from "beta/providers";

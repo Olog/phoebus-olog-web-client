@@ -2,14 +2,11 @@ import React from "react";
 import { useGetLogbookQuery } from "api/ologApi";
 import { ServerErrorPage } from "components/ErrorPage";
 import { LinearProgress } from "@mui/material";
-import useIsAuthenticated from "hooks/useIsAuthenticated";
 
 const LogContainer = ({id, renderLog}) => {
 
     const { data: log, isLoading, error } = useGetLogbookQuery({id});
     
-    const [isAuthenticated] = useIsAuthenticated();
-
     if(isLoading) {
         return <LinearProgress width="100%" />
     }
@@ -22,7 +19,7 @@ const LogContainer = ({id, renderLog}) => {
     }
 
     return (
-        renderLog({log, isAuthenticated})
+        renderLog({log})
     );
 }
 export default LogContainer;

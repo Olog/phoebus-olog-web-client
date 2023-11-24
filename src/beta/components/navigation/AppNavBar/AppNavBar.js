@@ -22,7 +22,7 @@ import Initialize from "components/Initialize";
 import { InternalButtonLink } from "components/shared/InternalLink";
 import { useShowLogin, useUser } from "features/authSlice";
 import React from "react";
-import packageInfo from "../../../../package.json";
+import packageInfo from "../../../../../package.json";
 import UserMenu from "./UserMenu";
 import LoginDialog from "components/LoginLogout/LoginDialog";
 import LogoutDialog from "components/LoginLogout/LogoutDialog";
@@ -76,8 +76,8 @@ const AppNavBar = () => {
                     <NavFooter>
                         <li>
                             { user ? 
-                                <InternalButtonLink to="/logs/create" variant="outlined" color="inherit" startIcon={<AddCircleIcon />}>
-                                    New Log
+                                <InternalButtonLink to="/logs/create" color="inherit" startIcon={<AddCircleIcon />}>
+                                    New Entry
                                 </InternalButtonLink> : null
                             }
                         </li>

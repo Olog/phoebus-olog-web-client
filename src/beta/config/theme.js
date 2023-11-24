@@ -9,4 +9,3 @@ theme = createTheme(theme, {
         primary: theme.palette.essCyan
     }
 });
-console.log({theme})

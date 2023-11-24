@@ -1,4 +1,5 @@
 import BetaApp from "beta/views/BetaApp";
+import SearchView from "beta/views/SearchView";
 import LogEntriesView from "components/LogEntriesView";
 import React from "react";
 import {
@@ -45,7 +46,16 @@ export const routes = [
     {
         path: "/beta",
         element: <BetaApp />,
-        children: []
+        children: [
+            {
+                path: "",
+                element: <SearchView />
+            },
+            {
+                path: "logs/:id",
+                element: <SearchView />
+            },
+        ]
     },
 ];
 

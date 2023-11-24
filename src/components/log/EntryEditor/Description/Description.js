@@ -65,7 +65,7 @@ const Description = ({form, attachmentsDisabled }) => {
         if(files) {
             // note event.target.files is a FileList, not an array! But we can convert it
             Array.from(files).forEach(file => {
-                appendAttachment(new OlogAttachment(file, uuidv4()));
+                appendAttachment(new OlogAttachment({file, id: uuidv4()}));
             });
         }
     }
@@ -111,7 +111,7 @@ const Description = ({form, attachmentsDisabled }) => {
      */
     const addEmbeddedImage = (file, width, height) => {
         const id = uuidv4();
-        appendAttachment(new OlogAttachment(file, id));
+        appendAttachment(new OlogAttachment({file, id}));
         const imageMarkup = "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
         let description = getValues('description') || '';
         description += imageMarkup;
