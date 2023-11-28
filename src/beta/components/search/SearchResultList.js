@@ -3,8 +3,8 @@ import React from "react";
 
 const SearchResultList = styled(({className}) => {
     return (
-        <Stack className={`SearchResultList ${className}`} >
-            <Typography>SearchResultList</Typography>
+        <Stack className={`SearchResultList ${className}`} width={300} >
+            <Typography>SearchResultList (Stub)</Typography>
         </Stack>
     )
 })({})

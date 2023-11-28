@@ -1,18 +1,11 @@
-import { Box, Stack, Typography, styled } from "@mui/material";
-import { theme } from "beta/config/theme";
+import { Stack, Typography, styled } from "@mui/material";
 import { InternalLink } from "components/shared/Link";
 import { formatFullDateTime } from "lib/moment";
 import React from "react";
 import AttachmentsGallery from "./AttachmentsGallery";
 import OlogAttachment from "components/log/EntryEditor/Description/OlogAttachment";
-
-const Key = styled(Typography)({
-    fontWeight: "bold",
-    gridColumn: "span / span"
-});
-const Value = styled(Typography)({
-    gridColumn: "span / span"
-});
+import MetadataTable from "./MetadataTable";
+import LogDetailActionButton from "./LogDetailActionButton";
 
 const CreatedDate = ({log}) => {
     return (
@@ -22,7 +15,7 @@ const CreatedDate = ({log}) => {
                 <>
                     {formatFullDateTime(log.modifyDate)}
                     {" "}
-                    <InternalLink to={`/logs/${log.id}/history`}>(edited)</InternalLink>
+                    <InternalLink to={`/beta/logs/${log.id}/history`}>(edited)</InternalLink>
                 </>
             )
             : formatFullDateTime(log.createdDate)}
@@ -30,33 +23,35 @@ const CreatedDate = ({log}) => {
     )
 }
 
-const LogHeader = ({log}) => {
+const LogHeader = styled(({log, className}) => {
 
     return (
         <Stack 
             gap={1}
-            sx={{
-                bgcolor: `${theme.palette.primary.main}10`,
-                borderLeft: `${theme.palette.primary.main} solid 5px`,
-                padding: 2
-            }}
+            className={className}
+            padding={2}
         >
-            <Typography variant="button" component="h3" >Log Information</Typography>
-            <Box sx={{
-                display: "grid",
-                gridTemplateColumns: "max-content max-content max-content max-content",
-                columnGap: 2
-            }}>
-                <Key>Author</Key><Value>{log.owner}</Value>
-                <Key>Created</Key><Value><CreatedDate log={log} /></Value>
-                <Key>Logbooks</Key><Value>{log?.logbooks.map(it => it.name).join(", ")}</Value>
-                <Key>Tags</Key><Value>{log?.tags.map(it => it.name).join(", ")}</Value>
-                <Key>Entry Type</Key><Value>{log.level}</Value>
-            </Box>
+            <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
+                <Typography variant="button" component="h3" >Log Information</Typography>
+                <LogDetailActionButton log={log} />
+            </Stack>
+            <MetadataTable data={{
+                "Author": log.owner,
+                "Created": <CreatedDate log={log} />,
+                "Logbooks": log?.logbooks.map(it => it.name).join(", "),
+                "Tags": log?.tags.map(it => it.name).join(", "),
+                "Entry Type": log.level
+            }} />
             <Typography fontWeight="bold" >Attachments</Typography>
-            <AttachmentsGallery attachments={log?.attachments?.map(it => new OlogAttachment({attachment: it})) ?? []} />
+            { log.attachments && log.attachments.length > 0 
+                ? <AttachmentsGallery attachments={log?.attachments?.map(it => new OlogAttachment({attachment: it})) ?? []} />
+                : <Typography fontStyle="italic" >(None)</Typography>
+            }
         </Stack>
     );
-}
+})(({theme}) => ({
+    backgroundColor: `${theme.palette.primary.main}10`,
+    borderLeft: `${theme.palette.primary.main} solid 5px`
+}))
 
 export default LogHeader;

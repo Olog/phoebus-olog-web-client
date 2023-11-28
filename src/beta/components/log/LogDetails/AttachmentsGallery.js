@@ -1,4 +1,4 @@
-import { Box, IconButton, ImageList, ImageListItem, ImageListItemBar, Stack, styled } from "@mui/material";
+import { IconButton, ImageList, ImageListItem, ImageListItemBar, Stack, styled } from "@mui/material";
 import React, { useState } from "react";
 import { FileImage } from "components/Attachment";
 import Modal from "components/shared/Modal";
@@ -111,8 +111,8 @@ const AttachmentsGallery = ({attachments, size=100}) => {
     }
 
     return (
-        <Box onKeyUp={onKeyPress}>
-            <ImageList gap={5} cols={10}>
+        <Stack onKeyUp={onKeyPress} >
+            <ImageList gap={5} cols={10} >
                 {attachments.map((attachment, index) => {
                     return (
                         <ImageListItem key={attachment.id} onClick={() => onClick(index)} sx={{ cursor: "pointer"}}>
@@ -130,7 +130,7 @@ const AttachmentsGallery = ({attachments, size=100}) => {
                 title={attachments[currentIndex].filename}
                 content={<GalleryView {...{attachments, currentIndex, setCurrentIndex, onPrevious, onNext}} />}
             />
-        </Box>
+        </Stack>
     );
 
 };

@@ -4,7 +4,7 @@ import EntryEditor from "../EntryEditor";
 import customization from "config/customization";
 import { useCreateLogMutation } from "api/ologApi";
 import { verifyLogExists } from "api/axios-olog-service";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
 
 const ReplyLog = ({log, isAuthenticated}) => {
@@ -12,6 +12,7 @@ const ReplyLog = ({log, isAuthenticated}) => {
     const [replyInProgress, setReplyInProgress] = useState(false);
     const [createLog] = useCreateLogMutation();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const form = useForm({
         defaultValues: {
@@ -54,9 +55,13 @@ const ReplyLog = ({log, isAuthenticated}) => {
                 // verify log fully created before redirecting
                 await verifyLogExists({logRequest: formData, logResult: data});
                 setReplyInProgress(false);
-                navigate(`/logs/${data.id}`);
+                if(location.pathname.startsWith("/beta")) {
+                    navigate(`/beta/logs/${data.id}`);
+                } else {
+                    navigate(`/logs/${data.id}`);
+                }
             } catch (error) {
-                console.log("An error occured while checking log was created", error);
+                console.error("An error occured while checking log was created", error);
             }
         } catch (error) {
             if(error.response && (error.response.status === 401 || error.response.status === 403)){

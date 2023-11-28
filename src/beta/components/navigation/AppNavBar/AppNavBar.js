@@ -76,7 +76,7 @@ const AppNavBar = () => {
                     <NavFooter>
                         <li>
                             { user ? 
-                                <InternalButtonLink to="/logs/create" color="inherit" startIcon={<AddCircleIcon />}>
+                                <InternalButtonLink to="/beta/logs/create" color="inherit" startIcon={<AddCircleIcon />}>
                                     New Entry
                                 </InternalButtonLink> : null
                             }

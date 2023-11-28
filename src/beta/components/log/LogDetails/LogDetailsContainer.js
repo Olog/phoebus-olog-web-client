@@ -3,7 +3,7 @@ import LogContainer from "components/log/LogContainer";
 import React from "react";
 import LogDetails from "./LogDetails";
 
-const LogDetailsContainer = styled(({id, className}) => {
+const LogDetailsContainer = styled(({id}) => {
 
     let renderedContent = (
         <LogContainer 
@@ -21,9 +21,9 @@ const LogDetailsContainer = styled(({id, className}) => {
     }
 
     return (
-        <Stack className={`LogDetailsContainer ${className}`}>
+        <>
             {renderedContent}
-        </Stack>
+        </>
     )
 })({})
 

@@ -55,6 +55,22 @@ export const routes = [
                 path: "logs/:id",
                 element: <SearchView />
             },
+            {
+                path: "logs/create",
+                element: <CreateLogView />
+            },
+            {
+                path: "logs/:id/reply",
+                element: <ReplyLogView />
+            },
+            {
+                path: "logs/:id/edit",
+                element: <EditLogView />
+            },
+            {
+                path: "logs/:id/history",
+                element: <LogHistoryView />
+            }
         ]
     },
 ];

@@ -21,19 +21,32 @@ import AppNavBar from "beta/components/navigation/AppNavBar";
 import Initialize from "components/Initialize";
 import { Outlet } from "react-router-dom";
 import { ThemeProvider } from "beta/providers";
-import { Stack } from "@mui/material";
+import { Box, styled } from "@mui/material";
 
-const BetaApp = () => {
+const BetaApp = styled(({className}) => {
 
     return (
         <ThemeProvider>
-            <Initialize>
-                <Stack height="100dvh" width="100dvw">
+            <Initialize >
+                <Box 
+                    className={className}
+                    sx={{
+                        height: "100dvh",
+                        width: "100dvw",
+                        display: "grid",
+                        gridTemplateColumns: "1fr",
+                        gridTemplateRows: "min-content 1fr"
+                    }} 
+                >
                     <AppNavBar />
                     <Outlet />
-                </Stack>
+                </Box>
             </Initialize>
         </ThemeProvider>
     )
-}
+})({
+    "& > *": {
+        minHeight: 0
+    }
+})
 export default BetaApp;

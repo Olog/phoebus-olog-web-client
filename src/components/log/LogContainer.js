@@ -5,7 +5,7 @@ import { LinearProgress } from "@mui/material";
 
 const LogContainer = ({id, renderLog}) => {
 
-    const { data: log, isLoading, error } = useGetLogbookQuery({id});
+    const { data: log, isLoading, error } = useGetLogbookQuery({id}, { refetchOnFocus: true, refetchOnMountOrArgChange: true });
     
     if(isLoading) {
         return <LinearProgress width="100%" />
