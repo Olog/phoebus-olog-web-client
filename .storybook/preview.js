@@ -1,9 +1,10 @@
 import React from "react";
 import { MuiThemeProvider, ReduxProvider, StyledComponentsThemeProvider } from "../src/providers";
 import { initialize, mswLoader } from 'msw-storybook-addon';
+import {defaultHandlers} from "../src/mocks/handlers";
 
 // Initialize MSW
-initialize();
+initialize({}, defaultHandlers);
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
