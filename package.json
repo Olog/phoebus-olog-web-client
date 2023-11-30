@@ -76,9 +76,13 @@
     "cypress": "^13.3.2",
     "eslint-plugin-storybook": "^0.6.12",
     "msw": "^0.44.2",
+    "msw-storybook-addon": "^1.10.0",
     "prop-types": "^15.8.1",
     "react-select-event": "^5.5.1",
     "storybook": "^7.0.12",
     "webpack": "^5.82.1"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
