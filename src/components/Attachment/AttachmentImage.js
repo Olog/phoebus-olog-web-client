@@ -15,7 +15,7 @@ export const isImage = (attachment) => {
     }
 } 
 
-const FileImage = ({alt, className, ...props}) => {
+export const FileImage = ({alt, className, ...props}) => {
     return (
         <Stack 
             fontSize="5rem"
@@ -30,7 +30,7 @@ const FileImage = ({alt, className, ...props}) => {
     )
 }
 
-export const LocalImage = styled(({attachment, className, ...props}) => {
+export const LocalImage = styled(({attachment, className, ImageProps, FileProps}) => {
     const alt = attachment.file.name;
     if(isImage(attachment)) {
         return (
@@ -38,17 +38,17 @@ export const LocalImage = styled(({attachment, className, ...props}) => {
                 src={URL.createObjectURL(attachment.file)} 
                 alt={alt} 
                 className={className} 
-                {...props} 
+                {...ImageProps} 
             />
         );
     } else {
         return (
-            <FileImage {...{alt, className, ...props}} />
+            <FileImage {...{alt, className, ...FileProps}} />
         );
     }
 })({});
 
-export const RemoteImage = styled(({attachment, className, ...props}) => {
+export const RemoteImage = styled(({attachment, className, ImageProps, FileProps}) => {
     const alt = attachment?.filename ?? "unknown image";
     if(isImage(attachment)) {
         return (
@@ -56,11 +56,11 @@ export const RemoteImage = styled(({attachment, className, ...props}) => {
                 src={`${customization.APP_BASE_URL}/attachment/` + attachment.id} 
                 alt={alt}
                 className={className}
-                {...props}
+                {...ImageProps}
             />
         )
     } else {
-        return <FileImage {...{alt, className, ...props}} />
+        return <FileImage {...{alt, className, ...FileProps}} />
     }
 })({});
 

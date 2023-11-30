@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
 import useFormPersist from "react-hook-form-persist";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
 
@@ -11,6 +11,7 @@ const CreateLog = ({isAuthenticated}) => {
     const [createInProgress, setCreateInProgress] = useState(false);
     const [createLog] = ologApi.endpoints.createLog.useMutation();
     const verifyLogExists = useVerifyLogExists();
+    const location = useLocation();
 
     const form = useForm({
         defaultValues: {
@@ -55,7 +56,11 @@ const CreateLog = ({isAuthenticated}) => {
                 await verifyLogExists({logRequest: formData, logResult: data});
                 clearFormData();
                 setCreateInProgress(false);
-                navigate(`/logs/${data.id}`);
+                if(location.pathname.startsWith("/beta")) {
+                    navigate(`/beta/logs/${data.id}`);
+                } else {
+                    navigate(`/logs/${data.id}`);
+                }
             } catch (error) {
                 console.error("An error occured while checking log was created", error);
             }

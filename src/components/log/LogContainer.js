@@ -2,14 +2,14 @@ import React from "react";
 import { ologApi } from "api/ologApi";
 import { ServerErrorPage } from "components/ErrorPage";
 import { LinearProgress } from "@mui/material";
-import useIsAuthenticated from "hooks/useIsAuthenticated";
 
 const LogContainer = ({id, renderLog}) => {
 
-    const { data: log, isLoading, error } = ologApi.endpoints.getLog.useQuery({id});
+    const { data: log, isLoading, error } = ologApi.endpoints.getLog.useQuery(
+        { id }, 
+        { refetchOnFocus: true, refetchOnMountOrArgChange: true }
+    );
     
-    const [isAuthenticated] = useIsAuthenticated();
-
     if(isLoading) {
         return <LinearProgress width="100%" />
     }
@@ -22,7 +22,7 @@ const LogContainer = ({id, renderLog}) => {
     }
 
     return (
-        renderLog({log, isAuthenticated})
+        renderLog({log})
     );
 }
 export default LogContainer;

@@ -127,7 +127,6 @@ const LogEntriesView = () => {
         console.error("An error occurred while fetching search results", searchResultError);
     }
     const [getLog, {data: getLogResult, error: getLogError}] = ologApi.endpoints.getLog.useLazyQuery();
-
     const {id: logId } = useParams();
 
     // On changes to search params, reset the page to zero

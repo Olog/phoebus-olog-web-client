@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
 
 const EditLog = ({log, isAuthenticated}) => {
 
-    const navigate = useNavigate();
     const [editInProgress, setEditInProgress] = useState(false);
     const [editLog] = ologApi.endpoints.editLog.useMutation();
     const verifyLogExists = useVerifyLogExists();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const form = useForm({
         defaultValues: {
@@ -45,7 +46,11 @@ const EditLog = ({log, isAuthenticated}) => {
                 // Verify full edited/available
                 await verifyLogExists({logRequest: formData, logResult: data});
                 setEditInProgress(false);
-                navigate(`/logs/${log.id}`);
+                if(location.pathname.startsWith("/beta")) {
+                    navigate(`/beta/logs/${data.id}`);
+                } else {
+                    navigate(`/logs/${data.id}`);
+                }
             } catch (error) {
                 console.error("An error occured while checking log was edited", error);
             }
