@@ -37,7 +37,12 @@ export let theme = createTheme({});
 // Compose ESS Colors
 theme = createTheme(theme, {
     palette: {
-      essCyan: "#0099dc",
+      essCyan: theme.palette.augmentColor({
+        color: {
+          main: "#0099dc"
+        },
+        name: "essCyan"
+      }),
       essBlack: "#000000",
       essWhite: theme.palette.augmentColor({
         color: {

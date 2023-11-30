@@ -147,7 +147,6 @@ const LogEntriesView = () => {
         if(logId > 0) {
             ologAxiosApi.get(`/logs/${logId}`, {signal})
             .then(res => {
-                console.log({log: res.data})
                 dispatch(updateCurrentLogEntry(res.data));
             })
             .catch(e => {

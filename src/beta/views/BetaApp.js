@@ -16,35 +16,37 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { Paper, Stack, Typography } from "@mui/material";
-import Initialize from "components/Initialize";
 import React from "react";
+import AppNavBar from "beta/components/navigation/AppNavBar";
+import Initialize from "components/Initialize";
+import { Outlet } from "react-router-dom";
+import { ThemeProvider } from "beta/providers";
+import { Box, styled } from "@mui/material";
 
-const BetaApp = () => {
+const BetaApp = styled(({className}) => {
 
     return (
-        <Initialize>
-            {/* Stub for initial merge of beta feature */}
-            <Stack height="100vh" padding={2} alignItems="center" justifyContent="center" >
-                <Paper 
-                    elevation={24}
-                    square={false}
+        <ThemeProvider>
+            <Initialize >
+                <Box 
+                    className={className}
                     sx={{
-                        paddingY: 10,
-                        paddingX: 20, 
-                        backgroundColor: "primary.main",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "essWhite.main"
-                    }}
+                        height: "100dvh",
+                        width: "100dvw",
+                        display: "grid",
+                        gridTemplateColumns: "1fr",
+                        gridTemplateRows: "min-content 1fr"
+                    }} 
                 >
-                    <Typography component="h1" variant="h3">Welcome to the Beta App</Typography>
-                    <Typography>This is a placeholder and will be updated as features are added</Typography>
-                </Paper>
-            </Stack>
-        </Initialize>
+                    <AppNavBar />
+                    <Outlet />
+                </Box>
+            </Initialize>
+        </ThemeProvider>
     )
-}
+})({
+    "& > *": {
+        minHeight: 0
+    }
+})
 export default BetaApp;
