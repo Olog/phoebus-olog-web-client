@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
 import customization from "config/customization";
-import { useCreateLogMutation } from "api/ologApi";
-import { verifyLogExists } from "api/axios-olog-service";
+import { ologApi, useVerifyLogExists } from "api/ologApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
 
 const ReplyLog = ({log, isAuthenticated}) => {
 
     const [replyInProgress, setReplyInProgress] = useState(false);
-    const [createLog] = useCreateLogMutation();
+    const [createLog] = ologApi.endpoints.createLog.useMutation();
+    const verifyLogExists = useVerifyLogExists();
     const navigate = useNavigate();
     const location = useLocation();
 

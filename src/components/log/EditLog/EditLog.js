@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
-import { useEditLogMutation } from "api/ologApi";
-import { verifyLogExists } from "api/axios-olog-service";
+import { ologApi, useVerifyLogExists } from "api/ologApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
 
 const EditLog = ({log, isAuthenticated}) => {
 
     const [editInProgress, setEditInProgress] = useState(false);
-    const [editLog] = useEditLogMutation();
+    const [editLog] = ologApi.endpoints.editLog.useMutation();
+    const verifyLogExists = useVerifyLogExists();
     const navigate = useNavigate();
     const location = useLocation();
 

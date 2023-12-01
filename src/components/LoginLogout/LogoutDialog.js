@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal from 'components/shared/Modal';
 import { Alert, Button } from '@mui/material';
-import { useLogoutMutation } from 'api/ologApi';
+import { ologApi } from 'api/ologApi';
 import { useShowLogout } from 'features/authSlice';
 
 const Form = styled.form``;
@@ -28,7 +28,7 @@ const Form = styled.form``;
 const LogoutDialog = () => {
 
   const [logoutErrorMessage, setLogoutErrorMessage] = useState("");
-  const [logout, { isSuccess, error}] = useLogoutMutation();
+  const [logout, { isSuccess, error}] = ologApi.endpoints.logout.useMutation();
   const {showLogout, setShowLogout} = useShowLogout();
 
   const hideLogout = () => {

@@ -1,13 +1,13 @@
 import React from "react";
-import { useGetArchivedLogbooksQuery, useGetLogbookQuery } from "api/ologApi";
+import { ologApi } from "api/ologApi";
 import { ServerErrorPage } from "components/ErrorPage";
 import { LinearProgress } from "@mui/material";
 import LogHistory from "./LogHistory";
 
 const LogHistoryContainer = ({id}) => {
 
-    const { data: currentLog, isLoading: loadingCurrentLog, error:  currentLogError } = useGetLogbookQuery({id});
-    const { data: logHistory, isLoading: loadingLogHistory, error: logHistoryError } = useGetArchivedLogbooksQuery({id});
+    const { data: currentLog, isLoading: loadingCurrentLog, error:  currentLogError } = ologApi.endpoints.getLog.useQuery({id});
+    const { data: logHistory, isLoading: loadingLogHistory, error: logHistoryError } = ologApi.endpoints.getArchivedLogbooks.useQuery({id});
 
     if(loadingCurrentLog || loadingLogHistory) {
         return <LinearProgress width="100%" />

@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-const { createSlice } = require("@reduxjs/toolkit");
-const { ologApi } = require("api/ologApi");
+import { createSlice } from "@reduxjs/toolkit";
+import { ologApi } from "api/ologApi";
 
 const initialState = {
     user: null,

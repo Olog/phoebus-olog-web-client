@@ -20,7 +20,7 @@ import PropertyEditor from './PropertyEditor';
 import PropertySelector from './PropertySelector';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { useGetPropertiesQuery } from 'api/ologApi';
+import { ologApi } from 'api/ologApi';
 import { useFieldArray } from 'react-hook-form';
 import TextInput from 'components/shared/input/TextInput';
 import styled from 'styled-components';
@@ -74,7 +74,7 @@ export const EntryEditor = ({form, title, onSubmit, submitDisabled, attachmentsD
     })
 
     const [showAddProperty, setShowAddProperty] = useState(false);
-    const {data: availableProperties} = useGetPropertiesQuery();
+    const {data: availableProperties} = ologApi.endpoints.getProperties.useQuery();
 
     // Scroll to top if there are field errors
     useEffect(() => {

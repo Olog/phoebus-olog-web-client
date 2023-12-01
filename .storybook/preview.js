@@ -1,5 +1,10 @@
 import React from "react";
-import { MuiThemeProvider, StyledComponentsThemeProvider } from "../src/providers"
+import { MuiThemeProvider, ReduxProvider, StyledComponentsThemeProvider } from "../src/providers";
+import { initialize, mswLoader } from 'msw-storybook-addon';
+import {defaultHandlers} from "../src/mocks/handlers";
+
+// Initialize MSW
+initialize({}, defaultHandlers);
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
@@ -16,11 +21,14 @@ const preview = {
     (Story) => (
       <StyledComponentsThemeProvider>
         <MuiThemeProvider>
-          <Story />
+          <ReduxProvider>  
+            <Story />
+          </ReduxProvider>
         </MuiThemeProvider>
       </StyledComponentsThemeProvider>
     )
-  ]
+  ],
+  loaders: [mswLoader]
 };
 
 export default preview;

@@ -1,11 +1,14 @@
 import React from "react";
-import { useGetLogbookQuery } from "api/ologApi";
+import { ologApi } from "api/ologApi";
 import { ServerErrorPage } from "components/ErrorPage";
 import { LinearProgress } from "@mui/material";
 
 const LogContainer = ({id, renderLog}) => {
 
-    const { data: log, isLoading, error } = useGetLogbookQuery({id}, { refetchOnFocus: true, refetchOnMountOrArgChange: true });
+    const { data: log, isLoading, error } = ologApi.endpoints.getLog.useQuery(
+        { id }, 
+        { refetchOnFocus: true, refetchOnMountOrArgChange: true }
+    );
     
     if(isLoading) {
         return <LinearProgress width="100%" />

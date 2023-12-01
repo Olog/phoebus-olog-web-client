@@ -131,22 +131,27 @@ const log = {
 const mockUserSlice = createSlice({
     name: "user",
     initialState: {
-        user: { userName: "somebody" }
+        user: null
     }
 })
 
-const store = configureStore({
-    reducer: {
-        auth: mockUserSlice.reducer
-    }
-})
+const Template = ({anonymousUser, ...props}) => {
 
-const Template = (args) => {
+    const store = configureStore({
+        reducer: {
+            auth: mockUserSlice.reducer
+        },
+        preloadedState: {
+            auth: {
+                user: anonymousUser ? null : { userName: "somebody" }
+            }
+        }
+    })
 
     return (
         <Provider store={store} >
             <MemoryRouter>
-                <LogDetails {...args} />
+                <LogDetails {...props} />
             </MemoryRouter>
         </Provider>
     )
@@ -154,5 +159,6 @@ const Template = (args) => {
 
 export const Default = (args) => <Template {...args} />;
 Default.args = {
-    log
+    log,
+    anonymousUser: false
 }

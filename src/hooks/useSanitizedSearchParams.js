@@ -18,7 +18,7 @@
 
 import queryStringParser from 'query-string';
 import { useCallback } from 'react';
-import { useGetLogbooksQuery, useGetTagsQuery } from 'api/ologApi';
+import { ologApi } from 'api/ologApi';
 import {v4 as uuidv4} from 'uuid';
 
 const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties", "attachments"];
@@ -91,8 +91,8 @@ export function withoutCacheBust(searchParams) {
 const useSanitizedSearchParams = () => {
 
     // todo: display toast on error to let user know tags or logbooks couldn't be fetched
-    const {data: tags = []} = useGetTagsQuery();
-    const {data: logbooks = []} = useGetLogbooksQuery();
+    const {data: tags = []} = ologApi.endpoints.getTags.useQuery();
+    const {data: logbooks = []} = ologApi.endpoints.getLogbooks.useQuery();
 
     const toSearchParams = useCallback((input) => {
         return queryStringToSearchParameters({queryString: input, availableTags: tags, availableLogbooks: logbooks})

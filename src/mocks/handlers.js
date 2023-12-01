@@ -1,14 +1,14 @@
 import { rest } from 'msw';
 
 export const defaultHandlers = [
-    rest.get('/', (req, res, ctx) => {
+    rest.get('*/', (req, res, ctx) => {
         return res(
             ctx.json({
                 "name" : "Olog Service",
                 "version" : "1.2.3-test",
                 "serverConfig" : {
-                  "maxFileSize" : 50.0,
-                  "maxRequestSize" : 100.0
+                  "maxFileSize" : 51.0,
+                  "maxRequestSize" : 101.0
                 }
               })
         )
