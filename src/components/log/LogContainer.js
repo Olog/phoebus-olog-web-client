@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ologApi } from "api/ologApi";
 import { ServerErrorPage } from "components/ErrorPage";
 import { LinearProgress } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
 
 const LogContainer = ({id, renderLog}) => {
 
@@ -9,6 +11,13 @@ const LogContainer = ({id, renderLog}) => {
         { id }, 
         { refetchOnFocus: true, refetchOnMountOrArgChange: true }
     );
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if(log) {
+            dispatch(updateCurrentLogEntry(log));
+        }
+    }, [dispatch, log])
     
     if(isLoading) {
         return <LinearProgress width="100%" />

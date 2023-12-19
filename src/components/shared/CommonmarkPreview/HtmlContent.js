@@ -137,7 +137,7 @@ const Container = styled("div")(({theme}) => {
             padding: 0.5rem 0.3rem;
         }
 
-        table tr:nth-child(even){
+        table tr:nth-of-type(even){
             background-color: ${theme.palette.grey[200]};
         }
 

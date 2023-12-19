@@ -78,7 +78,10 @@ const SearchResultList = ({
     if(sortedLogs.length > 0) {
         sortLogsDateCreated(sortedLogs, searchPageParams.sort === 'down');
     }
-    const sortedResults = {...searchResults, logs: sortedLogs};
+    const sortedResults = {
+        ...searchResults, 
+        logs: sortedLogs
+    };
 
     const columns = [
         {

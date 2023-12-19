@@ -1,30 +1,25 @@
-import { Stack, Typography, styled } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import LogContainer from "components/log/LogContainer";
 import React from "react";
-import LogDetails from "./LogDetails";
+import LogDetailsWithReplies from "./LogDetailsWithReplies";
 
-const LogDetailsContainer = styled(({id}) => {
+const LogDetailsContainer = ({id}) => {
 
-    let renderedContent = (
-        <LogContainer 
-            id={id}
-            renderLog={({log}) => <LogDetails log={log} /> }
-        />
-    )
-
-    if(!id) {
-        renderedContent = (
-            <Stack justifyContent="center">
-                <Typography>Select a log to view its details</Typography>
-            </Stack>
+    if(id) {
+        return (
+            <LogContainer 
+                id={id}
+                renderLog={({log}) => <LogDetailsWithReplies log={log} /> }
+            />
         )
     }
 
     return (
-        <>
-            {renderedContent}
-        </>
+        <Stack justifyContent="center">
+            <Typography>Select a log to view its details</Typography>
+        </Stack>
     )
-})({})
+
+}
 
 export default LogDetailsContainer;

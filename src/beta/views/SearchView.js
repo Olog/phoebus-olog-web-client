@@ -1,6 +1,6 @@
-import { Box, styled } from "@mui/material";
+import { Box, Divider, styled } from "@mui/material";
 import LogDetailsContainer from "beta/components/log/LogDetails/LogDetailsContainer";
-import { SearchResultList } from "beta/components/search";
+import { SearchResultList } from "beta/components/search/SearchResultList";
 import React from "react";
 import { useParams } from "react-router-dom";
 
@@ -14,12 +14,13 @@ const SearchView = styled(({className}) => {
                 height: "100%",
                 width: "100%",
                 display: "grid",
-                gridTemplateColumns: "1fr 2fr",
+                gridTemplateColumns: "1fr auto 2fr",
                 gridTemplateRows: "1fr"
             }} 
-            className={`SearchView ${className}`} 
+            className={`SearchView ${className}`}
         >
             <SearchResultList />
+            <Divider orientation="vertical" />
             <LogDetailsContainer id={id} />
         </Box>
     )

@@ -4,6 +4,7 @@ import customization from "config/customization";
 
 export const defaultSearchPageParamsState = {
     sort: customization.defaultSortDirection,
+    dateDescending: customization.defaultSortDirection === "down",
     from: 0,
     size: customization.defaultPageSize
 }
