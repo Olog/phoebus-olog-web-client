@@ -17,30 +17,6 @@
  */
 import moment from 'moment';
 
-const shortTimeFormat = 'HH:mm';
-const shortDateFormat = 'YYYY-MM-DD';
-const fullDateTime = 'YYYY-MM-DD HH:mm:ss';
-
-export function formatShortTime(date){
-    return moment(date).format(shortTimeFormat);
-}
-
-export function formatShortDate(date){
-    return moment(date).format(shortDateFormat);
-}
-
-export function formatFullDateTime(date){
-    return moment(date).format(fullDateTime);
-}
-
-/**
- * Converts a JavaScript Date object to a string on format yyyy-MM-dd HH:mm:ss.
- */
-export function dateToString(value){
-    return value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' +
-           ("0" + value.getDate()).slice(-2) + ' ' + ('0' + value.getHours()).slice(-2) +
-           ':' + ('0' + value.getMinutes()).slice(-2) + ':' +
-           ('0' + value.getSeconds()).slice(-2);
-}
+moment.locale("en");
 
 export { moment };

@@ -17,11 +17,11 @@
  */
 
  import React from 'react';
- import OlogMoment from './OlogMoment';
  import customization from 'config/customization';
 import styled from 'styled-components';
 import { Link } from '@mui/material';
 import { Link as RouterLink } from "react-router-dom";
+import FormattedDate from 'components/shared/FormattedDate';
 
 const Container = styled.div`
     font-size: 0.8rem;
@@ -30,6 +30,7 @@ const Container = styled.div`
 
 const DetailRow = styled.div`
     display: flex;
+    align-items: center;
     gap: 1rem;
 `
 
@@ -71,10 +72,15 @@ const LogDetailsMetaData = ({currentLogRecord}) => {
             <DetailRow>
                 <Key>Created</Key>
                 <Value data-testid="meta-created">
-                    { currentLogRecord.modifyDate 
-                        ? <span><OlogMoment date={currentLogRecord.modifyDate}/> <Link component={RouterLink} to={`/logs/${currentLogRecord.id}/history`}>(edited)</Link></span>
-                        : <OlogMoment date={currentLogRecord.createdDate}/>
-                    }
+                    <span>
+                        <FormattedDate 
+                            date={currentLogRecord.modifyDate ? currentLogRecord.modifyDate : currentLogRecord.createdDate} 
+                            fontSize="0.8rem"
+                            fontWeight="inherit"
+                        />
+                        {" "}
+                        {currentLogRecord.modifyDate ? <Link component={RouterLink} to={`/logs/${currentLogRecord.id}/history`}>(edited)</Link> : null}
+                    </span>
                 </Value>
             </DetailRow>
             <DetailRow>

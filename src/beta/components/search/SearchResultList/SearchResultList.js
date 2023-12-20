@@ -142,7 +142,10 @@ const SearchResultList = styled(({className}) => {
             </Stack>
             {error 
                 ? <Alert color="error">
-                    Error {error?.code}: {error?.message}
+                    {error?.status === "FETCH_ERROR" 
+                        ? "Error: Log Service Unavailable"
+                        : `Error ${error?.code}: ${error?.message}`
+                    }
                 </Alert>  
                 : <DataGrid 
                     aria-label="Search Results"

@@ -5,9 +5,9 @@ import { sortByCreatedDate } from "components/log/sort";
 import { useSelector } from "react-redux";
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, CircularProgress, Divider, Stack, Typography, styled } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { moment } from "lib/moment";
 import LogDetails from "./LogDetails";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import FormattedDate from "components/shared/FormattedDate";
 
 const LogDetailsAccordion = styled(({log, defaultExpanded=false, className}) => {
 
@@ -30,22 +30,26 @@ const LogDetailsAccordion = styled(({log, defaultExpanded=false, className}) => 
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`${log.id}-content`}
                 id={`${log.id}-header`}
+                sx={{
+                    bgcolor: "grey.100"
+                }}
             >
                 <Box
                     sx={{
                         display: "grid",
                         gridTemplateColumns: "1fr auto",
                         gridTemplateRows: "1fr 1fr",
-                        gap: 1,
-                        width: "100%"
+                        columnGap: 2,
+                        rowGap: 1,
+                        width: "100%",
                     }}
                 >
-                        <Typography variant="body1" fontWeight="bold">{log.title}</Typography>
+                        <Typography variant="body1" fontWeight="bold" noWrap >{log.title}</Typography>
                         <Stack flexDirection="row" justifyContent="flex-end" gap={0.5}>
                             {log?.attachments?.length > 0 ? <AttachFileIcon /> : null }
                         </Stack>
-                        <Typography variant="body2" fontWeight="italic">{log.description?.slice(0, 100)}...</Typography>
-                        <Typography variant="button">{moment(log.createdDate).format("YYYY-MM-DD HH:MM")}</Typography>
+                        <Typography variant="body2" fontWeight="italic" noWrap >{log.description?.slice(0, 100)}...</Typography>
+                        <FormattedDate date={log.createdDate} variant="button" />
                 </Box>
             </AccordionSummary>
             <AccordionDetails>
@@ -92,7 +96,7 @@ const LogDetailsWithReplies = ({log}) => {
         ].toSorted(sortByCreatedDate(dateDescending));
         
         return (
-            <Stack gap={1} divider={<Divider flexItem />} sx={{
+            <Stack divider={<Divider flexItem />} sx={{
                 overflow: "auto"
             }}>
                 {sortedLogs.map(sortedLog => <LogDetailsAccordion 

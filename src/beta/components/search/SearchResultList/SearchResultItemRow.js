@@ -1,9 +1,9 @@
 import React from "react";
 import { Stack, Typography, styled } from "@mui/material";
-import { moment } from "lib/moment";
 import ReplyIcon from '@mui/icons-material/Reply';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { getLogEntryGroupId } from "components/Properties";
+import FormattedDate from "components/shared/FormattedDate";
 
 const SearchResultItemRow = styled(({log, className}) => {
 
@@ -12,9 +12,13 @@ const SearchResultItemRow = styled(({log, className}) => {
     return (
         <Stack className={className} paddingLeft={1} width="100%">
             <Stack flexDirection="row" justifyContent="space-between" >
-                <Typography color="primary" fontWeight="bold" lineHeight={1}>
-                    {moment(log.createdDate).format("HH:MM:SS")}
-                </Typography>
+                <FormattedDate 
+                    date={log.createdDate}
+                    formatVariant="shortTime"
+                    color="primary" 
+                    fontWeight="bold" 
+                    lineHeight={1}
+                />
                 <Stack flexDirection="row" >
                     {isGroupEntry ? <ReplyIcon titleAccess="grouped" role="status" /> : null}
                     {log.attachments && log.attachments.length  !== 0 ? <AttachFileIcon titleAccess='has attachments' role='status' /> : null}

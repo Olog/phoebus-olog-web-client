@@ -1,12 +1,16 @@
 import React from "react";
-import { Typography } from "@mui/material";
-import { moment } from "lib/moment";
+import FormattedDate from "components/shared/FormattedDate";
 
 const SearchResultDateRow = ({createdDate}) => {
     return (
-        <Typography color="secondary" fontWeight="bold" borderBottom="1px solid rgba(0, 0, 0, 0.12)" width="100%">
-            {moment(createdDate).format("YYYY-MM-DD")}
-        </Typography> 
+        <FormattedDate 
+            formatVariant="shortDate"
+            date={createdDate}
+            color="secondary" 
+            fontWeight="bold" 
+            borderBottom="1px solid rgba(0, 0, 0, 0.12)" 
+            width="100%"
+        />
     )
 }
 export default SearchResultDateRow;
