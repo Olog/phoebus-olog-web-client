@@ -49,8 +49,9 @@ const AppNavBar = () => {
     return (
         <Initialize>
             <AppBar 
-            component={"header"} 
-            position="static" 
+                component={"header"} 
+                position="static" 
+                elevation={0}
             >
                 <Toolbar component={"nav"} sx={{
                     display: "flex",

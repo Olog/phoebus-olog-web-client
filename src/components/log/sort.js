@@ -12,3 +12,20 @@ export function sortLogsDateCreated(logs, descending){
         return logs.sort((a, b) => a.createdDate - b.createdDate);
     }
 }
+
+export const sortByDate = (descending) => {
+    if(descending) {
+        return (a, b) => b - a;
+    } else {
+        return (a, b) => a - b;
+    }
+}
+
+export const sortByCreatedDate = (descending) => {
+    if(descending){
+        return (a, b) => b.createdDate - a.createdDate;
+    }
+    else{
+        return (a, b) => a.createdDate - b.createdDate;
+    }
+}

@@ -1,3 +1,3 @@
-import SearchResultList from "./SearchResultList";
+import SearchResultList from "./SearchResultList/SearchResultList";
 
 export { SearchResultList };

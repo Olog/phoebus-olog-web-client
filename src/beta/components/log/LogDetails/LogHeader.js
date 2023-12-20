@@ -1,26 +1,28 @@
 import { Stack, Typography, styled } from "@mui/material";
 import { InternalLink } from "components/shared/Link";
-import { formatFullDateTime } from "lib/moment";
 import React from "react";
 import AttachmentsGallery from "./AttachmentsGallery";
 import OlogAttachment from "components/log/EntryEditor/Description/OlogAttachment";
 import MetadataTable from "./MetadataTable";
 import LogDetailActionButton from "./LogDetailActionButton";
+import FormattedDate from "components/shared/FormattedDate";
 
 const CreatedDate = ({log}) => {
+
+    if(log.modifyDate) {
+        return (
+            <>
+                <FormattedDate date={log.modifyDate} component="span" />
+                {" "}
+                <InternalLink to={`/beta/logs/${log.id}/history`}>(edited)</InternalLink>
+            </>
+        )
+    }
+
     return (
-        <Typography component="span" >
-            {log.modifyDate 
-            ? (
-                <>
-                    {formatFullDateTime(log.modifyDate)}
-                    {" "}
-                    <InternalLink to={`/beta/logs/${log.id}/history`}>(edited)</InternalLink>
-                </>
-            )
-            : formatFullDateTime(log.createdDate)}
-        </Typography>
+        <FormattedDate date={log.createdDate} component="span" />
     )
+
 }
 
 const LogHeader = styled(({log, className}) => {

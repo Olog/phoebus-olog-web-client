@@ -18,7 +18,7 @@
  import React from 'react';
 import { FaPaperclip } from 'react-icons/fa';
 import styled from 'styled-components';
- import OlogMoment from './OlogMoment';
+import FormattedDate from 'components/shared/FormattedDate';
  
 const Container = styled.div`
     display: flex;
@@ -43,7 +43,7 @@ const Right = styled.div`
  
      return(
          <Container>
-             <OlogMoment date={logEntry.createdDate}/>, {logEntry.owner}, {logEntry.title} 
+             <FormattedDate date={logEntry.createdDate} fontSize="1.2rem" />{", "}{logEntry.owner}{", "}{logEntry.title}
              <Right>
                 <span>{logEntry.id}</span>
                 {logEntry.attachments.length > 0 ? <FaPaperclip /> : null}

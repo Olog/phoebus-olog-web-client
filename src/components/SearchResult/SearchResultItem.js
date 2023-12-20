@@ -19,8 +19,8 @@ import React from 'react';
 import { Stack, Tooltip, Typography, styled } from "@mui/material";
 import ReplyIcon from '@mui/icons-material/Reply';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { formatFullDateTime } from 'lib/moment';
 import { getLogEntryGroupId } from 'components/Properties/utils';
+import FormattedDate from 'components/shared/FormattedDate';
 
 const LogInfo = styled("div")`
     display: flex;
@@ -61,7 +61,7 @@ const SearchResultItem = ({log}) => {
             </Stack>
             <LogInfo>
                 <p>{log.owner}</p>
-                <p>{formatFullDateTime(log.createdDate)}</p>
+                <FormattedDate date={log.createdDate} fontSize="0.75rem" />
             </LogInfo>
             <LogInfo>
                 <p>{formatDescription(log.description)}</p>

@@ -2,8 +2,8 @@ import React from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Link, Stack, Typography } from "@mui/material";
 import LogEntrySingleView from "components/LogDetails/LogEntrySingleView";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import OlogMoment from "components/LogDetails/OlogMoment";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FormattedDate from "components/shared/FormattedDate";
 
 const DownloadButton = ({currentLog, logHistory}) => {
 
@@ -40,7 +40,7 @@ const LogHistory = ({currentLog, logHistory}) => {
                 {title ?? 
                     <>
                         {`${log.modifyDate ? "Edited" : "Created"} `} 
-                        <OlogMoment date={log.modifyDate ?? log.createdDate} />
+                        <FormattedDate date={log.modifyDate ?? log.createdDate} />
                     </>
                 }
             </Typography> 
