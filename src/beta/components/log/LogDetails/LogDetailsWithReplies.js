@@ -73,7 +73,7 @@ const LogDetailsWithReplies = ({log}) => {
         error: repliesError
     } = ologApi.endpoints.getLogGroup.useQuery({groupId});
 
-    const { sort } = useSelector(state => state.searchPageParams);
+    const { dateDescending } = useSelector(state => state.searchPageParams);
 
     if (repliesLoading) {
         return <CircularProgress /> 
@@ -89,7 +89,7 @@ const LogDetailsWithReplies = ({log}) => {
         const sortedLogs = [
             log,
             ...replies.filter(it => it.id !== log.id)
-        ].toSorted(sortByCreatedDate(sort === "down"));
+        ].toSorted(sortByCreatedDate(dateDescending));
         
         return (
             <Stack gap={1} divider={<Divider flexItem />} sx={{

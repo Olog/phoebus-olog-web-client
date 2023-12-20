@@ -78,10 +78,8 @@ const SearchResultList = styled(({className}) => {
         console.error("Search error", error);
     }
 
-    const descending = searchPageParams.dateDescending;
-
     // generate unique ymds, using the smaller/larger date to match sort order
-    const uniqueDates = [...new Set(searchResults?.logs?.map(log => !descending 
+    const uniqueDates = [...new Set(searchResults?.logs?.map(log => !searchPageParams.dateDescending 
         ? moment(log.createdDate).hours(0).minutes(0).seconds(0).milliseconds(0).valueOf()
         : moment(log.createdDate).hours(23).minutes(59).seconds(59).milliseconds(999).valueOf()
     ))];
@@ -90,7 +88,7 @@ const SearchResultList = styled(({className}) => {
     const rows = [
         ...searchResults?.logs,
         ...uniqueDates.map(date => ({ id: `daterow-${date}`, createdDate: date, isDateRow: true}))
-    ]?.toSorted(sortByCreatedDate(descending));
+    ]?.toSorted(sortByCreatedDate(searchPageParams.dateDescending));
 
     const columns = [
         {
@@ -112,7 +110,7 @@ const SearchResultList = styled(({className}) => {
     }
 
     const toggleSort = () => {
-        dispatch(updateSearchPageParams({...searchPageParams, dateDescending: !descending }))
+        dispatch(updateSearchPageParams({...searchPageParams, dateDescending: !searchPageParams.dateDescending }))
     }
 
     const onPaginationModelChange = useCallback((model) => {
@@ -136,7 +134,7 @@ const SearchResultList = styled(({className}) => {
             <Stack flexDirection="row" justifyContent="space-between" alignItems="center" marginTop={1}>
                 <Typography sx={{verticalAlign: "middle"}}>(Search Box)</Typography>
                 <IconButton onClick={toggleSort}>
-                    { descending ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                    { searchPageParams.dateDescending ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
                 </IconButton>
             </Stack>
             {error 
