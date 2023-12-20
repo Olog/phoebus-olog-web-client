@@ -134,7 +134,10 @@ const SearchResultList = styled(({className}) => {
             <Stack flexDirection="row" justifyContent="space-between" alignItems="center" marginTop={1}>
                 <Typography sx={{verticalAlign: "middle"}}>(Search Box)</Typography>
                 <IconButton onClick={toggleSort}>
-                    { searchPageParams.dateDescending ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                    { searchPageParams.dateDescending 
+                        ? <ArrowDownwardIcon titleAccess="sort, date descending" /> 
+                        : <ArrowUpwardIcon titleAccess="sort, date ascending" />
+                    }
                 </IconButton>
             </Stack>
             {error 
