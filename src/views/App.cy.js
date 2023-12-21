@@ -3,8 +3,263 @@ import customization from "config/customization";
 import { defaultSearchPageParamsState } from "features/searchPageParamsReducer";
 import { defaultSearchParamsState } from "features/searchParamsReducer";
 import { TestRouteProvider } from "test-utils/router-utils";
+import { v4 as uuidV4 } from "uuid";
 
-describe('App.cy.js', () => {
+describe("Smoketests", () => {
+
+  it("renders without crashing", () => {
+    cy.mount(<TestRouteProvider />);
+  });
+
+  it("renders an error banner if the logbook service cannot be reached", () => {
+    
+    // Given the logbook service doesn't respond
+    cy.intercept(
+      'GET',
+      '**',
+      {
+        forceNetworkError: true
+      }
+    );
+
+    // When rendered
+    cy.mount(<TestRouteProvider />);
+
+    // Then an error message is present
+    // (unfortunately snackbar doesn't support aria labels etc atm)
+    cy.findByText(/search error/i).should("exist");
+
+});
+
+})
+
+describe("Search Interface", () => {
+
+  // Given server has tags and logbooks available
+  beforeEach(() => {
+    cy.intercept(
+      'GET',
+      '**/tags',
+      {
+        statusCode: 200,
+        body: [
+            {
+                "name": "bar",
+                "state": "Active"
+            },
+            {
+                "name": "baz",
+                "state": "Active"
+            },
+            {
+                "name": "foo",
+                "state": "Active"
+            }
+        ]
+      }
+    );
+    cy.intercept(
+      'GET',
+      '**/logbooks',
+      {
+        statusCode: 200,
+        body: [
+          {
+              "name": "test controls",
+              "owner": null,
+              "state": "Active"
+          },
+          {
+              "name": "test operations",
+              "owner": "olog-logs",
+              "state": "Active"
+          }
+        ]
+      }
+    );
+  })
+
+  it("supports searching with the search box", () => {
+  
+    // When rendered
+    cy.mount(<TestRouteProvider />);
+  
+    // Given search will return results
+    const entry = testEntry({title: uuidV4()});
+    const start = uuidV4();
+    cy.intercept(
+      'GET',
+      '**/logs/search*',
+      (req) => {
+        req.reply(
+          {
+            statusCode: 200,
+            body: req.query.start === start ? resultList([
+              entry
+            ]) : resultList([])
+          }
+        ) 
+      }
+    );
+  
+    // When searched
+    cy.findByRole("searchbox", {name: /search logs/i}).clear().type(`start=${start}{Enter}`);
+  
+    // then the results are updated
+    cy.findByText(entry.title).should("exist");
+  
+  });
+  
+  it("supports search by toggling advanced search", () => {
+
+    cy.mount(<TestRouteProvider />);
+
+    // given the search returns results
+    const entry = testEntry({title: uuidV4()});
+    cy.intercept(
+      'GET',
+      '**/logs/search*',
+      (req) => {
+        req.reply(
+          {
+            statusCode: 200,
+            body: req.query.title === entry.title ? resultList([
+              entry
+            ]) : resultList([])
+          }
+        ) 
+      }
+    );
+
+    // When the advanced search is opened,
+    // title entered
+    // And then toggled closed
+    cy.findByRole('button', {name: /show advanced search/i}).click();
+    cy.findByRole('heading', {name: /advanced search/i}).should("exist");
+    cy.findByRole('textbox', {name: /title/i}).type(entry.title)
+    cy.findByRole('button', {name: /hide advanced search/i}).click();
+
+    // then the results include the expected query
+    cy.findByText(entry.title).should("exist");
+    
+  });
+
+  it("searches tags instantly from advanced search", () => {
+
+    cy.mount(<TestRouteProvider />);
+
+    // given the search returns results
+    const entry = testEntry({title: uuidV4(), });
+    cy.intercept(
+      'GET',
+      '**/logs/search*',
+      (req) => {
+        req.reply(
+          {
+            statusCode: 200,
+            body: req.query.tags === "foo" ? resultList([
+              entry
+            ]) : resultList([])
+          }
+        ) 
+      }
+    );
+
+    // When the advanced search is opened,
+    // and tags entered
+    cy.findByRole('button', {name: /show advanced search/i}).click();
+    cy.findByRole('heading', {name: /advanced search/i}).should("exist");
+    cy.findByLabelText(/tags/i).type('foo{downArrow}{enter}');
+
+    // then the results include the expected query
+    cy.findByText(entry.title).should("exist");
+    
+  });
+
+  it("searches logbooks instantly from advanced search", () => {
+
+    cy.mount(<TestRouteProvider />);
+
+    // given the search returns results
+    const entry = testEntry({title: uuidV4(), });
+    cy.intercept(
+      'GET',
+      '**/logs/search*',
+      (req) => {
+        req.reply(
+          {
+            statusCode: 200,
+            body: req.query.logbooks === "test controls" ? resultList([
+              entry
+            ]) : resultList([])
+          }
+        ) 
+      }
+    );
+
+    // When the advanced search is opened,
+    // and tags entered
+    cy.findByRole('button', {name: /show advanced search/i}).click();
+    cy.findByRole('heading', {name: /advanced search/i}).should("exist");
+    cy.findByLabelText(/logbooks/i).type('test controls{downArrow}{enter}');
+
+    // then the results include the expected query
+    cy.findByText(entry.title).should("exist");
+    
+  });
+
+});
+
+describe("Default Behaviors", () => {
+
+  it('renders with a default search query', () => {
+    
+    // When rendered
+    cy.mount(<TestRouteProvider />);
+
+    // There is a default search term
+    cy.findByRole("searchbox", {name: /search logs/i}).should("have.value", "start=12 hours&end=now");
+
+  });
+
+  it("uses previous cookie state for search params if they exist", () => {
+
+    // Given we set the search params to something that isn't the default value
+    expect(defaultSearchPageParamsState.sort).not.equal("up");
+    expect(defaultSearchPageParamsState.size).not.equal(50);
+    cy.setCookie(customization.searchPageParamsCookie, JSON.stringify(
+      {
+        ...defaultSearchPageParamsState,
+        sort: "up",
+        size: 50
+      }
+    ));
+    const title = "my unique title";
+    cy.setCookie(customization.searchParamsCookie, JSON.stringify(
+      {
+        ...defaultSearchParamsState,
+        title
+      }
+    ));
+    
+    // Then when the user loads the page
+    cy.mount(<TestRouteProvider />);
+
+    // The search bar shows their existing search
+    cy.findByRole("searchbox", {name: /search logs/i}).invoke("val").should("include", title);
+
+    // page size should be set to cookie value
+    cy.findByRole("button", {name: /hits per page 50/i}).should("exist");
+
+    // and sort should be set to cookie value
+    cy.findByRole('button', {name: /show advanced search/i}).click();
+    cy.findByRole('radio', {name: /ascending/i}).should("be.checked");
+
+  })
+
+})
+
+describe('Navigating Results', () => {
 
   it('can navigate different log entries by clicking on the next/previous buttons on the log entry', () => {
 
@@ -116,41 +371,6 @@ describe('App.cy.js', () => {
       });
   
   })
-  
-  it("uses previous cookie state for search params if they exist", () => {
-
-    // Given we set the search params to something that isn't the default value
-    expect(defaultSearchPageParamsState.sort).not.equal("up");
-    expect(defaultSearchPageParamsState.size).not.equal(50);
-    cy.setCookie(customization.searchPageParamsCookie, JSON.stringify(
-      {
-        ...defaultSearchPageParamsState,
-        sort: "up",
-        size: 50
-      }
-    ));
-    const title = "my unique title";
-    cy.setCookie(customization.searchParamsCookie, JSON.stringify(
-      {
-        ...defaultSearchParamsState,
-        title
-      }
-    ));
-    
-    // Then when the user loads the page
-    cy.mount(<TestRouteProvider />);
-
-    // The search bar shows their existing search
-    cy.findByRole("searchbox", {name: /search logs/i}).invoke("val").should("include", title);
-
-    // page size should be set to cookie value
-    cy.findByRole("button", {name: /hits per page 50/i}).should("exist");
-
-    // and sort should be set to cookie value
-    cy.findByRole('button', {name: /show advanced search/i}).click();
-    cy.findByRole('radio', {name: /ascending/i}).should("be.checked");
-
-  })
 
   it("can view a log directly, even when not in search results list", () => {
     
@@ -203,3 +423,69 @@ describe('App.cy.js', () => {
   })
 
 });
+
+describe('Login/Logout', () => {
+
+  it("displays sign-in and disabled log entry when logged out", () => {
+  
+      // Given user is signed out
+      cy.intercept(
+        "GET",
+        "**/user", 
+        {
+          statusCode: 404 // service returns a 404 instead of 401 or 403 when unauthorized/unauthenticated
+        }
+      )
+  
+      // When rendered
+      cy.mount(<TestRouteProvider />)
+  
+      // Then the user sees a login button
+      cy.findByRole('button', {name: /Sign In/i}).should("exist");
+  
+  });
+  
+  it("displays username and allows creating log entries when signed in", () => {
+  
+      // Given user is signed in
+      const user = {
+        userName: "garfieldHatesMondays",
+        roles: ["ROLE_ADMIN"]
+      };
+      cy.intercept(
+        "GET",
+        "**/user",
+        {
+          responseCode: 200,
+          body: user
+        }
+      )
+  
+      // When rendered
+      cy.mount(<TestRouteProvider />);
+  
+      // Then the user is logged in 
+      cy.findByRole('button', {name:/garfieldHatesMondays/i}).should("exist");
+  
+  });
+
+  it('when navigating to create a log entry directly but not logged in, the user is prompted to login', () => {
+
+      // Given user is signed out
+      cy.intercept(
+        "GET",
+        "**/user", 
+        {
+          statusCode: 404 // service returns a 404 instead of 401 or 403 when unauthorized/unauthenticated
+        }
+      )
+  
+      // When trying to create a log directly
+      cy.mount(<TestRouteProvider initialEntries={[`/logs/create`]} />);
+
+      // then login is displayed
+      cy.findByLabelText(/password/i).should("exist");
+  
+  });
+
+})
