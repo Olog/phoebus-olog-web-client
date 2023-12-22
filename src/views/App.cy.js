@@ -2,7 +2,7 @@ import { resultList, testEntry } from "../mocks/fixtures/generators";
 import customization from "config/customization";
 import { defaultSearchPageParamsState } from "features/searchPageParamsReducer";
 import { defaultSearchParamsState } from "features/searchParamsReducer";
-import { TestRouteProvider } from "test-utils/router-utils";
+import TestRouteProvider from "test-utils/TestRouteProvider";
 import { v4 as uuidV4 } from "uuid";
 
 describe("Smoketests", () => {

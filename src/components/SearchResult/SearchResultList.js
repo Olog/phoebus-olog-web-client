@@ -25,7 +25,7 @@ import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import customization from 'config/customization';
 import { useCallback, useMemo, useState } from 'react';
 import { updateSearchPageParams } from 'features/searchPageParamsReducer';
-import { sortLogsDateCreated } from 'components/log/sort';
+import { sortByCreatedDate } from 'components/log/sort';
 
 const NoRowsOverlay = (props) => {
     return (
@@ -74,13 +74,9 @@ const SearchResultList = ({
     );
 
     // Guarantee that sort is applied for the current page of results
-    const sortedLogs = [...searchResults.logs];
-    if(sortedLogs.length > 0) {
-        sortLogsDateCreated(sortedLogs, searchPageParams.sort === 'down');
-    }
     const sortedResults = {
         ...searchResults, 
-        logs: sortedLogs
+        logs: searchResults?.logs?.toSorted(sortByCreatedDate(searchPageParams.sort === 'down'))
     };
 
     const columns = [

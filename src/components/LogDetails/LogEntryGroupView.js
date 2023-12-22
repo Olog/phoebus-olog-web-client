@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import CommonmarkPreview from 'components/shared/CommonmarkPreview';
 import customization from 'config/customization';
 import { getLogEntryGroupId } from '../Properties/utils';
-import { sortLogsDateCreated } from 'components/log/sort';
+import { sortByCreatedDate } from 'components/log/sort';
 import { ologApi } from 'api/ologApi';
 
 const Container = styled.div`
@@ -62,8 +62,7 @@ const LogEntryGroupView = ({currentLogEntry, logGroupRecords, setLogGroupRecords
         const res = getLogGroup({groupId: getLogEntryGroupId(currentLogEntry?.properties)})
         res.unwrap()
             .then(data => {
-                const sortedResult = sortLogsDateCreated([...data], false);
-                setLogGroupRecords(sortedResult);
+                setLogGroupRecords(data.toSorted(sortByCreatedDate(false)))
             })
             .catch(error => {
                 console.error("Could not fetch logs by group", error);
