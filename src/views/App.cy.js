@@ -29,7 +29,56 @@ describe("Smoketests", () => {
     // (unfortunately snackbar doesn't support aria labels etc atm)
     cy.findByText(/search error/i).should("exist");
 
+  });
+
 });
+
+describe("Default Behaviors", () => {
+
+  it('renders with a default search query', () => {
+    
+    // When rendered
+    cy.mount(<TestRouteProvider initialEntries={["/"]} />);
+
+    // There is a default search term
+    cy.findByRole("searchbox", {name: /search logs/i}).should("have.value", "start=12 hours&end=now");
+
+  });
+
+  it("uses previous cookie state for search params if they exist", () => {
+
+    // Given we set the search params to something that isn't the default value
+    expect(defaultSearchPageParamsState.sort).not.equal("up");
+    expect(defaultSearchPageParamsState.size).not.equal(50);
+    cy.setCookie(customization.searchPageParamsCookie, JSON.stringify(
+      {
+        ...defaultSearchPageParamsState,
+        sort: "up",
+        size: 50
+      }
+    ));
+    const title = "my unique title";
+    cy.setCookie(customization.searchParamsCookie, JSON.stringify(
+      {
+        ...defaultSearchParamsState,
+        title
+      }
+    ));
+    
+    // Then when the user loads the page
+    cy.mount(<TestRouteProvider />);
+
+    // The search bar shows their existing search
+    cy.findByRole("searchbox", {name: /search logs/i}).invoke("val").should("include", title);
+
+    // page size should be set to cookie value
+    cy.findByRole("button", {name: /hits per page 50/i}).should("exist");
+
+    // and sort should be set to cookie value
+    cy.findByRole('button', {name: /show advanced search/i}).click();
+    cy.findByRole('radio', {name: /ascending/i}).should("be.checked");
+
+  })
 
 })
 
@@ -208,61 +257,72 @@ describe("Search Interface", () => {
     
   });
 
-});
-
-describe("Default Behaviors", () => {
-
-  it('renders with a default search query', () => {
+  it('executes the same query repeatedly (no caching)', () => {
     
-    // When rendered
     cy.mount(<TestRouteProvider />);
 
-    // There is a default search term
-    cy.findByRole("searchbox", {name: /search logs/i}).should("have.value", "start=12 hours&end=now");
+    // Given we expect search to be performed many times for the same query
+    // But to return updated results each time
+    const entry1 = testEntry({title: "entry 1 - " + uuidV4()});
+    const entry2 = testEntry({title: "entry 2 - " + uuidV4()});
+    const entry3 = testEntry({title: "entry 3 - " + uuidV4()});
 
-  });
+    // Given the first search returns just entry 1
+    cy.intercept(
+        "GET",
+        "**/logs/search*",
+        {
+            responseCode: 200,
+            body: resultList([entry1])
+        }
+    )
 
-  it("uses previous cookie state for search params if they exist", () => {
+    // When we search, then we expect just entry 1
+    cy.findByRole('searchbox', {name: /Search/i}).click().type("{Enter}");
+    cy.findByRole('heading', {name: entry1.title}).should("exist");
+    cy.findByRole('heading', {name: entry2.title}).should("not.exist");
+    cy.findByRole('heading', {name: entry3.title}).should("not.exist");
 
-    // Given we set the search params to something that isn't the default value
-    expect(defaultSearchPageParamsState.sort).not.equal("up");
-    expect(defaultSearchPageParamsState.size).not.equal(50);
-    cy.setCookie(customization.searchPageParamsCookie, JSON.stringify(
-      {
-        ...defaultSearchPageParamsState,
-        sort: "up",
-        size: 50
-      }
-    ));
-    const title = "my unique title";
-    cy.setCookie(customization.searchParamsCookie, JSON.stringify(
-      {
-        ...defaultSearchParamsState,
-        title
-      }
-    ));
+    // Given the search now returns entry 1 and 2
+    cy.intercept(
+        "GET",
+        "**/logs/search*",
+        {
+            responseCode: 200,
+            body: resultList([entry1, entry2])
+        }
+    )
+
+    // When we search, then we expect just entry 1 and 2
+    cy.findByRole('searchbox', {name: /Search/i}).click().type("{Enter}");
+    cy.findByRole('heading', {name: entry1.title}).should("exist");
+    cy.findByRole('heading', {name: entry2.title}).should("exist");
+    cy.findByRole('heading', {name: entry3.title}).should("not.exist"); 
     
-    // Then when the user loads the page
-    cy.mount(<TestRouteProvider />);
+    // finally given search returns all entries
+    cy.intercept(
+        "GET",
+        "**/logs/search*",
+        {
+            responseCode: 200,
+            body: resultList([entry1, entry2, entry3])
+        }
+    )
 
-    // The search bar shows their existing search
-    cy.findByRole("searchbox", {name: /search logs/i}).invoke("val").should("include", title);
-
-    // page size should be set to cookie value
-    cy.findByRole("button", {name: /hits per page 50/i}).should("exist");
-
-    // and sort should be set to cookie value
-    cy.findByRole('button', {name: /show advanced search/i}).click();
-    cy.findByRole('radio', {name: /ascending/i}).should("be.checked");
+    // When we search, then we expect all entries
+    cy.findByRole('searchbox', {name: /Search/i}).click().type("{Enter}");
+    cy.findByRole('heading', {name: entry1.title}).should("exist");
+    cy.findByRole('heading', {name: entry2.title}).should("exist");
+    cy.findByRole('heading', {name: entry3.title}).should("exist");
 
   })
 
-})
+});
 
 describe('Navigating Results', () => {
 
   it('can navigate different log entries by clicking on the next/previous buttons on the log entry', () => {
-
+    
     // Given the server responds with many search results to click on
     const entry1 = testEntry({title: 'Entry 1'});
     const entry2 = testEntry({title: 'Entry 2'});
