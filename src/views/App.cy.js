@@ -84,50 +84,6 @@ describe("Default Behaviors", () => {
 
 describe("Search Interface", () => {
 
-  // Given server has tags and logbooks available
-  beforeEach(() => {
-    cy.intercept(
-      'GET',
-      '**/tags',
-      {
-        statusCode: 200,
-        body: [
-            {
-                "name": "bar",
-                "state": "Active"
-            },
-            {
-                "name": "baz",
-                "state": "Active"
-            },
-            {
-                "name": "foo",
-                "state": "Active"
-            }
-        ]
-      }
-    );
-    cy.intercept(
-      'GET',
-      '**/logbooks',
-      {
-        statusCode: 200,
-        body: [
-          {
-              "name": "test controls",
-              "owner": null,
-              "state": "Active"
-          },
-          {
-              "name": "test operations",
-              "owner": "olog-logs",
-              "state": "Active"
-          }
-        ]
-      }
-    );
-  })
-
   it("supports searching with the search box", () => {
   
     // When rendered
@@ -197,6 +153,29 @@ describe("Search Interface", () => {
 
     cy.mount(<TestRouteProvider />);
 
+    // Given tags exist
+    cy.intercept(
+      'GET',
+      '**/tags',
+      {
+        statusCode: 200,
+        body: [
+            {
+                "name": "bar",
+                "state": "Active"
+            },
+            {
+                "name": "baz",
+                "state": "Active"
+            },
+            {
+                "name": "foo",
+                "state": "Active"
+            }
+        ]
+      }
+    );
+
     // given the search returns results
     const entry = testEntry({title: uuidV4(), });
     cy.intercept(
@@ -228,6 +207,27 @@ describe("Search Interface", () => {
   it("searches logbooks instantly from advanced search", () => {
 
     cy.mount(<TestRouteProvider />);
+
+    // Given logbooks exist
+    cy.intercept(
+      'GET',
+      '**/logbooks',
+      {
+        statusCode: 200,
+        body: [
+          {
+              "name": "test controls",
+              "owner": null,
+              "state": "Active"
+          },
+          {
+              "name": "test operations",
+              "owner": "olog-logs",
+              "state": "Active"
+          }
+        ]
+      }
+    );
 
     // given the search returns results
     const entry = testEntry({title: uuidV4(), });
