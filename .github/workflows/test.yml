@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
     
 jobs:
-  test:
-    timeout-minutes: 30
+  unit-tests:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
 
     strategy:
@@ -16,21 +16,49 @@ jobs:
         node-version: [16.x, 18.x, 20.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - name: Install Dependencies and Build
+    - name: Install Dependencies and Verify Can Be Built
       run: ./scripts/install-dependencies-and-build.sh
-    - name: Run Unit and Integration Tests
-      run: ./scripts/test.sh
-    - name: Publish Test Results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-results
-        path: |
-          cypress/screenshots
-          cypress/videos
+    - name: Run Unit tests
+      run: CI=true npm test
+    # - name: Run Unit and Integration Tests
+    #   run: ./scripts/test.sh
+    # - name: Publish Test Results
+    #   if: always()
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: test-results
+    #     path: |
+    #       cypress/screenshots
+    #       cypress/videos
+
+  cypress-component-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x, 20.x]
+    name: Cypress component tests, node ${{ matrix.node-version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Install dependencies and run tests
+        uses: cypress-io/github-action@v6
+        with:
+          install-command: npm ci
+          start: npm start
+          component: true
+          browser: chrome
+          
