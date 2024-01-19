@@ -1,6 +1,19 @@
 import {v4 as uuidv4} from 'uuid';
 
 let title = 'title ' + uuidv4();
+let property = {
+  name: "resource",
+  attributes: {
+    file: {
+      name: "file",
+      value: uuidv4()
+    },
+    name: {
+      name: "name",
+      value: uuidv4()
+    }
+  }
+};
 
 describe('Happy Paths', () => {
 
@@ -63,6 +76,15 @@ describe('Happy Paths', () => {
     cy.findByRole('textbox', {name: /title/i}).type(title);
     cy.findByRole('textbox', {name: /description/i}).type('my custom description');
     cy.get('input[type=file]').selectFile('cypress/fixtures/testImage.jpg', {force: true});
+    
+    // Add the resource property
+    cy.findByRole("button", {name: /add property/i}).click();
+    cy.findByRole("button", {name: /add resource/i}).click();
+    cy.findByRole("button", {name: /close/i}).click();
+    cy.findByRole("textbox", {name: "file"}).type(property.attributes.file.value, { delay: 0});
+    cy.findByRole("textbox", {name: "name"}).type(property.attributes.name.value, { delay: 0});
+
+    // submit
     cy.findByRole('button', {name: /submit/i}).click();
 
     // expect to find the entry we created
@@ -72,6 +94,10 @@ describe('Happy Paths', () => {
     cy.findByTestId("meta-entrytype").invoke("text").should("match", /incident/i);
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
+    cy.findByRole("button", {name: /properties/i}).click()
+    cy.findByRole("button", {name: "resource"}).should("exist");
+    cy.findByText(property.attributes.file.value).should("exist");
+    cy.findByText(property.attributes.name.value).should("exist");
 
   })
 
@@ -105,6 +131,16 @@ describe('Happy Paths', () => {
     cy.findByLabelText(/tags/i).type('alarm{downArrow}{enter}');
     cy.findByLabelText(/entry type/i).type('shift start{downArrow}{enter}');
     cy.get('input[type=file]').selectFile('cypress/fixtures/testImage.jpg', {force: true});
+
+    // Add the resource property
+    property.attributes.file.value = uuidv4();
+    property.attributes.name.value = uuidv4();
+    cy.findByRole("button", {name: /add property/i}).click();
+    cy.findByRole("button", {name: /add resource/i}).click();
+    cy.findByRole("button", {name: /close/i}).click();
+    cy.findByRole("textbox", {name: "file"}).type(property.attributes.file.value, { delay: 0});
+    cy.findByRole("textbox", {name: "name"}).type(property.attributes.name.value, { delay: 0});
+
     cy.findByRole('button', {name: /submit/i}).click();
 
     // expect to find the reply we created
@@ -114,6 +150,10 @@ describe('Happy Paths', () => {
     cy.findByTestId("meta-entrytype").invoke("text").should("match", /shift start/i);
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
+    cy.findByRole("button", {name: /properties/i}).click()
+    cy.findByRole("button", {name: "resource"}).should("exist");
+    cy.findByText(property.attributes.file.value).should("exist");
+    cy.findByText(property.attributes.name.value).should("exist");
 
   })
 
@@ -135,10 +175,14 @@ describe('Happy Paths', () => {
 
     // Edit our log
     title += " (EDITED)";
+    property.attributes.file.value += " edited";
+    property.attributes.name.value += " edited";
     cy.findByRole('textbox', {name: /title/i}).clear().type(title);
     cy.findByLabelText(/logbooks/i).type('operations{downArrow}{enter}');
     cy.findByRole("button", {name: /alarm/i}).click();
     cy.findByLabelText(/entry type/i).type('shift end{downArrow}{enter}');
+    cy.findByRole("textbox", {name: "file"}).clear().type(property.attributes.file.value, { delay: 0});
+    cy.findByRole("textbox", {name: "name"}).clear().type(property.attributes.name.value, { delay: 0});
     cy.findByRole('button', {name: /submit/i}).click();
 
     // expect to find the edit to our log but have the same id as before
@@ -148,6 +192,10 @@ describe('Happy Paths', () => {
     cy.findByTestId("meta-entrytype").invoke("text").should("match", /shift end/i);
     cy.findByRole('button', {name: /attachments/i}).click();
     cy.findByRole('img', {name: /testImage/i}).should('exist');
+    cy.findByRole("button", {name: /properties/i}).click()
+    cy.findByRole("button", {name: "resource"}).should("exist");
+    cy.findByText(property.attributes.file.value).should("exist");
+    cy.findByText(property.attributes.name.value).should("exist");
 
   })
   

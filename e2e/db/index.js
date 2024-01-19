@@ -63,12 +63,41 @@ const createTag = (name) => {
         }
     });
 }
+const createProperty = (property) => {
+    return axios.request({
+        method: 'put',
+        url: `${TEST_BE_URL}/properties/${property.name}`,
+        withCredentials: true,
+        auth: {
+            username: 'admin',
+            password: 'adminPass'
+        },
+        data: property
+    });
+}
 
 const seedDatabase = async () => {
     console.log('>>> seeding database');
     console.log({testBackendUrl: TEST_BE_URL})
     await createTag('e2e-test-tag');
     await createLogbook('e2e-tests');
+    await createProperty({
+        "name": "resource",
+        "owner": null,
+        "state": "Active",
+        "attributes": [
+            {
+                "name": "file",
+                "value": null,
+                "state": "Active"
+            },
+            {
+                "name": "name",
+                "value": null,
+                "state": "Active"
+            }
+        ]
+    });
     for(let i=0; i < 35; i++) {
         await createEntry({...entry, title: `Entry #${i + 1}`});
     }

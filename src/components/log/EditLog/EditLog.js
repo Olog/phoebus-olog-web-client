@@ -4,6 +4,7 @@ import EntryEditor from "../EntryEditor";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingOverlay from "components/shared/LoadingOverlay";
+import { validate as uuidValidate } from "uuid";
 
 const EditLog = ({log, isAuthenticated}) => {
 
@@ -37,6 +38,15 @@ const EditLog = ({log, isAuthenticated}) => {
             title: formData.title,
             level: formData.level,
             description: formData.description
+        }
+
+        // Verify the group id hasn't been somehow edited
+        // This shouldn't happen, but we should try to protect against it
+        // since the backend currently does not protect against mangling the group id property
+        const groupId = body?.properties?.filter(it => it.name === "Log Entry Group")?.at(0).value;
+        if(groupId && !uuidValidate(groupId)) {
+            console.error("Log group may have been edited!", body);
+            return;
         }
 
         try {

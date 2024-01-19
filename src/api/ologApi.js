@@ -21,6 +21,7 @@ import { withoutCacheBust } from "hooks/useSanitizedSearchParams";
 import customization from "config/customization";
 import packageInfo from '../../package.json';
 import { useCallback } from "react";
+import assert from "assert";
 
 export function ologClientInfoHeader() {
     return {"X-Olog-Client-Info": "Olog Web " + packageInfo.version + " on " + window.navigator.userAgent}
@@ -123,7 +124,10 @@ export const ologApi = createApi({
         getProperties: builder.query({
             query: () => ({
                 url: '/properties'
-            })
+            }),
+            transformResponse: (res) => {
+                return res?.filter(property => property.name !== "Log Entry Group")
+            }
         }),
         getLog: builder.query({
             query: ({id}) => ({
@@ -198,6 +202,40 @@ export const ologApi = createApi({
     })
 });
 
+const setToList = (list) => {
+    const result = new Set()
+    list?.forEach(item => result.add(item));
+    return result;
+}
+
+const makeSetOfProperties = (properties) => {
+
+    const setifiedProperties = new Set();
+    properties.forEach(property => {
+        const copy = {...property};
+        delete copy.attributes;
+        const setifiedAttributes = setToList(property?.attributes);
+        copy.attributes = setifiedAttributes;
+        setifiedProperties.add(copy);
+    });
+    return setifiedProperties;
+}
+
+export const hasSameProperties = (log1, log2) => {
+    
+    const props1 = makeSetOfProperties(log1?.properties ?? []);
+    const props2 = makeSetOfProperties(log2?.properties ?? []);
+    
+    try {
+        assert.deepStrictEqual(
+            props1, props2
+        );
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
 export const useVerifyLogExists = () => {
 
     // use the SEARCH endpoint because the problem isn't that the log isn't 
@@ -216,7 +254,8 @@ export const useVerifyLogExists = () => {
                 // (the server sometimes responds with the entry but has an empty attachments field)
                 const found = retryRes?.logs?.find(it => `${it.id}` === `${logResult.id}`);
                 const hasAllAttachments = found?.attachments?.length === logRequest?.attachments?.length;
-                const willRetry = !found || (found && !hasAllAttachments)
+                const hasExpectedProperties = hasSameProperties(found?.properties, logRequest?.properties);
+                const willRetry = !(found && hasAllAttachments && hasExpectedProperties);
                 return willRetry;
             },
             retryDelay: (count) => count*200
