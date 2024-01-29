@@ -156,8 +156,6 @@ describe("Search Interface", () => {
 
   it("searches tags instantly from advanced search", () => {
 
-    cy.mount(<TestRouteProvider />);
-
     // Given tags exist
     cy.intercept(
       'GET',
@@ -198,6 +196,8 @@ describe("Search Interface", () => {
       }
     ).as("search")
 
+    cy.mount(<TestRouteProvider />);
+
     // When the advanced search is opened,
     // and tags entered
     cy.findByRole('button', {name: /show advanced search/i}).click();
@@ -212,8 +212,6 @@ describe("Search Interface", () => {
   });
 
   it("searches logbooks instantly from advanced search", () => {
-
-    cy.mount(<TestRouteProvider />);
 
     // Given logbooks exist
     cy.intercept(
@@ -253,6 +251,8 @@ describe("Search Interface", () => {
       }
     ).as("search");
 
+    cy.mount(<TestRouteProvider />);
+
     // When the advanced search is opened,
     // and tags entered
     cy.findByRole('button', {name: /show advanced search/i}).click();
@@ -267,8 +267,6 @@ describe("Search Interface", () => {
   });
 
   it('executes the same query repeatedly (no caching)', () => {
-    
-    cy.mount(<TestRouteProvider />);
 
     // Given we expect search to be performed many times for the same query
     // But to return updated results each time
@@ -285,6 +283,8 @@ describe("Search Interface", () => {
             body: resultList([entry1])
         }
     ).as("search1");
+
+    cy.mount(<TestRouteProvider />);
 
     // When we search, then we expect just entry 1
     cy.findByRole('searchbox', {name: /Search/i}).click().type("{Enter}");

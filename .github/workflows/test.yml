@@ -61,5 +61,5 @@ jobs:
           start: npm start
           component: true
           browser: chrome
-          headed: true
+          headed: false
           
