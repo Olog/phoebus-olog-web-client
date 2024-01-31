@@ -20,15 +20,15 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import GroupHeader from './GroupHeader';
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import CommonmarkPreview from 'components/shared/CommonmarkPreview';
 import customization from 'config/customization';
 import { getLogEntryGroupId } from '../Properties/utils';
 import { sortByCreatedDate } from 'components/log/sort';
 import { ologApi } from 'api/ologApi';
+import { styled } from '@mui/material';
 
-const Container = styled.div`
+const Container = styled("div")`
     display: flex;
     height: 100%;
     flex-direction: column;
@@ -37,7 +37,7 @@ const Container = styled.div`
     overflow: auto;
 `
 
-const GroupContainer = styled.li`
+const GroupContainer = styled("li")`
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
