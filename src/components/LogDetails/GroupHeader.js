@@ -32,7 +32,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
     return (
         <Stack
             flexDirection="row"
-            justifyContent="center"
+            justifyContent="flex-start"
             alignItems="center"
             padding={0.5}
             sx={{
