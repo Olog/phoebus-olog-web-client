@@ -15,20 +15,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import { Button } from '@mui/material';
 import React from 'react';
-import styled from 'styled-components';
-
-const PropertyRow = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-`
-
-const Container = styled.div`
-    padding: 1rem;
-`
+import { Box, Button, Chip, Paper, Stack, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 const PropertySelector = ({selectedProperties, availableProperties, addProperty}) => {
 
@@ -36,23 +25,42 @@ const PropertySelector = ({selectedProperties, availableProperties, addProperty}
         return selectedProperties.filter(prop => prop.name === propertyName).length > 0;
     }
 
-    const rows = availableProperties.filter(row => !isAlreadySelected(row.name)).map( row => 
-        <PropertyRow key={row.name}>
-            <div>{row.name}</div>
+    const rows = availableProperties.filter(property => !isAlreadySelected(property.name)).map( property => 
+        <Paper 
+            key={property.name} 
+            component={Stack}
+            variant="outlined"
+            padding={1}
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+        >
+            <Box>
+                <Typography>{property.name}</Typography>
+                <Stack 
+                    flexDirection="row"
+                    gap={0.5}
+                >
+                    {
+                        property?.attributes?.map(attr => <Chip label={attr.name} size="small" />)
+                    }
+                </Stack>
+            </Box>
             <Button 
                 variant="contained"
-                onClick={() => addProperty(row)}
+                onClick={() => addProperty(property)}
+                aria-label={`Add ${property.name}`}
+                startIcon={<AddIcon />}
             >
                 Add
             </Button>
-        </PropertyRow>
+        </Paper>
     );
-        
     
     return(
-        <Container>
+        <Stack gap={1}>
             {rows}
-        </Container>
+        </Stack>
     )
 }
 

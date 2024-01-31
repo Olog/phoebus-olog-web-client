@@ -123,7 +123,10 @@ export const ologApi = createApi({
         getProperties: builder.query({
             query: () => ({
                 url: '/properties'
-            })
+            }),
+            transformResponse: (res) => {
+                return res?.filter(property => property.name !== "Log Entry Group")
+            }
         }),
         getLog: builder.query({
             query: ({id}) => ({
@@ -216,7 +219,7 @@ export const useVerifyLogExists = () => {
                 // (the server sometimes responds with the entry but has an empty attachments field)
                 const found = retryRes?.logs?.find(it => `${it.id}` === `${logResult.id}`);
                 const hasAllAttachments = found?.attachments?.length === logRequest?.attachments?.length;
-                const willRetry = !found || (found && !hasAllAttachments)
+                const willRetry = !(found && hasAllAttachments);
                 return willRetry;
             },
             retryDelay: (count) => count*200
