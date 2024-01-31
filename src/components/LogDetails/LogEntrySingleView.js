@@ -20,20 +20,20 @@ import React from 'react';
 import ListGroup from 'components/shared/ListGroup';
 import Properties from '../Properties/Properties';
 import LogDetailsMetaData from './LogDetailsMetaData';
-import styled from 'styled-components';
 import Collapse from 'components/shared/Collapse';
 import { ListGroupItem } from 'components/shared/ListGroup';
 import CommonmarkPreview from 'components/shared/CommonmarkPreview';
 import customization from 'config/customization';
 import AttachmentImage, { isImage } from 'components/Attachment/AttachmentImage';
+import { Divider, styled } from '@mui/material';
 
-const Container = styled.div`
+const Container = styled("div")`
     padding: 0.5rem;
     height: 100%;
     overflow: auto;
 `
 
-const LogTitle = styled.div`
+const LogTitle = styled("div")`
     display: flex;
     justify-content: space-between;
 
@@ -41,12 +41,6 @@ const LogTitle = styled.div`
         font-size: 1.4rem;
         font-weight: normal;
     }
-`
-
-const Ruler = styled.hr`
-    border: none;
-    border-top: 1px solid ${({theme}) => theme.colors.light};
-    margin: 0.5rem 0;
 `
 
 const StyledCommonmarkPreview = styled(CommonmarkPreview)`
@@ -108,9 +102,9 @@ const LogEntrySingleView = ({currentLogEntry, className}) => {
                 <h2>{currentLogEntry.title}</h2>
                 <span>{currentLogEntry.id}</span>
             </LogTitle>
-            <Ruler />
+            <Divider sx={{marginY: 1}} />
             <LogDetailsMetaData currentLogRecord={currentLogEntry}/>
-            <Ruler />
+            <Divider sx={{marginY: 1}} />
             <StyledCommonmarkPreview commonmarkSrc={currentLogEntry.source} imageUrlPrefix={customization.APP_BASE_URL + "/"} />
             <Collapse title='Attachments'>
                 {currentLogEntry.attachments.length > 0 

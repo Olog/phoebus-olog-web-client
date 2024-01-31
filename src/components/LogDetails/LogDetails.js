@@ -22,22 +22,9 @@ import LogEntryGroupView from './LogEntryGroupView';
 import LogEntrySingleView from './LogEntrySingleView';
 import { useHref, useLocation } from "react-router-dom";
 import NavigationButtons from './NavigationButtons';
-import styled from 'styled-components';
-import { Button, Divider, Stack } from '@mui/material';
+import { Box, Button, Divider, Stack, styled } from '@mui/material';
 import { InternalButtonLink } from 'components/shared/InternalLink';
 import { useUser } from 'features/authSlice';
-
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    overflow: hidden;
-`
-
-const LogViewContainer = styled.div`
-    overflow: hidden;
-`
 
 const StyledLogEntrySingleView = styled(LogEntrySingleView)`
     overflow: auto;
@@ -107,7 +94,13 @@ const LogDetails = ({
         />;
 
     return(
-        <Container className={className} id='logdetails-and-buttons'>
+        <Stack 
+            className={className} 
+            id='logdetails-and-buttons'
+            flexDirection="column"
+            width="100%"
+            overflow="hidden"
+        >
             <Stack flexDirection="row" gap={1} borderBottom={0} padding={1} flexWrap="wrap">
                 <NavigationButtons {...{
                     currentLogEntry,
@@ -130,10 +123,10 @@ const LogDetails = ({
                 </Button>
             </Stack>
             <Divider />
-            <LogViewContainer id='logdetails'>
+            <Box id='logdetails' overflow="hidden" >
                 {renderedLogView}
-            </LogViewContainer>
-        </Container>
+            </Box>
+        </Stack>
     )
     
 }

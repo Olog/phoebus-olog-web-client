@@ -16,83 +16,82 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
- import React from 'react';
- import customization from 'config/customization';
+import React from 'react';
+import customization from 'config/customization';
 import styled from 'styled-components';
-import { Link } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from "react-router-dom";
 import FormattedDate from 'components/shared/FormattedDate';
 
-const Container = styled.div`
-    font-size: 0.8rem;
-    padding-bottom: 1rem;
-`
+const Key = styled(Typography)({
+    textAlign: "right",
+    "&, & *": {
+        fontSize: "0.8rem"
+    }
+});
 
-const DetailRow = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-`
+const Value = styled(Typography)({
+    fontWeight: "bold",
+    "&, & *": {
+        fontSize: "0.8rem"
+    }
+});
 
-const Key = styled.div`
-    flex: 0 0 5rem;
-    text-align: right;
-`
+const CommaSeparatedList = ({list}) => {
+    if(list && list.length > 0) {
+        return (
+            <Typography component="span" fontWeight="inherit">
+                {
+                    list.join(", ")
+                }
+            </Typography>
+        )
+    }
 
-const Value = styled.div`
-    flex-grow: 1;
-    font-weight: bold;
-`
+    return null;
+}
 
-const LogDetailsMetaData = ({currentLogRecord}) => {
-        
-    const logbooks = currentLogRecord && currentLogRecord.logbooks.slice().sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-        if(index === currentLogRecord.logbooks.length - 1){
-            return(<span key={index}>{row.name}</span>);
-        }
-        else{
-            return (<span key={index}>{row.name},&nbsp;</span>);
-        }    
-    });
-
-    const tags = currentLogRecord && currentLogRecord.tags.slice().sort((a, b) => a.name.localeCompare(b.name)).map((row, index) => {
-        if(index === currentLogRecord.tags.length - 1){
-            return(<span key={index}>{row.name}</span>);
-        }
-        else{
-            return (<span key={index}>{row.name},&nbsp;</span>);
-        } 
-    });    
+const LogDetailsMetaData = ({currentLogRecord}) => {        
     
     return (
-        <Container>
-            <DetailRow>
-                <Key>Author</Key><Value data-testid="meta-author">{currentLogRecord.owner}</Value>
-            </DetailRow>
-            <DetailRow>
-                <Key>Created</Key>
-                <Value data-testid="meta-created">
-                    <span>
-                        <FormattedDate 
-                            date={currentLogRecord.modifyDate ? currentLogRecord.modifyDate : currentLogRecord.createdDate} 
-                            fontSize="0.8rem"
-                            fontWeight="inherit"
-                        />
-                        {" "}
-                        {currentLogRecord.modifyDate ? <Link component={RouterLink} to={`/logs/${currentLogRecord.id}/history`}>(edited)</Link> : null}
-                    </span>
-                </Value>
-            </DetailRow>
-            <DetailRow>
-                <Key>Logbooks</Key><Value data-testid="meta-logbooks">{logbooks}</Value>
-            </DetailRow>
-            <DetailRow>
-                <Key>Tags</Key><Value data-testid="meta-tags">{tags}</Value>
-            </DetailRow>
-            <DetailRow>
-                <Key>{customization.level}</Key><Value data-testid="meta-entrytype">{currentLogRecord.level}</Value>
-            </DetailRow>
-        </Container>
+        <Box
+            sx={{
+                display: "grid",
+                gridTemplateColumns: "max-content auto",
+                columnGap: 1,
+                justifyContent: "flex-start",
+            }}
+        >
+            <Key>Author</Key>
+            <Value data-testid="meta-author">{currentLogRecord.owner}</Value>
+            <Key>Created</Key>
+            <Value data-testid="meta-created">
+                <FormattedDate 
+                    date={currentLogRecord.modifyDate ? currentLogRecord.modifyDate : currentLogRecord.createdDate} 
+                    fontWeight="inherit"
+                />
+                {" "}
+                {currentLogRecord.modifyDate ? <Link component={RouterLink} to={`/logs/${currentLogRecord.id}/history`}>(edited)</Link> : null}
+            </Value>
+            <Key>Logbooks</Key>
+            <Value data-testid="meta-logbooks">
+                <CommaSeparatedList list={
+                    currentLogRecord?.logbooks
+                    ?.toSorted((a, b) => a.name.localeCompare(b.name))
+                    ?.map(it => it.name)
+                } />
+            </Value>
+            <Key>Tags</Key>
+            <Value data-testid="meta-tags">
+                <CommaSeparatedList list={
+                    currentLogRecord?.tags
+                    ?.toSorted((a, b) => a.name.localeCompare(b.name))
+                    ?.map(it => it.name)
+                } />
+            </Value>
+            <Key>{customization.level}</Key>
+            <Value data-testid="meta-entrytype">{currentLogRecord.level}</Value>
+        </Box>
     );
 
 }
