@@ -10,6 +10,9 @@ export const InternalButtonLink = ({ children, ...props }) => {
   return (
     <Button
       component={Link}
+      sx={{
+        whiteSpace: "nowrap"
+      }}
       {...props}
     >
       {children}

@@ -17,7 +17,7 @@
  */
 
 import SearchBoxInput from "../shared/input/managed/SearchBoxInput"
-import { Link, Stack } from "@mui/material"
+import { Button, Stack, Typography } from "@mui/material"
 
 const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
 
@@ -26,23 +26,31 @@ const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
     }
     
     return (
-        <Stack gap={0.5} padding={1}>
+        <Stack gap={0.5} padding={1} className={className} >
             <SearchBoxInput
                 {...{searchParams, showFilters, isFetching: true}}
             />
-            <Link 
-                component="button"
-                type="button"
-                onClick={(e) => toggleFilters(e)} 
+            <Typography 
+                component={Button} 
+                onClick={(e) => toggleFilters(e)}
                 aria-expanded={showFilters}
+                variant="text"
+                disableRipple
+                fullWidth={false}
+                maxWidth="max-content"
+                padding={0}
+                marginLeft="auto"
+                fontStyle="italic"
                 sx={{
-                    fontStyle: "italic",
-                    width: "max-content",
-                    alignSelf: "flex-end"
+                    "&:hover, &": {
+                        background: "none",
+                        border: "none",
+                        boxShadow: "none",
+                    }
                 }}
             >
                 {showFilters ? "Hide Advanced Search" : "Show Advanced Search"}
-            </Link>
+            </Typography>
         </Stack>
     );
 }

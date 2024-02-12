@@ -1,14 +1,12 @@
-import { MuiThemeProvider, StyledComponentsThemeProvider, LocalizationProvider, ReduxProvider } from "providers";
+import { MuiThemeProvider, LocalizationProvider, ReduxProvider } from "providers";
 
 export const AppWrapper = ({store, children}) => {
     return (
         <ReduxProvider store={store}>
             <MuiThemeProvider>
-                <StyledComponentsThemeProvider>
-                    <LocalizationProvider>
-                        {children}
-                    </LocalizationProvider>
-                </StyledComponentsThemeProvider>
+                <LocalizationProvider>
+                    {children}
+                </LocalizationProvider>
             </MuiThemeProvider>
         </ReduxProvider>
     )

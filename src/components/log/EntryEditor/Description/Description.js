@@ -1,4 +1,4 @@
-import { Alert, Box, Button, FormLabel, Grid, Stack, Typography, styled } from "@mui/material";
+import { Alert, Box, Button, FormLabel, Stack, Typography, styled } from "@mui/material";
 import DroppableFileUploadInput from "components/shared/input/FileInput";
 import React, { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
@@ -180,7 +180,6 @@ const Description = ({form, attachmentsDisabled }) => {
                 <FormLabel htmlFor="attachments-upload">{!attachmentsDisabled ? "Attachments" : "Attachments (Disabled)"}</FormLabel>
                 {!attachmentsDisabled ? <Typography>max size per file: {maxFileSizeMb}MB, max total size: {maxRequestSizeMb}MB</Typography> : null}
                 <Stack>
-                    <Grid>
                     <RenderedAttachmentsContainer hasAttachments={attachments && attachments.length > 0}>
                         <DroppableFileUploadInput 
                             onFileChanged={onFileChanged}
@@ -193,7 +192,6 @@ const Description = ({form, attachmentsDisabled }) => {
                         />
                         { renderedAttachments }
                     </RenderedAttachmentsContainer>
-                    </Grid>
                     { formState?.errors?.attachments ? 
                         <Alert severity="error">{formState?.errors?.attachments?.root.message}</Alert>
                         : null 

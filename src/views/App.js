@@ -19,7 +19,7 @@
 import React from 'react';
 import { Outlet } from "react-router-dom";
 import Banner from '../components/Banner';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import Initialize from '../components/Initialize';
 
 /**
@@ -28,23 +28,22 @@ import Initialize from '../components/Initialize';
 const App = () => {
 
     return(
-        <Box id='app-viewport' 
-            sx={{
-                height: "100vh",
-                display: "flex",
-                flexDirection: "column"
-        }}>
+        <Stack id='app-viewport' 
+            height="100vh"
+        >
             <Initialize>
                 <Banner />
                 <Box id='app-content' 
                     sx={{
                         overflow: "auto",
-                        height: "100%"
-                }}>
+                        height: "100%",
+                        padding: 1
+                    }}
+                >
                     <Outlet />
                 </Box>
             </Initialize>
-        </Box>
+        </Stack>
     );
 }
 

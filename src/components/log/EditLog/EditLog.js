@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
 import { useLocation, useNavigate } from "react-router-dom";
-import LoadingOverlay from "components/shared/LoadingOverlay";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const EditLog = ({log, isAuthenticated}) => {
 
@@ -81,9 +81,13 @@ const EditLog = ({log, isAuthenticated}) => {
     }
 
     return (
-        <LoadingOverlay
-            active={editInProgress}
-        >
+        <>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={editInProgress}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <EntryEditor {...{
                 form, 
                 title: `Edit Log "${log?.title}" (id ${log?.id})`, 
@@ -91,7 +95,7 @@ const EditLog = ({log, isAuthenticated}) => {
                 submitDisabled: !isAuthenticated, 
                 attachmentsDisabled: true
             }} />
-        </LoadingOverlay>
+        </>
     )
 
 }

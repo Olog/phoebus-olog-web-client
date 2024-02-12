@@ -21,22 +21,12 @@ import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
 import packageInfo from '../../../package.json';
 import SkipToContent from 'components/shared/SkipToContent';
-import { AppBar, Toolbar, Typography, Button, styled, Link as MuiLink } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Link as MuiLink, List, ListItem, Stack, Box } from '@mui/material';
 import { InternalButtonLink } from "components/shared/InternalLink";
 import { useShowLogin, useShowLogout, useUser } from "features/authSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import customization from "config/customization";
 
-const NavHeader = styled("ul")`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-`
-const NavFooter = styled("ul")`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`
 /**
  * Banner component with controls to create log entry, log book or tag. Plus
  * button for signing in/out. 
@@ -60,48 +50,64 @@ export const Banner = () => {
     <AppBar 
       component={"header"} 
       position="static" 
+      elevation={0}
       sx={{
-        backgroundColor: "#343a40"
+        backgroundColor: "#343a40",
+        width: "100%"
       }}
     >
-      <Toolbar component={"nav"} sx={{
+      <SkipToContent href='#app-content'>Skip to Main Content</SkipToContent>
+      <Toolbar sx={{
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        flexWrap: "wrap"
       }} >
-        <SkipToContent href='#app-content'>Skip to Main Content</SkipToContent>
-        <NavHeader>
-          <li>
-            <MuiLink component={Link} to="/" aria-label='home' sx={{ color: "essWhite.main", textDecoration: "none !important"}}>
-              <Typography variant="h6" component="p">{packageInfo.name}</Typography>
-              <Typography variant="body2">{packageInfo.version}</Typography>
-            </MuiLink>
-          </li>
-          <li>
-            <InternalButtonLink to="/logs/create" variant="contained">
-              New Log Entry
-            </InternalButtonLink>      
-          </li>
-        </NavHeader>
-        <NavFooter>
-          {customization.ENABLE_BETA ? 
-            <li>
-              <InternalButtonLink
-                to="/beta"
-                variant="contained"
-                aria-label="Navigate to Beta App"
-                endIcon={<AutoAwesomeIcon />}
-              >
-                Try Beta UI! 
+        <Box component="nav" aria-label="app menu" >
+          <List sx={{ 
+            display: "flex",
+            padding: 0
+          }}>
+            <ListItem display="flex">
+              <MuiLink component={Link} to="/" aria-label='home' sx={{ color: "essWhite.main", textDecoration: "none !important"}}>
+                <Typography variant="h6" component="p">{packageInfo.name}</Typography>
+                <Typography variant="body2">{packageInfo.version}</Typography>
+              </MuiLink>
+            </ListItem>
+            <ListItem>
+              <InternalButtonLink to="/logs/create" variant="contained">
+                New Log Entry
               </InternalButtonLink>
-            </li> : null
+            </ListItem>
+          </List>
+        </Box>
+        <Stack flexDirection="row" alignItems="center" >
+          {customization.ENABLE_BETA ? 
+            <Box aria-label="beta menu" width="100%">
+              <List sx={{ padding: 0 }}>
+                <ListItem>
+                  <InternalButtonLink
+                    to="/beta"
+                    variant="contained"
+                    aria-label="Navigate to Beta App"
+                    endIcon={<AutoAwesomeIcon />}
+                  >
+                    Try Beta UI! 
+                  </InternalButtonLink>
+                </ListItem>
+              </List>
+            </Box> : null
           }
-          <li>
-            <Button onClick={handleClick} variant="contained" >
-              {user?.userName ? user.userName : 'Sign In'}
-            </Button>
-          </li>
-        </NavFooter>
+          <nav aria-label="user menu">
+            <List>
+              <ListItem>
+                <Button onClick={handleClick} variant="contained" sx={{ whiteSpace: "nowrap" }} >
+                  {user?.userName ? user.userName : 'Sign In'}
+                </Button>
+              </ListItem>
+            </List>
+          </nav>
+        </Stack>
       </Toolbar>
       <LoginDialog 
         setShowLogin={setShowLogin}

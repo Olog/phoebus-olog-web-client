@@ -4,7 +4,7 @@ import EntryEditor from "../EntryEditor";
 import customization from "config/customization";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
 import { useLocation, useNavigate } from "react-router-dom";
-import LoadingOverlay from "components/shared/LoadingOverlay";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const ReplyLog = ({log, isAuthenticated}) => {
 
@@ -78,11 +78,15 @@ const ReplyLog = ({log, isAuthenticated}) => {
     }
 
     return (
-        <LoadingOverlay
-            active={replyInProgress}
-        >
+        <>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={replyInProgress}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <EntryEditor {...{form, title: `Reply to Log "${log?.title}" (id ${log?.id})`, onSubmit, submitDisabled: !isAuthenticated}} />
-        </LoadingOverlay>
+        </>
     );
 
 }
