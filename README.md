@@ -1,10 +1,10 @@
 # Olog Web Client
 
-This project implements a web client for the Phoebus Olog logbook service. It provides read, write and search capabilities, but not the full feature set of the CS Studio logbook client, see https://github.com/ControlSystemStudio/phoebus
+This project implements a web client for the Phoebus Olog logbook service. It provides read, write and search capabilities, but not the full feature set of the CS Studio (Java) logbook client, see https://github.com/ControlSystemStudio/phoebus
 
 Technology stack:
 * ReactJS (main framework)
-* Axios & Redux Toolkit (app state, http clients)
+* Redux Toolkit (app state, http clients)
 * Remarkable for commonmark processing/rendering (https://github.com/jonschlinkert/remarkable)
 * Jest for unit testing
 * Cypress and docker-compose for end-to-end testing
@@ -39,19 +39,26 @@ Available:
 Backlog:
 * Localization.
 
-## Site customization
+## Customization and Environment Variables
 
-The file `src/config/customization.js` contains customizable items. Please review its contents and adjust to your needs.
+### Configuration File
 
-## Development 
+The file `src/config/customization.js` contains customizable items, such as level/entry-type values, default search, and more. Please review its contents and adjust to your needs.
 
-### Environment Setup
-
-#### Environment Variables
+### Environment Variables
 
 Environment variables can be set directly on the terminal, or they can be loaded via the `.env` file automatically when npm runs. Copy the `.env.example` file and rename to `.env`.
 
-#### Tooling
+Note that `REACT_APP_*` variables are [only embedded during build time](https://create-react-app.dev/docs/adding-custom-environment-variables/); they cannot be read from the environment during runtime. 
+
+| Environment variable     | Description |
+| -------------------------|-------------|
+| REACT_APP_BASE_URL       | The [Phoebus Olog Backend](https://github.com/Olog/phoebus-olog) base URL (for example: `http://localhost:8080/Olog`). Default is the same host as the frontend; e.g. `http://localhost:3000` |
+| REACT_APP_ENABLE_BETA    | Enables the Beta UI features if set to `"true"`. Disabled by default. |
+
+## Development 
+
+### Tooling
 
 In order to develop and test with reasonable effort you will need the proper toolchain:
 
@@ -75,7 +82,7 @@ npm start
 
 The application will be available on `http://localhost:3000`.
 
-### Storybook
+### Previewing Components (Storybook)
 
 If you want to view components in isolation (without running the backend or starting the app above), 
 you can preview them via [Storybook](https://storybook.js.org/):
@@ -86,13 +93,10 @@ npm run storybook
 
 Components can then be previewed at `http://localhost:6006/`
 
-### Unit Tests
+### Unit and Component Tests
 
-Run tests interactively:
-```
-npm test
-```
-Or run them one-time:
+This test script runs both React Testing Library (RTL) unit tests and [Cypress](https://www.cypress.io/) component tests:
+
 ```
 ./scripts/test.sh
 ```
@@ -127,35 +131,8 @@ Run end-to-end tests headlessly (from the main project directory):
 
 ## Deployment
 
-The below instructions apply to a deployment scenario where a web server hosts the (static) web client resources, and at the same time acts as a reverse proxy resolving calls to the Phoebus Olog backend (which need not run on the same host).
+There are no special deployment considerations. 
 
-1. Review the file `customization.js`. It contains a few values defining text resources that might differ between sites. If you need different values, update according to your needs, but please do not commit the changes.
+Please note the Dockerfile example here is simple and doesn't include all necessary build variables.
 
-1. Build the deployment artifacts (`REACT_APP_*` variables must be set during build; they are compile-time variables):
-   ```
-   REACT_APP_BASE_URL=Olog/ npm run-script build
-   ``` 
-   Note that setting `REACT_APP_BASE_URL` is needed in order to override whatever value in the `.env` file. The actual value will depend on 
-   how the web application is deployed.
-   
-   This will generate files in the `build` directory, all of which must be copied to the target web server. Publish the web client resource under the root context, i.e. the URL `http://<host>/` shall resolve to the file `index.html` found in the build output.
-   
-1. On the target web server, configure the reverse proxy to map the path /Olog to the Phoebus Olog backend. On Apache this is done like so (the rewrite rules may not be needed on other type of front end servers): 
-   ```
-   <VirtualHost *:80>
-      ProxyPreserveHost On
-      ServerName <my server name>
-      ProxyPass /Olog/ http://localhost:8080/Olog/
-      ProxyPassReverse /Olog/ http://localhost:8080/Olog/
-      
-      <Directory "/path/to/npm/build/output">
-         RewriteEngine on
-         RewriteCond %{HTTP_ACCEPT} text/html
-         RewriteCond %{REQUEST_FILENAME} !-f
-         RewriteRule ^ index.html [last]
-         RewriteRule ^ - [last]
-      </Directory>
-   </VirtualHost>
-   ```
-   
-   In this example the Phoebus Olog backend is deployed on the same host on port 8080.
+Otherwise, refer to the above section on customization and environment varialbes as required for your particular deployment environment / configuration management system.
