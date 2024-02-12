@@ -53,7 +53,7 @@ Note that `REACT_APP_*` variables are [only embedded during build time](https://
 
 | Environment variable     | Description |
 | -------------------------|-------------|
-| REACT_APP_BASE_URL       | The [Phoebus Olog Backend](https://github.com/Olog/phoebus-olog) base URL (host:port). Default is the same host as the frontend; e.g. `http://localhost:3000` |
+| REACT_APP_BASE_URL       | The [Phoebus Olog Backend](https://github.com/Olog/phoebus-olog) base URL (for example: `http://localhost:8080/Olog`). Default is the same host as the frontend; e.g. `http://localhost:3000` |
 | REACT_APP_ENABLE_BETA    | Enables the Beta UI features if set to `"true"`. Disabled by default. |
 
 ## Development 
