@@ -21,7 +21,7 @@ import { useCallback } from 'react';
 import { ologApi } from 'api/ologApi';
 import {v4 as uuidv4} from 'uuid';
 
-const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties", "attachments"];
+const supportedKeys = ["desc", "logbooks", "tags", "start", "end", "owner", "title", "level", "properties", "attachments", "query"];
 
 const options = {
     arrayFormat: "comma",
