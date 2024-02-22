@@ -26,24 +26,22 @@ import { updateSearchPageParams } from 'features/searchPageParamsReducer';
 import { ologApi, removeEmptyKeys } from 'api/ologApi';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import ServiceErrorBanner from 'components/ErrorBanner';
-import styledComponentsStyled from 'styled-components';
 import Filters from 'components/Filters';
-import { desktop, mobile } from 'config/media';
-import { styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
-const ContentContainer = styledComponentsStyled.div`
-    height: 100%;
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.5rem;
-
-    ${mobile(`
-        flex-direction: column;
-        overflow: auto;
-        height: auto;
-    `)}
-`
+const ContentContainer = styled("div")( ({theme}) => ({
+    height: "100%",
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
+    padding: 1,
+    [theme.breakpoints.down("sm")]: {
+        flexDirection: "column",
+        overflow: "auto",
+        height: "auto"
+    }
+}) )
 
 const StyledFilters = styled(Filters)(({theme}) => ({
     flex: "0 0 20%",
@@ -55,33 +53,33 @@ const StyledFilters = styled(Filters)(({theme}) => ({
     }
 }));
 
-const StyledSearchResultList = styledComponentsStyled(SearchResultList)`
-    flex: 0 0 40%;
-    border: 1px solid ${({theme}) => theme.colors.light};
-    border-radius: 5px;
+const StyledSearchResultList = styled(SearchResultList)( ({theme}) => ({
+    flex: "0 0 40%",
+    border: `1px solid ${theme.palette.grey[300]}`,
+    borderRadius: "5px",
+    [theme.breakpoints.down("sm")]: {
+        order: 9,
+        width: "100%"
+    }
+}));
 
-    ${mobile(`
-        flex: 1 50%;
-        width: 100%;
-    `)}
-`
+const LogDetailsContainer = styled("div")( ({theme}) => ({
+    display: "flex",
+    flexDirection: "column",
+    flex: "1 0 0",
+    border: `1px solid ${theme.palette.grey[300]}`,
+    borderRadius: "5px",
 
-const LogDetailsContainer = styledComponentsStyled.div`
-    display: flex;
-    flex-direction: column;
-    flex: 1 0 0;
-    border: 1px solid ${({theme}) => theme.colors.light};
-    border-radius: 5px;
-    
-    ${desktop(`
-        overflow-x: hidden;
-        overflow-y: auto;
-    `)}
-    ${mobile(`
-        order: -1;
-        width: 100%;
-    `)}
-`
+    [theme.breakpoints.up("sm")]: {
+        overflowX: "hidden",
+        overflowY: "auto"
+    },
+
+    [theme.breakpoints.down("sm")]: {
+        order: -1,
+        width: "100%"
+    }
+}))
 
 const LogEntriesView = () => {
 
@@ -181,9 +179,9 @@ const LogEntriesView = () => {
                     }}/>
         } else {
             if(logId) {
-                return <h5>Log record id {logId} not found</h5>
+                return <Typography variant="h5" >Log record id {logId} not found</Typography>
             } else {
-                return <h5>Search for log entries, and select one to view</h5>
+                return <Typography variant="h5" >Search for log entries, and select one to view</Typography>
             }   
         }
 

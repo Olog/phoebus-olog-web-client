@@ -18,18 +18,16 @@
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { MuiThemeProvider, StyledComponentsThemeProvider, LocalizationProvider, ReduxProvider, RouterProvider } from 'providers';
+import { MuiThemeProvider, LocalizationProvider, ReduxProvider, RouterProvider } from 'providers';
 
 const container = document.getElementById('root');
 const root = createRoot(container); 
 root.render(
     <ReduxProvider>
         <MuiThemeProvider>
-            <StyledComponentsThemeProvider>
-                <LocalizationProvider>
-                    <RouterProvider />
-                </LocalizationProvider>
-            </StyledComponentsThemeProvider>
+            <LocalizationProvider>
+                <RouterProvider />
+            </LocalizationProvider>
         </MuiThemeProvider>
     </ReduxProvider>
 );

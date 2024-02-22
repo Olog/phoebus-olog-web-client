@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
 import useFormPersist from "react-hook-form-persist";
 import { useLocation, useNavigate } from "react-router-dom";
-import LoadingOverlay from "components/shared/LoadingOverlay";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const CreateLog = ({isAuthenticated}) => {
 
@@ -80,11 +80,15 @@ const CreateLog = ({isAuthenticated}) => {
     }
 
     return (
-        <LoadingOverlay
-            active={createInProgress}
-        >
+        <>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={createInProgress}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <EntryEditor {...{form, title: "Create New Log", onSubmit, submitDisabled: !isAuthenticated}} />
-        </LoadingOverlay>
+        </>
     );
 }
 export default CreateLog;

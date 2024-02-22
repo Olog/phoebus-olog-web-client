@@ -112,11 +112,11 @@ export const DroppableFileUploadInput = ({id, onFileChanged, className, multiple
                 <Box fontSize="5rem">
                     {disabled ? <CloudOffIcon fontSize="inherit" /> : <BackupIcon fontSize="inherit"/> }
                 </Box>
-                <label htmlFor={id} >
+                <Typography component="label" htmlFor={id} >
                     {disabled ?
                         "File Upload Disabled"
-                        : <>{browseLabel} <strong>  {dragLabel}</strong></> }
-                </label>
+                        : <>{browseLabel}{" "}<Typography component="span" fontWeight="bold">{dragLabel}</Typography></> }
+                </Typography>
 
             </StyledClickableArea>
             <input

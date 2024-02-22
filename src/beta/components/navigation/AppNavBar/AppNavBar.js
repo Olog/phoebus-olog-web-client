@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { AppBar, Toolbar, Typography, styled, Button, Stack, IconButton } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Stack, IconButton, List, ListItem } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import Initialize from "components/Initialize";
 import { InternalButtonLink } from "components/shared/InternalLink";
@@ -30,17 +30,6 @@ import LockIcon from '@mui/icons-material/Lock';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import HomeIcon from '@mui/icons-material/Home';
 
-const NavHeader = styled("ul")`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-`
-const NavFooter = styled("ul")`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`
-
 const AppNavBar = () => {
 
     const user = useUser();
@@ -53,42 +42,48 @@ const AppNavBar = () => {
                 position="static" 
                 elevation={0}
             >
-                <Toolbar component={"nav"} sx={{
+                <Toolbar sx={{
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between"
                 }} >
-                    <NavHeader>
-                        <li>
-                            <Stack flexDirection="row" gap={1} alignItems="center" >
-                                <IconButton component={RouterLink} to="/beta" color="inherit" >
-                                    <HomeIcon titleAccess="home" />
-                                </IconButton>
-                                <Typography variant="h6" component="span" >
-                                    {packageInfo.name}
-                                    {" "}
-                                    <Typography component="span" variant="body2">
-                                        {packageInfo.version}
+                    <nav aria-label="app menu">
+                        <List>
+                            <ListItem>
+                                <Stack flexDirection="row" gap={1} alignItems="center" >
+                                    <IconButton component={RouterLink} to="/beta" color="inherit" >
+                                        <HomeIcon titleAccess="home" />
+                                    </IconButton>
+                                    <Typography variant="h6" component="span" >
+                                        {packageInfo.name}
+                                        {" "}
+                                        <Typography component="span" variant="body2">
+                                            {packageInfo.version}
+                                        </Typography>
                                     </Typography>
-                                </Typography>
-                            </Stack>
-                        </li>
-                    </NavHeader>
-                    <NavFooter>
-                        <li>
+                                </Stack>
+                            </ListItem>
+                        </List>
+                    </nav>
+                    <nav aria-label="user menu">
+                        <List sx={{
+                            display: "flex"
+                        }}>
                             { user ? 
-                                <InternalButtonLink to="/beta/logs/create" color="inherit" startIcon={<AddCircleIcon />}>
-                                    New Entry
-                                </InternalButtonLink> : null
+                                <ListItem>
+                                    <InternalButtonLink to="/beta/logs/create" color="inherit" startIcon={<AddCircleIcon />}>
+                                        New Entry
+                                    </InternalButtonLink> 
+                                </ListItem> : null
                             }
-                        </li>
-                        <li>
-                            { user?.userName 
-                                ? <UserMenu user={user} />
-                                : <Button onClick={() => setShowLogin(true)} variant="outlined" color="inherit" startIcon={<LockIcon />} >Sign In</Button>
-                            }
-                        </li>
-                    </NavFooter>
+                            <ListItem>
+                                { user?.userName 
+                                    ? <UserMenu user={user} />
+                                    : <Button onClick={() => setShowLogin(true)} variant="outlined" color="inherit" startIcon={<LockIcon />} >Sign In</Button>
+                                }
+                            </ListItem>
+                        </List>
+                    </nav>
                 </Toolbar>
                 <LoginDialog />
                 <LogoutDialog />

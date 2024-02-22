@@ -15,15 +15,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import Modal from 'components/shared/Modal';
-import { Alert, Button } from '@mui/material';
+import { Alert, Button, Stack, Typography } from '@mui/material';
 import { ologApi } from 'api/ologApi';
 import { useShowLogout } from 'features/authSlice';
-
-const Form = styled.form``;
 
 const LogoutDialog = () => {
 
@@ -57,12 +53,10 @@ const LogoutDialog = () => {
       open={showLogout} 
       title="Log out?"
       content={
-        <Form>
-          <br />
-          <p>Would you like to logout?</p>
-          <br />
+        <Stack component="form" gap={1} paddingY={1}>
+          <Typography>Would you like to logout?</Typography>
           {logoutErrorMessage ? <Alert severity="error">{logoutErrorMessage}</Alert> : null}
-        </Form>
+        </Stack>
       }
       actions={
         <>

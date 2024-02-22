@@ -17,15 +17,13 @@
  */
 
 import React from 'react';
-import ListGroup from 'components/shared/ListGroup';
 import Properties from '../Properties/Properties';
 import LogDetailsMetaData from './LogDetailsMetaData';
 import Collapse from 'components/shared/Collapse';
-import { ListGroupItem } from 'components/shared/ListGroup';
 import CommonmarkPreview from 'components/shared/CommonmarkPreview';
 import customization from 'config/customization';
 import AttachmentImage, { isImage } from 'components/Attachment/AttachmentImage';
-import { Divider, styled } from '@mui/material';
+import { Box, Divider, Typography, styled } from '@mui/material';
 
 const Container = styled("div")`
     padding: 0.5rem;
@@ -67,7 +65,7 @@ const LogEntrySingleView = ({currentLogEntry, className}) => {
         
         if(isImage(attachment)) {
             return (
-                <ListGroupItem key={index}>
+                <Box key={index}>
                     <StyledAttachmentImage 
                         onClick={() => {
                                 let w = window.open("", attachment.filename);
@@ -79,15 +77,15 @@ const LogEntrySingleView = ({currentLogEntry, className}) => {
                         }
                         attachment={attachment}
                     />
-                </ListGroupItem>
+                </Box>
             )
         } else {
             return (
-                <ListGroupItem key={index}>
+                <Box key={index}>
                     <a target="_blank" rel="noopener noreferrer" href={url}>
                         {attachment.filename}
                     </a>
-                </ListGroupItem>
+                </Box>
             )
         }
     });
@@ -99,8 +97,8 @@ const LogEntrySingleView = ({currentLogEntry, className}) => {
     return(
         <Container className={className}>
             <LogTitle>
-                <h2>{currentLogEntry.title}</h2>
-                <span>{currentLogEntry.id}</span>
+                <Typography component="h2" variant="h2">{currentLogEntry.title}</Typography>
+                <Typography component="span">{currentLogEntry.id}</Typography>
             </LogTitle>
             <Divider sx={{marginY: 1}} />
             <LogDetailsMetaData currentLogRecord={currentLogEntry}/>
@@ -108,16 +106,16 @@ const LogEntrySingleView = ({currentLogEntry, className}) => {
             <StyledCommonmarkPreview commonmarkSrc={currentLogEntry.source} imageUrlPrefix={customization.APP_BASE_URL + "/"} />
             <Collapse title='Attachments'>
                 {currentLogEntry.attachments.length > 0 
-                    ? <ListGroup>
+                    ? <Box>
                         {attachments}
-                    </ListGroup>
-                    : <p>No Attachments</p> 
+                    </Box>
+                    : <Typography>No Attachments</Typography> 
                 }
             </Collapse>
             <Collapse title='Properties'>
                 {properties?.length > 0
                     ? properties 
-                    : <p>No Properties</p> 
+                    : <Typography>No Properties</Typography> 
                 }
             </Collapse>
         </Container>

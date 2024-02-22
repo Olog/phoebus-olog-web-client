@@ -15,48 +15,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import styled from 'styled-components';
+import { Box, Stack, Typography, styled } from '@mui/material';
 import Collapse from 'components/shared/Collapse';
 
-const StyledCollapse = styled(Collapse)`
-    padding-left: 1rem;
-`
-
-const Container = styled.div`
-    & > *:nth-child(2n) {
-        background-color: ${({theme}) => theme.colors.light};
-    }
-`
-
-const Attribute = styled.div`
-    display: flex;
-    gap: 0.5rem;
-`
-
-const AttributeKey = styled.div`
-    font-weight: bold;
-    min-width: 3.5rem;
-    text-align: right;
-`
-
-const AttributeValue = styled.div`
-    font-style: italic;
-`
+const StyledCollapse = styled(Collapse)({
+    paddingLeft: 10
+})
 
 const Properties = ({property}) => {
     
     const renderedProperties = property.attributes.map((a, index) => (
-        <Attribute key={index}>
-            <AttributeKey>{a.name}:</AttributeKey>
-            <AttributeValue>{a.value}</AttributeValue>
-        </Attribute>
+        <Stack flexDirection="row" gap={1} key={index}>
+            <Typography fontWeight="bold" textAlign="right">{a.name}:</Typography>
+            <Typography fontStyle="italic">{a.value}</Typography>
+        </Stack>
     ))
 
     return(
         <StyledCollapse active={true} title={property.name} >
-            <Container>
+            <Box
+                sx={{
+                    "& > *:nth-child(2n)": {
+                        backgroundColor: (theme) => theme.palette.grey[300]
+                    }
+                }}
+            >
                 {renderedProperties}
-            </Container>
+            </Box>
         </StyledCollapse>
     )
 }

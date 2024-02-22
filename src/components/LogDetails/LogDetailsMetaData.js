@@ -18,23 +18,16 @@
 
 import React from 'react';
 import customization from 'config/customization';
-import styled from 'styled-components';
-import { Box, Link, Typography } from '@mui/material';
+import { Box, Link, Typography, styled } from '@mui/material';
 import { Link as RouterLink } from "react-router-dom";
 import FormattedDate from 'components/shared/FormattedDate';
 
 const Key = styled(Typography)({
-    textAlign: "right",
-    "&, & *": {
-        fontSize: "0.8rem"
-    }
+    textAlign: "right"
 });
 
 const Value = styled(Typography)({
-    fontWeight: "bold",
-    "&, & *": {
-        fontSize: "0.8rem"
-    }
+    fontWeight: "bold"
 });
 
 const CommaSeparatedList = ({list}) => {

@@ -60,12 +60,12 @@ const SearchResultItem = ({log}) => {
                 </Stack>
             </Stack>
             <LogInfo>
-                <p>{log.owner}</p>
-                <FormattedDate date={log.createdDate} fontSize="0.75rem" />
+                <Typography fontSize="0.75rem">{log.owner}</Typography>
+                <FormattedDate fontSize="0.75rem" date={log.createdDate} />
             </LogInfo>
             <LogInfo>
-                <p>{formatDescription(log.description)}</p>
-                <p>{log.id}</p>
+                <Typography fontSize="0.75rem">{formatDescription(log.description)}</Typography>
+                <Typography fontSize="0.75rem">{log.id}</Typography>
             </LogInfo>
         </Stack>
     )

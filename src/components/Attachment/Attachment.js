@@ -15,25 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import styled from 'styled-components';
-import { BsXCircle } from 'react-icons/bs';
+import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react';
 import Modal from 'components/shared/Modal';
-import { Stack, Typography } from "@mui/material";
+import { Box, IconButton, Paper, Stack, Typography, styled } from "@mui/material";
 import AttachmentImage, { isImage } from "./AttachmentImage";
 
-const Container = styled.div`
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    border: solid 1px ${({theme}) => theme.colors.light};
-    border-radius: 5px;
-`;
-
-const ImageContainer = styled.div`
+const ImageContainer = styled("div")`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,31 +29,14 @@ const ImageContainer = styled.div`
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.10);
     flex-grow: 1;
-    ${({disabled}) => disabled && "filter: grayscale(100%) opacity(0.5) blur(1px);"}
+    ${({disabled}) => disabled ? "filter: grayscale(100%) opacity(0.5) blur(1px);" : ""}
 
     &:hover {
         cursor: pointer;
     }
 `
 
-const ImageHeader = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-`
-
-const CloseIcon = styled.button`
-    background-color: transparent;
-    border: none;
-    &:hover {
-        cursor: pointer;
-    }
-`
-
-const CaptionContainer = styled.div`
-
-`
-const Caption = styled.figcaption`
+const Caption = styled("figcaption")`
     font-style: italic;
     text-align: center;
     overflow: hidden;
@@ -97,21 +68,36 @@ const Attachment = ({attachment, removeAttachment, disabled, className}) => {
 
     return (
         <>
-            <Container className={className}>
-                <ImageHeader>
+            <Stack 
+                height="100%" 
+                width="100%"
+                gap={0.5}
+                padding={0.5}
+                className={className}
+                component={Paper} 
+                variant="outlined"
+            >
+                <Stack 
+                    justifyContent="center" 
+                    alignItems="flex-end"
+                >
                     {!disabled ? 
-                        <CloseIcon type='button' onClick={() => removeAttachment(attachment.file)} aria-label={`remove ${attachmentFileName}`}>
-                            <BsXCircle />
-                        </CloseIcon> : null
+                        <IconButton 
+                            onClick={() => removeAttachment(attachment.file)} 
+                            aria-label={`remove ${attachmentFileName}`}
+                            size="small"
+                        >
+                            <CloseIcon />
+                        </IconButton> : null
                     }
-                </ImageHeader>
+                </Stack>
                 <ImageContainer onClick={previewImage} disabled={disabled} >
                     {image}
                 </ImageContainer>
-                <CaptionContainer>
+                <Box>
                     <Caption disabled={disabled}>{attachmentFileName}</Caption>
-                </CaptionContainer>
-            </Container>
+                </Box>
+            </Stack>
             <Modal 
                 title={attachmentFileName}
                 content={

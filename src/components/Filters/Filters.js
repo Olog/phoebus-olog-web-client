@@ -23,7 +23,7 @@ import Collapse from './Collapse';
 import TextInput from 'components/shared/input/TextInput';
 import WizardDateInput from 'components/shared/input/WizardDateInput';
 import RadioInput from 'components/shared/input/RadioInput';
-import { Button, Stack } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import customization from 'config/customization';
 import TagsMultiSelect from 'components/shared/input/managed/TagsMultiSelect';
 import LogbooksMultiSelect from 'components/shared/input/managed/LogbooksMultiSelect';
@@ -79,7 +79,7 @@ const Filters = ({showFilters, className}) => {
     return(
         <Collapse show={showFilters} onExiting={handleSubmit(onSubmit)} >
             <Stack gap={0.5} padding={1} className={className} sx={{overflow: "auto"}} >
-                <h2 id="advanced-search">Advanced Search</h2>
+                <Typography component="h2" variant="h4" id="advanced-search">Advanced Search</Typography>
                 <Stack 
                     component="form" 
                     onSubmit={handleSubmit(onSubmit)}
