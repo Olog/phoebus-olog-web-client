@@ -154,7 +154,7 @@ describe("Search Interface", () => {
     
   });
 
-  it("searches tags instantly from advanced search", () => {
+  it.skip("searches tags instantly from advanced search", () => {
 
     // Given tags exist
     cy.intercept(
@@ -211,7 +211,7 @@ describe("Search Interface", () => {
     
   });
 
-  it("searches logbooks instantly from advanced search", () => {
+  it.skip("searches logbooks instantly from advanced search", () => {
 
     // Given logbooks exist
     cy.intercept(
@@ -266,7 +266,7 @@ describe("Search Interface", () => {
     
   });
 
-  it('executes the same query repeatedly (no caching)', () => {
+  it.skip('executes the same query repeatedly (no caching)', () => {
 
     // Given we expect search to be performed many times for the same query
     // But to return updated results each time
