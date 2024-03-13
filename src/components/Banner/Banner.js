@@ -52,7 +52,7 @@ export const Banner = () => {
       position="static" 
       elevation={0}
       sx={{
-        backgroundColor: "#343a40",
+        backgroundColor: "primary",
         width: "100%"
       }}
     >
@@ -75,7 +75,7 @@ export const Banner = () => {
               </MuiLink>
             </ListItem>
             <ListItem>
-              <InternalButtonLink to="/logs/create" variant="contained">
+              <InternalButtonLink to="/logs/create" variant="outlined" color="essWhite">
                 New Log Entry
               </InternalButtonLink>
             </ListItem>
@@ -88,7 +88,8 @@ export const Banner = () => {
                 <ListItem>
                   <InternalButtonLink
                     to="/beta"
-                    variant="contained"
+                    variant="outlined"
+                    color="essWhite"
                     aria-label="Navigate to Beta App"
                     endIcon={<AutoAwesomeIcon />}
                   >
@@ -101,7 +102,7 @@ export const Banner = () => {
           <nav aria-label="user menu">
             <List>
               <ListItem>
-                <Button onClick={handleClick} variant="contained" sx={{ whiteSpace: "nowrap" }} >
+                <Button onClick={handleClick} variant="outlined" color="essWhite" sx={{ whiteSpace: "nowrap" }} >
                   {user?.userName ? user.userName : 'Sign In'}
                 </Button>
               </ListItem>

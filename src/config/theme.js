@@ -18,20 +18,6 @@
 
 import { createTheme } from "@mui/material";
 
-export const styledComponentsTheme = {
-    colors: {
-        primary: '#006FE6',
-        secondary: '#6c757d',
-        danger: '#EE3A3A',
-        warning: '#fff3cd',
-        darkest: '#000',
-        dark: '#333',
-        neutral: '#777',
-        light: '#ddd',
-        lightest: '#fff'
-    }
-};
-
 export let theme = createTheme({});
 
 // Compose ESS Colors
@@ -54,9 +40,7 @@ theme = createTheme(theme, {
       essOrange: "#ff7d00",
       essForest: "#006646",
       essGrass: "#99be00",
-      essNavy: "#003366",
-      legacyBlue: '#006FE6' // to remove
-    }
+      essNavy: "#003366"    }
   });
 
 // Compose remaining overrides
@@ -64,7 +48,7 @@ theme = createTheme(theme, {
     palette: {
       primary: theme.palette.augmentColor({
         color: {
-          main: theme.palette.legacyBlue
+          main: theme.palette.essCyan.main
         },
         name: "primary"
       }),
