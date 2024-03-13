@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ologApi } from "api/ologApi";
-import { ServerErrorPage } from "components/ErrorPage";
+import { ServerErrorPage } from "components/shared/error";
 import { LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { updateCurrentLogEntry } from "features/currentLogEntryReducer";

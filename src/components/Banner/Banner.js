@@ -22,7 +22,7 @@ import LogoutDialog from '../LoginLogout/LogoutDialog';
 import packageInfo from '../../../package.json';
 import SkipToContent from 'components/shared/SkipToContent';
 import { AppBar, Toolbar, Typography, Button, Link as MuiLink, List, ListItem, Stack, Box } from '@mui/material';
-import { InternalButtonLink } from "components/shared/InternalLink";
+import { InternalButtonLink } from "components/shared/Link";
 import { useShowLogin, useShowLogout, useUser } from "features/authSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import customization from "config/customization";

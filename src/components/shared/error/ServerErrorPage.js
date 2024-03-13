@@ -12,7 +12,7 @@ const propTypes = {
   supportHref: string
 };
 
-const ServerErrorPage = styled(({ message, status, supportHref, className }) => {
+const ServerErrorPage = styled(({ message, status, supportHref, homeHref, className }) => {
   // Define some fallback messages if none provided
   if (!message) {
     if (status?.toString().startsWith("5")) {
@@ -27,6 +27,7 @@ const ServerErrorPage = styled(({ message, status, supportHref, className }) => 
       title={message}
       subtitle={status}
       supportHref={supportHref}
+      homeHref={homeHref}
       className={className}
     />
   );
