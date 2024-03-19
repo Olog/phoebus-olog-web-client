@@ -30,7 +30,7 @@ function ReturnHomeButton({ resetErrorBoundary }) {
   
     return (
       <ErrorPage
-        title="💥 Whoops! Something went wrong 💥"
+        title="Whoops! Something went wrong"
         titleProps={{ component: "h1", variant: "h2" }}
         details={error.stack}
         supportHref={supportHref}
