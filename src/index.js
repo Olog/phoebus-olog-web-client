@@ -19,15 +19,18 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { MuiThemeProvider, LocalizationProvider, ReduxProvider, RouterProvider } from 'providers';
+import { AppErrorBoundary } from 'components/shared/error/ErrorBoundary';
 
 const container = document.getElementById('root');
 const root = createRoot(container); 
 root.render(
-    <ReduxProvider>
-        <MuiThemeProvider>
-            <LocalizationProvider>
-                <RouterProvider />
-            </LocalizationProvider>
-        </MuiThemeProvider>
-    </ReduxProvider>
+    <AppErrorBoundary>
+        <ReduxProvider>
+            <MuiThemeProvider>
+                <LocalizationProvider>
+                    <RouterProvider />
+                </LocalizationProvider>
+            </MuiThemeProvider>
+        </ReduxProvider>
+    </AppErrorBoundary>
 );

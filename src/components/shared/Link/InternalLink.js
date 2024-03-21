@@ -49,6 +49,9 @@ export const InternalButtonLink = ({ children, label, to, ...props }) => {
       component={RouterLink}
       to={to}
       aria-label={label ? label : children}
+      sx={{
+        whiteSpace: "nowrap"
+      }}
       {...props}
     >
       {children}

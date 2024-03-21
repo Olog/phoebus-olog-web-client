@@ -23,7 +23,7 @@ import LogEntrySingleView from './LogEntrySingleView';
 import { useHref, useLocation } from "react-router-dom";
 import NavigationButtons from './NavigationButtons';
 import { Box, Button, Divider, Stack, styled } from '@mui/material';
-import { InternalButtonLink } from 'components/shared/InternalLink';
+import { InternalButtonLink } from 'components/shared/Link';
 import { useUser } from 'features/authSlice';
 
 const StyledLogEntrySingleView = styled(LogEntrySingleView)`

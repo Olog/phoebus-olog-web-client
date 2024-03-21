@@ -19,7 +19,7 @@
 import { AppBar, Toolbar, Typography, Button, Stack, IconButton, List, ListItem } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import Initialize from "components/Initialize";
-import { InternalButtonLink } from "components/shared/InternalLink";
+import { InternalButtonLink } from "components/shared/Link";
 import { useShowLogin, useUser } from "features/authSlice";
 import React from "react";
 import packageInfo from "../../../../../package.json";

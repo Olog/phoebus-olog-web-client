@@ -11,8 +11,7 @@ import {
 import { element, object, string } from "prop-types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import theme from "config/theme";
-import { ExternalButtonLink } from "components/shared/ExternalLink";
-import { InternalButtonLink } from "components/shared/InternalLink";
+import { ExternalButtonLink, InternalButtonLink } from "components/shared/Link";
 
 const propTypes = {
   /** String describing the most important informatio about the error */
@@ -37,6 +36,7 @@ const ErrorPage = styled(({
   details,
   SecondaryActionComponent,
   supportHref,
+  homeHref="/",
   titleProps,
   subtitleProps,
   className
@@ -107,7 +107,7 @@ const ErrorPage = styled(({
           {SecondaryActionComponent ?? (
             <InternalButtonLink
               variant="contained"
-              to="/"
+              to={homeHref}
             >
               Return to Home
             </InternalButtonLink>

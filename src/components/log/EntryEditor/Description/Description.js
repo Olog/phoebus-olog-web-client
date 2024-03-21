@@ -7,7 +7,7 @@ import OlogAttachment from "./OlogAttachment";
 import { v4 as uuidv4 } from 'uuid';
 import Attachment from "components/Attachment/Attachment";
 import TextInput from "components/shared/input/TextInput";
-import { ExternalLink } from "components/shared/ExternalLink";
+import { ExternalLink } from "components/shared/Link";
 import { FaMarkdown } from "react-icons/fa";
 import EmbedImageDialog from "./EmbedImageDialog";
 import HtmlPreviewModal from "./HtmlPreviewModal";
