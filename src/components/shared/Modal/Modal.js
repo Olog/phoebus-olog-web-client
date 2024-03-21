@@ -27,7 +27,7 @@ const ModalTitle = styled(({onClose, className, children}) => {
             justifyContent="space-between"
             alignItems="center"
             backgroundColor="primary.main"
-            color="essWhite.main"
+            color="ologWhite.main"
             paddingX={2}
             paddingY={1}
         >
@@ -38,7 +38,7 @@ const ModalTitle = styled(({onClose, className, children}) => {
                 aria-label="Close Dialog" 
                 edge="end"
             >
-                <CloseIcon fontSize="medium" color="essWhite"/>
+                <CloseIcon fontSize="medium" color="ologWhite"/>
             </IconButton>
         </Stack>
     )

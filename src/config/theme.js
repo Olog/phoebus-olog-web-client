@@ -18,44 +18,54 @@
 
 import { createTheme } from "@mui/material";
 
-export const styledComponentsTheme = {
-    colors: {
-        primary: '#006FE6',
-        secondary: '#6c757d',
-        danger: '#EE3A3A',
-        warning: '#fff3cd',
-        darkest: '#000',
-        dark: '#333',
-        neutral: '#777',
-        light: '#ddd',
-        lightest: '#fff'
-    }
-};
-
 export let theme = createTheme({});
 
 // Compose ESS Colors
 theme = createTheme(theme, {
     palette: {
-      essCyan: theme.palette.augmentColor({
+      ologCyan: theme.palette.augmentColor({
         color: {
           main: "#0099dc"
         },
-        name: "essCyan"
+        name: "ologCyan"
       }),
-      essBlack: "#000000",
-      essWhite: theme.palette.augmentColor({
+      ologBlack: "#000000",
+      ologWhite: theme.palette.augmentColor({
         color: {
           main: "#ffffff"
         },
-        name: "essWhite"
+        name: "ologWhite"
       }), 
-      essPurple: "#821482",
-      essOrange: "#ff7d00",
-      essForest: "#006646",
-      essGrass: "#99be00",
-      essNavy: "#003366",
-      legacyBlue: '#006FE6' // to remove
+      ologPurple: theme.palette.augmentColor({
+        color: {
+          main: "#821482"
+        },
+        name: "ologPurple"
+      }),
+      ologOrange: theme.palette.augmentColor({
+        color: {
+          main: "#ff7d00"
+        },
+        name: "ologOrange"
+      }),
+      ologForest: theme.palette.augmentColor({
+        color: {
+          main: "#006646"
+        },
+        name: "ologForest"
+      }),
+      ologGrass: theme.palette.augmentColor({
+        color: {
+          main: "#99be00"
+        },
+        name:"ologGrass"
+      }),
+      ologNavy:theme.palette.augmentColor({
+        color: {
+          main: "#003366"
+        },
+        name: "ologNavy"  
+      })  
     }
   });
 
@@ -64,7 +74,7 @@ theme = createTheme(theme, {
     palette: {
       primary: theme.palette.augmentColor({
         color: {
-          main: theme.palette.legacyBlue
+          main: theme.palette.ologCyan.main
         },
         name: "primary"
       }),
