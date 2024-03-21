@@ -1,18 +1,19 @@
 import { Alert, Divider, IconButton, LinearProgress, Stack, Typography, styled } from "@mui/material";
-import { ologApi } from "api/ologApi";
+import { ologApi, removeEmptyKeys } from "api/ologApi";
 import { sortByCreatedDate } from "components/log/sort";
 import { moment } from "lib/moment";
 import React, { useCallback, useMemo, useState } from "react";
 import SearchResultItemRow from "./SearchResultItemRow";
 import SearchResultDateRow from "./SearchResultDateRow";
 import customization from "config/customization";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { updateSearchPageParams } from "features/searchPageParamsReducer";
+import SimpleSearch from "../SimpleSearch";
 
 const NoRowsOverlay = (props) => {
     return (
@@ -40,8 +41,8 @@ const SearchResultList = styled(({className}) => {
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
     const currentLogEntry = useSelector(state => state.currentLogEntry);
+    const searchParams = useSelector(state => state.searchParams);
     const searchPageParams = useSelector(state => state.searchPageParams);
     const pageSizeOptions = customization.defaultRowsPerPageOptions;
     const [page, setPage] = useState(0);
@@ -63,7 +64,7 @@ const SearchResultList = styled(({className}) => {
         error, 
         isFetching: loading 
     } = ologApi.endpoints.searchLogs.useQuery({
-            searchParams: {}, 
+            searchParams: {...removeEmptyKeys({...searchParams})}, 
             searchPageParams: { 
                 ...searchPageParams, 
                 sort: searchPageParams.dateDescending ? "down" : "up"
@@ -106,7 +107,7 @@ const SearchResultList = styled(({className}) => {
         }
         const log = params.row;
         dispatch(updateCurrentLogEntry(log));
-        navigate(`/beta/logs/${log.id}${location.search}`);
+        navigate(`/beta/logs/${log.id}`);
     }
 
     const toggleSort = () => {
@@ -131,8 +132,8 @@ const SearchResultList = styled(({className}) => {
             divider={<Divider flexItem />} 
             gap={1}
         >
-            <Stack flexDirection="row" justifyContent="space-between" alignItems="center" marginTop={1}>
-                <Typography sx={{verticalAlign: "middle"}}>(Search Box)</Typography>
+            <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
+                <SimpleSearch />
                 <IconButton onClick={toggleSort}>
                     { searchPageParams.dateDescending 
                         ? <ArrowDownwardIcon titleAccess="sort, date descending" /> 
