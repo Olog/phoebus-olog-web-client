@@ -60,11 +60,22 @@ const LogDetailsMetaData = ({currentLogRecord}) => {
             <Key>Created</Key>
             <Value data-testid="meta-created">
                 <FormattedDate 
-                    date={currentLogRecord.modifyDate ? currentLogRecord.modifyDate : currentLogRecord.createdDate} 
+                    date={currentLogRecord.createdDate} 
                     fontWeight="inherit"
                 />
                 {" "}
-                {currentLogRecord.modifyDate ? <Link component={RouterLink} to={`/logs/${currentLogRecord.id}/history`}>(edited)</Link> : null}
+                {currentLogRecord.modifyDate ? 
+                  <Link component={RouterLink} to={`/logs/${currentLogRecord.id}/history`}>
+                    {"("}
+                    edited
+                    {" "}
+                    <FormattedDate 
+                        date={currentLogRecord.modifyDate} 
+                        fontWeight="inherit"
+                    />
+                    {")"}
+                  </Link> 
+                  : null}
             </Value>
             <Key>Logbooks</Key>
             <Value data-testid="meta-logbooks">
