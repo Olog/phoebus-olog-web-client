@@ -21,6 +21,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { getLogEntryGroupId } from 'components/Properties/utils';
 import FormattedDate from 'components/shared/FormattedDate';
+import EditIcon from '@mui/icons-material/Edit';
 
 const LogInfo = styled("div")`
     display: flex;
@@ -55,8 +56,9 @@ const SearchResultItem = ({log}) => {
                     </Typography>
                 </Tooltip>
                 <Stack flexDirection="row" >
-                    {isGroupEntry ? <ReplyIcon titleAccess="grouped" role="status" /> : null}
+                    {isGroupEntry ? <ReplyIcon titleAccess="has replies" role="status" /> : null}
                     {log.attachments && log.attachments.length  !== 0 ? <AttachFileIcon titleAccess='has attachments' role='status' /> : null}
+                    {log.modifyDate ? <EditIcon titleAccess="has edits" /> : null}
                 </Stack>
             </Stack>
             <LogInfo>
