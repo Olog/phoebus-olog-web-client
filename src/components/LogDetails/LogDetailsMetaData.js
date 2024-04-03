@@ -18,9 +18,10 @@
 
 import React from 'react';
 import customization from 'config/customization';
-import { Box, Link, Typography, styled } from '@mui/material';
-import { Link as RouterLink } from "react-router-dom";
+import { Box, Typography, styled } from '@mui/material';
 import FormattedDate from 'components/shared/FormattedDate';
+import EditIcon from '@mui/icons-material/Edit';
+import { InternalLink } from 'components/shared/Link';
 
 const Key = styled(Typography)({
     textAlign: "right"
@@ -60,11 +61,21 @@ const LogDetailsMetaData = ({currentLogRecord}) => {
             <Key>Created</Key>
             <Value data-testid="meta-created">
                 <FormattedDate 
-                    date={currentLogRecord.modifyDate ? currentLogRecord.modifyDate : currentLogRecord.createdDate} 
+                    date={currentLogRecord.createdDate} 
                     fontWeight="inherit"
                 />
-                {" "}
-                {currentLogRecord.modifyDate ? <Link component={RouterLink} to={`/logs/${currentLogRecord.id}/history`}>(edited)</Link> : null}
+                {currentLogRecord.modifyDate ? 
+                  <Typography component="span" fontStyle="italic">
+                    {" "}
+                    <InternalLink 
+                      to={`/logs/${currentLogRecord.id}/history`} 
+                      label={`View log history for ${currentLogRecord.title}`}
+                    >
+                      <EditIcon fontSize="small" sx={{ verticalAlign: "text-top"}} />
+                      view history
+                    </InternalLink>
+                  </Typography>
+                  : null}
             </Value>
             <Key>Logbooks</Key>
             <Value data-testid="meta-logbooks">

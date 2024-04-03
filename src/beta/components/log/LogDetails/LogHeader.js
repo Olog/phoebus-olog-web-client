@@ -6,6 +6,7 @@ import OlogAttachment from "components/log/EntryEditor/Description/OlogAttachmen
 import MetadataTable from "./MetadataTable";
 import LogDetailActionButton from "./LogDetailActionButton";
 import FormattedDate from "components/shared/FormattedDate";
+import EditIcon from '@mui/icons-material/Edit';
 
 const CreatedDate = ({log}) => {
 
@@ -14,7 +15,10 @@ const CreatedDate = ({log}) => {
             <>
                 <FormattedDate date={log.modifyDate} component="span" />
                 {" "}
-                <InternalLink to={`/beta/logs/${log.id}/history`}>(edited)</InternalLink>
+                <InternalLink to={`/beta/logs/${log.id}/history`}>
+                  <EditIcon fontSize="small" sx={{ verticalAlign: "text-top"}} />
+                  view history
+                </InternalLink>
             </>
         )
     }

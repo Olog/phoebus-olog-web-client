@@ -30,7 +30,7 @@ describe('SearchResultListItem.cy.js', () => {
         );
     
         // the grouped entry will have the group icon
-        cy.findByRole('status', {name: 'grouped'}).should("exist");
+        cy.findByRole('status', {name: 'has replies'}).should("exist");
 
     })
     it('non-grouped item does not include a grouped icon', () => {
@@ -45,7 +45,7 @@ describe('SearchResultListItem.cy.js', () => {
         );
     
         // the grouped entry will not have the group icon
-        cy.findByRole('status', {name: 'grouped'}).should("not.exist");
+        cy.findByRole('status', {name: 'has replies'}).should("not.exist");
 
     })
     it('item with attachments include attachment icon', () => {
