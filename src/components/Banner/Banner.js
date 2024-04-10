@@ -73,7 +73,7 @@ export const Banner = () => {
             <ListItem display="flex">
               <MuiLink component={Link} to="/" aria-label='home' sx={{ color: "ologWhite.main", textDecoration: "none !important"}}>
                 <Typography variant="h6" component="p">{packageInfo.name}</Typography>
-                <Typography variant="body2">{packageInfo.version}</Typography>
+                <Typography variant="body2">{customization.VERSION}</Typography>
               </MuiLink>
             </ListItem>
             <ListItem>
