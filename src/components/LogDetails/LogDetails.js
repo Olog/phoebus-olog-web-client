@@ -21,7 +21,6 @@ import { getLogEntryGroupId } from '../Properties/utils';
 import LogEntryGroupView from './LogEntryGroupView';
 import LogEntrySingleView from './LogEntrySingleView';
 import { useHref, useLocation } from "react-router-dom";
-import NavigationButtons from './NavigationButtons';
 import { Box, Button, Divider, Stack, styled } from '@mui/material';
 import { InternalButtonLink } from 'components/shared/Link';
 import { useUser } from 'features/authSlice';
@@ -102,10 +101,6 @@ const LogDetails = ({
             overflow="hidden"
         >
             <Stack flexDirection="row" gap={1} borderBottom={0} padding={1} flexWrap="wrap">
-                <NavigationButtons {...{
-                    currentLogEntry,
-                    searchResults,
-                }} order={0}/>
                 <Stack flexDirection="row" gap={1} order={2} sx={{flexBasis: ["100%", "auto"]}}>
                     {renderedEditButton}
                     {renderedReplyButton}
