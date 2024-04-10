@@ -55,6 +55,11 @@ Note that `REACT_APP_*` variables are [only embedded during build time](https://
 | -------------------------|-------------|
 | REACT_APP_BASE_URL       | The [Phoebus Olog Backend](https://github.com/Olog/phoebus-olog) base URL (for example: `http://localhost:8080/Olog`). Default is the same host as the frontend; e.g. `http://localhost:3000` |
 | REACT_APP_ENABLE_BETA    | Enables the Beta UI features if set to `"true"`. Disabled by default. |
+| REACT_APP_DOCS_HREF      | URL where more information can be found on Olog, shown on Help page; 
+default is `https://olog.readthedocs.io/en/latest/` |
+| REACT_APP_SUPPORT_HREF   | URL where support can be found for Olog. Shown on Help page only if provided. |
+| REACT_APP_VERSION        | Version string for Olog; default is the version defined in `package.json`. |
+| REACT_APP_VERSION_HREF   | URL where this version of Olog can be found. Shown on Help page only if provided. |
 
 ## Development 
 

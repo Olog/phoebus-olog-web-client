@@ -22,13 +22,14 @@ import Initialize from "components/Initialize";
 import { InternalButtonLink } from "components/shared/Link";
 import { useShowLogin, useUser } from "features/authSlice";
 import React from "react";
-import packageInfo from "../../../../../package.json";
 import UserMenu from "./UserMenu";
 import LoginDialog from "components/LoginLogout/LoginDialog";
 import LogoutDialog from "components/LoginLogout/LogoutDialog";
 import LockIcon from '@mui/icons-material/Lock';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import HomeIcon from '@mui/icons-material/Home';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
+import customization from "config/customization";
 
 const AppNavBar = () => {
 
@@ -55,35 +56,48 @@ const AppNavBar = () => {
                                         <HomeIcon titleAccess="home" />
                                     </IconButton>
                                     <Typography variant="h6" component="span" >
-                                        {packageInfo.name}
+                                        {customization.NAME}
                                         {" "}
                                         <Typography component="span" variant="body2">
-                                            {packageInfo.version}
+                                            {customization.VERSION}
                                         </Typography>
                                     </Typography>
                                 </Stack>
                             </ListItem>
                         </List>
                     </nav>
-                    <nav aria-label="user menu">
+                    <Stack flexDirection="row">
+                      <nav aria-label="help menu">
                         <List sx={{
-                            display: "flex"
+                          display: "flex"
                         }}>
-                            { user ? 
-                                <ListItem>
-                                    <InternalButtonLink to="/beta/logs/create" color="inherit" startIcon={<AddCircleIcon />}>
-                                        New Entry
-                                    </InternalButtonLink> 
-                                </ListItem> : null
-                            }
-                            <ListItem>
-                                { user?.userName 
-                                    ? <UserMenu user={user} />
-                                    : <Button onClick={() => setShowLogin(true)} variant="outlined" color="inherit" startIcon={<LockIcon />} >Sign In</Button>
-                                }
-                            </ListItem>
+                          <ListItem>
+                            <IconButton component={RouterLink} to="/beta/help" color="inherit" >
+                              <HelpCenterIcon titleAccess="help" />
+                            </IconButton>
+                          </ListItem>
                         </List>
-                    </nav>
+                      </nav>
+                      <nav aria-label="user menu">
+                          <List sx={{
+                            display: "flex"
+                          }}>
+                              { user ? 
+                                  <ListItem>
+                                      <InternalButtonLink to="/beta/logs/create" color="inherit" startIcon={<AddCircleIcon />}>
+                                          New Entry
+                                      </InternalButtonLink> 
+                                  </ListItem> : null
+                              }
+                              <ListItem>
+                                  { user?.userName 
+                                      ? <UserMenu user={user} />
+                                      : <Button onClick={() => setShowLogin(true)} variant="outlined" color="inherit" startIcon={<LockIcon />} >Sign In</Button>
+                                  }
+                              </ListItem>
+                          </List>
+                      </nav>
+                    </Stack>
                 </Toolbar>
                 <LoginDialog />
                 <LogoutDialog />

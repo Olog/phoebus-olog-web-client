@@ -10,6 +10,7 @@ import {
 import App from "views/App";
 import CreateLogView from "views/CreateLogView";
 import EditLogView from "views/EditLogView";
+import { HelpView } from "views/HelpView";
 import LogHistoryView from "views/LogHistoryView";
 import NotFoundView from "views/NotFoundView";
 import ReplyLogView from "views/ReplyLogView";
@@ -49,6 +50,10 @@ export const routes = [
                 element: <TestErrorView />
             },
             {
+              path: "help",
+              element: <HelpView />
+            },
+            {
                 path: "*",
                 element: <NotFoundView />
             }
@@ -86,6 +91,10 @@ export const routes = [
             {
                 path: "error-test",
                 element: <TestErrorView />
+            },
+            {
+              path: "help",
+              element: <HelpView />
             },
             {
                 path: "/beta/*",

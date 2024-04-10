@@ -21,10 +21,12 @@ import LoginDialog from '../LoginLogout/LoginDialog';
 import LogoutDialog from '../LoginLogout/LogoutDialog';
 import packageInfo from '../../../package.json';
 import SkipToContent from 'components/shared/SkipToContent';
-import { AppBar, Toolbar, Typography, Button, Link as MuiLink, List, ListItem, Stack, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Link as MuiLink, List, ListItem, Stack, Box, IconButton } from '@mui/material';
+import { Link as RouterLink } from "react-router-dom";
 import { InternalButtonLink } from "components/shared/Link";
 import { useShowLogin, useShowLogout, useUser } from "features/authSlice";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import customization from "config/customization";
 
 /**
@@ -99,6 +101,17 @@ export const Banner = () => {
               </List>
             </Box> : null
           }
+          <nav aria-label="help menu">
+            <List sx={{
+              display: "flex"
+            }}>
+              <ListItem>
+                <IconButton component={RouterLink} to="/help" color="inherit" >
+                  <HelpCenterIcon titleAccess="help" />
+                </IconButton>
+              </ListItem>
+            </List>
+          </nav>
           <nav aria-label="user menu">
             <List>
               <ListItem>
