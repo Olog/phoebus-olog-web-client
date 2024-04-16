@@ -16,7 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import packageInfo from '../../package.json';
+
 let customization = {
+
+    NAME: packageInfo.name,
     /**
      * The name of the "level" (legacy name) meta data field.
      */
@@ -92,7 +96,15 @@ let customization = {
     /**
      * Enable/Disable the beta feature
      */
-    ENABLE_BETA: process.env.REACT_APP_ENABLE_BETA === "true"
+    ENABLE_BETA: process.env.REACT_APP_ENABLE_BETA === "true",
+
+    /**
+     * Support and Docs URLs for Help page
+     */
+    DOCS_HREF: process.env.REACT_APP_DOCS_HREF ?? "https://olog.readthedocs.io/en/latest/",
+    SUPPORT_HREF: process.env.REACT_APP_SUPPORT_HREF,
+    VERSION: process.env.REACT_APP_VERSION ?? packageInfo.version,
+    VERSION_HREF: process.env.REACT_APP_VERSION_HREF
 }
 
 export default customization;

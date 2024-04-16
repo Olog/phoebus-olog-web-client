@@ -19,11 +19,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { withoutCacheBust } from "hooks/useSanitizedSearchParams";
 import customization from "config/customization";
-import packageInfo from '../../package.json';
 import { useCallback } from "react";
 
 export function ologClientInfoHeader() {
-    return {"X-Olog-Client-Info": "Olog Web " + packageInfo.version + " on " + window.navigator.userAgent}
+    return {"X-Olog-Client-Info": "Olog Web " + customization.VERSION + " on " + window.navigator.userAgent}
 }
 
 export const removeEmptyKeys = (obj, exceptions=[]) => {
