@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "universal-cookie";
 import customization from "config/customization";
+import { useSelector } from "react-redux";
 
 export const defaultSearchPageParamsState = {
     sort: customization.defaultSortDirection,
@@ -23,5 +24,7 @@ export const searchPageParamsSlice = createSlice({
 });
 
 export const { updateSearchPageParams } = searchPageParamsSlice.actions;
+
+export const useSearchPageParams = () => useSelector(state => state.searchPageParams);
 
 export default searchPageParamsSlice.reducer;

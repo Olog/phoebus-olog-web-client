@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "universal-cookie";
 import customization from "config/customization";
 import { withCacheBust } from "hooks/useSanitizedSearchParams";
+import { useSelector } from "react-redux";
 
 const cookies = new Cookies();
 // const initialState = cookies.get(customization.searchParamsCookie) || {...customization.defaultSearchParams};
@@ -30,5 +31,7 @@ export const forceUpdateSearchParams = (searchParams) => {
 }
 
 export const { updateSearchParams } = searchParamsSlice.actions;
+
+export const useSearchParams = () => useSelector(state => state.searchParams);
 
 export default searchParamsSlice.reducer;

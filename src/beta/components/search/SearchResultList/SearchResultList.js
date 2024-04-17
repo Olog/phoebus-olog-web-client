@@ -6,13 +6,13 @@ import React, { useCallback, useMemo, useState } from "react";
 import SearchResultItemRow from "./SearchResultItemRow";
 import SearchResultDateRow from "./SearchResultDateRow";
 import customization from "config/customization";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
-import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
+import { updateCurrentLogEntry, useCurrentLogEntry } from "features/currentLogEntryReducer";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { updateSearchPageParams } from "features/searchPageParamsReducer";
+import { updateSearchPageParams, useSearchPageParams } from "features/searchPageParamsReducer";
 import SimpleSearch from "../SimpleSearch";
 
 const NoRowsOverlay = (props) => {
@@ -41,9 +41,9 @@ const SearchResultList = styled(({className}) => {
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const currentLogEntry = useSelector(state => state.currentLogEntry);
-    const searchParams = useSelector(state => state.searchParams);
-    const searchPageParams = useSelector(state => state.searchPageParams);
+    const currentLogEntry = useCurrentLogEntry();
+    const searchParams = useSearchParams();
+    const searchPageParams = useSearchPageParams();
     const pageSizeOptions = customization.defaultRowsPerPageOptions;
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(
