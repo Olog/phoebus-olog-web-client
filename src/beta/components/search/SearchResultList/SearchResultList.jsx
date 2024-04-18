@@ -5,7 +5,7 @@ import { SearchResultGroupItem } from "./SearchResultGroupItem/SearchResultGroup
 import { SearchResultSingleItem } from "./SearchResultSingleItem";
 import { sortByCreatedDate } from "components/log/sort";
 
-export const SearchResultTreeList = styled(({logs, dateDescending, onRowClick, className}) => {
+export const SearchResultList = styled(({logs, dateDescending, selectedId, onRowClick, className}) => {
 
   const removeSubsequentReplies = (logs) => {
     const visitedGroups = []
@@ -29,14 +29,15 @@ export const SearchResultTreeList = styled(({logs, dateDescending, onRowClick, c
 
   return (
     <Stack
+      overflow="scroll"
       className={`SearchResultList ${className}`}
       divider={<Divider flexItem />}
     >
       {transformedLogs?.map(log => {
         if(log.groupId) {
-          return <SearchResultGroupItem key={log.id} log={log} onClick={onRowClick} dateDescending={dateDescending} />
+          return <SearchResultGroupItem key={log.id} log={log} selectedId={selectedId} onClick={onRowClick} dateDescending={dateDescending} />
         } else {
-          return <SearchResultSingleItem key={log.id} log={log} onClick={onRowClick} />
+          return <SearchResultSingleItem key={log.id} log={log} selected={`${selectedId}` === `${log.id}`} onClick={onRowClick} />
         }
       })}
     </Stack>

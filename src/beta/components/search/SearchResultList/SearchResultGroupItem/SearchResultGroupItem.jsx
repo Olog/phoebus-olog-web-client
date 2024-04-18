@@ -10,7 +10,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
-export const SearchResultGroupItem = styled(({log, onClick=() => {}, dateDescending=true}) => {
+export const SearchResultGroupItem = styled(({log, onClick=() => {}, selectedId, dateDescending=true}) => {
 
   const [expanded, setExpanded] = useState(true);
   const { data: replies, isLoading: repliesLoading, error: repliesError } = ologApi.endpoints.getLogGroup.useQuery(
@@ -51,6 +51,7 @@ export const SearchResultGroupItem = styled(({log, onClick=() => {}, dateDescend
     <Stack sx={{
       display: "grid",
       gridTemplateColumns: "repeat(2, 14px) 10px auto",
+      paddingBottom: 0.5,
       "& .group-parent-icon": {
         gridColumn: "span 2"
       },
@@ -85,7 +86,7 @@ export const SearchResultGroupItem = styled(({log, onClick=() => {}, dateDescend
       <Stack justifyContent="center" alignItems="center" className="group-parent-icon">
         {renderedIcon}
       </Stack>
-      <GroupParent log={log} replyCount={replies?.length ?? null} onClick={onClick} />
+      <GroupParent log={log} replyCount={replies?.length ?? null} onClick={onClick} selected={`${selectedId}` === `${log.id}`} />
       {replies && expanded ? replies
         .toSorted(sortByCreatedDate(dateDescending))
         .map((reply, index) => {
@@ -96,7 +97,7 @@ export const SearchResultGroupItem = styled(({log, onClick=() => {}, dateDescend
               <Box className="group-child-connector group-child-elbow" />
               {replyIsParent ? <ArrowRightIcon fontSize="small" className="reply-is-parent-icon" /> : null }
               <Box gridColumn={replyIsParent ? "span 1" : "span 2"}>
-                <GroupChild log={reply} onClick={onClick} />
+                <GroupChild log={reply} onClick={onClick} selected={`${selectedId}` === `${reply.id}`} />
               </Box>
             </React.Fragment>
           )

@@ -16,9 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { forceUpdateSearchParams } from 'features/searchParamsReducer';
-import { updateSearchPageParams } from 'features/searchPageParamsReducer';
+import { useDispatch } from 'react-redux';
+import { forceUpdateSearchParams, useSearchParams } from 'features/searchParamsReducer';
+import { updateSearchPageParams, useSearchPageParams } from 'features/searchPageParamsReducer';
 import Collapse from './Collapse';
 import TextInput from 'components/shared/input/TextInput';
 import WizardDateInput from 'components/shared/input/WizardDateInput';
@@ -36,8 +36,8 @@ import EntryTypeSelect from 'components/shared/input/managed/EntryTypeSelect';
 const Filters = ({showFilters, className}) => {
 
     const dispatch = useDispatch();
-    const searchParams = useSelector(state => state.searchParams);
-    const searchPageParams = useSelector(state => state.searchPageParams);
+    const searchParams = useSearchParams();
+    const searchPageParams = useSearchPageParams();
     const form = useForm({
         defaultValues: {...searchParams, sort: searchPageParams.sort},
         values: {...searchParams, sort: searchPageParams.sort}

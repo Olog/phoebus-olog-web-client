@@ -1,9 +1,10 @@
-import { Box, Paper } from "@mui/material";
-import { SearchResultGroupItem } from "beta/components/search/SearchResultTreeList/SearchResultGroupItem";
-import { SearchResultTreeList } from "beta/components/search/SearchResultTreeList"
+import { Paper } from "@mui/material";
+import { SearchResultGroupItem } from "beta/components/search/SearchResultList/SearchResultGroupItem";
+import { SearchResultList } from "beta/components/search/SearchResultList"
 import { attachment, attribute, group, log, logbook, property, tag } from "mocks/fixtures/generators";
 import moment from "moment/moment";
 import { rest } from "msw";
+import { sbDisabledArg } from "stories/sb-utils";
 
 export default {
   title: "beta/SearchResultList"
@@ -19,7 +20,7 @@ const log0 = {
   owner: "bhoneydew",
   createdDate: createdDate.valueOf(),
   level: "Normal",
-  logbooks: [logbook({name: "instruments"})],
+  logbooks: [logbook({name: "experiments"})],
   tags: [tag({name: "setup"})],
   properties: [
     property({name: "contact", attributes: [attribute({name: "email", value: "bhoneydew@muppet.fuzz"})]})
@@ -34,7 +35,7 @@ const log1 = log({
   owner: "bhoneydew",
   createdDate: createdDate.valueOf(),
   level: "Normal",
-  logbooks: [logbook({name: "instruments"})],
+  logbooks: [logbook({name: "experiments"})],
   tags: [tag({name: "interesting"}), tag({name: "discovery"}), tag({name: "something"})],
   properties: [
     property({name: "contact", attributes: [attribute({name: "email", value: "bhoneydew@muppet.fuzz"})]}),
@@ -87,7 +88,7 @@ const log5 = {
   owner: "bhoneydew",
   createdDate: createdDate.valueOf(),
   level: "Normal",
-  logbooks: [logbook({name: "instruments"}), logbook({name: "party-commitee"})],
+  logbooks: [logbook({name: "experiments"}), logbook({name: "party-commitee"})],
   tags: [tag({name: "success"}), tag({name: "discovery"})],
   properties: [
     property({name: "contact", attributes: [attribute({name: "email", value: "bhoneydew@muppet.fuzz"})]})
@@ -95,7 +96,7 @@ const log5 = {
   attachments: [attachment({filename: "paper.pdf"})]
 }
 
-const SearchResultTreeListTemplate = (props) => {
+const SearchResultListTemplate = ({...props}) => {
   
   const onRowClick = (log) => {
     console.log({clicked: log});
@@ -106,15 +107,21 @@ const SearchResultTreeListTemplate = (props) => {
       width: "40%",
       minHeight: "90vh"
     }}>
-      <SearchResultTreeList onRowClick={onRowClick} {...props} />
+      <SearchResultList onRowClick={onRowClick} {...props} />
     </Paper>
   )
 
 }
-export const Default = (args) => <SearchResultTreeListTemplate {...args} />;
+export const Default = (args) => <SearchResultListTemplate {...args} />;
 Default.args = {
   logs: [log0, log1, log2, log3, log4, log5],
-  dateDescending: true
+  dateDescending: true,
+  selectedId: 1
+}
+Default.argTypes = {
+  logs: {
+    ...sbDisabledArg
+  }
 }
 Default.parameters = {
   msw: {
@@ -129,7 +136,7 @@ Default.parameters = {
   },
 }
 
-const ReplyItemTemplate = (props) => {
+const ReplyItemTemplate = ({selected, ...props}) => {
 
   const onClick = (log) => {
     console.log({clicked: log});
@@ -144,7 +151,13 @@ const replies = [log1, log2, log3, log4] // BE replies are a flat group that inc
 export const ReplyItem = (args) => <ReplyItemTemplate {...args} />;
 ReplyItem.args = {
   log: log2,
-  dateDescending: true
+  dateDescending: true,
+  selectedId: 1
+}
+ReplyItem.argTypes = {
+  log: {
+    ...sbDisabledArg
+  }
 }
 ReplyItem.parameters = {...Default.parameters}
 

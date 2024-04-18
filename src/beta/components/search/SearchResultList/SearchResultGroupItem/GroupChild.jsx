@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Stack, Typography, styled } from "@mui/material";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 
-export const GroupChild = styled(({log, onClick = () => {}, className}) => {
+export const GroupChild = styled(({log, onClick = () => {}, selected, className}) => {
 
   return (
     <Box
@@ -13,10 +13,13 @@ export const GroupChild = styled(({log, onClick = () => {}, className}) => {
         "&:hover": {
           cursor: "pointer",
           backgroundColor: "grey.300"
-        }
+        },
+        ...(selected && {
+          backgroundColor: "grey.300"
+        })
       }}
       onClick={() => onClick(log)}
-      className={`group-child ${className}`} 
+      className={`group-child ${className}`}
     >
       <Typography flex={2} variant="body2" fontStyle="italic" sx={{ verticalAlign: "bottom"}} >{log.owner}</Typography>
       <Typography flex={2} variant="caption" noWrap sx={{ verticalAlign: "baseline"}}>{log.description}</Typography>

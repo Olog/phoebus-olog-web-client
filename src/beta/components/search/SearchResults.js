@@ -1,6 +1,5 @@
-import { Alert, Box, LinearProgress, Stack, TablePagination, Typography, styled } from "@mui/material";
+import { Alert, Box, Divider, IconButton, LinearProgress, Stack, TablePagination, Typography, styled } from "@mui/material";
 import { ologApi, removeEmptyKeys } from "api/ologApi";
-import { getLogEntryGroupId } from "components/Properties";
 import customization from "config/customization";
 import { updateCurrentLogEntry, useCurrentLogEntry } from "features/currentLogEntryReducer";
 import { updateSearchPageParams, useSearchPageParams } from "features/searchPageParamsReducer";
@@ -8,10 +7,12 @@ import { useSearchParams } from "features/searchParamsReducer";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { SearchResultGroupItem } from "./SearchResultGroupItem/SearchResultGroupItem";
-import { SearchResultSingleItem } from "./SearchResultSingleItem";
+import SearchResultList from "./SearchResultList";
+import SimpleSearch from "./SimpleSearch";
+import { SortToggleButton } from "./SortToggleButton";
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
-export const SearchResultTreeListContainer = styled(({className}) => {
+export const SearchResults = styled(({className}) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ export const SearchResultTreeListContainer = styled(({className}) => {
 
   const count = searchResults?.hitCount ?? 0;
 
-  const onClick = (log) => {
+  const onRowClick = (log) => {
     dispatch(updateCurrentLogEntry(log));
     navigate(`/beta/logs/${log.id}`);
   }
@@ -68,42 +69,66 @@ export const SearchResultTreeListContainer = styled(({className}) => {
   useEffect(() => {
     dispatch(updateSearchPageParams({
       from: page*pageSize, 
-      size: pageSize
+      size: pageSize,
+      dateDescending: searchPageParams?.dateDescending
     }));
-  }, [dispatch, page, pageSize])
+  }, [dispatch, page, pageSize, searchPageParams.dateDescending])
 
   const remaining = searchPageParams.from + Math.min(pageSize, searchResults.logs.length);
 
+  const toggleSort = () => {
+    dispatch(updateSearchPageParams({...searchPageParams, dateDescending: !searchPageParams.dateDescending }));
+  }
+
   return (
     <Stack
-      minWidth={350}
-      className={`SearchResultList ${className}`} 
+      minWidth={400}
+      className={`SearchResultList ${className}`}
+      padding={1}
+      gap={1}
+      divider={<Divider />}
+      position="relative"
     >
-      <Stack>
-        <Typography>Search Results</Typography>
-        <Typography>{searchPageParams.from + 1}-{remaining} of {count}</Typography>
-      </Stack>
-      <Stack>
-        {loading ? <LinearProgress /> : null}
-        {error ? 
-          <Alert color="error">
+      <Box>
+        <SimpleSearch />
+        <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
+          <Stack flexDirection="row" alignItems="center" gap={0.5}>
+            <Typography component="h2" variant="h6" fontWeight="bold" >Search Results</Typography>
+            {searchResults.hitCount > 0 ? 
+              <Typography variant="body2" fontStyle="italic" height="100%" position="relative" top={2}>{searchPageParams.from + 1}-{remaining} of {count}</Typography>
+              : null
+            }
+          </Stack>
+          <Stack flexDirection="row" alignItems="center">
+            <IconButton>
+              <FilterAltIcon />
+            </IconButton>
+            <SortToggleButton label="create date" isDescending={searchPageParams?.dateDescending} onClick={toggleSort} />
+          </Stack>
+        </Stack>
+      </Box>
+      {loading ? <LinearProgress /> : null}
+      {error ?
+        <Box>
+          <Alert severity="error">
             {error?.status === "FETCH_ERROR" 
                 ? "Error: Log Service Unavailable"
                 : `Error ${error?.code}: ${error?.message}`
             }
-          </Alert> : null
-        }
-        <Box padding={1}>
-          {searchResults.logs?.map(log => {
-            const isGroupEntry = getLogEntryGroupId(log.properties);
-            if(isGroupEntry) {
-              return <SearchResultGroupItem log={log} onClick={onClick} dateDescending={searchPageParams.dateDescending} />
-            } else {
-              return <SearchResultSingleItem log={log} />
-            }
-          })}
-        </Box>
-      </Stack>
+          </Alert>
+        </Box> : null
+      }
+      {searchResults?.logs?.length > 0 
+        ? <SearchResultList 
+            logs={searchResults.logs} 
+            dateDescending={searchPageParams?.dateDescending}
+            selectedId={currentLogEntry?.id}
+            onRowClick={onRowClick}
+          /> 
+        : <Box >
+            <Typography>No Results</Typography>
+          </Box>
+      }
       <TablePagination
         component="div"
         count={count}

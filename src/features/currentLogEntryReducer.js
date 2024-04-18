@@ -15,6 +15,6 @@ const currentLogEntrySlice = createSlice({
 
 export const { updateCurrentLogEntry } = currentLogEntrySlice.actions;
 
-export const useCurrentLogEntry = () => useSelector(state => state.useCurrentLogEntry);
+export const useCurrentLogEntry = () => useSelector(state => state.currentLogEntry);
 
 export default currentLogEntrySlice.reducer;
