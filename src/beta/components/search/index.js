@@ -1,3 +1,4 @@
-import SearchResultList from "./SearchResultList/SearchResultList";
+import { SearchResults } from "./SearchResults";
 
-export { SearchResultList };
+export { SearchResults };
+export default SearchResults;

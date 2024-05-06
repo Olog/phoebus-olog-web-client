@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { ologApi } from "api/ologApi";
 import { getLogEntryGroupId } from "components/Properties";
 import { sortByCreatedDate } from "components/log/sort";
-import { useSelector } from "react-redux";
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, CircularProgress, Divider, Stack, Typography, styled } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LogDetails from "./LogDetails";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import FormattedDate from "components/shared/FormattedDate";
+import { useSearchPageParams } from "features/searchPageParamsReducer";
 
 const LogDetailsAccordion = styled(({log, defaultExpanded=false, className}) => {
 
@@ -77,7 +77,7 @@ const LogDetailsWithReplies = ({log}) => {
         error: repliesError
     } = ologApi.endpoints.getLogGroup.useQuery({groupId});
 
-    const { dateDescending } = useSelector(state => state.searchPageParams);
+    const { dateDescending } = useSearchPageParams();
 
     if (repliesLoading) {
         return <CircularProgress /> 

@@ -1,4 +1,3 @@
-import React from "react";
 import CommonmarkPreview from "components/shared/CommonmarkPreview";
 
 export default {

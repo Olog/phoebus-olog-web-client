@@ -1,6 +1,6 @@
 import { Box, Divider, styled } from "@mui/material";
 import LogDetailsContainer from "beta/components/log/LogDetails/LogDetailsContainer";
-import { SearchResultList } from "beta/components/search/SearchResultList";
+import { SearchResults } from "beta/components/search";
 import React from "react";
 import { useParams } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const SearchView = styled(({className}) => {
             }} 
             className={`SearchView ${className}`}
         >
-            <SearchResultList />
+            <SearchResults />
             <Divider orientation="vertical" />
             <LogDetailsContainer id={id} />
         </Box>

@@ -21,14 +21,15 @@ import { useParams } from 'react-router-dom';
 import LogDetails from 'components/LogDetails';
 import SearchResultList from 'components/SearchResult/SearchResultList';
 import customization from 'config/customization';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateSearchPageParams } from 'features/searchPageParamsReducer';
+import { useDispatch } from 'react-redux';
+import { updateSearchPageParams, useSearchPageParams } from 'features/searchPageParamsReducer';
 import { ologApi, removeEmptyKeys } from 'api/ologApi';
-import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
+import { updateCurrentLogEntry, useCurrentLogEntry } from 'features/currentLogEntryReducer';
 import ServiceErrorBanner from 'components/ErrorBanner';
 import Filters from 'components/Filters';
 import { Typography, styled } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { useSearchParams } from 'features/searchParamsReducer';
 
 const ContentContainer = styled("div")( ({theme}) => ({
     height: "100%",
@@ -83,15 +84,15 @@ const LogDetailsContainer = styled("div")( ({theme}) => ({
 
 const LogEntriesView = () => {
 
-    const currentLogEntry = useSelector(state => state.currentLogEntry);
+    const currentLogEntry = useCurrentLogEntry();
 
     const [showFilters, setShowFilters] = useState(false);
     const [showGroup, setShowGroup] = useState(false);
     const [logGroupRecords, setLogGroupRecords] = useState([]);
     
     const dispatch = useDispatch();
-    const searchParams = useSelector(state => state.searchParams);
-    const searchPageParams = useSelector(state => state.searchPageParams);
+    const searchParams = useSearchParams();
+    const searchPageParams = useSearchPageParams();
     const searchLogsQuery = useMemo(() => {
         
         const sanitizedSearchParams = {...searchParams};

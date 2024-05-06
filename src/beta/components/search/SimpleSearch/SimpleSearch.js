@@ -1,14 +1,14 @@
 import { Chip, InputAdornment, Stack } from "@mui/material";
 import TextInput from "components/shared/input/TextInput";
 import { ButtonDatePicker, DATE_FORMAT } from "components/shared/input/WizardDateInput";
-import { forceUpdateSearchParams } from "features/searchParamsReducer";
+import { forceUpdateSearchParams, useSearchParams } from "features/searchParamsReducer";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const SimpleSearch = () => {
 
-    const searchParams = useSelector(state => state.searchParams);
+    const searchParams = useSearchParams();
     const dispatch = useDispatch();
 
     const { control, handleSubmit, setValue, watch, getValues } = useForm({
@@ -40,7 +40,6 @@ const SimpleSearch = () => {
     return (
         <Stack 
             component="form" 
-            padding={1}
             gap={1}
             width="100%" 
             onSubmit={handleSubmit(onSubmit)}

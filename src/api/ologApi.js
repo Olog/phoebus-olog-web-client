@@ -84,7 +84,7 @@ export const ologApi = createApi({
     reducerPath: 'ologApi',
     baseQuery: fetchBaseQuery({
         baseUrl: customization.APP_BASE_URL,    // e.g. http://localhost:8080/Olog
-        credentials: "include",                      // send credentials with requests
+        credentials: "include",                 // send credentials with requests
         headers: {...ologClientInfoHeader()}
     }),
     keepUnusedDataFor: 0, // Don't cache anything
