@@ -9,14 +9,17 @@ const Value = styled(Typography)({
     gridColumn: "span / span"
 });
 
-const MetadataTable = ({data}) => {
+const MetadataTable = styled(({data, className}) => {
 
     return (
-        <Box sx={{
+        <Box 
+          sx={{
             display: "grid",
             gridTemplateColumns: "max-content max-content max-content max-content",
             columnGap: 2
-        }}>
+          }}
+          className={className}
+        >
             {Object.entries(data).map(entry => 
                 <React.Fragment key={entry[0]}>
                     <Key>{entry[0]}</Key>
@@ -25,6 +28,6 @@ const MetadataTable = ({data}) => {
             )}
         </Box>
     )
-}
+})({})
 
 export default MetadataTable;

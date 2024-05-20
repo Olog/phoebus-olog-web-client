@@ -29,7 +29,12 @@ theme = createTheme(theme, {
         },
         name: "ologCyan"
       }),
-      ologBlack: "#000000",
+      ologBlack: theme.palette.augmentColor({
+        color: {
+          main: "#000000"
+        },
+        name: "ologBlack"
+      }),
       ologWhite: theme.palette.augmentColor({
         color: {
           main: "#ffffff"
