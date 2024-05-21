@@ -2,12 +2,24 @@ import React, { useState } from "react";
 import { ologApi } from "api/ologApi";
 import { getLogEntryGroupId } from "components/Properties";
 import { sortByCreatedDate } from "components/log/sort";
-import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, CircularProgress, Divider, Stack, Typography, styled } from "@mui/material";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Alert,
+  Box,
+  CircularProgress,
+  Divider,
+  Stack,
+  styled
+} from "@mui/material";
 import LogDetails from "./LogDetails";
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import FormattedDate from "components/shared/FormattedDate";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
+import LogHeader from "./LogHeader";
+
+const StyledLogHeader = styled(LogHeader)({
+  width: "100%"
+});
 
 const LogDetailsAccordion = styled(({log, defaultExpanded=false, className}) => {
 
@@ -27,30 +39,13 @@ const LogDetailsAccordion = styled(({log, defaultExpanded=false, className}) => 
             className={className}
         >
             <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
                 aria-controls={`${log.id}-content`}
                 id={`${log.id}-header`}
                 sx={{
                     bgcolor: "grey.100"
                 }}
             >
-                <Box
-                    sx={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr auto",
-                        gridTemplateRows: "1fr 1fr",
-                        columnGap: 2,
-                        rowGap: 1,
-                        width: "100%",
-                    }}
-                >
-                        <Typography variant="body1" fontWeight="bold" noWrap >{log.title}</Typography>
-                        <Stack flexDirection="row" justifyContent="flex-end" gap={0.5}>
-                            {log?.attachments?.length > 0 ? <AttachFileIcon /> : null }
-                        </Stack>
-                        <Typography variant="body2" fontWeight="italic" noWrap >{log.description?.slice(0, 100)}...</Typography>
-                        <FormattedDate date={log.createdDate} variant="button" />
-                </Box>
+              <StyledLogHeader log={log} />
             </AccordionSummary>
             <AccordionDetails>
                 <LogDetails log={log} />
@@ -109,7 +104,12 @@ const LogDetailsWithReplies = ({log}) => {
     }
     
     return (
+      <Stack>
+        <Box padding={1}>
+          <LogHeader log={log} />
+        </Box>
         <LogDetails log={log} />
+      </Stack>
     )
 
 }

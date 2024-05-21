@@ -1,35 +1,9 @@
 import React from "react";
-import { Box, Chip, Stack, Typography } from "@mui/material";
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import { Box, Stack, Typography } from "@mui/material";
 import FormattedDate from "components/shared/FormattedDate";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-
-const LogbookChip = ({name, ...props}) => {
-  return (
-    <Chip 
-      label={name} 
-      aria-label={`has logbook ${name}`} 
-      size="small"
-      variant="outlined"
-      color="ologPurple" 
-      {...props} 
-    />
-  )
-}
-
-const TagChip = ({name, ...props}) => {
-  return (
-    <Chip 
-      label={name} 
-      aria-label={`has tag ${name}`} 
-      icon={<LocalOfferIcon />} 
-      size="small"
-      variant="outlined"
-      color="ologOrange" 
-      {...props} 
-    />
-)
-}
+import { LogbookChip } from "beta/components/log/LogbookChip";
+import { TagChip } from "beta/components/log/TagChip";
 
 export const SearchResultSingleItem = ({log, selected, onClick}) => {
 

@@ -21,15 +21,15 @@ const LogDetailActionButton = ({log}) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const onClick = (event) => {
-        setAnchorEl(event.currentTarget);
+    const onMenuButtonClick = (event) => {
+      setAnchorEl(event.currentTarget);
     };
-    const onClose = () => {
-        setAnchorEl(null);
+    const onMenuClose = () => {
+      setAnchorEl(null);
     };
 
     return (
-        <ButtonGroup variant="outlined">
+        <ButtonGroup variant="outlined" onClick={(event) => event.stopPropagation()}>
             <CopyUrlButton url={`${window.location.origin}/beta/logs/${log.id}`} />
             {user ? 
                 <>
@@ -38,16 +38,16 @@ const LogDetailActionButton = ({log}) => {
                         aria-controls={open ? "log-detail-action-menu" : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
-                        onClick={onClick}
+                        onClick={onMenuButtonClick}
                         variant="outlined"
                     >
-                        <ExpandMoreIcon />
+                      <ExpandMoreIcon />
                     </Button>
                     <Menu
                         id="log-detail-action-menu"
                         anchorEl={anchorEl}
                         open={open}
-                        onClose={onClose}
+                        onClose={onMenuClose}
                     >
                         <MenuItemLink to={`/beta/logs/${log.id}/reply`} >
                             <ReplyIcon />
