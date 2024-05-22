@@ -38,10 +38,13 @@ const LogDetails = styled(({log, className}) => {
           }
           <Divider />
           <MetadataTable
+            ValueProps={{
+              component: "div"
+            }}
             data={{
-              Logbooks: <ChipList>{log?.logbooks?.map(it => <LogbookChip key={it.name} name={it.name} />)}</ChipList>,
-              Tags: <ChipList>{log?.tags?.map(it => <TagChip key={it.name} name={it.name} />)}</ChipList>,
-              "Entry Type": <EntryTypeChip name={log?.level} />
+              Logbooks: <ChipList>{log?.logbooks?.map(it => <LogbookChip key={it.name} value={it.name} />)}</ChipList>,
+              Tags: <ChipList>{log?.tags?.map(it => <TagChip key={it.name} value={it.name} />)}</ChipList>,
+              "Entry Type": <EntryTypeChip value={log?.level} />
             }}
           />
         </Stack>

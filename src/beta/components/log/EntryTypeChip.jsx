@@ -1,12 +1,12 @@
 import { Chip } from "@mui/material";
 import React from "react";
 
-export const EntryTypeChip = ({name, ...props}) => {
+export const EntryTypeChip = ({value, ...props}) => {
 
   return (
     <Chip
-      label={name} 
-      aria-label={`has logbook ${name}`} 
+      label={`type: ${value}`} 
+      aria-label={`has level ${value}`} 
       size="small"
       variant="outlined"
       color="ologBlack" 

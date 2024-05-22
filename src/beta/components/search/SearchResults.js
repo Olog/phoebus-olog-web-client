@@ -1,22 +1,26 @@
-import { Alert, Box, Divider, IconButton, LinearProgress, Stack, TablePagination, Typography, styled } from "@mui/material";
+import { Alert, Badge, Box, Divider, IconButton, LinearProgress, Stack, TablePagination, Typography, styled } from "@mui/material";
 import { ologApi, removeEmptyKeys } from "api/ologApi";
 import customization from "config/customization";
 import { updateCurrentLogEntry, useCurrentLogEntry } from "features/currentLogEntryReducer";
 import { updateSearchPageParams, useSearchPageParams } from "features/searchPageParamsReducer";
-import { useSearchParams } from "features/searchParamsReducer";
-import React, { useEffect, useState } from "react";
+import { updateSearchParams, useSearchParams } from "features/searchParamsReducer";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import SearchResultList from "./SearchResultList";
 import SimpleSearch from "./SimpleSearch";
 import { SortToggleButton } from "./SortToggleButton";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { SearchParamsBadges } from "./SearchParamsBadges";
+import { AdvancedSearchDrawer } from "./SearchResultList/AdvancedSearchDrawer";
+import { useAdvancedSearch } from "features/advancedSearchReducer";
 
 export const SearchResults = styled(({className}) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { active: advancedSearchActive, fieldCount: advancedSearchFieldCount } = useAdvancedSearch();
   const currentLogEntry = useCurrentLogEntry();
   const searchParams = useSearchParams();
   const searchPageParams = useSearchPageParams();
@@ -28,6 +32,27 @@ export const SearchResults = styled(({className}) => {
       ? searchPageParams?.size 
       : customization.defaultPageSize
   );
+  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+
+  const searchLogsQuery = useMemo(() => {
+        
+    const sanitizedSearchParams = {...searchParams};
+    if(searchParams.tags) {
+        sanitizedSearchParams.tags = searchParams.tags.map(it => it.name);
+    }
+    if(searchParams.logbooks) {
+        sanitizedSearchParams.logbooks = searchParams.logbooks.map(it => it.name);
+    }
+
+    return {
+        searchParams: removeEmptyKeys(sanitizedSearchParams),
+        searchPageParams: { 
+          ...searchPageParams, 
+          sort: searchPageParams.dateDescending ? "down" : "up"
+      }
+    };
+
+  }, [searchParams, searchPageParams]);
 
   const {         
       data: searchResults={
@@ -37,13 +62,7 @@ export const SearchResults = styled(({className}) => {
       error, 
       isFetching: loading 
   } = ologApi.endpoints.searchLogs.useQuery(
-    {
-      searchParams: {...removeEmptyKeys({...searchParams})}, 
-      searchPageParams: { 
-          ...searchPageParams, 
-          sort: searchPageParams.dateDescending ? "down" : "up"
-      }
-    }, 
+    searchLogsQuery, 
     {
       pollingInterval: customization.defaultSearchFrequency,
       refetchOnMountOrArgChange: true,
@@ -89,8 +108,10 @@ export const SearchResults = styled(({className}) => {
       divider={<Divider />}
       position="relative"
     >
+      <AdvancedSearchDrawer searchParams={searchParams} advancedSearchOpen={advancedSearchOpen} setAdvancedSearchOpen={setAdvancedSearchOpen} />
       <Box>
         <SimpleSearch />
+        <SearchParamsBadges search={searchParams} onSearch={vals => dispatch(updateSearchParams(vals))} />
         <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
           <Stack flexDirection="row" alignItems="center" gap={0.5}>
             <Typography component="h2" variant="h6" fontWeight="bold" >Search Results</Typography>
@@ -100,8 +121,10 @@ export const SearchResults = styled(({className}) => {
             }
           </Stack>
           <Stack flexDirection="row" alignItems="center">
-            <IconButton>
-              <FilterAltIcon />
+            <IconButton onClick={() => setAdvancedSearchOpen(true)}>
+              <Badge badgeContent={advancedSearchActive ? advancedSearchFieldCount : 0} color="primary">
+                <FilterAltIcon />
+              </Badge>
             </IconButton>
             <SortToggleButton label="create date" isDescending={searchPageParams?.dateDescending} onClick={toggleSort} />
           </Stack>

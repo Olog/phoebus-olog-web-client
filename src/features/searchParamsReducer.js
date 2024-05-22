@@ -5,9 +5,19 @@ import { withCacheBust } from "hooks/useSanitizedSearchParams";
 import { useSelector } from "react-redux";
 
 const cookies = new Cookies();
-// const initialState = cookies.get(customization.searchParamsCookie) || {...customization.defaultSearchParams};
-// cookies.set(customization.searchParamsCookie, initialState, {path: '/', maxAge: '100000000'}); 
-export const defaultSearchParamsState = {...customization.defaultSearchParams};
+
+export const defaultSearchParams = {
+  title: "",
+  desc: "",
+  owner: "",
+  level: undefined,
+  start: undefined,
+  end: undefined,
+  logbooks: [],
+  tags: [],
+  attachments: ""
+};
+export const defaultSearchParamsState = {...defaultSearchParams, ...customization.defaultSearchParams};
 
 export const searchParamsSlice = createSlice({
     name: 'searchParams',

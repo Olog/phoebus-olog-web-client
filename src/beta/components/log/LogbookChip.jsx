@@ -1,11 +1,11 @@
 import React from "react";
 import { Chip } from "@mui/material";
 
-export const LogbookChip = ({name, ...props}) => {
+export const LogbookChip = ({value, ...props}) => {
   return (
     <Chip 
-      label={name} 
-      aria-label={`has logbook ${name}`} 
+      label={value} 
+      aria-label={`has logbook ${value}`} 
       size="small"
       variant="outlined"
       color="ologPurple" 
