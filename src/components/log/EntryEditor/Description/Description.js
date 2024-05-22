@@ -155,17 +155,17 @@ const Description = ({form, attachmentsDisabled }) => {
             />
             <Stack direction="row" justifyContent="space-between">
                 <Box>
-                    <ExternalLink href={`${customization.APP_BASE_URL}/help/CommonmarkCheatsheet`} 
-                        text={
-                            <Stack flexDirection="row" gap={0.5} alignItems="center">
-                                <FaMarkdown />
-                                <Typography component="span">
-                                    CommonMark Formatting Help
-                                </Typography>
-                            </Stack>
-                        }
-                        label="CommonMark Formatting Help"
-                    />
+                    <ExternalLink 
+                      href={`${customization.APP_BASE_URL}/help/CommonmarkCheatsheet`}
+                      label="CommonMark Formatting Help"
+                    >
+                      <Stack flexDirection="row" gap={0.5} alignItems="center">
+                        <FaMarkdown />
+                        <Typography component="span">
+                          CommonMark Formatting Help
+                        </Typography>
+                      </Stack>
+                    </ExternalLink>
                 </Box>
                 <Stack direction="row" gap={1}>
                     <Button variant="outlined" disabled={attachmentsDisabled} onClick={() => setShowEmbedImageDialog(true) } >
