@@ -14,6 +14,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { SearchParamsBadges } from "./SearchParamsBadges";
 import { AdvancedSearchDrawer } from "./SearchResultList/AdvancedSearchDrawer";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
+import { withCacheBust } from "hooks/useSanitizedSearchParams";
 
 export const SearchResults = styled(({className}) => {
 
@@ -35,24 +36,37 @@ export const SearchResults = styled(({className}) => {
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
 
   const searchLogsQuery = useMemo(() => {
-        
-    const sanitizedSearchParams = {...searchParams};
-    if(searchParams.tags) {
-        sanitizedSearchParams.tags = searchParams.tags.map(it => it.name);
-    }
-    if(searchParams.logbooks) {
-        sanitizedSearchParams.logbooks = searchParams.logbooks.map(it => it.name);
-    }
-
-    return {
-        searchParams: removeEmptyKeys(sanitizedSearchParams),
-        searchPageParams: { 
-          ...searchPageParams, 
-          sort: searchPageParams.dateDescending ? "down" : "up"
-      }
+    
+    let params = {
+      ...searchPageParams,
+      sort: searchPageParams.dateDescending ? "down" : "up"
     };
 
-  }, [searchParams, searchPageParams]);
+    if (advancedSearchActive) {
+      params = { 
+        ...params,
+        ...searchParams
+      };
+      if(params.tags) {
+        params.tags = params.tags.map(it => it.name);
+      }
+      if(params.logbooks) {
+          params.logbooks = params.logbooks.map(it => it.name);
+      }
+      if(params.query) {
+        delete params.query;
+      }
+    } else {
+      params = {
+        ...params,
+        query: searchParams.query,
+        start: searchParams.start
+      };
+    }
+
+    return withCacheBust(removeEmptyKeys(params));
+
+  }, [searchPageParams, searchParams, advancedSearchActive]);
 
   const {         
       data: searchResults={
@@ -110,11 +124,11 @@ export const SearchResults = styled(({className}) => {
     >
       <AdvancedSearchDrawer searchParams={searchParams} advancedSearchOpen={advancedSearchOpen} setAdvancedSearchOpen={setAdvancedSearchOpen} />
       <Box>
-        <SimpleSearch />
+        { advancedSearchActive ? null : <SimpleSearch /> }
         <SearchParamsBadges search={searchParams} onSearch={vals => dispatch(updateSearchParams(vals))} />
         <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
           <Stack flexDirection="row" alignItems="center" gap={0.5}>
-            <Typography component="h2" variant="h6" fontWeight="bold" >Search Results</Typography>
+            <Typography component="h2" variant="h6" fontWeight="bold" >Results</Typography>
             {searchResults.hitCount > 0 ? 
               <Typography variant="body2" fontStyle="italic" height="100%" position="relative" top={2}>{searchPageParams.from + 1}-{remaining} of {count}</Typography>
               : null
@@ -149,7 +163,7 @@ export const SearchResults = styled(({className}) => {
             onRowClick={onRowClick}
           /> 
         : <Box >
-            <Typography>No Results</Typography>
+            <Typography>No records found</Typography>
           </Box>
       }
       <TablePagination

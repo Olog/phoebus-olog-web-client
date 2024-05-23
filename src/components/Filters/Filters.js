@@ -17,7 +17,7 @@
  */
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { forceUpdateSearchParams, useSearchParams } from 'features/searchParamsReducer';
+import { updateSearchParams, useSearchParams } from 'features/searchParamsReducer';
 import { updateSearchPageParams, useSearchPageParams } from 'features/searchPageParamsReducer';
 import Collapse from './Collapse';
 import TextInput from 'components/shared/input/TextInput';
@@ -54,7 +54,7 @@ const Filters = ({showFilters, className}) => {
             const updatedSearchPageParams = {...searchPageParams, sort: data.sort}
             dispatch(updateSearchPageParams(updatedSearchPageParams));
         }
-        dispatch(forceUpdateSearchParams(updatedSearchParams));
+        dispatch(updateSearchParams(updatedSearchParams));
 
     }
 

@@ -6,8 +6,9 @@ import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
 import { useForm, useWatch } from "react-hook-form";
-import SearchIcon from '@mui/icons-material/Search';
 import { defaultSearchParams } from "features/searchParamsReducer";
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+
 
 const isDate = (obj) => {
   return obj instanceof Date && !isNaN(obj);
@@ -47,7 +48,7 @@ export const AdvancedSearch = ({search, onSearchChange, onSearchSubmit}) => {
 
   return (
     <Stack>
-      <Typography component="h2" variant="h4" id="advanced-search">Advanced Search</Typography>
+      <Typography component="h2" variant="h4" id="advanced-search">Filters</Typography>
       <Stack 
           component="form" 
           onSubmit={handleSubmit(onSubmit)}
@@ -132,7 +133,7 @@ export const AdvancedSearch = ({search, onSearchChange, onSearchSubmit}) => {
               defaultValue=''
           />
           <Stack flexDirection="row" justifyContent="flex-end">
-            <Button type="submit" variant="contained" startIcon={<SearchIcon />} >Search</Button>
+            <Button type="submit" variant="contained" startIcon={<FilterAltIcon />} >Apply</Button>
           </Stack>
       </Stack>
     </Stack>

@@ -2,7 +2,7 @@ import { InputAdornment, Stack } from "@mui/material";
 import TextInput from "components/shared/input/TextInput";
 import { ButtonDatePicker, DATE_FORMAT } from "components/shared/input/WizardDateInput";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
-import { forceUpdateSearchParams, useSearchParams } from "features/searchParamsReducer";
+import { defaultSearchParams, updateSearchParams, useSearchParams } from "features/searchParamsReducer";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -14,27 +14,25 @@ const SimpleSearch = () => {
   const { active: advancedSearchActive } = useAdvancedSearch();
 
   const { control, handleSubmit, setValue, getValues } = useForm({
-    defaultValues: { query: searchParams?.query, start: searchParams?.start },
+    defaultValues: { query: defaultSearchParams.query, start: defaultSearchParams.start },
     values: { query: searchParams?.query, start: searchParams?.start }
   });
 
   const onAccept = (momentDate) => {
-    console.log({onAccept: momentDate})
     setValue("start", momentDate.format(DATE_FORMAT));
     onSubmit(getValues());
   }
 
   const onSubmit = (data) => {
-    console.log({onSubmit: data, searchParams})
     const params = {
       ...searchParams,
       ...data
     }
-    dispatch(forceUpdateSearchParams(params));
+    dispatch(updateSearchParams(params));
   }
 
   return (
-    <Stack 
+    <Stack
         component="form" 
         gap={1}
         width="100%" 

@@ -30,6 +30,7 @@ import Filters from 'components/Filters';
 import { Typography, styled } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { useSearchParams } from 'features/searchParamsReducer';
+import { withCacheBust } from 'hooks/useSanitizedSearchParams';
 
 const ContentContainer = styled("div")( ({theme}) => ({
     height: "100%",
@@ -94,19 +95,23 @@ const LogEntriesView = () => {
     const searchParams = useSearchParams();
     const searchPageParams = useSearchPageParams();
     const searchLogsQuery = useMemo(() => {
-        
-        const sanitizedSearchParams = {...searchParams};
-        if(searchParams.tags) {
-            sanitizedSearchParams.tags = searchParams.tags.map(it => it.name);
-        }
-        if(searchParams.logbooks) {
-            sanitizedSearchParams.logbooks = searchParams.logbooks.map(it => it.name);
-        }
-
-        return {
-            searchParams: removeEmptyKeys(sanitizedSearchParams),
-            searchPageParams
-        };
+    
+      let params = {
+        ...searchPageParams,
+        ...searchParams
+      };
+  
+      if(params.tags) {
+        params.tags = params.tags.map(it => it.name);
+      }
+      if(params.logbooks) {
+          params.logbooks = params.logbooks.map(it => it.name);
+      }
+      if(params.query) {
+        delete params.query;
+      }
+  
+      return withCacheBust(removeEmptyKeys(params));
 
     }, [searchParams, searchPageParams]);
 
