@@ -49,7 +49,7 @@ export default class OlogAttachment{
             }
             this.url = URL.createObjectURL(file);
         }   
-        if(this.fileMetadataDescription === "image") {
+        if(this.fileMetadataDescription?.toLowerCase()?.startsWith("image")) {
             this.isImage = true;
         }
     }
