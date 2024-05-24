@@ -58,25 +58,27 @@ const delay = (duration) => {
 }
 
 const withRetry = async ({fcn, retries=5, retryCondition = () => true, retryDelay = (count) => 30}) => {
-
-    let retryCount = 0;
-    let shouldRetry = true;
-    let res = null;
-    while(shouldRetry && retryCount < retries) { 
-        try {
-            res = await fcn();
-        } catch (e) {
-            res = e;
-        }
-        if(retryCondition(res)) {
-            shouldRetry = true;
-        } else {
-            shouldRetry = false;
-        }
-        retryCount++;
-        await delay(retryDelay(retryCount));
+  let retryCount = 0;
+  let shouldRetry = true;
+  let res = null;
+  while(shouldRetry) {
+    if (retryCount >= retries) {
+      throw new Error(`Retry condition not fulfilled after ${retries} retries`);
     }
-    return res;
+    try {
+      res = await fcn();
+    } catch (e) {
+      res = e;
+    }
+    if(retryCondition(res)) {
+      shouldRetry = true;
+    } else {
+      shouldRetry = false;
+    }
+    retryCount++;
+    await delay(retryDelay(retryCount));
+  }
+  return res;
 }
 
 export const ologApi = createApi({
@@ -200,11 +202,11 @@ export const useVerifyLogExists = () => {
     // available as a resource by id -- the problem is search can take too long
     // to index it, leading to incomplete entries appearing in search (/logs/search) but 
     // looking fine when retrieved by id (/logs/{id}).
-    const [trigger] = ologApi.endpoints.searchLogs.useLazyQuery();
+    const [searchLogs] = ologApi.endpoints.searchLogs.useLazyQuery();
 
     return useCallback(async ({logRequest, logResult}) => {
         return withRetry({
-            fcn: async () => trigger({searchParams: {title: logResult.title, end: "now"}}).unwrap(),
+            fcn: async () => searchLogs({title: logResult.title, end: "now"}).unwrap(),
             retries: 5,
             retryCondition: (retryRes) => {
                 // Retry if the entry we created isn't in the search results yet
@@ -217,6 +219,6 @@ export const useVerifyLogExists = () => {
             },
             retryDelay: (count) => count*200
         });
-    }, [trigger]);
+    }, [searchLogs]);
 
 }
