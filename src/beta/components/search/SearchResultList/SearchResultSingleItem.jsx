@@ -45,8 +45,8 @@ export const SearchResultSingleItem = ({log, selected, onClick}) => {
         />
       </Stack>
       <Stack flexDirection="row" gap={0.5} flexWrap="wrap" gridColumn="span 2">
-        {log?.logbooks?.map(it => <LogbookChip key={it.name} name={it.name} />)}
-        {log?.tags?.map(it => <TagChip key={it.name} name={it.name} />)}
+        {log?.logbooks?.map(it => <LogbookChip key={it.name} value={it.name} />)}
+        {log?.tags?.map(it => <TagChip key={it.name} value={it.name} />)}
       </Stack>
     </Stack>
   );

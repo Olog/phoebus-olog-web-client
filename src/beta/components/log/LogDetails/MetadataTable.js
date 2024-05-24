@@ -9,7 +9,7 @@ const Value = styled(Typography)({
     gridColumn: "span / span"
 });
 
-const MetadataTable = styled(({data, className}) => {
+const MetadataTable = styled(({data, KeyProps, ValueProps, className}) => {
 
     return (
         <Box 
@@ -22,8 +22,8 @@ const MetadataTable = styled(({data, className}) => {
         >
             {Object.entries(data).map(entry => 
                 <React.Fragment key={entry[0]}>
-                    <Key>{entry[0]}</Key>
-                    <Value>{entry[1]}</Value>
+                    <Key {...KeyProps}>{entry[0]}</Key>
+                    <Value {...ValueProps}>{entry[1]}</Value>
                 </React.Fragment>
             )}
         </Box>

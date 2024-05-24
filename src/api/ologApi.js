@@ -17,7 +17,6 @@
  */
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { withoutCacheBust } from "hooks/useSanitizedSearchParams";
 import customization from "config/customization";
 import { useCallback } from "react";
 
@@ -90,19 +89,14 @@ export const ologApi = createApi({
     keepUnusedDataFor: 0, // Don't cache anything
     endpoints: builder => ({
         searchLogs: builder.query({
-            query: ({searchParams, searchPageParams}) => {
-                return {
-                    url: '/logs/search',
-                    params: { 
-                        // remove cache bust so we don't send it to the server
-                        // we must do it *here* rather than where useSearchLogsQuery
-                        // is called because we want repeated searches of the same
-                        // search to trigger calling the api (e.g. polling)
-                        ...withoutCacheBust(searchParams), 
-                        ...searchPageParams
-                    }
-                }
+          query: ({query, title, desc, start, end, level, logbooks, tags, owner, attachments, from, size, sort}) => {
+            return {
+              url: '/logs/search',
+              params: { 
+                query, title, desc, start, end, level, logbooks, tags, owner, attachments, from, size, sort
+              }
             }
+          }
         }),
         getTags: builder.query({
             query: () => ({

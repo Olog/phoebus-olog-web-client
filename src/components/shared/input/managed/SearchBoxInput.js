@@ -19,9 +19,9 @@
 import React, { useEffect } from "react";
 
 import { useState } from 'react';
-import useSanitizedSearchParams, { withoutCacheBust } from 'hooks/useSanitizedSearchParams';
+import useSanitizedSearchParams, { withoutBetaParams, withoutCacheBust } from 'hooks/useSanitizedSearchParams';
 import { useDispatch } from "react-redux";
-import { forceUpdateSearchParams } from "features/searchParamsReducer";
+import { updateSearchParams } from "features/searchParamsReducer";
 import { InputAdornment, Link, OutlinedInput, styled } from "@mui/material";
 import HelpIcon from '@mui/icons-material/Help';
 import { removeEmptyKeys } from "api/ologApi";
@@ -45,7 +45,9 @@ const SearchBoxInput = styled(({searchParams, showFilters, className}) => {
                 toQueryString(
                     removeEmptyKeys(
                         withoutCacheBust(
+                          withoutBetaParams(
                             searchParams
+                          )
                         )
                     )
                 )
@@ -60,7 +62,7 @@ const SearchBoxInput = styled(({searchParams, showFilters, className}) => {
     const onKeyDown = (event) => {
         if(event.key === 'Enter') {
             const sanitizedSearchParams = toSearchParams(searchString);
-            dispatch(forceUpdateSearchParams(sanitizedSearchParams));
+            dispatch(updateSearchParams(sanitizedSearchParams));
         }
     }
 

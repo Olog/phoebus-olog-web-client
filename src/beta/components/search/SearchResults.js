@@ -1,22 +1,27 @@
-import { Alert, Box, Divider, IconButton, LinearProgress, Stack, TablePagination, Typography, styled } from "@mui/material";
+import { Alert, Badge, Box, Divider, IconButton, LinearProgress, Stack, TablePagination, Typography, styled } from "@mui/material";
 import { ologApi, removeEmptyKeys } from "api/ologApi";
 import customization from "config/customization";
 import { updateCurrentLogEntry, useCurrentLogEntry } from "features/currentLogEntryReducer";
 import { updateSearchPageParams, useSearchPageParams } from "features/searchPageParamsReducer";
-import { useSearchParams } from "features/searchParamsReducer";
-import React, { useEffect, useState } from "react";
+import { updateSearchParams, useSearchParams } from "features/searchParamsReducer";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import SearchResultList from "./SearchResultList";
 import SimpleSearch from "./SimpleSearch";
 import { SortToggleButton } from "./SortToggleButton";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { SearchParamsBadges } from "./SearchParamsBadges";
+import { AdvancedSearchDrawer } from "./SearchResultList/AdvancedSearchDrawer";
+import { useAdvancedSearch } from "features/advancedSearchReducer";
+import { withCacheBust } from "hooks/useSanitizedSearchParams";
 
 export const SearchResults = styled(({className}) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { active: advancedSearchActive, fieldCount: advancedSearchFieldCount } = useAdvancedSearch();
   const currentLogEntry = useCurrentLogEntry();
   const searchParams = useSearchParams();
   const searchPageParams = useSearchPageParams();
@@ -28,6 +33,40 @@ export const SearchResults = styled(({className}) => {
       ? searchPageParams?.size 
       : customization.defaultPageSize
   );
+  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+
+  const searchLogsQuery = useMemo(() => {
+    
+    let params = {
+      ...searchPageParams,
+      sort: searchPageParams.dateDescending ? "down" : "up"
+    };
+
+    if (advancedSearchActive) {
+      params = { 
+        ...params,
+        ...searchParams
+      };
+      if(params.tags) {
+        params.tags = params.tags.map(it => it.name);
+      }
+      if(params.logbooks) {
+          params.logbooks = params.logbooks.map(it => it.name);
+      }
+      if(params.query) {
+        delete params.query;
+      }
+    } else {
+      params = {
+        ...params,
+        query: searchParams.query,
+        start: searchParams.start
+      };
+    }
+
+    return withCacheBust(removeEmptyKeys(params));
+
+  }, [searchPageParams, searchParams, advancedSearchActive]);
 
   const {         
       data: searchResults={
@@ -37,13 +76,7 @@ export const SearchResults = styled(({className}) => {
       error, 
       isFetching: loading 
   } = ologApi.endpoints.searchLogs.useQuery(
-    {
-      searchParams: {...removeEmptyKeys({...searchParams})}, 
-      searchPageParams: { 
-          ...searchPageParams, 
-          sort: searchPageParams.dateDescending ? "down" : "up"
-      }
-    }, 
+    searchLogsQuery, 
     {
       pollingInterval: customization.defaultSearchFrequency,
       refetchOnMountOrArgChange: true,
@@ -89,19 +122,23 @@ export const SearchResults = styled(({className}) => {
       divider={<Divider />}
       position="relative"
     >
+      <AdvancedSearchDrawer searchParams={searchParams} advancedSearchOpen={advancedSearchOpen} setAdvancedSearchOpen={setAdvancedSearchOpen} />
       <Box>
-        <SimpleSearch />
+        { advancedSearchActive ? null : <SimpleSearch /> }
+        <SearchParamsBadges search={searchParams} onSearch={vals => dispatch(updateSearchParams(vals))} />
         <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
           <Stack flexDirection="row" alignItems="center" gap={0.5}>
-            <Typography component="h2" variant="h6" fontWeight="bold" >Search Results</Typography>
+            <Typography component="h2" variant="h6" fontWeight="bold" >Results</Typography>
             {searchResults.hitCount > 0 ? 
               <Typography variant="body2" fontStyle="italic" height="100%" position="relative" top={2}>{searchPageParams.from + 1}-{remaining} of {count}</Typography>
               : null
             }
           </Stack>
           <Stack flexDirection="row" alignItems="center">
-            <IconButton>
-              <FilterAltIcon />
+            <IconButton onClick={() => setAdvancedSearchOpen(true)}>
+              <Badge badgeContent={advancedSearchActive ? advancedSearchFieldCount : 0} color="primary">
+                <FilterAltIcon />
+              </Badge>
             </IconButton>
             <SortToggleButton label="create date" isDescending={searchPageParams?.dateDescending} onClick={toggleSort} />
           </Stack>
@@ -126,7 +163,7 @@ export const SearchResults = styled(({className}) => {
             onRowClick={onRowClick}
           /> 
         : <Box >
-            <Typography>No Results</Typography>
+            <Typography>No records found</Typography>
           </Box>
       }
       <TablePagination

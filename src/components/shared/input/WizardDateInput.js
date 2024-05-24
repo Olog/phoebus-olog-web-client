@@ -88,7 +88,7 @@ const ButtonField = ({
         aria-label={ariaLabel}
         onClick={() => setOpen?.((prev) => !prev)}
       >
-        <CalendarMonthIcon color="primary" />
+        <CalendarMonthIcon color={disabled ? "disabled" : "primary"} />
       </IconButton>
     );
 }
@@ -128,8 +128,10 @@ export const ButtonDatePicker = ({slots, ButtonFieldProps, ...props}) => {
         />
     );
 }
-
-const WizardDateInput = styled(({name, label, form, rules, defaultValue, onChange, className, DatePickerProps, ...props}) => {
+const defaultOnChange = (field, value) => {
+  field.onChange(value);
+}
+const WizardDateInput = styled(({name, label, form, rules, defaultValue, onChange = defaultOnChange, className, DatePickerProps, ...props}) => {
 
     const {control} = form;
     const {field: {ref, ...field}, fieldState} = useController({name, control, rules, defaultValue});

@@ -88,6 +88,14 @@ export function withoutCacheBust(searchParams) {
     return copy;
 }
 
+export function withoutBetaParams(searchParams) {
+  const copy = {...searchParams};
+  if (copy.query) {
+    delete copy.query;
+  }
+  return copy;
+}
+
 const useSanitizedSearchParams = () => {
 
     // todo: display toast on error to let user know tags or logbooks couldn't be fetched

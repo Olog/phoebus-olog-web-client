@@ -1,48 +1,42 @@
-import { Chip, InputAdornment, Stack } from "@mui/material";
+import { InputAdornment, Stack } from "@mui/material";
 import TextInput from "components/shared/input/TextInput";
 import { ButtonDatePicker, DATE_FORMAT } from "components/shared/input/WizardDateInput";
-import { forceUpdateSearchParams, useSearchParams } from "features/searchParamsReducer";
+import { useAdvancedSearch } from "features/advancedSearchReducer";
+import { defaultSearchParams, updateSearchParams, useSearchParams } from "features/searchParamsReducer";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
 const SimpleSearch = () => {
 
-  const searchParams = useSearchParams();
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const { active: advancedSearchActive } = useAdvancedSearch();
 
-  const { control, handleSubmit, setValue, watch, getValues } = useForm({
-    defaultValues: { query: searchParams?.query, start: searchParams?.start },
+  const { control, handleSubmit, setValue, getValues } = useForm({
+    defaultValues: { query: defaultSearchParams.query, start: defaultSearchParams.start },
     values: { query: searchParams?.query, start: searchParams?.start }
   });
 
-  const startDateValue = watch("start");
-
   const onAccept = (momentDate) => {
-    console.log({onAccept: momentDate})
     setValue("start", momentDate.format(DATE_FORMAT));
-    onSubmit(getValues());
-  }
-  const onReject = () => {
-    setValue("start", null);
     onSubmit(getValues());
   }
 
   const onSubmit = (data) => {
-    console.log({onSubmit: data, searchParams})
     const params = {
       ...searchParams,
       ...data
     }
-    dispatch(forceUpdateSearchParams(params));
+    dispatch(updateSearchParams(params));
   }
 
   return (
-    <Stack 
-      component="form" 
-      gap={1}
-      width="100%" 
-      onSubmit={handleSubmit(onSubmit)}
+    <Stack
+        component="form" 
+        gap={1}
+        width="100%" 
+        onSubmit={handleSubmit(onSubmit)}
     >
       <TextInput 
         control={control}
@@ -51,28 +45,23 @@ const SimpleSearch = () => {
         defaultValue=""
         fullWidth
         InputProps={{
-          endAdornment: (
+          disabled: advancedSearchActive,
+          endAdornment:
             <InputAdornment position="end">
               <ButtonDatePicker 
                 onAccept={onAccept} 
                 ButtonFieldProps={{
                   inputProps: {
-                    "aria-label": `Select start date/time`
+                    "aria-label": `Select start date/time}`
                   }
                 }}
+                disabled={advancedSearchActive}
               />
             </InputAdornment>
-          )
         }}
       />
-      <Stack flexDirection="row" justifyContent="flex-end">
-        {
-          startDateValue ? <Chip label={`from: ${startDateValue}`} size="small" onDelete={onReject} /> : null 
-        }
-      </Stack>
     </Stack>
   )
-
 };
 
 export default SimpleSearch;
