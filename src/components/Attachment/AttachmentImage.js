@@ -11,7 +11,7 @@ export const isImage = (attachment) => {
     if(attachment.file) {
         return attachment?.file?.type?.toLowerCase()?.startsWith("image");
     } else {
-        return attachment.fileMetadataDescription === "image";
+        return attachment.fileMetadataDescription?.toLowerCase()?.startsWith("image");
     }
 } 
 
