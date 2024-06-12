@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
-import { useLocation, useNavigate } from "react-router-dom";
 import { Backdrop, CircularProgress } from "@mui/material";
+import useBetaNavigate from "hooks/useBetaNavigate";
 
 const EditLog = ({log, isAuthenticated}) => {
 
     const [editInProgress, setEditInProgress] = useState(false);
     const [editLog] = ologApi.endpoints.editLog.useMutation();
     const verifyLogExists = useVerifyLogExists();
-    const navigate = useNavigate();
-    const location = useLocation();
+    const navigate = useBetaNavigate();
 
     const existingLogGroup = log?.properties?.filter(it => it.name === "Log Entry Group")?.at(0)?.value;
 
@@ -54,16 +53,13 @@ const EditLog = ({log, isAuthenticated}) => {
             // Edit the log
             const data = await editLog({log: body}).unwrap();
             try {
-                // Verify full edited/available
-                await verifyLogExists({logRequest: formData, logResult: data});
-                setEditInProgress(false);
-                if(location.pathname.startsWith("/beta")) {
-                    navigate(`/beta/logs/${data.id}`);
-                } else {
-                    navigate(`/logs/${data.id}`);
-                }
+              // Verify full edited/available
+              await verifyLogExists({logRequest: formData, logResult: data});
+              setEditInProgress(false);
             } catch (error) {
-                console.error("An error occured while checking log was edited", error);
+              console.error("An error occured while checking log was edited", error);
+            } finally {
+              navigate(`/logs/${data.id}`);
             }
         } catch (error) {
             if(error.response && (error.response.status === 401 || error.response.status === 403)){

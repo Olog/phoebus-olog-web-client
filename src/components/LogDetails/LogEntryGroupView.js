@@ -20,13 +20,13 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import GroupHeader from './GroupHeader';
-import { useNavigate } from 'react-router-dom';
 import CommonmarkPreview from 'components/shared/CommonmarkPreview';
 import customization from 'config/customization';
 import { getLogEntryGroupId } from '../Properties/utils';
 import { sortByCreatedDate } from 'components/log/sort';
 import { ologApi } from 'api/ologApi';
 import { styled } from '@mui/material';
+import useBetaNavigate from 'hooks/useBetaNavigate';
 
 const Container = styled("div")`
     display: flex;
@@ -55,7 +55,7 @@ const GroupContainer = styled("li")`
 const LogEntryGroupView = ({currentLogEntry, logGroupRecords, setLogGroupRecords, className}) => {
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const navigate = useBetaNavigate();
     const [ getLogGroup ] = ologApi.endpoints.getLogGroup.useLazyQuery();
 
     useEffect(() => {

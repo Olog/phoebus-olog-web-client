@@ -3,16 +3,15 @@ import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
 import customization from "config/customization";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
-import { useLocation, useNavigate } from "react-router-dom";
 import { Backdrop, CircularProgress } from "@mui/material";
+import useBetaNavigate from "hooks/useBetaNavigate";
 
 const ReplyLog = ({log, isAuthenticated}) => {
 
     const [replyInProgress, setReplyInProgress] = useState(false);
     const [createLog] = ologApi.endpoints.createLog.useMutation();
     const verifyLogExists = useVerifyLogExists();
-    const navigate = useNavigate();
-    const location = useLocation();
+    const navigate = useBetaNavigate();
 
     const form = useForm({
         defaultValues: {
@@ -52,16 +51,13 @@ const ReplyLog = ({log, isAuthenticated}) => {
             // create (reply to) the log
             const data = await createLog({log: body, replyTo: log.id}).unwrap();
             try {
-                // verify log fully created before redirecting
-                await verifyLogExists({logRequest: formData, logResult: data});
-                setReplyInProgress(false);
-                if(location.pathname.startsWith("/beta")) {
-                    navigate(`/beta/logs/${data.id}`);
-                } else {
-                    navigate(`/logs/${data.id}`);
-                }
+              // verify log fully created before redirecting
+              await verifyLogExists({logRequest: formData, logResult: data});
+              setReplyInProgress(false);
             } catch (error) {
-                console.error("An error occured while checking log was created", error);
+              console.error("An error occured while checking log was created", error);
+            } finally {
+              navigate(`/logs/${data.id}`);
             }
         } catch (error) {
             if(error.response && (error.response.status === 401 || error.response.status === 403)){
