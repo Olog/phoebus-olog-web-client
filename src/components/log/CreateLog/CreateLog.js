@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import EntryEditor from "../EntryEditor";
 import useFormPersist from "react-hook-form-persist";
-import { useLocation, useNavigate } from "react-router-dom";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
 import { Backdrop, CircularProgress } from "@mui/material";
+import useBetaNavigate from "hooks/useBetaNavigate";
 
 const CreateLog = ({isAuthenticated}) => {
 
     const [createInProgress, setCreateInProgress] = useState(false);
     const [createLog] = ologApi.endpoints.createLog.useMutation();
     const verifyLogExists = useVerifyLogExists();
-    const location = useLocation();
 
     const form = useForm({
         defaultValues: {
@@ -19,7 +18,7 @@ const CreateLog = ({isAuthenticated}) => {
         }
     });
     const { watch, setValue } = form;
-    const navigate = useNavigate();
+    const navigate = useBetaNavigate();
 
     /**
      * Save/restore form data
@@ -52,17 +51,14 @@ const CreateLog = ({isAuthenticated}) => {
             // Create log
             const data = await createLog({log: body}).unwrap();
             try {
-                // Verify it is fully indexed/created before redirecting
-                await verifyLogExists({logRequest: formData, logResult: data});
-                clearFormData();
-                setCreateInProgress(false);
-                if(location.pathname.startsWith("/beta")) {
-                    navigate(`/beta/logs/${data.id}`);
-                } else {
-                    navigate(`/logs/${data.id}`);
-                }
+              // Verify it is fully indexed/created before redirecting
+              await verifyLogExists({logRequest: formData, logResult: data});
+              clearFormData();
+              setCreateInProgress(false);
             } catch (error) {
-                console.error("An error occured while checking log was created", error);
+              console.error("An error occured while checking log was created", error);
+            } finally {
+              navigate(`/logs/${data.id}`);
             }
         } catch (error) {
             if(error.response && (error.response.status === 401 || error.response.status === 403)){

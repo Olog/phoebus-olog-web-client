@@ -18,10 +18,10 @@
 import { useState, useEffect } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
 import { Button, Stack } from '@mui/material';
+import useBetaNavigate from 'hooks/useBetaNavigate';
 
 const NavigationButtons = ({
     currentLogEntry,
@@ -29,7 +29,7 @@ const NavigationButtons = ({
     ...props
 }) => { 
 
-    const navigate = useNavigate();
+    const navigate = useBetaNavigate();
     const dispatch = useDispatch();
     const [previousLogEntry, setPreviousLogEntry] = useState();
     const [nextLogEntry, setNextLogEntry] = useState();

@@ -6,7 +6,6 @@ import { updateSearchPageParams, useSearchPageParams } from "features/searchPage
 import { updateSearchParams, useSearchParams } from "features/searchParamsReducer";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import SearchResultList from "./SearchResultList";
 import SimpleSearch from "./SimpleSearch";
 import { SortToggleButton } from "./SortToggleButton";
@@ -15,11 +14,12 @@ import { SearchParamsBadges } from "./SearchParamsBadges";
 import { AdvancedSearchDrawer } from "./SearchResultList/AdvancedSearchDrawer";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
 import { withCacheBust } from "hooks/useSanitizedSearchParams";
+import useBetaNavigate from "hooks/useBetaNavigate";
 
 export const SearchResults = styled(({className}) => {
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate = useBetaNavigate();
 
   const { active: advancedSearchActive, fieldCount: advancedSearchFieldCount } = useAdvancedSearch();
   const currentLogEntry = useCurrentLogEntry();
@@ -88,7 +88,7 @@ export const SearchResults = styled(({className}) => {
 
   const onRowClick = (log) => {
     dispatch(updateCurrentLogEntry(log));
-    navigate(`/beta/logs/${log.id}`);
+    navigate(`/logs/${log.id}`);
   }
 
   const onPageChange = (event, page) => {
