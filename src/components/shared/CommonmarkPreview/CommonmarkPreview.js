@@ -23,8 +23,12 @@ import HtmlContent from './HtmlContent';
 import { styled } from '@mui/material';
 
 const StyledHtmlContent = styled(HtmlContent)`
-    padding: 0.5rem 0;
+    padding: 0;
+    & > p {
+        padding: 0;
+    }
     width: 100%;
+    font-size: 1.2rem;
 `
 
 /**
@@ -35,30 +39,30 @@ const StyledHtmlContent = styled(HtmlContent)`
  * attachedFile urls; ignored if there are no file objects.
  * @returns 
  */
-export const CommonmarkPreview = styled(({commonmarkSrc, attachedFiles, imageUrlPrefix, className}) => {
-    
+export const CommonmarkPreview = styled(({ commonmarkSrc, attachedFiles, imageUrlPrefix, className }) => {
+
     const [innerHtml, setInnerHtml] = useState("");
-    
+
     const remarkable = useMemo(() => new Remarkable('full', {
-        html:         false,        // Enable HTML tags in source
-        xhtmlOut:     false,        // Use '/' to close single tags (<br />)
-        breaks:       false,        // Convert '\n' in paragraphs into <br>
-        langPrefix:   'language-',  // CSS language prefix for fenced blocks
-        linkTarget:   '',           // set target to open link in
-        typographer:  false,        // Enable some language-neutral replacements + quotes beautification
+        html: false,        // Enable HTML tags in source
+        xhtmlOut: false,        // Use '/' to close single tags (<br />)
+        breaks: true,        // Convert '\n' in paragraphs into <br>
+        langPrefix: 'language-',  // CSS language prefix for fenced blocks
+        linkTarget: '',           // set target to open link in
+        typographer: false,        // Enable some language-neutral replacements + quotes beautification
     }), []);
 
     useEffect(() => {
         remarkable.use(imageProcessor, {
-            attachedFiles, 
-            setHtmlPreview: attachedFiles && attachedFiles.length > 0, 
+            attachedFiles,
+            setHtmlPreview: attachedFiles && attachedFiles.length > 0,
             urlPrefix: imageUrlPrefix
         });
         setInnerHtml(remarkable.render(commonmarkSrc));
     }, [commonmarkSrc, attachedFiles, imageUrlPrefix, remarkable])
 
-    return(
-        <StyledHtmlContent className={className} html={{ __html: innerHtml }} /> 
+    return (
+        <StyledHtmlContent className={className} html={{ __html: innerHtml }} />
     )
 
 })({})
