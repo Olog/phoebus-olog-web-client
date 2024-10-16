@@ -1,34 +1,32 @@
-import { Box, Typography, styled } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import React from "react";
+import { EntryTypeChip } from "../EntryTypeChip";
+import { LogbookChip } from "../LogbookChip";
+import { TagChip } from "../TagChip";
 
-const Key = styled(Typography)({
-  fontWeight: "bold",
-  gridColumn: "span / span"
-});
-const Value = styled(Typography)({
-  gridColumn: "span / span"
-});
+const Key = ({ name, children }) => (
+  <Stack flexDirection="row" gap={0.5} alignItems="center" flexWrap="wrap">
+    <Typography fontSize="0.9rem" fontWeight="bold" mr={0.5}>{name}</Typography>
+    {children}
+  </Stack>
+);
 
-const MetadataTable = styled(({ data, KeyProps, ValueProps, className }) => {
+const MetadataTable = ({ log }) => (
+  <Stack direction="row" flexWrap="wrap" alignItems="center" gap={2}>
+    <Key name="Tags">
+      {log?.tags?.map(it => <TagChip key={it.name} value={it.name} />)}
+    </Key>
 
-  return (
-    <Box
-      sx={{
-        display: "grid",
-        gridTemplateColumns: "max-content max-content max-content max-content",
-        columnGap: 2,
-        rowGap: 1
-      }}
-      className={className}
-    >
-      {Object.entries(data).map(entry =>
-        <React.Fragment key={entry[0]}>
-          <Key {...KeyProps}>{entry[0]}</Key>
-          <Value {...ValueProps}>{entry[1]}</Value>
-        </React.Fragment>
-      )}
-    </Box>
-  )
-})({})
+    <Key name="Log books">
+      {log?.logbooks?.map(it => <LogbookChip key={it.name} value={it.name} />)}
+    </Key>
+
+    {log?.level && (
+      <Key name="Entry type" value>
+        <EntryTypeChip value={log?.level} />
+      </Key>
+    )}
+  </Stack>
+)
 
 export default MetadataTable;

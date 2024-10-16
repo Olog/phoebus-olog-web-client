@@ -3,25 +3,25 @@ import { ologApi } from "api/ologApi";
 import { getLogEntryGroupId } from "components/Properties";
 import { sortByCreatedDate } from "components/log/sort";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Alert,
-  Box,
-  CircularProgress,
-  Divider,
-  Stack,
-  styled
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Alert,
+    Box,
+    CircularProgress,
+    Divider,
+    Stack,
+    styled
 } from "@mui/material";
 import LogDetails from "./LogDetails";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
 import LogHeader from "./LogHeader";
 
 const StyledLogHeader = styled(LogHeader)({
-  width: "100%"
+    width: "100%"
 });
 
-const LogDetailsAccordion = styled(({log, defaultExpanded=false, className}) => {
+const LogDetailsAccordion = styled(({ log, defaultExpanded = false, className }) => {
 
     const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -30,7 +30,7 @@ const LogDetailsAccordion = styled(({log, defaultExpanded=false, className}) => 
     }
 
     return (
-        <Accordion 
+        <Accordion
             defaultExpanded={false}
             expanded={expanded}
             onChange={onChange}
@@ -45,7 +45,7 @@ const LogDetailsAccordion = styled(({log, defaultExpanded=false, className}) => 
                     bgcolor: "grey.100"
                 }}
             >
-              <StyledLogHeader log={log} />
+                <StyledLogHeader log={log} />
             </AccordionSummary>
             <AccordionDetails>
                 <LogDetails log={log} />
@@ -62,7 +62,7 @@ const LogDetailsAccordion = styled(({log, defaultExpanded=false, className}) => 
     }
 })
 
-const LogDetailsWithReplies = ({log}) => {
+const LogDetailsWithReplies = ({ log }) => {
 
     // fetch any groups/conversations
     const groupId = getLogEntryGroupId(log.properties);
@@ -70,12 +70,12 @@ const LogDetailsWithReplies = ({log}) => {
         data: replies = [],
         isLoading: repliesLoading,
         error: repliesError
-    } = ologApi.endpoints.getLogGroup.useQuery({groupId});
+    } = ologApi.endpoints.getLogGroup.useQuery({ groupId });
 
     const { dateDescending } = useSearchPageParams();
 
     if (repliesLoading) {
-        return <CircularProgress /> 
+        return <CircularProgress />
     }
 
     if (repliesError) {
@@ -89,27 +89,27 @@ const LogDetailsWithReplies = ({log}) => {
             log,
             ...replies.filter(it => it.id !== log.id)
         ].toSorted(sortByCreatedDate(dateDescending));
-        
+
         return (
             <Stack divider={<Divider flexItem />} sx={{
                 overflow: "auto"
             }}>
-                {sortedLogs.map(sortedLog => <LogDetailsAccordion 
-                    log={sortedLog} 
-                    defaultExpanded={sortedLog.id === log.id} 
-                    key={`current-${log.id}-accordion-${sortedLog.id}`} 
+                {sortedLogs.map(sortedLog => <LogDetailsAccordion
+                    log={sortedLog}
+                    defaultExpanded={sortedLog.id === log.id}
+                    key={`current-${log.id}-accordion-${sortedLog.id}`}
                 />)}
             </Stack>
         )
     }
-    
+
     return (
-      <Stack>
-        <Box padding={1}>
-          <LogHeader log={log} />
-        </Box>
-        <LogDetails log={log} />
-      </Stack>
+        <Stack>
+            <Box padding={2}>
+                <LogHeader log={log} />
+            </Box>
+            <LogDetails log={log} />
+        </Stack>
     )
 
 }
