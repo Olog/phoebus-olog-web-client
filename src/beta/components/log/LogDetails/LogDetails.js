@@ -20,8 +20,12 @@ const LogDetails = ({ log, className }) => {
     >
       <LogAttachmentsHeader log={log} />
       <Typography component="h2" variant="h4" fontWeight="600" mb={2}>{log.title}</Typography>
-      <Divider />
-      <CommonmarkPreview commonmarkSrc={log.source} imageUrlPrefix={customization.APP_BASE_URL + "/"} />
+      {log.source && (
+        <>
+          <Divider />
+          <CommonmarkPreview commonmarkSrc={log.source} imageUrlPrefix={customization.APP_BASE_URL + "/"} />
+        </>
+      )}
       {log?.properties && filteredProperties.length > 0 && (
         <Box sx={{
           "& > div:last-child, & > div.Mui-expanded:last-child": {

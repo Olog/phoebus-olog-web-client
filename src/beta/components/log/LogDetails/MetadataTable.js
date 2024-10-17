@@ -12,7 +12,7 @@ const Key = ({ name, children }) => (
 );
 
 const MetadataTable = ({ log }) => (
-  <Stack direction="row" flexWrap="wrap" alignItems="center" gap={2}>
+  <Stack gap={2}>
     <Key name="Tags">
       {log?.tags?.map(it => <TagChip key={it.name} value={it.name} />)}
     </Key>
