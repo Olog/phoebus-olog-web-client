@@ -170,15 +170,10 @@ export const ologApi = createApi({
         }),
         login: builder.mutation({
             query: ({username, password}) => {
-                const bodyFormData = new FormData();
-                bodyFormData.append("username", username);
-                bodyFormData.append("password", password);
-
                 return {
                     url: "/login",
                     method: 'POST',
-                    body: bodyFormData,
-                    formData: true
+                    body: {"username": username, "password": password}
                 }
             }
         }),
