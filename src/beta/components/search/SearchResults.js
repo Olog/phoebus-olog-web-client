@@ -74,7 +74,7 @@ export const SearchResults = styled(({ className }) => {
       hitCount: 0
     },
     error,
-    isFetching: loading
+    isLoading: loading
   } = ologApi.endpoints.searchLogs.useQuery(
     searchLogsQuery,
     {
@@ -144,7 +144,7 @@ export const SearchResults = styled(({ className }) => {
           </Stack>
         </Stack>
       </Box>
-      {loading ? <LinearProgress /> : null}
+      {loading && <LinearProgress />}
       {error ?
         <Box>
           <Alert severity="error">
