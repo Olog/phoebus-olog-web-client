@@ -1,7 +1,6 @@
 import { Alert, Badge, Box, IconButton, LinearProgress, Stack, TablePagination, Typography, styled } from "@mui/material";
 import { ologApi, removeEmptyKeys } from "api/ologApi";
 import customization from "config/customization";
-import { updateCurrentLogEntry, useCurrentLogEntry } from "features/currentLogEntryReducer";
 import { updateSearchPageParams, useSearchPageParams } from "features/searchPageParamsReducer";
 import { updateSearchParams, useSearchParams } from "features/searchParamsReducer";
 import React, { useEffect, useMemo, useState } from "react";
@@ -14,15 +13,12 @@ import { SearchParamsBadges } from "./SearchParamsBadges";
 import { AdvancedSearchDrawer } from "./SearchResultList/AdvancedSearchDrawer";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
 import { withCacheBust } from "hooks/useSanitizedSearchParams";
-import useBetaNavigate from "hooks/useBetaNavigate";
 
 export const SearchResults = styled(({ className }) => {
 
   const dispatch = useDispatch();
-  const navigate = useBetaNavigate();
 
   const { active: advancedSearchActive, fieldCount: advancedSearchFieldCount } = useAdvancedSearch();
-  const currentLogEntry = useCurrentLogEntry();
   const searchParams = useSearchParams();
   const searchPageParams = useSearchPageParams();
   const rowsPerPageOptions = customization.defaultRowsPerPageOptions;
@@ -85,11 +81,6 @@ export const SearchResults = styled(({ className }) => {
   );
 
   const count = searchResults?.hitCount ?? 0;
-
-  const onRowClick = (log) => {
-    dispatch(updateCurrentLogEntry(log));
-    navigate(`/logs/${log.id}`);
-  }
 
   const onPageChange = (event, page) => {
     setPage(page);
@@ -159,8 +150,6 @@ export const SearchResults = styled(({ className }) => {
         ? <SearchResultList
           logs={searchResults.logs}
           dateDescending={searchPageParams?.dateDescending}
-          selectedId={currentLogEntry?.id}
-          onRowClick={onRowClick}
         />
         : <Box >
           <Typography>No records found</Typography>
