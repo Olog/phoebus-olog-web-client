@@ -26,6 +26,7 @@ const StyledHtmlContent = styled(HtmlContent)`
     padding: 0;
     & > p {
         padding: 0;
+        margin: 0;
     }
     width: 100%;
     font-size: 1.2rem;

@@ -104,8 +104,8 @@ const LogDetailsWithReplies = ({ log }) => {
     }
 
     return (
-        <Stack>
-            <Box padding={2}>
+        <Stack sx={{ height: "100%", overflow: "auto" }}>
+            <Box padding={2} bgcolor={"grey.100"}>
                 <LogHeader log={log} />
             </Box>
             <LogDetails log={log} />
