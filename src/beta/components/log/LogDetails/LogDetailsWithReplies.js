@@ -42,12 +42,13 @@ const LogDetailsAccordion = styled(({ log, defaultExpanded = false, className })
                 aria-controls={`${log.id}-content`}
                 id={`${log.id}-header`}
                 sx={{
-                    bgcolor: "grey.100"
+                    bgcolor: "grey.100",
+                    padding: "0 40px"
                 }}
             >
                 <StyledLogHeader log={log} />
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{ padding: 0 }}>
                 <LogDetails log={log} />
             </AccordionDetails>
         </Accordion>
@@ -105,7 +106,7 @@ const LogDetailsWithReplies = ({ log }) => {
 
     return (
         <Stack sx={{ height: "100%", overflow: "auto" }}>
-            <Box padding={2} bgcolor={"grey.100"}>
+            <Box padding={2} px={5} bgcolor={"grey.100"}>
                 <LogHeader log={log} />
             </Box>
             <LogDetails log={log} />

@@ -1,4 +1,4 @@
-import { Alert, Badge, Box, IconButton, LinearProgress, Stack, TablePagination, Typography, styled } from "@mui/material";
+import { Alert, Badge, Box, Divider, IconButton, LinearProgress, Stack, TablePagination, Typography, styled } from "@mui/material";
 import { ologApi, removeEmptyKeys } from "api/ologApi";
 import customization from "config/customization";
 import { updateSearchPageParams, useSearchPageParams } from "features/searchPageParamsReducer";
@@ -108,13 +108,11 @@ export const SearchResults = styled(({ className }) => {
     <Stack
       minWidth={400}
       className={`SearchResultList ${className}`}
-      padding={1}
-      gap={1}
-      pt={2}
       position="relative"
+      sx={{ backgroundColor: "#FCFCFC" }}
     >
       <AdvancedSearchDrawer searchParams={searchParams} advancedSearchOpen={advancedSearchOpen} setAdvancedSearchOpen={setAdvancedSearchOpen} />
-      <Box>
+      <Box px={4} pt={2}>
         {advancedSearchActive ? null : <SimpleSearch />}
         <SearchParamsBadges search={searchParams} onSearch={vals => dispatch(updateSearchParams(vals))} />
         <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
@@ -135,6 +133,7 @@ export const SearchResults = styled(({ className }) => {
           </Stack>
         </Stack>
       </Box>
+      <Divider sx={{ marginTop: 1, borderWidth: "1px" }} />
       {loading && <LinearProgress />}
       {error ?
         <Box>
@@ -169,6 +168,7 @@ export const SearchResults = styled(({ className }) => {
         labelDisplayedRows={() => null}
         showFirstButton
         showLastButton
+        sx={{ borderTop: "1px solid #bdbdbd" }}
       />
     </Stack>
   );

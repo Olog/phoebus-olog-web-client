@@ -12,7 +12,7 @@ const LogDetails = ({ log, className }) => {
     <Stack
       className={`LogDetails ${className}`}
       gap={1}
-      p={2}
+      p={5}
       sx={{
         overflow: "scroll"
       }}
