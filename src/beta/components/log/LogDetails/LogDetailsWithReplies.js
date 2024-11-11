@@ -90,7 +90,8 @@ const LogDetailsWithReplies = ({ log }) => {
             log,
             ...replies.filter(it => it.id !== log.id)
         ].toSorted(sortByCreatedDate(dateDescending));
-
+        const parentLog = sortedLogs.pop();
+        sortedLogs.unshift(parentLog);
         return (
             <Stack divider={<Divider flexItem />} sx={{
                 overflow: "auto"
