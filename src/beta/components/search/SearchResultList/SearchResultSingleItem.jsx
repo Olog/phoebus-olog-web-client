@@ -10,7 +10,7 @@ export const SearchResultSingleItem = ({ log, selected, onClick, isReply, expand
   return (
     <Stack
       px={4}
-      py={2}
+      py={1.5}
       sx={{
         position: "relative",
         borderBottom: "1px solid #bdbdbd",
@@ -32,7 +32,7 @@ export const SearchResultSingleItem = ({ log, selected, onClick, isReply, expand
           backgroundColor: "grey.300"
         }),
         ...(isReply && {
-          paddingLeft: "70px"
+          paddingLeft: "75px"
         }),
         "&:last-child": {
           borderBottom: "none",
@@ -43,7 +43,7 @@ export const SearchResultSingleItem = ({ log, selected, onClick, isReply, expand
       onKeyDown={handleKeyDown}
       data-id={log.id}
     >
-      {isReply && <TurnRightIcon sx={{ position: "absolute", top: "35%", left: "50px", transform: "rotate(-90deg) translate(-50%, -50%)", color: "#6f6f6f" }} fontSize="small" />}
+      {isReply && <TurnRightIcon sx={{ position: "absolute", top: "35%", left: "55px", transform: "rotate(-90deg) translate(-50%, -50%)", color: "#6f6f6f" }} fontSize="small" />}
       <Stack flexDirection="row" gap={1} paddingBottom={0.5}>
         <FormattedDate
           date={log.createdDate}
@@ -69,10 +69,12 @@ export const SearchResultSingleItem = ({ log, selected, onClick, isReply, expand
       <Typography variant="caption">
         {log.description.length > 100 ? log.description.substring(0, 100) + "..." : log.description}
       </Typography>
-      <Stack mt={1} flexDirection="row" gap={0.5} flexWrap="wrap" gridColumn="span 2" sx={{ "& > div": { cursor: "pointer" } }}>
-        {log?.logbooks?.map(it => <LogbookChip sx={{ fontSize: ".7rem" }} key={it.name} value={it.name} />)}
-        {log?.tags?.map(it => <TagChip sx={{ fontSize: ".7rem" }} key={it.name} value={it.name} />)}
-      </Stack>
+      {!isReply && (
+        <Stack mt={1} flexDirection="row" gap={0.5} flexWrap="wrap" gridColumn="span 2" sx={{ "& > div": { cursor: "pointer" } }}>
+          {log?.logbooks?.map(it => <LogbookChip sx={{ fontSize: ".7rem" }} key={it.name} value={it.name} />)}
+          {log?.tags?.map(it => <TagChip sx={{ fontSize: ".7rem" }} key={it.name} value={it.name} />)}
+        </Stack>
+      )}
       {expandIcon}
     </Stack>
   );
