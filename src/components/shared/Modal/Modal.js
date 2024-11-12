@@ -19,9 +19,9 @@
 import { Box, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Stack, Typography, styled } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 
-const ModalTitle = styled(({onClose, className, children}) => {
+const ModalTitle = styled(({ onClose, className, children }) => {
     return (
-        <Stack 
+        <Stack
             className={className}
             flexDirection="row"
             justifyContent="space-between"
@@ -32,19 +32,19 @@ const ModalTitle = styled(({onClose, className, children}) => {
             paddingY={1}
         >
             {typeof children === "string" ? <Typography>{children}</Typography> : <>{children}</>}
-            <IconButton 
+            <IconButton
                 variant="outlined"
-                onClick={onClose} 
-                aria-label="Close Dialog" 
+                onClick={onClose}
+                aria-label="Close Dialog"
                 edge="end"
             >
-                <CloseIcon fontSize="medium" color="ologWhite"/>
+                <CloseIcon fontSize="medium" color="ologWhite" />
             </IconButton>
         </Stack>
     )
 })({});
 
-const Modal = ({title, content, actions, open, onClose, className, DialogProps={}}) => {
+const Modal = ({ title, content, actions, open, onClose, className, DialogProps = {} }) => {
 
     return (
         <Dialog
@@ -54,20 +54,18 @@ const Modal = ({title, content, actions, open, onClose, className, DialogProps={
             maxWidth="sm"
             {...DialogProps}
         >
-            { title ? <ModalTitle onClose={onClose}>{title}</ModalTitle> : null }
-            <DialogContent 
+            {title ? <ModalTitle onClose={onClose}>{title}</ModalTitle> : null}
+            <DialogContent
                 className={className}
             >
-                {typeof content === "string" ? 
+                {typeof content === "string" ?
                     <DialogContentText>
                         {content}
                     </DialogContentText>
-                    : <Box>
-                        {content}
-                      </Box>
-                }        
+                    : <>{content}</>
+                }
             </DialogContent>
-            { actions ? <DialogActions>{actions}</DialogActions> : null }
+            {actions ? <DialogActions>{actions}</DialogActions> : null}
         </Dialog>
     )
 };

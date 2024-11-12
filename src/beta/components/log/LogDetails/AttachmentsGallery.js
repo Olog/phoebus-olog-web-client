@@ -1,4 +1,4 @@
-import { IconButton, ImageList, ImageListItem, Link, Stack, styled } from "@mui/material";
+import { Box, IconButton, ImageList, ImageListItem, ImageListItemBar, Link, Stack, styled, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { FileImage } from "components/Attachment";
 import Modal from "components/shared/Modal";
@@ -47,18 +47,20 @@ const GalleryView = ({ attachments, onPrevious, onNext, currentIndex }) => {
   const attachment = attachments[currentIndex];
 
   return (
-    <Stack flexDirection="row" alignItems="center" justifyContent="center">
+    <Stack flexDirection="row" alignItems="center" justifyContent="space-between" sx={{ maxWidth: "500px", margin: "0 auto" }}>
       <IconButton
         onClick={onPrevious}
-        sx={{ height: "min-content" }}
+        sx={{ height: "min-content", marginRight: "16px" }}
         disabled={currentIndex === 0}
       >
         <NavigateBeforeIcon />
       </IconButton>
-      <Image {...{ attachment, fullSize: true, maxHeight: 500, maxWidth: 500 }} />
+      <Box>
+        <Image {...{ attachment, fullSize: true, maxHeight: 400, maxWidth: "100%" }} />
+      </Box>
       <IconButton
         onClick={onNext}
-        sx={{ height: "min-content" }}
+        sx={{ height: "min-content", marginLeft: "16px" }}
         disabled={currentIndex === attachments.length - 1}
       >
         <NavigateNextIcon />
@@ -108,21 +110,42 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
     }
   }
 
+  const renderAttachmentTitle = (attachment) => {
+    const splitArr = attachment.filename.split('.');
+    const extension = splitArr[splitArr.length - 1];
+    return `${splitArr[0].substring(0, 9)}...${extension}`;
+  }
+
   return (
     <Stack onKeyUp={onKeyPress} >
-      <ImageList gap={5} cols={10} >
+      <ImageList gap={5} cols={10}>
         {imageAttachments.map((attachment, index) => (
           <ImageListItem key={attachment.id} onClick={() => onClick(index)} sx={{ cursor: "pointer" }}>
             <Image attachment={attachment} size={size} />
+            <ImageListItemBar
+              position="below"
+              title={renderAttachmentTitle(attachment)}
+              fontSize="small"
+              sx={{ "& div": { fontSize: "0.8rem", fontStyle: "italic" } }}
+            />
           </ImageListItem>
         ))}
         {fileAttachments.map((attachment) => (
-          <FileLink key={attachment.id} attachment={attachment} size={size} />
+          <Stack sx={{
+            cursor: "pointer", "&:hover > a > div > .file-overlay": {
+              display: "block"
+            }
+          }}>
+            <FileLink key={attachment.id} attachment={attachment} size={size} />
+            <Stack flexDirection="row">
+              <Typography pl={2} sx={{ fontSize: "0.8rem", fontStyle: "italic" }} mt={1}>{renderAttachmentTitle(attachment)}</Typography>
+            </Stack>
+          </Stack>
         ))}
       </ImageList>
       <Modal
         open={show}
-        onClose={() => setShow(false)}
+        onClose={() => { setShow(false); setCurrentIndex(0); }}
         title={attachments[currentIndex].filename}
         content={<GalleryView {...{ attachments: imageAttachments, currentIndex, setCurrentIndex, onPrevious, onNext }} />}
       />
