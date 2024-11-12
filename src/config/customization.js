@@ -28,17 +28,7 @@ let customization = {
     /**
      * Values for the "level" drop-down.
      */
-    levelValues: [
-        "Normal",
-        "Shift Start",
-        "Shift End",
-        "Fault",
-        "Beam Loss",
-        "Beam Configuration",
-        "Crew",
-        "Expert Intervention Call",
-        "Incident"
-    ],
+    levelValues: process.env.REACT_APP_LEVEL_VALUES,
 
     /**
      * Default "level" for new log entries

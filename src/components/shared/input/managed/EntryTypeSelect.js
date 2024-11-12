@@ -4,7 +4,6 @@ import { styled } from "@mui/material";
 import customization from "config/customization";
 
 const EntryTypeSelect = styled(({control, className, ...props}) => {
-
     return (
         <MultiSelect 
             className={className}
@@ -12,7 +11,7 @@ const EntryTypeSelect = styled(({control, className, ...props}) => {
             label={customization.level ?? "Entry Type"}
             control={control}
             defaultValue={customization.defaultLevel}
-            options={customization.levelValues}
+            options={JSON.parse(customization.levelValues)}
             {...props}
         />
     )
