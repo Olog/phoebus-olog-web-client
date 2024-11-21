@@ -33,7 +33,7 @@ let customization = {
     /**
      * Default "level" for new log entries
      */
-    defaultLevel: "Normal",
+    defaultLevel: process.env.REACT_APP_DEFAULT_LEVEL,
     
     /**
      * Specifies whether to support grouping of log entries.
