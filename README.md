@@ -60,7 +60,7 @@ default is `https://olog.readthedocs.io/en/latest/` |
 | REACT_APP_SUPPORT_HREF   | URL where support can be found for Olog. Shown on Help page only if provided. |
 | REACT_APP_VERSION        | Version string for Olog; default is the version defined in `package.json`. |
 | REACT_APP_VERSION_HREF   | URL where this version of Olog can be found. Shown on Help page only if provided. |
-| REACT_APP_LEVEL_VALUES   | List of values in the "Level" drop-down. NOTE: If set on the command line, quotes must be escaped, e.g. REACT_APP_LEVEL_VALUES=[\"foo\",\"bar\"] |
+| REACT_APP_LEVEL_VALUES   | List of values in the "Level" drop-down. NOTE: If set on the command line, quotes must be escaped, e.g. REACT_APP_LEVEL_VALUES=[\\"foo\\",\\"bar\\"] |
 
 ## Development 
 
