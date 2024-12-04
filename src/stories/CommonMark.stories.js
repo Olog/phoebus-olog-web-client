@@ -1,9 +1,9 @@
-import CommonmarkPreview from "components/shared/CommonmarkPreview";
+import CommonMark from "components/shared/CommonMark";
 
 export default {
-    title: "Common/CommonmarkPreview",
-    component: CommonmarkPreview
-}
+  title: "Common/CommonMark",
+  component: CommonMark,
+};
 
 const source = `# Heading 1
 ## Heading 2
@@ -79,10 +79,10 @@ Table:
 |---------------|---------------|
 | Table Cell 11 | Table Cell 12 |
 | Table Cell 21 | Table Cell 22 |
-`; 
+`;
 
 export const Default = {
-    args: {
-        commonmarkSrc: source
-    }
+  args: {
+    commonmarkSrc: source,
+  },
 };

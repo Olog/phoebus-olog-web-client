@@ -1,10 +1,10 @@
-import { styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 
-const Container = styled("div")(({theme}) => {
-    return `
+const Container = styled(Box)(({ theme }) => {
+  return `
+
         word-wrap: break-word;
         padding: 2rem 0;
-        font-size: 1.3rem;
         font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 400;
         color: ${theme.palette.grey[900]};
@@ -14,9 +14,11 @@ const Container = styled("div")(({theme}) => {
             padding-bottom: 0.5rem;
         }
         h1 {
+            margin: .3em 0 0.5em;
             font-size: 2.8rem;
         }
         h2 {
+            margin: 1em 0 0.5em;
             font-size: 2.1rem;
         }
         p {
@@ -144,12 +146,29 @@ const Container = styled("div")(({theme}) => {
         table tr:hover {
             background-color:  ${theme.palette.grey[300]};
         }
+               padding: 0;
+    & > p {
+        padding: 0;
+        margin: 0;
+    }
+    & > blockquote > p{
+        padding: 10px;
+        margin: 0;
+    }
+    width: 100%;
+    font-size: 1.1rem;
         
-    `
-})
+    `;
+});
 
-const HtmlContent = styled(({html, className}) => {
-    return <Container dangerouslySetInnerHTML={html} className={className} />
-})({});
+const HtmlContent = ({ html, className, ...props }) => {
+  return (
+    <Container
+      dangerouslySetInnerHTML={{ __html: html }}
+      className={className}
+      {...props}
+    />
+  );
+};
 
 export default HtmlContent;
