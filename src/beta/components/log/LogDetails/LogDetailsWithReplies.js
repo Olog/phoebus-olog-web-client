@@ -57,10 +57,10 @@ const LogDetailsAccordion = styled(
   }
 )({
   border: "2px solid #F3F5F7",
-  margin: "0 0 15px 0",
+  margin: "0 0 10px 0",
   borderRadius: "4px",
   "&.Mui-expanded": {
-    margin: "0 0 15px 0",
+    margin: "0 0 10px 0",
   },
   // Get rid of the small line above the accordion
   "&:before": {
