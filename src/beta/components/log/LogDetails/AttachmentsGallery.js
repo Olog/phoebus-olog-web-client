@@ -134,7 +134,7 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
 
   return (
     <Stack onKeyUp={onKeyPress}>
-      <ImageList gap={5} cols={10}>
+      <ImageList gap={5} cols={10} sx={{ marginBottom: 0 }}>
         {imageAttachments.map((attachment, index) => (
           <ImageListItem
             key={attachment.id}
@@ -146,7 +146,13 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
               position="below"
               title={renderAttachmentTitle(attachment)}
               fontSize="small"
-              sx={{ "& div": { fontSize: "0.8rem", fontStyle: "italic" } }}
+              sx={{
+                "& div": {
+                  fontSize: "0.8rem",
+                  fontStyle: "italic",
+                  paddingBottom: 0,
+                },
+              }}
             />
           </ImageListItem>
         ))}

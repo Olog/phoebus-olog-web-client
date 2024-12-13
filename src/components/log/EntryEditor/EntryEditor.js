@@ -18,7 +18,7 @@
 import { useEffect } from "react";
 import TextInput from "components/shared/input/TextInput";
 import { useRef } from "react";
-import { Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import Description from "./Description";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
@@ -48,51 +48,49 @@ export const EntryEditor = ({
   }, [formState]);
 
   return (
-    <>
-      <Stack gap={1} overflow="scroll" padding={1}>
-        <Typography component="h1" variant="h3">
-          {title}
-        </Typography>
-        <Stack component="form" onSubmit={handleSubmit(onSubmit)} gap={1}>
-          <span ref={topElem}></span>
-          <LogbooksMultiSelect
-            control={control}
-            rules={{
-              validate: {
-                notEmpty: (val) =>
-                  val?.length > 0 || "Select at least one logbook",
-              },
-            }}
-          />
-          <TagsMultiSelect control={control} />
-          <EntryTypeSelect
-            rules={{
-              validate: {
-                notEmpty: (val) =>
-                  val?.length > 0 || "Please select an Entry Type",
-              },
-            }}
-            control={control}
-          />
-          <TextInput
-            name="title"
-            label="Title"
-            control={control}
-            defaultValue=""
-            rules={{
-              required: {
-                value: true,
-                message: "Please specify a title.",
-              },
-            }}
-          />
-          <Description form={form} attachmentsDisabled={attachmentsDisabled} />
-          <PropertyCollectionInput control={control} />
-          <Button type="submit" variant="contained" disabled={submitDisabled}>
-            Submit
-          </Button>
-        </Stack>
+    <Stack gap={1} px={4} pb={4} pt={2} height="fit-content">
+      <Typography component="h2" variant="h3">
+        {title}
+      </Typography>
+      <Stack component="form" onSubmit={handleSubmit(onSubmit)} gap={2}>
+        <span ref={topElem}></span>
+        <LogbooksMultiSelect
+          control={control}
+          rules={{
+            validate: {
+              notEmpty: (val) =>
+                val?.length > 0 || "Select at least one logbook",
+            },
+          }}
+        />
+        <TagsMultiSelect control={control} />
+        <EntryTypeSelect
+          rules={{
+            validate: {
+              notEmpty: (val) =>
+                val?.length > 0 || "Please select an Entry Type",
+            },
+          }}
+          control={control}
+        />
+        <TextInput
+          name="title"
+          label="Title"
+          control={control}
+          defaultValue=""
+          rules={{
+            required: {
+              value: true,
+              message: "Please specify a title.",
+            },
+          }}
+        />
+        <Description form={form} attachmentsDisabled={attachmentsDisabled} />
+        <PropertyCollectionInput control={control} />
+        <Button type="submit" variant="contained" disabled={submitDisabled}>
+          Submit
+        </Button>
       </Stack>
-    </>
+    </Stack>
   );
 };
