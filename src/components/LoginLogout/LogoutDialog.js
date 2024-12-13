@@ -15,62 +15,66 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import { useEffect, useState } from 'react';
-import Modal from 'components/shared/Modal';
-import { Alert, Button, Stack, Typography } from '@mui/material';
-import { ologApi } from 'api/ologApi';
-import { useShowLogout } from 'features/authSlice';
+import { useEffect, useState } from "react";
+import Modal from "components/shared/Modal";
+import { Alert, Button, Stack, Typography } from "@mui/material";
+import { ologApi } from "api/ologApi";
+import { useShowLogout } from "features/authSlice";
 
 const LogoutDialog = () => {
-
   const [logoutErrorMessage, setLogoutErrorMessage] = useState("");
-  const [logout, { isSuccess, error}] = ologApi.endpoints.logout.useMutation();
-  const {showLogout, setShowLogout} = useShowLogout();
+  const [logout, { isSuccess, error }] = ologApi.endpoints.logout.useMutation();
+  const { showLogout, setShowLogout } = useShowLogout();
 
   const hideLogout = () => {
-      setLogoutErrorMessage("");
-      setShowLogout(false);
-  }
+    setLogoutErrorMessage("");
+    setShowLogout(false);
+  };
 
   // On logout success, close dialog
   useEffect(() => {
-    if(isSuccess) {
+    if (isSuccess) {
       setShowLogout(false);
     }
-  }, [isSuccess, setShowLogout])
+  }, [isSuccess, setShowLogout]);
 
   // On error, update error message
   useEffect(() => {
-    if(error) {
-      if(error.status === "FETCH_ERROR"){
+    if (error) {
+      if (error.status === "FETCH_ERROR") {
         setLogoutErrorMessage("Logout failed. Unable to connect to service.");
       }
     }
-  }, [error])
+  }, [error]);
 
-  return(
-    <Modal 
-      open={showLogout} 
+  return (
+    <Modal
+      open={showLogout}
+      onClose={hideLogout}
       title="Log out?"
       content={
         <Stack component="form" gap={1} paddingY={1}>
           <Typography>Would you like to logout?</Typography>
-          {logoutErrorMessage ? <Alert severity="error">{logoutErrorMessage}</Alert> : null}
+          {logoutErrorMessage ? (
+            <Alert severity="error">{logoutErrorMessage}</Alert>
+          ) : null}
         </Stack>
       }
       actions={
         <>
-          <Button variant="outlined" onClick={hideLogout} >
+          <Button variant="outlined" onClick={hideLogout}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={logout} > 
+          <Button variant="contained" onClick={logout}>
             Logout
           </Button>
         </>
       }
+      DialogProps={{
+        maxWidth: "sm",
+      }}
     />
-  )
-
-}
+  );
+};
 
 export default LogoutDialog;

@@ -18,7 +18,7 @@ export const SearchResultSingleItem = ({
   return (
     <Stack
       px={4}
-      py={1.5}
+      py={1.3}
       sx={{
         position: "relative",
         borderBottom: "1px solid #bdbdbd",
@@ -29,7 +29,7 @@ export const SearchResultSingleItem = ({
         ...(!selected && {
           "&:hover": {
             cursor: "pointer",
-            backgroundColor: "grey.200",
+            backgroundColor: "#ECF0F3",
           },
         }),
         ...(selected && {
@@ -37,7 +37,7 @@ export const SearchResultSingleItem = ({
             cursor: "pointer",
           },
           borderRadius: "1px",
-          backgroundColor: "grey.300",
+          backgroundColor: "#0099dc24",
         }),
         ...(isReply && {
           paddingLeft: "75px",
@@ -55,7 +55,7 @@ export const SearchResultSingleItem = ({
         <TurnRightIcon
           sx={{
             position: "absolute",
-            top: "35%",
+            top: "30%",
             left: "55px",
             transform: "rotate(-90deg) translate(-50%, -50%)",
             color: "#6f6f6f",
@@ -63,22 +63,32 @@ export const SearchResultSingleItem = ({
           fontSize="small"
         />
       )}
-      <Stack flexDirection="row" gap={1} paddingBottom={0.5}>
+      <Stack
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        pb="4px"
+      >
+        <Typography noWrap fontSize=".75rem" variant="body2">
+          {log.owner}
+        </Typography>
+
         <FormattedDate
           date={log.createdDate}
           whiteSpace="nowrap"
           variant="body2"
           fontSize=".75rem"
           fontWeight="bold"
-          color="#0099db"
-          sx={{ opacity: 0.8 }}
+          color="#0090AD"
+          sx={{ opacity: 0.8, marginRight: "2px" }}
         />
-        <Typography noWrap fontSize=".75rem" variant="body2">
-          {log.owner}
-        </Typography>
       </Stack>
-      <Stack flexDirection="row" justifyContent="space-between">
-        <Typography mb={0.5} noWrap variant="body1" fontWeight="bold">
+      <Stack
+        maxHeight="22px"
+        flexDirection="row"
+        justifyContent="space-between"
+      >
+        <Typography fontSize=".85rem" noWrap fontWeight="bold">
           {log.title}
         </Typography>
         <Box>
@@ -87,12 +97,16 @@ export const SearchResultSingleItem = ({
           ) : null}
         </Box>
       </Stack>
-      {console.log({ log: log.description })}
 
       <CommonMark
         commonmarkSrc={log.source}
         isSummary
-        sx={{ fontSize: ".9rem" }}
+        sx={{
+          fontSize: ".9rem",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
       />
 
       {!isReply && (
