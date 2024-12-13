@@ -31,7 +31,9 @@ const LogProperty = styled(({ property, className }) => {
         id={`${property.name}-header`}
         sx={AccordionSummaryStyles}
       >
-        <Typography variant="button">{property.name}</Typography>
+        <Typography variant="button" fontSize=".8rem">
+          {property.name}
+        </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <KeyValueTable data={attributes} />

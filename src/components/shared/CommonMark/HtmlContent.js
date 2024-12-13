@@ -5,6 +5,7 @@ const Container = styled(Box)(({ theme }) => {
 
         word-wrap: break-word;
         padding: 2rem 0;
+        font-size: 1rem;
         font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 400;
         color: ${theme.palette.grey[900]};
@@ -15,11 +16,11 @@ const Container = styled(Box)(({ theme }) => {
         }
         h1 {
             margin: .3em 0 0.5em;
-            font-size: 2.8rem;
+            font-size: 1.8rem;
         }
         h2 {
             margin: 1em 0 0.5em;
-            font-size: 2.1rem;
+            font-size: 1.4rem;
         }
         p {
             padding: 1rem 0;
@@ -40,8 +41,8 @@ const Container = styled(Box)(({ theme }) => {
         /** Block Quotes **/
         blockquote {
             border-left: 5px solid ${theme.palette.grey[400]};
-            padding: 0.5rem 10px;
-            margin: 1.5em 10px;
+            padding: 0rem 15px;
+            margin: 0rem 15px;
         }
 
         /** Lists **/

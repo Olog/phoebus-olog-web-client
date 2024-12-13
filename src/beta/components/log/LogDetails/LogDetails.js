@@ -16,18 +16,14 @@ const LogDetails = ({ log, className }) => {
     <Stack
       className={`LogDetails ${className}`}
       gap={1}
-      p={5}
+      py={2}
+      px={3}
       sx={{
         overflow: "scroll",
       }}
     >
       <LogAttachmentsHeader log={log} />
-      <Typography
-        sx={{ fontSize: "1.6rem" }}
-        component="h2"
-        fontWeight="600"
-        mb={1}
-      >
+      <Typography sx={{ fontSize: "1.4rem" }} component="h2" fontWeight="600">
         {log.title}
       </Typography>
       {log.source && (
@@ -43,7 +39,13 @@ const LogDetails = ({ log, className }) => {
           ))}
         </Box>
       )}
-      <Divider sx={{ margin: "20px 0" }} />
+      <Divider
+        sx={{
+          margin: "15px 0",
+          borderWidth: "1.25px",
+          borderColor: "#F3F5F7",
+        }}
+      />
       <MetadataTable log={log} />
     </Stack>
   );

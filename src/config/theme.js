@@ -22,98 +22,98 @@ export let theme = createTheme({});
 
 // Compose ESS Colors
 theme = createTheme(theme, {
-    palette: {
-      ologCyan: theme.palette.augmentColor({
-        color: {
-          main: "#0099dc"
-        },
-        name: "ologCyan"
-      }),
-      ologBlack: theme.palette.augmentColor({
-        color: {
-          main: "#000000"
-        },
-        name: "ologBlack"
-      }),
-      ologWhite: theme.palette.augmentColor({
-        color: {
-          main: "#ffffff"
-        },
-        name: "ologWhite"
-      }), 
-      ologPurple: theme.palette.augmentColor({
-        color: {
-          main: "#821482"
-        },
-        name: "ologPurple"
-      }),
-      ologOrange: theme.palette.augmentColor({
-        color: {
-          main: "#ff7d00"
-        },
-        name: "ologOrange"
-      }),
-      ologForest: theme.palette.augmentColor({
-        color: {
-          main: "#006646"
-        },
-        name: "ologForest"
-      }),
-      ologGrass: theme.palette.augmentColor({
-        color: {
-          main: "#99be00"
-        },
-        name:"ologGrass"
-      }),
-      ologNavy:theme.palette.augmentColor({
-        color: {
-          main: "#003366"
-        },
-        name: "ologNavy"  
-      })  
-    }
-  });
+  palette: {
+    ologCyan: theme.palette.augmentColor({
+      color: {
+        main: "#0099dc",
+      },
+      name: "ologCyan",
+    }),
+    ologBlack: theme.palette.augmentColor({
+      color: {
+        main: "#000000",
+      },
+      name: "ologBlack",
+    }),
+    ologWhite: theme.palette.augmentColor({
+      color: {
+        main: "#ffffff",
+      },
+      name: "ologWhite",
+    }),
+    ologPurple: theme.palette.augmentColor({
+      color: {
+        main: "#821482",
+      },
+      name: "ologPurple",
+    }),
+    ologOrange: theme.palette.augmentColor({
+      color: {
+        main: "#ff7d00",
+      },
+      name: "ologOrange",
+    }),
+    ologForest: theme.palette.augmentColor({
+      color: {
+        main: "#006646",
+      },
+      name: "ologForest",
+    }),
+    ologGrass: theme.palette.augmentColor({
+      color: {
+        main: "#99be00",
+      },
+      name: "ologGrass",
+    }),
+    ologNavy: theme.palette.augmentColor({
+      color: {
+        main: "#003366",
+      },
+      name: "ologNavy",
+    }),
+  },
+});
 
 // Compose remaining overrides
 theme = createTheme(theme, {
-    palette: {
-      primary: theme.palette.augmentColor({
-        color: {
-          main: theme.palette.ologCyan.main
-        },
-        name: "primary"
-      }),
-      secondary: theme.palette.augmentColor({
-        color: {
-          main: theme.palette.grey[700]
-        },
-        name: "secondary"
-      }),
-      status: {
-        ok: theme.palette.success.main,
-        progress: theme.palette.warning.light,
-        fail: theme.palette.error.main
-      }
-    },
-    components: {
-      MuiLink: {
-        styleOverrides: {
-          root: {
-            textDecoration: "none",
-            ":hover": {
-              textDecoration: "underline"
-            }
-          }
-        }
+  palette: {
+    primary: theme.palette.augmentColor({
+      color: {
+        main: theme.palette.ologCyan.main,
       },
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            textTransform: 'none'
-          }
-        }
-      }
-    }
-  });  
+      name: "primary",
+    }),
+    secondary: theme.palette.augmentColor({
+      color: {
+        main: theme.palette.grey[700],
+      },
+      name: "secondary",
+    }),
+    status: {
+      ok: theme.palette.success.main,
+      progress: theme.palette.warning.light,
+      fail: theme.palette.error.main,
+    },
+  },
+  components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: "none",
+          ":hover": {
+            textDecoration: "underline",
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
+    },
+  },
+});
 
 export default theme;

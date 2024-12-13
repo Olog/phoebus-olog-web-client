@@ -1,67 +1,54 @@
-import React, { useState } from "react";
-import { Button, ButtonGroup, Menu, MenuItem } from "@mui/material";
-import ReplyIcon from '@mui/icons-material/Reply';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EditIcon from '@mui/icons-material/Edit';
-import { Link } from "react-router-dom";
+import React from "react";
+import { Button, ButtonGroup } from "@mui/material";
+import ReplyIcon from "@mui/icons-material/Reply";
+import EditIcon from "@mui/icons-material/Edit";
 import { useUser } from "features/authSlice";
 import CopyUrlButton from "./CopyUrlButton";
+import { InternalButtonLink } from "components/shared/Link";
 
-const MenuItemLink = ({children, to}) => {
-    return (
-        <MenuItem disableRipple component={Link} to={to} sx={{ display: "flex", gap: 1}}>
-            {children}
-        </MenuItem>
-    )
-}
+const LogDetailActionButton = ({ log }) => {
+  const user = useUser();
 
-const LogDetailActionButton = ({log}) => {
-
-    const user = useUser();
-
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const onMenuButtonClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const onMenuClose = () => {
-      setAnchorEl(null);
-    };
-
-    return (
-        <ButtonGroup variant="outlined" onClick={(event) => event.stopPropagation()}>
-            <CopyUrlButton url={`${window.location.origin}/beta/logs/${log.id}`} />
-            {user ? 
-                <>
-                    <Button
-                        id="log-detail-action-button"
-                        aria-controls={open ? "log-detail-action-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        onClick={onMenuButtonClick}
-                        variant="outlined"
-                    >
-                      <ExpandMoreIcon />
-                    </Button>
-                    <Menu
-                        id="log-detail-action-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={onMenuClose}
-                    >
-                        <MenuItemLink to={`/beta/logs/${log.id}/reply`} >
-                            <ReplyIcon />
-                            Reply
-                        </MenuItemLink>
-                        <MenuItemLink to={`/beta/logs/${log.id}/edit`} >
-                            <EditIcon />
-                            Edit
-                        </MenuItemLink>
-                    </Menu>
-                </> : null
+  return (
+    <ButtonGroup
+      variant="outlined"
+      onClick={(event) => event.stopPropagation()}
+      sx={
+        !user
+          ? {
+              "& > button": { borderRadius: "4px" },
             }
-        </ButtonGroup>
-    )
-}
+          : {
+              "& > button,a": { borderRadius: "0px" },
+              "& > :first-child": {
+                borderRadius: "4px 0 0 4px",
+                marginRight: "-1px",
+              },
+              "& > :last-child": { borderRadius: "0 4px 4px 0" },
+            }
+      }
+    >
+      <CopyUrlButton url={`${window.location.origin}/beta/logs/${log.id}`} />
+      {user && (
+        <>
+          <InternalButtonLink
+            to={`/beta/logs/${log.id}/reply`}
+            startIcon={<ReplyIcon sx={{ width: "13px" }} />}
+            sx={{ fontSize: ".775rem" }}
+          >
+            Reply
+          </InternalButtonLink>
+          <InternalButtonLink
+            to={`/beta/logs/${log.id}/edit`}
+            startIcon={<EditIcon sx={{ width: "13px" }} />}
+            sx={{ borderRadiusRight: "100px", fontSize: ".775rem" }}
+          >
+            Edit
+          </InternalButtonLink>
+        </>
+      )}
+    </ButtonGroup>
+  );
+};
 
 export default LogDetailActionButton;

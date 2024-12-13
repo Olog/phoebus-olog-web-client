@@ -7,22 +7,23 @@ export const Help = styled(
     return (
       <Stack className={className} gap={1}>
         <Box>
-          <Typography variant="h2">About</Typography>
+          <Typography variant="h3" my="1rem">
+            About
+          </Typography>
           {typeof summary === "string" ? (
             <Typography>{summary}</Typography>
           ) : (
             summary
           )}
         </Box>
-        {supportHref || docsHref ? 
+        {supportHref || docsHref ? (
           <Box>
-            {docsHref ? 
+            {docsHref ? (
               <>
-                <Typography variant="h2">Support</Typography>
-                <Typography
-                  display="flex"
-                  gap={0.5}
-                >
+                <Typography variant="h3" my="1rem">
+                  Support
+                </Typography>
+                <Typography display="flex" gap={0.5}>
                   Want more information about this app?
                   <ExternalLink
                     href={docsHref}
@@ -31,15 +32,11 @@ export const Help = styled(
                     Read the docs
                   </ExternalLink>
                 </Typography>
-              </> : null
-            }
-            {
-              supportHref ? 
+              </>
+            ) : null}
+            {supportHref ? (
               <>
-                <Typography
-                  display="flex"
-                  gap={0.5}
-                >
+                <Typography display="flex" gap={0.5}>
                   Experiencing issues or want to suggest an improvement?
                   <ExternalLink
                     href={supportHref}
@@ -48,28 +45,23 @@ export const Help = styled(
                     Contact support
                   </ExternalLink>
                 </Typography>
-              </> : null
-            }
-          </Box> : null
-        }
-        {
-          versionHref && version ? 
-          <Box>
-            <Typography
-              fontWeight="bold"
-              display="flex"
-              gap={0.5}
-            >
-              Version:
-              <ExternalLink
-                href={versionHref}
-                label={`version ${version}`}
-              >
+              </>
+            ) : null}
+          </Box>
+        ) : null}
+
+        <Box mt="1rem">
+          <Typography fontWeight="bold" display="flex">
+            Version: {""}
+            {versionHref ? (
+              <ExternalLink href={versionHref} label={`version ${version}`}>
                 {version}
               </ExternalLink>
-            </Typography>
-          </Box> : null
-        }
+            ) : (
+              version
+            )}
+          </Typography>
+        </Box>
       </Stack>
     );
   }

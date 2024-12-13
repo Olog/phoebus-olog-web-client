@@ -10,16 +10,21 @@ const LogHeader = ({ log, className }) => (
     justifyContent="space-between"
     alignItems="center"
     className={className}
+    width="100%"
+    px={3}
+    py={1.5}
   >
-    <KeyValueTable data={[
-      {
-        name: "Author",
-        value: log.owner
-      },
-      {
-        name: "Created",
-        value: <CreatedDate log={log} />
-      }]}
+    <KeyValueTable
+      data={[
+        {
+          name: "Author",
+          value: log.owner,
+        },
+        {
+          name: "Created",
+          value: <CreatedDate log={log} />,
+        },
+      ]}
     />
     <LogDetailActionButton log={log} />
   </Stack>
