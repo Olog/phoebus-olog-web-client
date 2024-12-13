@@ -1,67 +1,128 @@
 import { InputAdornment, Stack } from "@mui/material";
+import { removeEmptyKeys } from "api/ologApi";
 import TextInput from "components/shared/input/TextInput";
-import { ButtonDatePicker, DATE_FORMAT } from "components/shared/input/WizardDateInput";
-import { useAdvancedSearch } from "features/advancedSearchReducer";
-import { defaultSearchParams, updateSearchParams, useSearchParams } from "features/searchParamsReducer";
-import React from "react";
+import {
+  ButtonDatePicker,
+  DATE_FORMAT,
+} from "components/shared/input/WizardDateInput";
+import {
+  defaultSearchParams,
+  updateSearchParams,
+  useSearchParams,
+} from "features/searchParamsReducer";
+import useSanitizedSearchParams, {
+  withoutBetaParams,
+  withoutCacheBust,
+} from "hooks/useSanitizedSearchParams";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import SearchIcon from "@mui/icons-material/Search";
 
 const SimpleSearch = () => {
-
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
-  const { active: advancedSearchActive } = useAdvancedSearch();
+  const { toSearchParams, toQueryString } = useSanitizedSearchParams();
 
   const { control, handleSubmit, setValue, getValues } = useForm({
-    defaultValues: { query: defaultSearchParams.query, start: defaultSearchParams.start },
-    values: { query: searchParams?.query, start: searchParams?.start }
+    defaultValues: {
+      query: defaultSearchParams.query,
+      start: defaultSearchParams.start,
+    },
+    values: { query: searchParams?.query, start: searchParams?.start },
   });
+
+  useEffect(() => {
+    if (searchParams) {
+      setValue(
+        "query",
+        toQueryString(
+          removeEmptyKeys(withoutCacheBust(withoutBetaParams(searchParams)))
+        )
+      );
+    }
+  }, [setValue, searchParams, toQueryString]);
 
   const onAccept = (momentDate) => {
     setValue("start", momentDate.format(DATE_FORMAT));
-    onSubmit(getValues());
-  }
+    onSubmit();
+  };
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
+    const { start, query } = getValues();
+    const sanitizedSearchParams = toSearchParams(query);
+
     const params = {
-      ...searchParams,
-      ...data
-    }
+      ...sanitizedSearchParams,
+      start,
+    };
     dispatch(updateSearchParams(params));
-  }
+  };
 
   return (
     <Stack
-        component="form" 
-        gap={1}
-        width="100%" 
-        onSubmit={handleSubmit(onSubmit)}
+      component="form"
+      gap={1}
+      width="100%"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{
+        flex: 3,
+        padding: "0 16px 0 30px",
+        "& .MuiFormLabel-root[data-shrink='false']": {
+          transform: "translate(14px, 14px)",
+        },
+      }}
     >
-      <TextInput 
+      <TextInput
         control={control}
+        placeholder="Search"
         name="query"
-        label="Search"
         defaultValue=""
         fullWidth
         InputProps={{
-          disabled: advancedSearchActive,
-          endAdornment:
-            <InputAdornment position="end">
-              <ButtonDatePicker 
-                onAccept={onAccept} 
-                ButtonFieldProps={{
-                  inputProps: {
-                    "aria-label": `Select start date/time}`
-                  }
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon
+                sx={{
+                  height: "20px",
+                  width: "20px",
                 }}
-                disabled={advancedSearchActive}
               />
             </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <ButtonDatePicker
+                onAccept={onAccept}
+                ButtonFieldProps={{
+                  inputProps: {
+                    "aria-label": `Select start date/time}`,
+                    size: "small",
+                  },
+                }}
+              />
+            </InputAdornment>
+          ),
+          sx: {
+            fontSize: ".9rem",
+            backgroundColor: "#fafafa",
+            "& .MuiInputBase-input": {
+              padding: "14px 0",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "1.5px solid #E2E8EE",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              border: "1.5px solid #E2E8EE",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              border: "1.5px solid #E2E8EE", // Custom border color when focused
+            },
+          },
         }}
       />
     </Stack>
-  )
+  );
 };
 
 export default SimpleSearch;
