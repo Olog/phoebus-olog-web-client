@@ -158,7 +158,7 @@ const AppNavBar = () => {
                 dispatch(updateSearchParams({ ...defaultSearchParams }))
               }
               to="/beta"
-              sx={{ padding: 0 }}
+              sx={{ padding: "8px", marginLeft: "-8px" }}
             >
               <IconButton
                 sx={{
