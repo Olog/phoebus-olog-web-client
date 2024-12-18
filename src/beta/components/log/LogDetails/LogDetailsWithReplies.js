@@ -124,7 +124,7 @@ const LogDetailsWithReplies = ({ log }) => {
       sx={{
         height: "100%",
         overflow: "auto",
-        padding: "10px 15px",
+        padding: "10px 15px 0 15px",
       }}
     >
       <Box borderRadius="4px" bgcolor="#f2f5f7">
