@@ -29,6 +29,7 @@ export const advancedSearchSlice = createSlice({
         searchParams?.logbooks?.length > 0 && activeFieldCount++;
         searchParams?.tags?.length > 0 && activeFieldCount++;
         searchParams.owner && activeFieldCount++;
+        searchParams.properties && activeFieldCount++;
 
         // If any of the advanced-only fields have values
         // then advanced search is active

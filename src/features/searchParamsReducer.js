@@ -9,6 +9,7 @@ export const defaultSearchParams = {
   query: "",
   title: "",
   desc: "",
+  properties: "",
   owner: "",
   level: undefined,
   start: undefined,

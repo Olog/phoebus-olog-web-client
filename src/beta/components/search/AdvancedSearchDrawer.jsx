@@ -5,7 +5,7 @@ import WizardDateInput from "components/shared/input/WizardDateInput";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   defaultSearchParams,
   updateSearchParams,
@@ -74,6 +74,12 @@ export const AdvancedSearchDrawer = ({
             <TextInput
               name="desc"
               label="Text"
+              control={control}
+              defaultValue=""
+            />
+            <TextInput
+              name="properties"
+              label="Properties"
               control={control}
               defaultValue=""
             />

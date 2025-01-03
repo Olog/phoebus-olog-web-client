@@ -78,9 +78,6 @@ export const SearchResultSingleItem = ({
           whiteSpace="nowrap"
           variant="body2"
           fontSize=".75rem"
-          fontWeight="bold"
-          color="#0090AD"
-          sx={{ opacity: 0.8, marginRight: "2px" }}
         />
       </Stack>
       <Stack
@@ -93,7 +90,10 @@ export const SearchResultSingleItem = ({
         </Typography>
         <Box>
           {log?.attachments?.length > 0 ? (
-            <AttachFileIcon fontSize="small" />
+            <AttachFileIcon
+              fontSize="small"
+              sx={{ fontSize: "1.2rem", marginRight: "-2px", marginTop: "4px" }}
+            />
           ) : null}
         </Box>
       </Stack>
