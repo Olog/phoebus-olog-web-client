@@ -91,11 +91,11 @@ export const ologApi = createApi({
     keepUnusedDataFor: 0, // Don't cache anything
     endpoints: builder => ({
         searchLogs: builder.query({
-          query: ({query, title, desc, start, end, level, logbooks, tags, owner, attachments, from, size, sort}) => {
+          query: ({query, title, desc, properties, start, end, level, logbooks, tags, owner, attachments, from, size, sort}) => {
             return {
               url: '/logs/search',
               params: { 
-                query, title, desc, start, end, level, logbooks, tags, owner, attachments, from, size, sort
+                query, title, desc, properties, start, end, level, logbooks, tags, owner, attachments, from, size, sort
               }
             }
           }

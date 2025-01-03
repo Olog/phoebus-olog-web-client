@@ -54,8 +54,18 @@ export const SearchParamsBadges = () => {
   const dispatch = useDispatch();
   const onSearch = (vals) => dispatch(updateSearchParams(vals));
 
-  const { title, level, desc, owner, attachments, start, end, tags, logbooks } =
-    searchParams;
+  const {
+    title,
+    level,
+    desc,
+    properties,
+    owner,
+    attachments,
+    start,
+    end,
+    tags,
+    logbooks,
+  } = searchParams;
 
   return (
     <Stack flexDirection="row" gap={0.5} flexWrap="wrap" padding={0.5}>
@@ -82,6 +92,18 @@ export const SearchParamsBadges = () => {
           value={desc}
           onDelete={() =>
             onSearch({ ...searchParams, desc: defaultSearchParams.desc })
+          }
+        />
+      ) : null}
+      {properties ? (
+        <TextChip
+          name="properties"
+          value={properties}
+          onDelete={() =>
+            onSearch({
+              ...searchParams,
+              properties: defaultSearchParams.properties,
+            })
           }
         />
       ) : null}
