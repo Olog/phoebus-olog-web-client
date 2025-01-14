@@ -4,7 +4,7 @@ import { Alert, Snackbar, styled } from "@mui/material";
 import customization from "config/customization";
 
 const errorText =
-  "Misconfigured REACT_APP_LEVEL_VALUES. Please contact your administrator.";
+  "Misconfigured VITE_APP_LEVEL_VALUES. Please contact your administrator.";
 
 const EntryTypeSelect = styled(({ control, className, ...props }) => {
   const [levelValues, setLevelValues] = useState([]);
