@@ -27,12 +27,12 @@ let customization = {
   /**
    * Values for the "level" drop-down.
    */
-  levelValues: process.env.REACT_APP_LEVEL_VALUES,
+  levelValues: import.meta.env.VITE_APP_LEVEL_VALUES,
 
   /**
    * Default "level" for new log entries
    */
-  defaultLevel: process.env.REACT_APP_DEFAULT_LEVEL,
+  defaultLevel: import.meta.env.VITE_APP_DEFAULT_LEVEL,
 
   /**
    * Specifies whether to support grouping of log entries.
@@ -80,21 +80,22 @@ let customization = {
   /**
    * Base URL pointing to the Olog service. Required in order to support imbedded into the description (body) of a log entry.
    */
-  APP_BASE_URL: process.env.REACT_APP_BASE_URL, // e.g. http://localhost:8080/Olog
+  APP_BASE_URL: import.meta.env.VITE_APP_BASE_URL, // e.g. http://localhost:8080/Olog
 
   /**
    * Enable/Disable the beta feature
    */
-  ENABLE_BETA: process.env.REACT_APP_ENABLE_BETA === "true",
+  ENABLE_BETA: import.meta.env.VITE_APP_ENABLE_BETA === "true",
 
   /**
    * Support and Docs URLs for Help page
    */
   DOCS_HREF:
-    process.env.REACT_APP_DOCS_HREF ?? "https://olog.readthedocs.io/en/latest/",
-  SUPPORT_HREF: process.env.REACT_APP_SUPPORT_HREF,
-  VERSION: process.env.REACT_APP_VERSION ?? packageInfo.version,
-  VERSION_HREF: process.env.REACT_APP_VERSION_HREF,
+    import.meta.env.VITE_APP_DOCS_HREF ??
+    "https://olog.readthedocs.io/en/latest/",
+  SUPPORT_HREF: import.meta.env.VITE_APP_SUPPORT_HREF,
+  VERSION: import.meta.env.VITE_APP_VERSION ?? packageInfo.version,
+  VERSION_HREF: import.meta.env.VITE_APP_VERSION_HREF,
 };
 
 export default customization;

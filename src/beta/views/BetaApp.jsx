@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React from "react";
 import AppNavBar from "beta/components/navigation/AppNavBar";
 import Initialize from "components/Initialize";
 import { Outlet } from "react-router-dom";

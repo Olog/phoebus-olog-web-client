@@ -1,7 +1,6 @@
 # Use the default network olog_default.
 version: "3.7"
 services:
-
   fe-olog-e2e-tests:
     build: ./e2e
     depends_on:
@@ -17,7 +16,7 @@ services:
     volumes:
       - ./e2e/cypress/screenshots:/e2e/cypress/screenshots
       - ./e2e/cypress/videos:/e2e/cypress/videos
-    entrypoint: > 
+    entrypoint: >
       /bin/bash -c "
           while ! curl -s -f http://localhost:3000;
         do
@@ -29,12 +28,12 @@ services:
 
   fe-olog:
     build: .
-    ports: 
+    ports:
       - "3000:3000"
     depends_on:
       - fe-olog-service
     environment:
-      REACT_APP_BASE_URL: http://localhost:8080/Olog
+      VITE_APP_BASE_URL: http://localhost:8080/Olog
     command: >
       /bin/bash -c "
           while ! curl -s -f fe-olog-service:8080/Olog;
