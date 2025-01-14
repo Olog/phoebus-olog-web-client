@@ -6,11 +6,11 @@ import {
   AccordionSummary,
   AccordionDetails,
   useMediaQuery,
-  styled
+  styled,
 } from "@mui/material";
 import { element, object, string } from "prop-types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import theme from "config/theme";
+import { theme } from "config/theme";
 import { ExternalButtonLink, InternalButtonLink } from "components/shared/Link";
 
 const propTypes = {
@@ -27,104 +27,90 @@ const propTypes = {
   /** Additional props for the title typography; e.g. to override the variant or component */
   titleProps: object,
   /** Additional props for the subtitle typography; e.g. to override the variant or component */
-  subtitleProps: object
+  subtitleProps: object,
 };
 
-const ErrorPage = styled(({
-  title,
-  subtitle,
-  details,
-  SecondaryActionComponent,
-  supportHref,
-  homeHref="/",
-  titleProps,
-  subtitleProps,
-  className
-}) => {
-  const [showDetails, setShowDetails] = useState(false);
-  const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
+const ErrorPage = styled(
+  ({
+    title,
+    subtitle,
+    details,
+    SecondaryActionComponent,
+    supportHref,
+    homeHref = "/",
+    titleProps,
+    subtitleProps,
+    className,
+  }) => {
+    const [showDetails, setShowDetails] = useState(false);
+    const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const toggleDetails = () => {
-    setShowDetails(!showDetails);
-  };
+    const toggleDetails = () => {
+      setShowDetails(!showDetails);
+    };
 
-  return (
-    <>
-      <Box
-        className={className}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        gap={2}
-      >
-        <Typography
-          variant="h3"
-          {...subtitleProps}
-        >
-          {subtitle}
-        </Typography>
-        <Typography
-          variant="h2"
-          {...titleProps}
-        >
-          {title}
-        </Typography>
-        {details ? (
-          <Accordion
-            expanded={showDetails}
-            onChange={toggleDetails}
-            sx={{ maxWidth: isDesktop ? "50%" : "100%" }}
-          >
-            <AccordionSummary
-              id="error-details-header"
-              aria-controls="error-details-content"
-              expandIcon={<ExpandMoreIcon />}
-            >
-              <Typography variant="body1">
-                {showDetails ? "Hide Details" : "Show Details"}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails
-              sx={{
-                whiteSpace: "pre",
-                overflow: "scroll"
-              }}
-            >
-              <Typography
-                variant="body2"
-                fontFamily="monospace"
-              >
-                {details}
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-        ) : null}
+    return (
+      <>
         <Box
+          className={className}
           display="flex"
-          justifyContent="center"
+          flexDirection="column"
+          alignItems="center"
           gap={2}
         >
-          {SecondaryActionComponent ?? (
-            <InternalButtonLink
-              variant="contained"
-              to={homeHref}
+          <Typography variant="h3" {...subtitleProps}>
+            {subtitle}
+          </Typography>
+          <Typography variant="h2" {...titleProps}>
+            {title}
+          </Typography>
+          {details ? (
+            <Accordion
+              expanded={showDetails}
+              onChange={toggleDetails}
+              sx={{ maxWidth: isDesktop ? "50%" : "100%" }}
             >
-              Return to Home
-            </InternalButtonLink>
-          )}
-
-          {supportHref ? (
-            <ExternalButtonLink
-              href={supportHref}
-              text="Contact Support"
-              variant="outlined"
-            />
+              <AccordionSummary
+                id="error-details-header"
+                aria-controls="error-details-content"
+                expandIcon={<ExpandMoreIcon />}
+              >
+                <Typography variant="body1">
+                  {showDetails ? "Hide Details" : "Show Details"}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails
+                sx={{
+                  whiteSpace: "pre",
+                  overflow: "scroll",
+                }}
+              >
+                <Typography variant="body2" fontFamily="monospace">
+                  {details}
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
           ) : null}
+          <Box display="flex" justifyContent="center" gap={2}>
+            {SecondaryActionComponent ?? (
+              <InternalButtonLink variant="contained" to={homeHref}>
+                Return to Home
+              </InternalButtonLink>
+            )}
+
+            {supportHref ? (
+              <ExternalButtonLink
+                href={supportHref}
+                text="Contact Support"
+                variant="outlined"
+              />
+            ) : null}
+          </Box>
         </Box>
-      </Box>
-    </>
-  );
-})({})
+      </>
+    );
+  }
+)({});
 ErrorPage.propTypes = propTypes;
 
 export default ErrorPage;

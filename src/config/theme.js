@@ -74,7 +74,7 @@ theme = createTheme(theme, {
   },
 });
 
-// Compose remaining overrides
+// // Compose remaining overrides
 theme = createTheme(theme, {
   palette: {
     primary: theme.palette.augmentColor({
@@ -115,5 +115,3 @@ theme = createTheme(theme, {
     },
   },
 });
-
-export default theme;

@@ -16,15 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import theme from "config/theme";
+import { theme } from "config/theme";
 
-const MuiThemeProvider = ({children, ...props}) => {
-    return (
-        <ThemeProvider theme={theme} {...props}>
-            <CssBaseline />
-            {children}
-        </ThemeProvider>
-    )
+const MuiThemeProvider = ({ children, ...props }) => {
+  return (
+    <ThemeProvider theme={theme} {...props}>
+      <CssBaseline />
+      {children}
+    </ThemeProvider>
+  );
 };
 
 export default MuiThemeProvider;

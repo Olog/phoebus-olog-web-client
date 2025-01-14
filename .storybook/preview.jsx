@@ -1,12 +1,11 @@
 import React from "react";
-import { MuiThemeProvider, ReduxProvider } from "../src/providers";
-import { initialize, mswLoader } from 'msw-storybook-addon';
-import {defaultHandlers} from "../src/mocks/handlers";
+import { MuiThemeProvider, ReduxProvider } from "providers";
+import { initialize, mswLoader } from "msw-storybook-addon";
+import { defaultHandlers } from "../src/mocks/handlers";
 
 // Initialize MSW
 initialize({}, defaultHandlers);
 
-/** @type { import('@storybook/react').Preview } */
 const preview = {
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
@@ -20,13 +19,13 @@ const preview = {
   decorators: [
     (Story) => (
       <MuiThemeProvider>
-        <ReduxProvider>  
+        <ReduxProvider>
           <Story />
         </ReduxProvider>
       </MuiThemeProvider>
-    )
+    ),
   ],
-  loaders: [mswLoader]
+  loaders: [mswLoader],
 };
 
 export default preview;

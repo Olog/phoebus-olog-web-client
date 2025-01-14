@@ -12,7 +12,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useShowLogout } from "features/authSlice";
 import UserAvatar from "beta/components/common/UserAvatar";
-import theme from "config/theme";
+import { theme } from "config/theme";
 const UserMenu = ({ user }) => {
   const { setShowLogout } = useShowLogout();
 

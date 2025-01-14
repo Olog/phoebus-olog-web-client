@@ -6,8 +6,8 @@ module.exports = defineConfig({
     viewportHeight: 660,
     viewportWidth: 1000,
     devServer: {
-      framework: "create-react-app",
-      bundler: "webpack",
+      framework: "react",
+      bundler: "vite",
     },
   },
 });
