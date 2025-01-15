@@ -15,63 +15,62 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import { useState, useEffect } from 'react';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useDispatch } from 'react-redux';
-import { updateCurrentLogEntry } from 'features/currentLogEntryReducer';
-import { Button, Stack } from '@mui/material';
-import useBetaNavigate from 'hooks/useBetaNavigate';
+import { useState, useEffect } from "react";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useDispatch } from "react-redux";
+import { Button, Stack } from "@mui/material";
+import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
+import useBetaNavigate from "hooks/useBetaNavigate";
 
-const NavigationButtons = ({
-    currentLogEntry,
-    searchResults,
-    ...props
-}) => { 
+const NavigationButtons = ({ currentLogEntry, searchResults, ...props }) => {
+  const navigate = useBetaNavigate();
+  const dispatch = useDispatch();
+  const [previousLogEntry, setPreviousLogEntry] = useState();
+  const [nextLogEntry, setNextLogEntry] = useState();
 
-    const navigate = useBetaNavigate();
-    const dispatch = useDispatch();
-    const [previousLogEntry, setPreviousLogEntry] = useState();
-    const [nextLogEntry, setNextLogEntry] = useState();
+  const navigateToLogEntry = (logEntry) => {
+    if (logEntry) {
+      dispatch(updateCurrentLogEntry(logEntry));
+      navigate("/logs/" + logEntry.id);
+    }
+  };
 
-    const navigateToLogEntry = (logEntry) => {
-        if(logEntry) {
-            dispatch(updateCurrentLogEntry(logEntry));
-            navigate('/logs/' + logEntry.id);
-        }
-    };
+  useEffect(() => {
+    // Get the index of the current log entry; note findIndex returns -1 if no result
+    // This should only happen when navigating to a log entry directly, without searching first
+    // todo: clear search results if navigating directly
+    const currentIndex = searchResults?.logs?.findIndex(
+      (item) => item.id === currentLogEntry.id
+    );
+    if (currentIndex >= 0) {
+      setPreviousLogEntry(searchResults.logs[currentIndex - 1]);
+      setNextLogEntry(searchResults.logs[currentIndex + 1]);
+    }
+  }, [currentLogEntry, searchResults]);
 
-    useEffect(() => {
-        // Get the index of the current log entry; note findIndex returns -1 if no result
-        // This should only happen when navigating to a log entry directly, without searching first
-        // todo: clear search results if navigating directly
-        const currentIndex = searchResults?.logs?.findIndex(item => item.id === currentLogEntry.id);
-        if(currentIndex >= 0) {
-            setPreviousLogEntry(searchResults.logs[currentIndex - 1]);
-            setNextLogEntry(searchResults.logs[currentIndex + 1]);
-        }
-    }, [currentLogEntry, searchResults]);
-
-    return (
-        <Stack flexDirection="row" gap={1} {...props}>
-            <Button 
-                variant="contained"
-                disabled={!previousLogEntry}
-                onClick={() => navigateToLogEntry(previousLogEntry)}
-            >
-                <ArrowBackIcon titleAccess="previous log entry" />
-            </Button>
-            <Button 
-                variant="contained"
-                disabled={!nextLogEntry}
-                onClick={() => navigateToLogEntry(nextLogEntry)}
-            >
-                <ArrowForwardIcon titleAccess="next log entry" />
-            </Button>
-        </Stack>
-    )
-
-}
+  return (
+    <Stack
+      flexDirection="row"
+      gap={1}
+      {...props}
+    >
+      <Button
+        variant="contained"
+        disabled={!previousLogEntry}
+        onClick={() => navigateToLogEntry(previousLogEntry)}
+      >
+        <ArrowBackIcon titleAccess="previous log entry" />
+      </Button>
+      <Button
+        variant="contained"
+        disabled={!nextLogEntry}
+        onClick={() => navigateToLogEntry(nextLogEntry)}
+      >
+        <ArrowForwardIcon titleAccess="next log entry" />
+      </Button>
+    </Stack>
+  );
+};
 
 export default NavigationButtons;
-

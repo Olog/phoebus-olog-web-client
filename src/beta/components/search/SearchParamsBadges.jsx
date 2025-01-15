@@ -1,5 +1,5 @@
-import React from "react";
 import { Stack } from "@mui/material";
+import { useDispatch } from "react-redux";
 import { EntryTypeChip } from "../log/EntryTypeChip";
 import { LogbookChip } from "../log/LogbookChip";
 import { TagChip } from "../log/TagChip";
@@ -7,9 +7,8 @@ import { TextChip } from "../log/TextChip";
 import {
   defaultSearchParams,
   updateSearchParams,
-  useSearchParams,
+  useSearchParams
 } from "features/searchParamsReducer";
-import { useDispatch } from "react-redux";
 
 const LogbooksList = ({ logbooks, onChange }) => {
   const onDelete = (logbook) => {
@@ -64,11 +63,16 @@ export const SearchParamsBadges = () => {
     start,
     end,
     tags,
-    logbooks,
+    logbooks
   } = searchParams;
 
   return (
-    <Stack flexDirection="row" gap={0.5} flexWrap="wrap" padding={0.5}>
+    <Stack
+      flexDirection="row"
+      gap={0.5}
+      flexWrap="wrap"
+      padding={0.5}
+    >
       {title ? (
         <TextChip
           name="title"
@@ -102,7 +106,7 @@ export const SearchParamsBadges = () => {
           onDelete={() =>
             onSearch({
               ...searchParams,
-              properties: defaultSearchParams.properties,
+              properties: defaultSearchParams.properties
             })
           }
         />
@@ -123,7 +127,7 @@ export const SearchParamsBadges = () => {
           onDelete={() =>
             onSearch({
               ...searchParams,
-              attachments: defaultSearchParams.attachments,
+              attachments: defaultSearchParams.attachments
             })
           }
         />

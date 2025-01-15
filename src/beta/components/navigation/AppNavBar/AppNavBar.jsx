@@ -27,34 +27,34 @@ import {
   ListItem,
   Divider,
   Badge,
-  Box,
+  Box
 } from "@mui/material";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import Initialize from "components/Initialize";
-import { InternalButtonLink } from "components/shared/Link";
-import { useShowLogin, useUser } from "features/authSlice";
-import React, { useState } from "react";
-import UserMenu from "./UserMenu";
-import LoginDialog from "components/LoginLogout/LoginDialog";
-import LogoutDialog from "components/LoginLogout/LogoutDialog";
+import { useState } from "react";
 import LockIcon from "@mui/icons-material/Lock";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import HomeIcon from "@mui/icons-material/Home";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import HelpCenterIcon from "@mui/icons-material/HelpCenter";
+import { useDispatch } from "react-redux";
+import UserMenu from "./UserMenu";
+import Initialize from "components/Initialize";
+import { InternalButtonLink } from "components/shared/Link";
+import { useShowLogin, useUser } from "features/authSlice";
+import LoginDialog from "components/LoginLogout/LoginDialog";
+import LogoutDialog from "components/LoginLogout/LogoutDialog";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
 import SimpleSearch from "beta/components/search/SimpleSearch";
 import { SortToggleButton } from "beta/components/search/SortToggleButton";
 import { AdvancedSearchDrawer } from "beta/components/search/AdvancedSearchDrawer";
-import { useDispatch } from "react-redux";
 import {
   defaultSearchParams,
   updateSearchParams,
-  useSearchParams,
+  useSearchParams
 } from "features/searchParamsReducer";
 import {
   updateSearchPageParams,
-  useSearchPageParams,
+  useSearchPageParams
 } from "features/searchPageParamsReducer";
 
 const showSearchBoxRegex = /^\/$|^\/beta$|^\/beta\/logs$|^\/beta\/logs\/\d+$/;
@@ -77,7 +77,7 @@ const AppNavBar = () => {
     dispatch(
       updateSearchPageParams({
         ...searchPageParams,
-        dateDescending: !searchPageParams.dateDescending,
+        dateDescending: !searchPageParams.dateDescending
       })
     );
   };
@@ -93,7 +93,7 @@ const AppNavBar = () => {
           backgroundColor: "transparent",
           borderBottom: "1px solid #E2E8EE",
           color: "#0099dc",
-          height: "80px",
+          height: "80px"
         }}
         component={"header"}
         position="static"
@@ -105,12 +105,15 @@ const AppNavBar = () => {
             display: "grid",
             gridTemplateColumns: onHomePage ? "1.15fr auto 2fr" : "auto",
             gridTemplateRows: "1fr",
-            height: "100%",
+            height: "100%"
           }}
         >
           {onHomePage && (
             <>
-              <nav style={{ height: "100%" }} aria-label="app menu">
+              <nav
+                style={{ height: "100%" }}
+                aria-label="app menu"
+              >
                 <Stack
                   flexDirection="row"
                   justifyContent="space-between"
@@ -141,7 +144,10 @@ const AppNavBar = () => {
                   </Box>
                 </Stack>
               </nav>
-              <Divider sx={{ borderColor: "#E2E8EE" }} orientation="vertical" />
+              <Divider
+                sx={{ borderColor: "#E2E8EE" }}
+                orientation="vertical"
+              />
             </>
           )}
           <Stack
@@ -163,13 +169,17 @@ const AppNavBar = () => {
               <IconButton
                 sx={{
                   "&:hover": { background: "transparent" },
-                  padding: "0 0 3px 0",
+                  padding: "0 0 3px 0"
                 }}
                 color="inherit"
               >
                 <HomeIcon titleAccess="home" />
               </IconButton>
-              <Typography ml={1} variant="h6" component="span">
+              <Typography
+                ml={1}
+                variant="h6"
+                component="span"
+              >
                 ESS Logbook
               </Typography>
             </Button>
@@ -178,7 +188,7 @@ const AppNavBar = () => {
                 sx={{
                   display: "flex",
                   padding: "0",
-                  gap: "10px",
+                  gap: "10px"
                 }}
               >
                 {user ? (
@@ -195,7 +205,7 @@ const AppNavBar = () => {
                 <List
                   aria-label="help menu"
                   sx={{
-                    display: "flex",
+                    display: "flex"
                   }}
                 >
                   <ListItem sx={{ padding: 0 }}>

@@ -16,43 +16,49 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import SearchBoxInput from "../shared/input/managed/SearchBoxInput"
-import { Button, Stack, Typography } from "@mui/material"
+import { Button, Stack, Typography } from "@mui/material";
+import SearchBoxInput from "../shared/input/managed/SearchBoxInput";
 
-const SearchBox = ({searchParams, showFilters, setShowFilters, className}) => {
+const SearchBox = ({
+  searchParams,
+  showFilters,
+  setShowFilters,
+  className
+}) => {
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
 
-    const toggleFilters = (e) => {
-        setShowFilters(!showFilters)
-    }
-    
-    return (
-        <Stack gap={0.5} padding={1} className={className} >
-            <SearchBoxInput
-                {...{searchParams, showFilters, isFetching: true}}
-            />
-            <Typography 
-                component={Button} 
-                onClick={(e) => toggleFilters(e)}
-                aria-expanded={showFilters}
-                variant="text"
-                disableRipple
-                fullWidth={false}
-                maxWidth="max-content"
-                padding={0}
-                marginLeft="auto"
-                fontStyle="italic"
-                sx={{
-                    "&:hover, &": {
-                        background: "none",
-                        border: "none",
-                        boxShadow: "none",
-                    }
-                }}
-            >
-                {showFilters ? "Hide Advanced Search" : "Show Advanced Search"}
-            </Typography>
-        </Stack>
-    );
-}
+  return (
+    <Stack
+      gap={0.5}
+      padding={1}
+      className={className}
+    >
+      <SearchBoxInput {...{ searchParams, showFilters, isFetching: true }} />
+      <Typography
+        component={Button}
+        onClick={(e) => toggleFilters(e)}
+        aria-expanded={showFilters}
+        variant="text"
+        disableRipple
+        fullWidth={false}
+        maxWidth="max-content"
+        padding={0}
+        marginLeft="auto"
+        fontStyle="italic"
+        sx={{
+          "&:hover, &": {
+            background: "none",
+            border: "none",
+            boxShadow: "none"
+          }
+        }}
+      >
+        {showFilters ? "Hide Advanced Search" : "Show Advanced Search"}
+      </Typography>
+    </Stack>
+  );
+};
 
 export default SearchBox;

@@ -1,4 +1,4 @@
-import React from "react";
+import { Fragment } from "react";
 import { Box, Typography } from "@mui/material";
 
 export const KeyValueTable = ({ data }) => (
@@ -6,13 +6,13 @@ export const KeyValueTable = ({ data }) => (
     sx={{
       width: "fit-content",
       display: "grid",
-      gridTemplateColumns: `auto auto`,
+      gridTemplateColumns: "auto auto",
       columnGap: 0.5,
-      rowGap: 0,
+      rowGap: 0
     }}
   >
     {data.map(({ name, value }, i) => (
-      <React.Fragment key={`${name}-${i}`}>
+      <Fragment key={`${name}-${i}`}>
         <Typography
           sx={{ gridColumn: "1" }}
           fontSize="0.875rem"
@@ -20,10 +20,14 @@ export const KeyValueTable = ({ data }) => (
         >
           {name}
         </Typography>
-        <Typography sx={{ gridColumn: "2" }} fontSize="0.875rem" ml={1}>
+        <Typography
+          sx={{ gridColumn: "2" }}
+          fontSize="0.875rem"
+          ml={1}
+        >
           {value}
         </Typography>
-      </React.Fragment>
+      </Fragment>
     ))}
   </Box>
 );

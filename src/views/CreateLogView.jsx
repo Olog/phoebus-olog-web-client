@@ -1,13 +1,9 @@
-import React from "react";
-import CreateLog from "components/log/CreateLog";
+import { CreateLog } from "components/log/CreateLog";
 import useIsAuthenticated from "hooks/useIsAuthenticated";
 
 const CreateLogView = () => {
+  const [isAuthenticated] = useIsAuthenticated();
 
-    const [isAuthenticated] = useIsAuthenticated();
-   
-    return (
-        <CreateLog {...{isAuthenticated}} />
-    );
-}
+  return <CreateLog {...{ isAuthenticated }} />;
+};
 export default CreateLogView;

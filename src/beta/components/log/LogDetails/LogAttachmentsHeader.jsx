@@ -1,4 +1,3 @@
-import React from "react";
 import { Stack, Typography, styled } from "@mui/material";
 import AttachmentsGallery from "./AttachmentsGallery";
 import OlogAttachment from "components/log/EntryEditor/Description/OlogAttachment";
@@ -9,7 +8,10 @@ export const LogAttachmentsHeader = styled(({ log, className }) => {
   }
 
   return (
-    <Stack className={className} mb={2}>
+    <Stack
+      className={className}
+      mb={2}
+    >
       <Typography fontWeight="bold">Attachments</Typography>
       <AttachmentsGallery
         attachments={

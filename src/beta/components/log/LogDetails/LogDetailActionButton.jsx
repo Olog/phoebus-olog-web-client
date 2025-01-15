@@ -1,9 +1,8 @@
-import React from "react";
-import { Button, ButtonGroup } from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import EditIcon from "@mui/icons-material/Edit";
-import { useUser } from "features/authSlice";
 import CopyUrlButton from "./CopyUrlButton";
+import { useUser } from "features/authSlice";
 import { InternalButtonLink } from "components/shared/Link";
 
 const LogDetailActionButton = ({ log }) => {
@@ -16,15 +15,15 @@ const LogDetailActionButton = ({ log }) => {
       sx={
         !user
           ? {
-              "& > button": { borderRadius: "4px" },
+              "& > button": { borderRadius: "4px" }
             }
           : {
               "& > button,a": { borderRadius: "0px" },
               "& > :first-child": {
                 borderRadius: "4px 0 0 4px",
-                marginRight: "-1px",
+                marginRight: "-1px"
               },
-              "& > :last-child": { borderRadius: "0 4px 4px 0" },
+              "& > :last-child": { borderRadius: "0 4px 4px 0" }
             }
       }
     >

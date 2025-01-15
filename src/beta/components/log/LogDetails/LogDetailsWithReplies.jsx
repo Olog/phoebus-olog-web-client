@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import { ologApi } from "api/ologApi";
-import { getLogEntryGroupId } from "components/Properties";
-import { sortByCreatedDate } from "components/log/sort";
+import { useState } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -9,13 +6,15 @@ import {
   Alert,
   Box,
   CircularProgress,
-  Divider,
   Stack,
-  styled,
+  styled
 } from "@mui/material";
 import LogDetails from "./LogDetails";
-import { useSearchPageParams } from "features/searchPageParamsReducer";
 import LogHeader from "./LogHeader";
+import { ologApi } from "api/ologApi";
+import { getLogEntryGroupId } from "components/Properties";
+import { sortByCreatedDate } from "components/log/sort";
+import { useSearchPageParams } from "features/searchPageParamsReducer";
 
 const LogDetailsAccordion = styled(
   ({ log, defaultExpanded = false, className }) => {
@@ -43,8 +42,8 @@ const LogDetailsAccordion = styled(
             "& .MuiAccordionSummary-content, & .MuiAccordionSummary-content.Mui-expanded":
               {
                 padding: "0",
-                margin: "0",
-              },
+                margin: "0"
+              }
           }}
         >
           <LogHeader log={log} />
@@ -60,12 +59,12 @@ const LogDetailsAccordion = styled(
   margin: "0 0 10px 0",
   borderRadius: "4px",
   "&.Mui-expanded": {
-    margin: "0 0 10px 0",
+    margin: "0 0 10px 0"
   },
   // Get rid of the small line above the accordion
   "&:before": {
-    display: "none",
-  },
+    display: "none"
+  }
 });
 
 const LogDetailsWithReplies = ({ log }) => {
@@ -74,7 +73,7 @@ const LogDetailsWithReplies = ({ log }) => {
   const {
     data: replies = [],
     isLoading: repliesLoading,
-    error: repliesError,
+    error: repliesError
   } = ologApi.endpoints.getLogGroup.useQuery({ groupId });
 
   const { dateDescending } = useSearchPageParams();
@@ -96,7 +95,7 @@ const LogDetailsWithReplies = ({ log }) => {
   if (replies?.length > 0) {
     const sortedLogs = [
       log,
-      ...replies.filter((it) => it.id !== log.id),
+      ...replies.filter((it) => it.id !== log.id)
     ].toSorted(sortByCreatedDate(dateDescending));
     const parentLog = sortedLogs.pop();
     sortedLogs.unshift(parentLog);
@@ -104,7 +103,7 @@ const LogDetailsWithReplies = ({ log }) => {
       <Stack
         sx={{
           overflow: "auto",
-          padding: "10px 15px",
+          padding: "10px 15px"
         }}
       >
         {sortedLogs.map((sortedLog) => (
@@ -124,10 +123,13 @@ const LogDetailsWithReplies = ({ log }) => {
       sx={{
         height: "100%",
         overflow: "auto",
-        padding: "10px 15px 0 15px",
+        padding: "10px 15px 0 15px"
       }}
     >
-      <Box borderRadius="4px" bgcolor="#f2f5f7">
+      <Box
+        borderRadius="4px"
+        bgcolor="#f2f5f7"
+      >
         <LogHeader log={log} />
       </Box>
       <LogDetails log={log} />

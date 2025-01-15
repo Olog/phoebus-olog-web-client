@@ -18,9 +18,8 @@
 
 import queryStringParser from "query-string";
 import { useCallback } from "react";
-import { ologApi } from "api/ologApi";
 import { v4 as uuidv4 } from "uuid";
-import { defaultSearchParams } from "features/searchParamsReducer";
+import { ologApi } from "api/ologApi";
 
 const supportedKeys = [
   "desc",
@@ -33,13 +32,13 @@ const supportedKeys = [
   "level",
   "properties",
   "attachments",
-  "query",
+  "query"
 ];
 
 const options = {
   arrayFormat: "comma",
   sort: false,
-  encode: false,
+  encode: false
 };
 
 const asArray = (obj) => {
@@ -58,7 +57,7 @@ const asArray = (obj) => {
 export function queryStringToSearchParameters({
   queryString,
   availableTags = [],
-  availableLogbooks = [],
+  availableLogbooks = []
 }) {
   let result = queryStringParser.parse(queryString, options);
 
@@ -95,7 +94,7 @@ export function searchParamsToQueryString({ searchParams }) {
 export function withCacheBust(searchParams) {
   return {
     ...searchParams,
-    cacheBust: uuidv4(),
+    cacheBust: uuidv4()
   };
 }
 
@@ -125,7 +124,7 @@ const useSanitizedSearchParams = () => {
       return queryStringToSearchParameters({
         queryString: input,
         availableTags: tags,
-        availableLogbooks: logbooks,
+        availableLogbooks: logbooks
       });
     },
     [tags, logbooks]
@@ -137,7 +136,7 @@ const useSanitizedSearchParams = () => {
 
   return {
     toSearchParams,
-    toQueryString,
+    toQueryString
   };
 };
 export default useSanitizedSearchParams;

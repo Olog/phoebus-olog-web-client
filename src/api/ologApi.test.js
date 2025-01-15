@@ -1,63 +1,57 @@
+import { describe, test, expect } from "vitest";
 import { removeEmptyKeys } from "./ologApi";
 
 describe("removeEmtpyKeys util", () => {
+  test("Empty lists are removed", () => {
+    const result = removeEmptyKeys({
+      foo: ["bar"],
+      baz: []
+    });
 
-    test("Empty lists are removed", () => {
-    
-        const result = removeEmptyKeys({
-            foo: ["bar"],
-            baz: []
-        })
-    
-        expect(result).toEqual({
-            foo: ["bar"]
-        })
-    
+    expect(result).toEqual({
+      foo: ["bar"]
     });
-    
-    test("empty strings are removed", () => {
-    
-        const result = removeEmptyKeys({
-            foo: "bar",
-            baz: ""
-        })
-    
-        expect(result).toEqual({
-            foo: "bar"
-        })
-        
+  });
+
+  test("empty strings are removed", () => {
+    const result = removeEmptyKeys({
+      foo: "bar",
+      baz: ""
     });
-    
-    test("null and undefined values are removed", () => {
-    
-        const result = removeEmptyKeys({
-            foo: "bar",
-            baz: null,
-            phooey: undefined
-        })
-    
-        expect(result).toEqual({
-            foo: "bar"
-        })
-    
+
+    expect(result).toEqual({
+      foo: "bar"
     });
-    
-    test("exceptions are excluded", () => {
-    
-        const result = removeEmptyKeys({
-            foo: "bar",
-            baz: null,
-            phooey: undefined,
-            whamo: []
-        }, ["baz", "phooey", "whamo"]);
-    
-        expect(result).toEqual({
-            foo: "bar",
-            baz: null,
-            phooey: undefined,
-            whamo: []
-        })
-    
+  });
+
+  test("null and undefined values are removed", () => {
+    const result = removeEmptyKeys({
+      foo: "bar",
+      baz: null,
+      phooey: undefined
     });
-    
+
+    expect(result).toEqual({
+      foo: "bar"
+    });
+  });
+
+  test("exceptions are excluded", () => {
+    const result = removeEmptyKeys(
+      {
+        foo: "bar",
+        baz: null,
+        phooey: undefined,
+        whamo: []
+      },
+      ["baz", "phooey", "whamo"]
+    );
+
+    expect(result).toEqual({
+      foo: "bar",
+      baz: null,
+      phooey: undefined,
+      whamo: []
+    });
+  });
 });

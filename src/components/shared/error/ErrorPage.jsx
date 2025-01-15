@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Typography,
   Box,
@@ -6,7 +6,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   useMediaQuery,
-  styled,
+  styled
 } from "@mui/material";
 import { element, object, string } from "prop-types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -27,10 +27,10 @@ const propTypes = {
   /** Additional props for the title typography; e.g. to override the variant or component */
   titleProps: object,
   /** Additional props for the subtitle typography; e.g. to override the variant or component */
-  subtitleProps: object,
+  subtitleProps: object
 };
 
-const ErrorPage = styled(
+export const ErrorPage = styled(
   ({
     title,
     subtitle,
@@ -40,7 +40,7 @@ const ErrorPage = styled(
     homeHref = "/",
     titleProps,
     subtitleProps,
-    className,
+    className
   }) => {
     const [showDetails, setShowDetails] = useState(false);
     const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
@@ -58,10 +58,16 @@ const ErrorPage = styled(
           alignItems="center"
           gap={2}
         >
-          <Typography variant="h3" {...subtitleProps}>
+          <Typography
+            variant="h3"
+            {...subtitleProps}
+          >
             {subtitle}
           </Typography>
-          <Typography variant="h2" {...titleProps}>
+          <Typography
+            variant="h2"
+            {...titleProps}
+          >
             {title}
           </Typography>
           {details ? (
@@ -82,18 +88,28 @@ const ErrorPage = styled(
               <AccordionDetails
                 sx={{
                   whiteSpace: "pre",
-                  overflow: "scroll",
+                  overflow: "scroll"
                 }}
               >
-                <Typography variant="body2" fontFamily="monospace">
+                <Typography
+                  variant="body2"
+                  fontFamily="monospace"
+                >
                   {details}
                 </Typography>
               </AccordionDetails>
             </Accordion>
           ) : null}
-          <Box display="flex" justifyContent="center" gap={2}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            gap={2}
+          >
             {SecondaryActionComponent ?? (
-              <InternalButtonLink variant="contained" to={homeHref}>
+              <InternalButtonLink
+                variant="contained"
+                to={homeHref}
+              >
                 Return to Home
               </InternalButtonLink>
             )}

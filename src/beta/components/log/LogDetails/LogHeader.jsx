@@ -1,4 +1,3 @@
-import React from "react";
 import { Stack } from "@mui/material";
 import LogDetailActionButton from "./LogDetailActionButton";
 import { CreatedDate } from "./CreatedDate";
@@ -18,12 +17,12 @@ const LogHeader = ({ log, className }) => (
       data={[
         {
           name: "Author",
-          value: log.owner,
+          value: log.owner
         },
         {
           name: "Created",
-          value: <CreatedDate log={log} />,
-        },
+          value: <CreatedDate log={log} />
+        }
       ]}
     />
     <LogDetailActionButton log={log} />

@@ -1,13 +1,11 @@
-import React from "react";
 import { useController } from "react-hook-form";
-import { TextField } from "@mui/material";
-import { styled } from "@mui/material";
+import { TextField, styled } from "@mui/material";
 
 export const TextInput = styled(
-  ({ name, label, control, rules, defaultValue, className, ...props }) => {
+  ({ name, label, control, rules, defaultValue, ...props }) => {
     const {
-      field: { ref, ...field },
-      fieldState,
+      field: { ...field },
+      fieldState
     } = useController({ name, control, rules, defaultValue });
 
     return (

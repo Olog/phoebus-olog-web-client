@@ -16,35 +16,35 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React from 'react';
 import { Outlet } from "react-router-dom";
-import Banner from '../components/Banner';
-import { Box, Stack } from '@mui/material';
-import Initialize from '../components/Initialize';
+import { Box, Stack } from "@mui/material";
+import { Banner } from "../components/Banner";
+import Initialize from "../components/Initialize";
 
 /**
  * Entry point component.
  */
 const App = () => {
-
-    return(
-        <Stack id='app-viewport' 
-            height="100vh"
+  return (
+    <Stack
+      id="app-viewport"
+      height="100vh"
+    >
+      <Initialize>
+        <Banner />
+        <Box
+          id="app-content"
+          sx={{
+            overflow: "auto",
+            height: "100%",
+            padding: 1
+          }}
         >
-            <Initialize>
-                <Banner />
-                <Box id='app-content' 
-                    sx={{
-                        overflow: "auto",
-                        height: "100%",
-                        padding: 1
-                    }}
-                >
-                    <Outlet />
-                </Box>
-            </Initialize>
-        </Stack>
-    );
-}
+          <Outlet />
+        </Box>
+      </Initialize>
+    </Stack>
+  );
+};
 
 export default App;

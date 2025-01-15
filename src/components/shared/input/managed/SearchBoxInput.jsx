@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import { useState } from "react";
-import useSanitizedSearchParams, {
-  withoutBetaParams,
-  withoutCacheBust,
-} from "hooks/useSanitizedSearchParams";
 import { useDispatch } from "react-redux";
-import { updateSearchParams } from "features/searchParamsReducer";
 import { InputAdornment, Link, OutlinedInput, styled } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
+import { updateSearchParams } from "features/searchParamsReducer";
+import useSanitizedSearchParams, {
+  withoutBetaParams,
+  withoutCacheBust
+} from "hooks/useSanitizedSearchParams";
 import { removeEmptyKeys } from "api/ologApi";
 import customization from "config/customization";
 
@@ -69,7 +68,7 @@ const SearchBoxInput = styled(({ searchParams, showFilters, className }) => {
       onKeyDown={onKeyDown}
       inputProps={{
         type: "search",
-        "aria-label": "Search Logs",
+        "aria-label": "Search Logs"
       }}
       endAdornment={
         <InputAdornment position="end">
@@ -79,7 +78,7 @@ const SearchBoxInput = styled(({ searchParams, showFilters, className }) => {
             aria-label="Logbook Search Help Reference, opens in new tab"
             sx={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "center"
             }}
           >
             <HelpIcon color="primary" />

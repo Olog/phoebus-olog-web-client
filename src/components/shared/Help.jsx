@@ -1,13 +1,18 @@
 import { Box, Stack, Typography, styled } from "@mui/material";
-import React from "react";
 import { ExternalLink } from "./Link";
 
 export const Help = styled(
   ({ summary, docsHref, supportHref, version, versionHref, className }) => {
     return (
-      <Stack className={className} gap={1}>
+      <Stack
+        className={className}
+        gap={1}
+      >
         <Box>
-          <Typography variant="h3" my="1rem">
+          <Typography
+            variant="h3"
+            my="1rem"
+          >
             About
           </Typography>
           {typeof summary === "string" ? (
@@ -20,10 +25,16 @@ export const Help = styled(
           <Box>
             {docsHref ? (
               <>
-                <Typography variant="h3" my="1rem">
+                <Typography
+                  variant="h3"
+                  my="1rem"
+                >
                   Support
                 </Typography>
-                <Typography display="flex" gap={0.5}>
+                <Typography
+                  display="flex"
+                  gap={0.5}
+                >
                   Want more information about this app?
                   <ExternalLink
                     href={docsHref}
@@ -36,7 +47,10 @@ export const Help = styled(
             ) : null}
             {supportHref ? (
               <>
-                <Typography display="flex" gap={0.5}>
+                <Typography
+                  display="flex"
+                  gap={0.5}
+                >
                   Experiencing issues or want to suggest an improvement?
                   <ExternalLink
                     href={supportHref}
@@ -51,10 +65,16 @@ export const Help = styled(
         ) : null}
 
         <Box mt="1rem">
-          <Typography fontWeight="bold" display="flex">
+          <Typography
+            fontWeight="bold"
+            display="flex"
+          >
             Version: {""}
             {versionHref ? (
-              <ExternalLink href={versionHref} label={`version ${version}`}>
+              <ExternalLink
+                href={versionHref}
+                label={`version ${version}`}
+              >
                 {version}
               </ExternalLink>
             ) : (

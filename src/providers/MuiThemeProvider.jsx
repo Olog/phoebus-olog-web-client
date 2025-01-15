@@ -20,7 +20,10 @@ import { theme } from "config/theme";
 
 const MuiThemeProvider = ({ children, ...props }) => {
   return (
-    <ThemeProvider theme={theme} {...props}>
+    <ThemeProvider
+      theme={theme}
+      {...props}
+    >
       <CssBaseline />
       {children}
     </ThemeProvider>

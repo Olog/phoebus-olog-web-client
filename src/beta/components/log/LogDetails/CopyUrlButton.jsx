@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, Tooltip, styled, tooltipClasses } from "@mui/material";
 import ContentCopyOutlined from "@mui/icons-material/ContentCopyOutlined";
 
 const StyledTooltip = styled(({ className, ...props }) => {
-  return <Tooltip {...props} classes={{ popper: className }} />;
-})(({ theme }) => ({
+  return (
+    <Tooltip
+      {...props}
+      classes={{ popper: className }}
+    />
+  );
+})(() => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "transparent",
-  },
+    backgroundColor: "transparent"
+  }
 }));
 
 const CopyUrlButton = ({ url }) => {
@@ -44,8 +49,8 @@ const CopyUrlButton = ({ url }) => {
             padding: "5px 10px",
             "& .MuiAlert-icon": {
               fontSize: "1.2rem",
-              marginRight: "10px",
-            },
+              marginRight: "10px"
+            }
           }}
         >
           URL copied!
@@ -56,7 +61,7 @@ const CopyUrlButton = ({ url }) => {
       disableHoverListener
       disableTouchListener
       PopperProps={{
-        disablePortal: true,
+        disablePortal: true
       }}
     >
       <Button

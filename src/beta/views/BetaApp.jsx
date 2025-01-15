@@ -16,10 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import AppNavBar from "beta/components/navigation/AppNavBar";
-import Initialize from "components/Initialize";
 import { Outlet } from "react-router-dom";
 import { Box, styled } from "@mui/material";
+import { AppNavBar } from "beta/components/navigation/AppNavBar";
+import Initialize from "components/Initialize";
 
 const BetaApp = styled(({ className }) => {
   return (
@@ -31,7 +31,7 @@ const BetaApp = styled(({ className }) => {
           width: "100dvw",
           display: "grid",
           gridTemplateColumns: "1fr",
-          gridTemplateRows: "min-content 1fr",
+          gridTemplateRows: "min-content 1fr"
         }}
       >
         <AppNavBar />
@@ -41,7 +41,7 @@ const BetaApp = styled(({ className }) => {
   );
 })({
   "& > *": {
-    minHeight: 0,
-  },
+    minHeight: 0
+  }
 });
 export default BetaApp;

@@ -1,21 +1,20 @@
-import React from "react";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Typography,
-  styled,
+  styled
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { KeyValueTable } from "./KeyValueTable";
 
 const AccordionSummaryStyles = {
   "& > .MuiAccordionSummary-content": {
-    margin: "10px 0",
+    margin: "10px 0"
   },
   "& > .MuiAccordionSummary-content.Mui-expanded": {
-    margin: "20px 0 5px",
-  },
+    margin: "20px 0 5px"
+  }
 };
 
 const LogProperty = styled(({ property, className }) => {
@@ -24,14 +23,20 @@ const LogProperty = styled(({ property, className }) => {
   );
 
   return (
-    <Accordion variant="outlined" className={className}>
+    <Accordion
+      variant="outlined"
+      className={className}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls={`${property.name}-content`}
         id={`${property.name}-header`}
         sx={AccordionSummaryStyles}
       >
-        <Typography variant="button" fontSize=".8rem">
+        <Typography
+          variant="button"
+          fontSize=".8rem"
+        >
           {property.name}
         </Typography>
       </AccordionSummary>
@@ -47,12 +52,12 @@ const LogProperty = styled(({ property, className }) => {
   backgroundColor: `${theme.palette.primary.main}10`,
   borderLeft: `${theme.palette.primary.main} solid 5px`,
   "& > .MuiButtonBase-root, .MuiButtonBase-root.Mui-expanded": {
-    minHeight: "auto",
+    minHeight: "auto"
   },
   // Get rid of the small line above the accordion
   "&:before": {
-    display: "none",
-  },
+    display: "none"
+  }
 }));
 
 export default LogProperty;

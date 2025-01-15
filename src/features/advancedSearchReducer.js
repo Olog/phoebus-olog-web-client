@@ -4,7 +4,7 @@ import { searchParamsSlice } from "./searchParamsReducer";
 
 export const defaultAdvancedSearchState = {
   active: false,
-  fieldCount: 0,
+  fieldCount: 0
 };
 
 export const advancedSearchSlice = createSlice({
@@ -20,16 +20,36 @@ export const advancedSearchSlice = createSlice({
         let activeFieldCount = 0;
 
         // Increment field count if advanced-only fields have values
-        searchParams.attachments && activeFieldCount++;
-        searchParams.title && activeFieldCount++;
-        searchParams.desc && activeFieldCount++;
-        searchParams.start && activeFieldCount++;
-        searchParams.end && activeFieldCount++;
-        searchParams.level && activeFieldCount++;
-        searchParams?.logbooks?.length > 0 && activeFieldCount++;
-        searchParams?.tags?.length > 0 && activeFieldCount++;
-        searchParams.owner && activeFieldCount++;
-        searchParams.properties && activeFieldCount++;
+        if (searchParams.attachments) {
+          activeFieldCount++;
+        }
+        if (searchParams.title) {
+          activeFieldCount++;
+        }
+        if (searchParams.desc) {
+          activeFieldCount++;
+        }
+        if (searchParams.start) {
+          activeFieldCount++;
+        }
+        if (searchParams.end) {
+          activeFieldCount++;
+        }
+        if (searchParams.level) {
+          activeFieldCount++;
+        }
+        if (searchParams?.logbooks?.length > 0) {
+          activeFieldCount++;
+        }
+        if (searchParams?.tags?.length > 0) {
+          activeFieldCount++;
+        }
+        if (searchParams.owner) {
+          activeFieldCount++;
+        }
+        if (searchParams.properties) {
+          activeFieldCount++;
+        }
 
         // If any of the advanced-only fields have values
         // then advanced search is active
@@ -42,7 +62,7 @@ export const advancedSearchSlice = createSlice({
         state.fieldCount = activeFieldCount;
       }
     );
-  },
+  }
 });
 
 export const useAdvancedSearch = () =>

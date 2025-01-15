@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, Link as MuiLink, Stack } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { string, bool, object, node } from "prop-types";

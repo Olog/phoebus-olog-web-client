@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Stack, styled } from "@mui/material";
-import { getLogEntryGroupId } from "components/Properties";
-import { SearchResultGroupItem } from "./SearchResultGroupItem/SearchResultGroupItem";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import { SearchResultSingleItem } from "./SearchResultSingleItem";
+import { SearchResultGroupItem } from "./SearchResultGroupItem/SearchResultGroupItem";
+import { getLogEntryGroupId } from "components/Properties";
 import { sortByCreatedDate } from "components/log/sort";
 import {
   updateCurrentLogEntry,
-  useCurrentLogEntry,
+  useCurrentLogEntry
 } from "features/currentLogEntryReducer";
-import { useDispatch } from "react-redux";
 import useBetaNavigate from "hooks/useBetaNavigate";
-import { useParams } from "react-router-dom";
 
 export const SearchResultList = styled(
   ({ logs, dateDescending, className }) => {
@@ -57,9 +57,9 @@ export const SearchResultList = styled(
 
     const logsWithGroupIds = useMemo(
       () =>
-        logs.map((log, i) => ({
+        logs.map((log) => ({
           ...log,
-          groupId: getLogEntryGroupId(log.properties),
+          groupId: getLogEntryGroupId(log.properties)
         })),
       [logs]
     );

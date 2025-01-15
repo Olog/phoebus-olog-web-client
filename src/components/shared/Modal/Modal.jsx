@@ -24,7 +24,7 @@ import {
   IconButton,
   Stack,
   Typography,
-  styled,
+  styled
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -51,7 +51,10 @@ const ModalTitle = styled(({ onClose, className, children }) => {
         aria-label="Close Dialog"
         edge="end"
       >
-        <CloseIcon fontSize="medium" color="ologWhite" />
+        <CloseIcon
+          fontSize="medium"
+          color="ologWhite"
+        />
       </IconButton>
     </Stack>
   );
@@ -64,13 +67,13 @@ const Modal = ({
   open,
   onClose,
   className,
-  DialogProps = {},
+  DialogProps = {}
 }) => {
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      fullWidth={true}
+      fullWidth
       maxWidth="md"
       {...DialogProps}
     >

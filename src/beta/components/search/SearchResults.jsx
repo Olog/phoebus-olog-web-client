@@ -6,19 +6,19 @@ import {
   Stack,
   TablePagination,
   Typography,
-  styled,
+  styled
 } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { SearchResultList } from "./SearchResultList";
+import { SearchParamsBadges } from "./SearchParamsBadges";
 import { ologApi, removeEmptyKeys } from "api/ologApi";
 import customization from "config/customization";
 import {
   updateSearchPageParams,
-  useSearchPageParams,
+  useSearchPageParams
 } from "features/searchPageParamsReducer";
 import { useSearchParams } from "features/searchParamsReducer";
-import React, { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
-import SearchResultList from "./SearchResultList";
-import { SearchParamsBadges } from "./SearchParamsBadges";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
 import { withCacheBust } from "hooks/useSanitizedSearchParams";
 
@@ -40,13 +40,13 @@ export const SearchResults = styled(({ className }) => {
   const searchLogsQuery = useMemo(() => {
     let params = {
       ...searchPageParams,
-      sort: searchPageParams.dateDescending ? "down" : "up",
+      sort: searchPageParams.dateDescending ? "down" : "up"
     };
 
     if (advancedSearchActive) {
       params = {
         ...params,
-        ...searchParams,
+        ...searchParams
       };
       if (params.tags) {
         params.tags = params.tags.map((it) => it.name);
@@ -61,7 +61,7 @@ export const SearchResults = styled(({ className }) => {
       params = {
         ...params,
         query: searchParams.query,
-        start: searchParams.start,
+        start: searchParams.start
       };
     }
 
@@ -71,14 +71,14 @@ export const SearchResults = styled(({ className }) => {
   const {
     data: searchResults = {
       logs: [],
-      hitCount: 0,
+      hitCount: 0
     },
     error,
-    isLoading: loading,
+    isLoading: loading
   } = ologApi.endpoints.searchLogs.useQuery(searchLogsQuery, {
     pollingInterval: customization.defaultSearchFrequency,
     refetchOnMountOrArgChange: true,
-    refetchOnFocus: true,
+    refetchOnFocus: true
   });
 
   const count = searchResults?.hitCount ?? 0;
@@ -96,7 +96,7 @@ export const SearchResults = styled(({ className }) => {
       updateSearchPageParams({
         from: page * pageSize,
         size: pageSize,
-        dateDescending: searchPageParams?.dateDescending,
+        dateDescending: searchPageParams?.dateDescending
       })
     );
   }, [dispatch, page, pageSize, searchPageParams.dateDescending]);
@@ -139,7 +139,11 @@ export const SearchResults = styled(({ className }) => {
           dateDescending={searchPageParams?.dateDescending}
         />
       ) : (
-        <Box flex={1} py={2} px={4}>
+        <Box
+          flex={1}
+          py={2}
+          px={4}
+        >
           <Typography>No records found</Typography>
         </Box>
       )}
@@ -161,8 +165,8 @@ export const SearchResults = styled(({ className }) => {
           borderTop: "1px solid #bdbdbd",
           height: "auto",
           "&:last-child": {
-            paddingRight: "20px",
-          },
+            paddingRight: "20px"
+          }
         }}
       />
     </Stack>

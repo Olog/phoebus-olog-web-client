@@ -1,8 +1,8 @@
-import CommonMark from "components/shared/CommonMark";
+import { CommonMark } from "components/shared/CommonMark";
 
 export default {
   title: "Common/CommonMark",
-  component: CommonMark,
+  component: CommonMark
 };
 
 const source = `# Heading 1
@@ -25,11 +25,11 @@ Resized Image:
 ![Stretched React Logo](./logo192.png){width=200 height=50}
 
 BlockQuotes:
-> *Lorem ipsum dolor sit amet consectetur adipisicing 
-elit. Voluptas, quasi ut voluptates quo necessitatibus similique 
+> *Lorem ipsum dolor sit amet consectetur adipisicing
+elit. Voluptas, quasi ut voluptates quo necessitatibus similique
 blanditiis illo, repellat enim error quidem qui quam, ab recusandae!*
 
-Horizontal Rule: 
+Horizontal Rule:
 
 ---
 
@@ -42,7 +42,7 @@ Unordered List:
             * Sweet
             * Spicy
     * Objects
-        * Fire Hydrant 
+        * Fire Hydrant
 * Green
 * Blue
 
@@ -63,12 +63,12 @@ Ordered List:
     1. Summary
     1. Closing
 
-This is \`inline code\` whereas the below is: 
+This is \`inline code\` whereas the below is:
 
 \`\`\`
 // Block Code
 const sayHello = (name) => {
-    console.log(\`Hello, $\{name\}!\`);
+    console.log(\`Hello, $\{name}!\`);
 };
 sayHello("World");
 \`\`\`
@@ -83,6 +83,6 @@ Table:
 
 export const Default = {
   args: {
-    commonmarkSrc: source,
-  },
+    commonmarkSrc: source
+  }
 };

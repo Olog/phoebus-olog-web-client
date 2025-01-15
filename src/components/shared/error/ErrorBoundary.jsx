@@ -1,8 +1,8 @@
 import { Button, styled } from "@mui/material";
-import ErrorPage from "./ErrorPage";
 import { useCallback } from "react";
-import { useEffectOnMount } from "src/hooks/useMountEffects";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
+import { ErrorPage } from "./ErrorPage";
+import { useEffectOnMount } from "src/hooks/useMountEffects";
 import { theme } from "config/theme";
 
 function ReturnHomeButton({ resetErrorBoundary }) {

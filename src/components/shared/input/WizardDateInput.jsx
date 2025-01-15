@@ -23,7 +23,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
-  styled,
+  styled
 } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useController } from "react-hook-form";
@@ -50,7 +50,11 @@ const CustomActionBar = ({
     switch (actionType) {
       case "clear":
         return (
-          <Button onClick={onClear} key={actionType} variant="contained">
+          <Button
+            onClick={onClear}
+            key={actionType}
+            variant="contained"
+          >
             {localeText.clearButtonLabel}
           </Button>
         );
@@ -69,7 +73,11 @@ const CustomActionBar = ({
 
       case "accept":
         return (
-          <Button onClick={onAccept} key={actionType} variant="contained">
+          <Button
+            onClick={onAccept}
+            key={actionType}
+            variant="contained"
+          >
             {localeText.okButtonLabel}
           </Button>
         );
@@ -99,7 +107,7 @@ const ButtonField = ({
   id,
   disabled,
   InputProps: { ref } = {},
-  inputProps: { "aria-label": ariaLabel } = {},
+  inputProps: { "aria-label": ariaLabel } = {}
 }) => {
   return (
     <IconButton
@@ -123,22 +131,22 @@ export const ButtonDatePicker = ({ slots, ButtonFieldProps, ...props }) => {
       slots={{
         field: ButtonField,
         actionBar: CustomActionBar,
-        ...slots,
+        ...slots
       }}
       slotProps={{
         field: { setOpen, ...ButtonFieldProps },
         actionBar: {
-          actions: ["today", "cancel", "accept"],
+          actions: ["today", "cancel", "accept"]
         },
         layout: {
           sx: {
             [`.${pickersLayoutClasses.actionBar}`]: {
               "button:first-of-type": {
-                marginRight: "auto",
-              },
-            },
-          },
-        },
+                marginRight: "auto"
+              }
+            }
+          }
+        }
       }}
       open={open}
       onClose={() => setOpen(false)}
@@ -161,14 +169,13 @@ const WizardDateInput = styled(
     rules,
     defaultValue,
     onChange = defaultOnChange,
-    className,
     DatePickerProps,
     ...props
   }) => {
     const { control } = form;
     const {
-      field: { ref, ...field },
-      fieldState,
+      field: { ...field },
+      fieldState
     } = useController({ name, control, rules, defaultValue });
 
     const onAccept = (momentDate) => {
@@ -189,13 +196,13 @@ const WizardDateInput = styled(
                 onAccept={onAccept}
                 ButtonFieldProps={{
                   inputProps: {
-                    "aria-label": `Select Absolute ${label ?? "Date/Time"}`,
-                  },
+                    "aria-label": `Select Absolute ${label ?? "Date/Time"}`
+                  }
                 }}
                 {...DatePickerProps}
               />
             </InputAdornment>
-          ),
+          )
         }}
         {...field}
         {...props}

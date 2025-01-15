@@ -17,86 +17,97 @@
  */
 
 import { Button, FormControl, FormLabel, Paper, Stack } from "@mui/material";
-import { ologApi } from "api/ologApi";
-import PropertyInput from "./PropertyInput";
-import Modal from "components/shared/Modal";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFieldArray } from "react-hook-form";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
+import PropertyInput from "./PropertyInput";
 import PropertySelector from "./PropertySelector";
+import Modal from "components/shared/Modal";
+import { ologApi } from "api/ologApi";
 
-const PropertyCollectionInput = ({control, className}) => {
+const PropertyCollectionInput = ({ control, className }) => {
+  const [showAddProperty, setShowAddProperty] = useState(false);
+  const { data: availableProperties } =
+    ologApi.endpoints.getProperties.useQuery();
 
-    const [showAddProperty, setShowAddProperty] = useState(false);
-    const {data: availableProperties} = ologApi.endpoints.getProperties.useQuery();
+  const {
+    fields: properties,
+    remove: removeProperty,
+    append: appendProperty,
+    update: updateProperty
+  } = useFieldArray({
+    control,
+    name: "properties",
+    keyName: "reactHookFormId" // default is 'id', which would override OlogAttachment#id
+  });
 
-
-    const { fields: properties, remove: removeProperty, append: appendProperty, update: updateProperty } = useFieldArray({
-        control,
-        name: 'properties',
-        keyName: 'reactHookFormId' // default is 'id', which would override OlogAttachment#id
-    })
-
-    const allPropertiesSelected = useMemo(() => {
-        return availableProperties?.filter(it => it.name !== "Log Entry Group")?.length 
-            === 
-        properties?.filter(it => it.name !== "Log Entry Group")?.length
-    }, [availableProperties, properties])
-        
-    // Close the Properties dialog if there are none left to select
-    useEffect(() => {
-        if(allPropertiesSelected) {
-            setShowAddProperty(false);
-        }
-    }, [allPropertiesSelected, setShowAddProperty]);
-
-    // Render, but visually hide, any group properties
-    // React Hook Form stores state in the form elements so they 
-    // must be rendered even if they shouldn't be edited
-    const renderedProperties = properties.map((property, index) => {
-        return (
-            <PropertyInput
-                key={index}
-                index={index}
-                control={control}
-                property={property}
-                removeProperty={removeProperty}
-                updateProperty={updateProperty}
-                hidden={property.name === "Log Entry Group"}
-            />
-        );
-    })
-
+  const allPropertiesSelected = useMemo(() => {
     return (
-        <FormControl className={className}>
-            <FormLabel>
-                Properties
-            </FormLabel>
-            <Paper variant="outlined" component={Stack} padding={1} gap={1}>
-                <Button 
-                    variant="outlined"
-                    disabled={allPropertiesSelected} 
-                    onClick={() => { setShowAddProperty(true)}}
-                    startIcon={<AddIcon />}
-                >
-                    Add Property
-                </Button>
-                {renderedProperties}
-            </Paper>
-            <Modal 
-                open={showAddProperty} 
-                onClose={() => setShowAddProperty(false)}
-                title="Add Property"
-                content={
-                    <PropertySelector 
-                        availableProperties={availableProperties} 
-                        selectedProperties={properties}
-                        addProperty={appendProperty}
-                    />
-                }
-            />
-        </FormControl>
-    )
+      availableProperties?.filter((it) => it.name !== "Log Entry Group")
+        ?.length ===
+      properties?.filter((it) => it.name !== "Log Entry Group")?.length
+    );
+  }, [availableProperties, properties]);
+
+  // Close the Properties dialog if there are none left to select
+  useEffect(() => {
+    if (allPropertiesSelected) {
+      setShowAddProperty(false);
+    }
+  }, [allPropertiesSelected, setShowAddProperty]);
+
+  // Render, but visually hide, any group properties
+  // React Hook Form stores state in the form elements so they
+  // must be rendered even if they shouldn't be edited
+  const renderedProperties = properties.map((property, index) => {
+    return (
+      <PropertyInput
+        key={index}
+        index={index}
+        control={control}
+        property={property}
+        removeProperty={removeProperty}
+        updateProperty={updateProperty}
+        hidden={property.name === "Log Entry Group"}
+      />
+    );
+  });
+
+  return (
+    <FormControl className={className}>
+      <FormLabel>Properties</FormLabel>
+      <Paper
+        variant="outlined"
+        component={Stack}
+        padding={1}
+        gap={1}
+      >
+        <Button
+          variant="outlined"
+          disabled={allPropertiesSelected}
+          onClick={() => {
+            setShowAddProperty(true);
+          }}
+          startIcon={<AddIcon />}
+        >
+          Add Property
+        </Button>
+        {renderedProperties}
+      </Paper>
+      <Modal
+        open={showAddProperty}
+        onClose={() => setShowAddProperty(false)}
+        title="Add Property"
+        content={
+          <PropertySelector
+            availableProperties={availableProperties}
+            selectedProperties={properties}
+            addProperty={appendProperty}
+          />
+        }
+      />
+    </FormControl>
+  );
 };
 
 export default PropertyCollectionInput;

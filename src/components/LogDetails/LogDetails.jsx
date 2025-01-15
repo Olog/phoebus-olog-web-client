@@ -15,120 +15,143 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React from 'react';
-import customization from 'config/customization';
-import { getLogEntryGroupId } from '../Properties/utils';
-import LogEntryGroupView from './LogEntryGroupView';
-import LogEntrySingleView from './LogEntrySingleView';
 import { useHref, useLocation } from "react-router-dom";
-import NavigationButtons from './NavigationButtons';
-import { Box, Button, Divider, Stack, styled } from '@mui/material';
-import { InternalButtonLink } from 'components/shared/Link';
-import { useUser } from 'features/authSlice';
+import { Box, Button, Divider, Stack, styled } from "@mui/material";
+import NavigationButtons from "./NavigationButtons";
+import LogEntrySingleView from "./LogEntrySingleView";
+import LogEntryGroupView from "./LogEntryGroupView";
+import { getLogEntryGroupId } from "../Properties/utils";
+import { useUser } from "features/authSlice";
+import { InternalButtonLink } from "components/shared/Link";
+import customization from "config/customization";
 
 const StyledLogEntrySingleView = styled(LogEntrySingleView)`
-    overflow: auto;
-`
+  overflow: auto;
+`;
 const StyledLogEntryGroupView = styled(LogEntryGroupView)`
-    overflow: auto;
-`
+  overflow: auto;
+`;
 
 /**
  * A view show all details of a log entry. Images are renderd, if such are
  * present. Other types of attachments are rendered as links.
  */
 const LogDetails = ({
-    showGroup, setShowGroup, 
-    currentLogEntry,
-    logGroupRecords, setLogGroupRecords, 
-    searchResults,
-    className
+  showGroup,
+  setShowGroup,
+  currentLogEntry,
+  logGroupRecords,
+  setLogGroupRecords,
+  searchResults,
+  className
 }) => {
+  const user = useUser();
 
-    const user = useUser();
+  const renderedEditButton = customization.log_edit_support ? (
+    <InternalButtonLink
+      to={`/logs/${currentLogEntry?.id}/edit`}
+      disabled={!user || !user.userName}
+      variant="contained"
+    >
+      Edit
+    </InternalButtonLink>
+  ) : null;
 
-    const renderedEditButton = customization.log_edit_support ? 
-        <InternalButtonLink 
-            to={`/logs/${currentLogEntry?.id}/edit`}
-            disabled={!user || !user.userName}
-            variant="contained"
-        >
-            Edit
-        </InternalButtonLink> : null;
+  const renderedReplyButton = customization.log_entry_groups_support ? (
+    <InternalButtonLink
+      to={`/logs/${currentLogEntry?.id}/reply`}
+      variant="contained"
+      disabled={!user || !user.userName}
+      sx={{ height: "100%" }}
+    >
+      Reply
+    </InternalButtonLink>
+  ) : null;
 
-    const renderedReplyButton = customization.log_entry_groups_support ?
-        <InternalButtonLink
-            to={`/logs/${currentLogEntry?.id}/reply`}
-            variant="contained"
-            disabled={!user || !user.userName}
-            sx={{height: "100%"}}
-        >
-            Reply
-        </InternalButtonLink> : null;
+  const currentPath = useHref(useLocation());
 
-    const currentPath = useHref(useLocation());
+  const copyUrl = () => {
+    navigator.clipboard.writeText(window.location.origin + currentPath);
+  };
 
-    const copyUrl = () => {
-        navigator.clipboard.writeText(
-            window.location.origin + currentPath
-        )
-    }
+  const renderedShowGroupButton = getLogEntryGroupId(
+    currentLogEntry.properties
+  ) ? (
+    <Button
+      variant="contained"
+      onClick={() => setShowGroup(!showGroup)}
+    >
+      {showGroup ? "Hide" : "Show"} Group
+    </Button>
+  ) : null;
 
-    const renderedShowGroupButton = getLogEntryGroupId(currentLogEntry.properties) ? 
-        <Button 
-            variant="contained"
-            onClick={() => setShowGroup(!showGroup)}
-        >
-            {showGroup ? "Hide" : "Show"} Group
-        </Button> : null;
+  const renderedLogView = showGroup ? (
+    <StyledLogEntryGroupView
+      {...{
+        showGroup,
+        setShowGroup,
+        currentLogEntry,
+        user,
+        logGroupRecords,
+        setLogGroupRecords
+      }}
+    />
+  ) : (
+    <StyledLogEntrySingleView currentLogEntry={currentLogEntry} />
+  );
 
-    const renderedLogView = showGroup 
-    ?   <StyledLogEntryGroupView {...{
-            showGroup, setShowGroup, 
+  return (
+    <Stack
+      className={className}
+      id="logdetails-and-buttons"
+      flexDirection="column"
+      width="100%"
+      overflow="hidden"
+    >
+      <Stack
+        flexDirection="row"
+        gap={1}
+        borderBottom={0}
+        padding={1}
+        flexWrap="wrap"
+      >
+        <NavigationButtons
+          {...{
             currentLogEntry,
-            user, 
-            logGroupRecords, setLogGroupRecords, 
-        }}/> 
-    :   <StyledLogEntrySingleView 
-            currentLogEntry={currentLogEntry} 
-        />;
-
-    return(
-        <Stack 
-            className={className} 
-            id='logdetails-and-buttons'
-            flexDirection="column"
-            width="100%"
-            overflow="hidden"
+            searchResults
+          }}
+          order={0}
+        />
+        <Stack
+          flexDirection="row"
+          gap={1}
+          order={2}
+          sx={{ flexBasis: ["100%", "auto"] }}
         >
-            <Stack flexDirection="row" gap={1} borderBottom={0} padding={1} flexWrap="wrap">
-                <NavigationButtons {...{
-                    currentLogEntry,
-                    searchResults,
-                }} order={0}/>
-                <Stack flexDirection="row" gap={1} order={2} sx={{flexBasis: ["100%", "auto"]}}>
-                    {renderedEditButton}
-                    {renderedReplyButton}
-                    {renderedShowGroupButton}
-                </Stack>
-                <Button 
-                    variant="contained" 
-                    onClick={copyUrl} 
-                    sx={{
-                        marginLeft: "auto",
-                        order: [0, 3]
-                    }}
-                >
-                    Copy URL
-                </Button>
-            </Stack>
-            <Divider />
-            <Box id='logdetails' overflow="hidden" >
-                {renderedLogView}
-            </Box>
+          {renderedEditButton}
+          {renderedReplyButton}
+          {renderedShowGroupButton}
         </Stack>
-    )
-    
-}
+        <Button
+          variant="contained"
+          onClick={copyUrl}
+          sx={{
+            marginLeft: "auto",
+            order: [0, 3]
+          }}
+        >
+          Copy URL
+        </Button>
+      </Stack>
+      <Divider />
+      <Box
+        id="logdetails"
+        overflow="hidden"
+      >
+        {renderedLogView}
+      </Box>
+    </Stack>
+  );
+};
 
 export default LogDetails;

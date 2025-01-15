@@ -15,49 +15,53 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
-import { IconButton, Paper, Stack, Typography } from '@mui/material';
-import TextInput from '../../TextInput';
+import CloseIcon from "@mui/icons-material/Close";
+import { IconButton, Paper, Stack, Typography } from "@mui/material";
+import { TextInput } from "../../TextInput";
 
-const PropertyInput = ({control, index, property, removeProperty, hidden}) => {
-
-    return (
-        <Paper
-            component={Stack}
-            variant="outlined"
-            padding={1}
-            gap={0.5}
-            width="100%"
-            visibility={hidden ? "hidden": "visible"}
-            display={hidden ? "none": "inherit"}
+const PropertyInput = ({
+  control,
+  index,
+  property,
+  removeProperty,
+  hidden
+}) => {
+  return (
+    <Paper
+      component={Stack}
+      variant="outlined"
+      padding={1}
+      gap={0.5}
+      width="100%"
+      visibility={hidden ? "hidden" : "visible"}
+      display={hidden ? "none" : "inherit"}
+    >
+      <Stack
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography fontWeight="bold">{property.name}</Typography>
+        <IconButton
+          onClick={() => removeProperty(index)}
+          aria-label={`remove property ${property.name}`}
         >
-            <Stack
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-            >
-                <Typography fontWeight="bold">{property.name}</Typography>
-                <IconButton
-                    onClick={() => removeProperty(index)}
-                    aria-label={`remove property ${property.name}`}
-                >
-                    <CloseIcon />
-                </IconButton>
-            </Stack>
-            <Stack gap={1}>
-                {
-                    property.attributes.map((attribute, attributeIndex) => {
-                        return  <TextInput
-                                    name={`properties.${index}.attributes.${attributeIndex}.value`}
-                                    label={attribute.name}
-                                    control={control}
-                                />
-                    })
-                }
-            </Stack>
-        </Paper>
-    );
-
-}
+          <CloseIcon />
+        </IconButton>
+      </Stack>
+      <Stack gap={1}>
+        {property.attributes.map((attribute, attributeIndex) => {
+          return (
+            <TextInput
+              key={`properties.${index}.attributes.${attributeIndex}.value`}
+              name={`properties.${index}.attributes.${attributeIndex}.value`}
+              label={attribute.name}
+              control={control}
+            />
+          );
+        })}
+      </Stack>
+    </Paper>
+  );
+};
 export default PropertyInput;
