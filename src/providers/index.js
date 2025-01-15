@@ -4,8 +4,8 @@ import ReduxProvider from "./ReduxProvider";
 import RouterProvider from "./RouterProvider";
 
 export {
-    MuiThemeProvider, 
-    LocalizationProvider, 
-    ReduxProvider, 
-    RouterProvider
+  MuiThemeProvider,
+  LocalizationProvider,
+  ReduxProvider,
+  RouterProvider
 };

@@ -1,7 +1,6 @@
 import { Stack, Typography } from "@mui/material";
-import LogContainer from "components/log/LogContainer";
-import React from "react";
 import LogDetailsWithReplies from "./LogDetailsWithReplies";
+import LogContainer from "components/log/LogContainer";
 
 const LogDetailsContainer = ({ id }) => {
   if (id) {

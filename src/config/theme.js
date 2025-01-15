@@ -25,53 +25,53 @@ theme = createTheme(theme, {
   palette: {
     ologCyan: theme.palette.augmentColor({
       color: {
-        main: "#0099dc",
+        main: "#0099dc"
       },
-      name: "ologCyan",
+      name: "ologCyan"
     }),
     ologBlack: theme.palette.augmentColor({
       color: {
-        main: "#000000",
+        main: "#000000"
       },
-      name: "ologBlack",
+      name: "ologBlack"
     }),
     ologWhite: theme.palette.augmentColor({
       color: {
-        main: "#ffffff",
+        main: "#ffffff"
       },
-      name: "ologWhite",
+      name: "ologWhite"
     }),
     ologPurple: theme.palette.augmentColor({
       color: {
-        main: "#821482",
+        main: "#821482"
       },
-      name: "ologPurple",
+      name: "ologPurple"
     }),
     ologOrange: theme.palette.augmentColor({
       color: {
-        main: "#ff7d00",
+        main: "#ff7d00"
       },
-      name: "ologOrange",
+      name: "ologOrange"
     }),
     ologForest: theme.palette.augmentColor({
       color: {
-        main: "#006646",
+        main: "#006646"
       },
-      name: "ologForest",
+      name: "ologForest"
     }),
     ologGrass: theme.palette.augmentColor({
       color: {
-        main: "#99be00",
+        main: "#99be00"
       },
-      name: "ologGrass",
+      name: "ologGrass"
     }),
     ologNavy: theme.palette.augmentColor({
       color: {
-        main: "#003366",
+        main: "#003366"
       },
-      name: "ologNavy",
-    }),
-  },
+      name: "ologNavy"
+    })
+  }
 });
 
 // // Compose remaining overrides
@@ -79,21 +79,21 @@ theme = createTheme(theme, {
   palette: {
     primary: theme.palette.augmentColor({
       color: {
-        main: theme.palette.ologCyan.main,
+        main: theme.palette.ologCyan.main
       },
-      name: "primary",
+      name: "primary"
     }),
     secondary: theme.palette.augmentColor({
       color: {
-        main: theme.palette.grey[700],
+        main: theme.palette.grey[700]
       },
-      name: "secondary",
+      name: "secondary"
     }),
     status: {
       ok: theme.palette.success.main,
       progress: theme.palette.warning.light,
-      fail: theme.palette.error.main,
-    },
+      fail: theme.palette.error.main
+    }
   },
   components: {
     MuiLink: {
@@ -101,17 +101,17 @@ theme = createTheme(theme, {
         root: {
           textDecoration: "none",
           ":hover": {
-            textDecoration: "underline",
-          },
-        },
-      },
+            textDecoration: "underline"
+          }
+        }
+      }
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "none",
-        },
-      },
-    },
-  },
+          textTransform: "none"
+        }
+      }
+    }
+  }
 });

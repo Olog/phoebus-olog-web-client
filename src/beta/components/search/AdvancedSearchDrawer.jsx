@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Box, Button, Drawer, Stack, Typography } from "@mui/material";
-import TextInput from "components/shared/input/TextInput";
+import { useForm } from "react-hook-form";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { useDispatch } from "react-redux";
+import { TextInput } from "components/shared/input/TextInput";
 import WizardDateInput from "components/shared/input/WizardDateInput";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
-import { useForm } from "react-hook-form";
 import {
   defaultSearchParams,
-  updateSearchParams,
+  updateSearchParams
 } from "features/searchParamsReducer";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { useDispatch } from "react-redux";
 
 const isDate = (obj) => {
   return obj instanceof Date && !isNaN(obj);
@@ -27,11 +27,11 @@ const toDate = (dateString) => {
 export const AdvancedSearchDrawer = ({
   searchParams,
   advancedSearchOpen,
-  setAdvancedSearchOpen,
+  setAdvancedSearchOpen
 }) => {
   const dispatch = useDispatch();
   const form = useForm({
-    defaultValues: defaultSearchParams,
+    defaultValues: defaultSearchParams
   });
   const { control, handleSubmit, getValues } = form;
 
@@ -52,10 +52,17 @@ export const AdvancedSearchDrawer = ({
   };
 
   return (
-    <Drawer open={advancedSearchOpen} onClose={closeDrawer}>
+    <Drawer
+      open={advancedSearchOpen}
+      onClose={closeDrawer}
+    >
       <Box padding={1}>
         <Stack>
-          <Typography component="h2" variant="h4" id="advanced-search">
+          <Typography
+            component="h2"
+            variant="h4"
+            id="advanced-search"
+          >
             Filters
           </Typography>
           <Stack
@@ -98,7 +105,7 @@ export const AdvancedSearchDrawer = ({
               form={form}
               defaultValue={getValues("start")}
               DatePickerProps={{
-                disableFuture: true,
+                disableFuture: true
               }}
               rules={{
                 validate: {
@@ -113,8 +120,8 @@ export const AdvancedSearchDrawer = ({
                     } else {
                       return true;
                     }
-                  },
-                },
+                  }
+                }
               }}
             />
             <WizardDateInput
@@ -123,7 +130,7 @@ export const AdvancedSearchDrawer = ({
               form={form}
               defaultValue={getValues("end")}
               DatePickerProps={{
-                disableFuture: true,
+                disableFuture: true
               }}
               rules={{
                 validate: {
@@ -138,8 +145,8 @@ export const AdvancedSearchDrawer = ({
                     } else {
                       return true;
                     }
-                  },
-                },
+                  }
+                }
               }}
             />
             <TextInput
@@ -148,8 +155,14 @@ export const AdvancedSearchDrawer = ({
               control={control}
               defaultValue=""
             />
-            <Stack flexDirection="row" justifyContent="flex-end">
-              <Button onClick={clearFilters} sx={{ marginRight: "10px" }}>
+            <Stack
+              flexDirection="row"
+              justifyContent="flex-end"
+            >
+              <Button
+                onClick={clearFilters}
+                sx={{ marginRight: "10px" }}
+              >
                 Clear filters
               </Button>
               <Button

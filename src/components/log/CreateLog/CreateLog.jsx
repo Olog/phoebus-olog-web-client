@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import EntryEditor from "../EntryEditor";
 import useFormPersist from "react-hook-form-persist";
-import { ologApi, useVerifyLogExists } from "api/ologApi";
 import { Backdrop, CircularProgress } from "@mui/material";
+import { EntryEditor } from "../EntryEditor";
+import { ologApi, useVerifyLogExists } from "api/ologApi";
 import useBetaNavigate from "hooks/useBetaNavigate";
 
 const CreateLog = ({ isAuthenticated }) => {
@@ -13,8 +13,8 @@ const CreateLog = ({ isAuthenticated }) => {
 
   const form = useForm({
     defaultValues: {
-      attachments: [],
-    },
+      attachments: []
+    }
   });
   const { watch, setValue } = form;
   const navigate = useBetaNavigate();
@@ -26,7 +26,7 @@ const CreateLog = ({ isAuthenticated }) => {
     watch,
     setValue,
     storage: window.localStorage,
-    exclude: "attachments", // serializing files is unsupported due to security risks
+    exclude: "attachments" // serializing files is unsupported due to security risks
   });
 
   const onSubmit = async (formData) => {
@@ -43,7 +43,7 @@ const CreateLog = ({ isAuthenticated }) => {
       title: formData.title,
       level: formData.level,
       description: formData.description,
-      attachments: formData.attachments ?? [],
+      attachments: formData.attachments ?? []
     };
     try {
       // Create log
@@ -87,7 +87,7 @@ const CreateLog = ({ isAuthenticated }) => {
           form,
           title: "Create New Log",
           onSubmit,
-          submitDisabled: !isAuthenticated,
+          submitDisabled: !isAuthenticated
         }}
       />
     </>

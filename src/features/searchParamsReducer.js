@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "universal-cookie";
-import customization from "config/customization";
 import { useSelector } from "react-redux";
+import customization from "config/customization";
 
 const cookies = new Cookies();
 
@@ -16,11 +16,11 @@ export const defaultSearchParams = {
   end: undefined,
   logbooks: [],
   tags: [],
-  attachments: "",
+  attachments: ""
 };
 export const defaultSearchParamsState = {
   ...defaultSearchParams,
-  ...customization.defaultSearchParams,
+  ...customization.defaultSearchParams
 };
 
 export const searchParamsSlice = createSlice({
@@ -31,11 +31,11 @@ export const searchParamsSlice = createSlice({
       const searchParams = action.payload;
       cookies.set(customization.searchParamsCookie, searchParams, {
         path: "/",
-        maxAge: "100000000",
+        maxAge: "100000000"
       });
       return { ...searchParams };
-    },
-  },
+    }
+  }
 });
 
 export const { updateSearchParams } = searchParamsSlice.actions;

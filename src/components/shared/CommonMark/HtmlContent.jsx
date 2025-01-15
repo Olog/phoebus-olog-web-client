@@ -28,7 +28,7 @@ const Container = styled(Box)(({ theme }) => {
         h3, h4 {
             padding-bottom: 0.5rem;
         }
-        
+
         /** Links **/
         a, a:visited {
             color: ${theme.palette.primary.main};
@@ -48,21 +48,21 @@ const Container = styled(Box)(({ theme }) => {
         /** Lists **/
         /** Unfortunately no good way of using selectors
          *  to enforce alternating bullet styles purely
-         *  with CSS; this supports six levels, which 
-         *  should be enough 
+         *  with CSS; this supports six levels, which
+         *  should be enough
          **/
-        ul, 
-        ul li, 
-        ul li li li, 
+        ul,
+        ul li,
+        ul li li li,
         ul li li li li li {
             list-style: disc inside;
         }
-        ul li li, 
-        ul li li li li, 
+        ul li li,
+        ul li li li li,
         ul li li li li li li {
             list-style: circle inside;
         }
-        ul li li li, 
+        ul li li li,
         ul li li li li li {
             list-style: square inside;
         }
@@ -85,7 +85,7 @@ const Container = styled(Box)(({ theme }) => {
             display: inline-block;
             padding-bottom: 0.25rem;
         }
-        ul + *, 
+        ul + *,
         ol + * {
             padding-top: 1rem;
         }
@@ -158,7 +158,7 @@ const Container = styled(Box)(({ theme }) => {
     }
     width: 100%;
     font-size: 1.1rem;
-        
+
     `;
 });
 

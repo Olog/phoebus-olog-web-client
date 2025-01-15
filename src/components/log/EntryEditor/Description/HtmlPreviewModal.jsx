@@ -16,9 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React from "react";
 import Modal from "../../../shared/Modal";
-import CommonMark from "../../../shared/CommonMark";
+import { CommonMark } from "../../../shared/CommonMark";
 import customization from "config/customization";
 
 const HtmlPreviewModal = ({
@@ -26,10 +25,10 @@ const HtmlPreviewModal = ({
   attachedFiles,
   showHtmlPreview,
   setShowHtmlPreview,
-  useRemoteAttachments,
+  useRemoteAttachments
 }) => {
   const CommonmarkPreviewArgs = {
-    commonmarkSrc,
+    commonmarkSrc
   };
 
   // If using remote attachments (e.g. editing an existing entry)
@@ -50,7 +49,7 @@ const HtmlPreviewModal = ({
       content={<CommonMark {...CommonmarkPreviewArgs} />}
       DialogProps={{
         fullWidth: true,
-        maxWidth: "lg",
+        maxWidth: "lg"
       }}
     />
   );

@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React from "react";
-import Properties from "../Properties/Properties";
+import { Box, Divider, Typography, styled } from "@mui/material";
 import LogDetailsMetaData from "./LogDetailsMetaData";
+import Properties from "../Properties/Properties";
 import Collapse from "components/shared/Collapse";
-import CommonMark from "components/shared/CommonMark";
+import { CommonMark } from "components/shared/CommonMark";
 import customization from "config/customization";
 import AttachmentImage, {
-  isImage,
+  isImage
 } from "components/Attachment/AttachmentImage";
-import { Box, Divider, Typography, styled } from "@mui/material";
 
 const Container = styled("div")`
   padding: 0.5rem;
@@ -87,7 +86,11 @@ const LogEntrySingleView = ({ currentLogEntry, className }) => {
     } else {
       return (
         <Box key={index}>
-          <a target="_blank" rel="noopener noreferrer" href={url}>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={url}
+          >
             {attachment.filename}
           </a>
         </Box>
@@ -97,12 +100,20 @@ const LogEntrySingleView = ({ currentLogEntry, className }) => {
 
   const properties = currentLogEntry.properties
     .filter((property) => property.name !== "Log Entry Group")
-    .map((property, index) => <Properties key={index} property={property} />);
+    .map((property, index) => (
+      <Properties
+        key={index}
+        property={property}
+      />
+    ));
 
   return (
     <Container className={className}>
       <LogTitle>
-        <Typography component="h2" variant="h2">
+        <Typography
+          component="h2"
+          variant="h2"
+        >
           {currentLogEntry.title}
         </Typography>
         <Typography component="span">{currentLogEntry.id}</Typography>

@@ -15,22 +15,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import SearchResultItem from "./SearchResultItem";
-import SearchBox from "./SearchBox";
 import { Divider, LinearProgress, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useCallback, useMemo, useState } from "react";
+import SearchBox from "./SearchBox";
+import SearchResultItem from "./SearchResultItem";
 import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
 import customization from "config/customization";
-import { useCallback, useMemo, useState } from "react";
 import { updateSearchPageParams } from "features/searchPageParamsReducer";
 import { sortByCreatedDate } from "components/log/sort";
 
 const NoRowsOverlay = (props) => {
   return (
-    <Stack sx={{ padding: 1 }} alignItems="center">
-      <Typography {...props} variant="body1">
+    <Stack
+      sx={{ padding: 1 }}
+      alignItems="center"
+    >
+      <Typography
+        {...props}
+        variant="body1"
+      >
         No records found
       </Typography>
     </Stack>
@@ -38,7 +44,12 @@ const NoRowsOverlay = (props) => {
 };
 
 const LoadingOverlay = (props) => {
-  return <LinearProgress sx={{ marginY: 2, top: -9 }} {...props} />;
+  return (
+    <LinearProgress
+      sx={{ marginY: 2, top: -9 }}
+      {...props}
+    />
+  );
 };
 
 /**
@@ -53,7 +64,7 @@ const SearchResultList = ({
   currentLogEntry,
   showFilters,
   setShowFilters,
-  className,
+  className
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -70,21 +81,21 @@ const SearchResultList = ({
     ...searchResults,
     logs: searchResults?.logs?.toSorted(
       sortByCreatedDate(searchPageParams.sort === "down")
-    ),
+    )
   };
 
   const columns = [
     {
       field: "renderedLog",
       renderCell: (params) => <>{params.value}</>,
-      flex: 1,
-    },
+      flex: 1
+    }
   ];
 
   const rows = sortedResults.logs.map((it) => ({
     id: it.id,
     log: it,
-    renderedLog: <SearchResultItem log={it} />,
+    renderedLog: <SearchResultItem log={it} />
   }));
 
   const handleClick = (params) => {
@@ -95,7 +106,7 @@ const SearchResultList = ({
   const paginationModel = useMemo(
     () => ({
       page,
-      pageSize,
+      pageSize
     }),
     [page, pageSize]
   );
@@ -106,7 +117,7 @@ const SearchResultList = ({
         updateSearchPageParams({
           ...searchPageParams,
           from: model.page * searchPageParams?.size || 0,
-          size: model.pageSize,
+          size: model.pageSize
         })
       );
       setPageSize(model.pageSize);
@@ -126,7 +137,7 @@ const SearchResultList = ({
         slots={{
           noRowsOverlay: NoRowsOverlay,
           noResultsOverlay: NoRowsOverlay,
-          loadingOverlay: LoadingOverlay,
+          loadingOverlay: LoadingOverlay
         }}
         slotProps={{
           pagination: {
@@ -134,14 +145,14 @@ const SearchResultList = ({
             showLastButton: true,
             variant: "outlined",
             shape: "rounded",
-            labelRowsPerPage: "Hits Per Page",
-          },
+            labelRowsPerPage: "Hits Per Page"
+          }
         }}
         loading={searchInProgress}
         rowHeight={70}
         onRowClick={handleClick}
         paginationMode="server"
-        pagination={true}
+        pagination
         paginationModel={paginationModel}
         onPaginationModelChange={onPaginationModelChange}
         rowCount={searchResults?.hitCount}
@@ -150,7 +161,7 @@ const SearchResultList = ({
         sx={{
           // Disable the "X rows selected" text
           "& .MuiDataGrid-selectedRowCount": {
-            display: "none",
+            display: "none"
           },
 
           // No border
@@ -158,13 +169,13 @@ const SearchResultList = ({
 
           // align the footer / pagination elements
           "& .MuiDataGrid-footerContainer": {
-            justifyContent: "flex-end",
+            justifyContent: "flex-end"
           },
 
           // Hide the header row
           "& .MuiDataGrid-columnHeaders": {
-            display: "none",
-          },
+            display: "none"
+          }
         }}
       />
     </Stack>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { IconButton, Stack, Typography, styled } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -35,7 +35,10 @@ export const SearchResultGroupItem = styled(
             <AddCircleOutlineIcon fontSize="inherit" />
           )}
         </IconButton>
-        <Typography color="#0099db" variant="body2">
+        <Typography
+          color="#0099db"
+          variant="body2"
+        >
           ({log?.replies.length}) {expanded ? "Hide" : "Show"} replies
         </Typography>
       </Stack>
@@ -54,10 +57,11 @@ export const SearchResultGroupItem = styled(
         {expanded &&
           log?.replies.map((reply) => (
             <SearchResultSingleItem
+              key={reply.id}
               log={reply}
               selected={currentLogEntryId === reply.id}
               onClick={onClick}
-              isReply={true}
+              isReply
               handleKeyDown={handleKeyDown}
             />
           ))}

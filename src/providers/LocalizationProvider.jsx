@@ -16,14 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { LocalizationProvider as MuiLocalizationProvider } from '@mui/x-date-pickers';
+import { LocalizationProvider as MuiLocalizationProvider } from "@mui/x-date-pickers";
 
-const LocalizationProvider = ({children, ...props}) => {
-
-    return (
-        <MuiLocalizationProvider dateAdapter={AdapterMoment} {...props} >
-            {children}
-        </MuiLocalizationProvider>
-    )
-}
-export default LocalizationProvider
+const LocalizationProvider = ({ children, ...props }) => {
+  return (
+    <MuiLocalizationProvider
+      dateAdapter={AdapterMoment}
+      {...props}
+    >
+      {children}
+    </MuiLocalizationProvider>
+  );
+};
+export default LocalizationProvider;

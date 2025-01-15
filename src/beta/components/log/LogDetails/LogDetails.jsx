@@ -1,10 +1,9 @@
-import React from "react";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import { LogAttachmentsHeader } from "./LogAttachmentsHeader";
-import CommonMark from "components/shared/CommonMark";
-import customization from "config/customization";
 import LogProperty from "./LogProperty";
 import MetadataTable from "./MetadataTable";
+import customization from "config/customization";
+import { CommonMark } from "components/shared/CommonMark";
 
 const LogDetails = ({ log, className }) => {
   const filteredProperties = log?.properties?.filter(
@@ -19,11 +18,15 @@ const LogDetails = ({ log, className }) => {
       py={2}
       px={3}
       sx={{
-        overflow: "scroll",
+        overflow: "scroll"
       }}
     >
       <LogAttachmentsHeader log={log} />
-      <Typography sx={{ fontSize: "1.4rem" }} component="h2" fontWeight="600">
+      <Typography
+        sx={{ fontSize: "1.4rem" }}
+        component="h2"
+        fontWeight="600"
+      >
         {log.title}
       </Typography>
       {log.source && (
@@ -35,7 +38,10 @@ const LogDetails = ({ log, className }) => {
       {log?.properties && filteredProperties.length > 0 && (
         <Box mt={2}>
           {filteredProperties.map((it, i) => (
-            <LogProperty property={it} key={`${it.name}-${i}`} />
+            <LogProperty
+              property={it}
+              key={`${it.name}-${i}`}
+            />
           ))}
         </Box>
       )}
@@ -43,7 +49,7 @@ const LogDetails = ({ log, className }) => {
         sx={{
           margin: "15px 0",
           borderWidth: "1.25px",
-          borderColor: "#F3F5F7",
+          borderColor: "#F3F5F7"
         }}
       />
       <MetadataTable log={log} />

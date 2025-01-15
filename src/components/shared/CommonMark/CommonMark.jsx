@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/material";
 import markdownit from "markdown-it";
 import markdownItAttrs from "markdown-it-attrs";

@@ -7,42 +7,49 @@ import {
   Link,
   Stack,
   styled,
-  Typography,
+  Typography
 } from "@mui/material";
-import React, { useState } from "react";
-import { FileImage } from "components/Attachment";
-import Modal from "components/shared/Modal";
+import { useState } from "react";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import { FileImage } from "components/Attachment";
+import Modal from "components/shared/Modal";
 
 const Image = styled(({ attachment, className }) => {
   return (
-    <img className={className} alt={attachment.filename} src={attachment.url} />
+    <img
+      className={className}
+      alt={attachment.filename}
+      src={attachment.url}
+    />
   );
 })(({ size, fullSize, maxHeight, maxWidth }) => {
   if (fullSize) {
     return {
       objectFit: "contain",
       maxHeight,
-      maxWidth,
+      maxWidth
     };
   } else {
     return {
       height: size,
       width: size,
-      objectFit: "cover",
+      objectFit: "cover"
     };
   }
 });
 
 const FileLink = ({ attachment, size }) => (
-  <Link href={attachment.url} download>
+  <Link
+    href={attachment.url}
+    download
+  >
     <FileImage
       alt={`file: ${attachment.filename}`}
       fontSize={size}
       sx={{
         height: size,
-        width: size,
+        width: size
       }}
     />
   </Link>
@@ -71,7 +78,7 @@ const GalleryView = ({ attachments, onPrevious, onNext, currentIndex }) => {
             attachment,
             fullSize: true,
             maxHeight: "500px",
-            maxWidth: "100%",
+            maxWidth: "100%"
           }}
         />
       </Box>
@@ -134,14 +141,21 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
 
   return (
     <Stack onKeyUp={onKeyPress}>
-      <ImageList gap={5} cols={10} sx={{ marginBottom: 0 }}>
+      <ImageList
+        gap={5}
+        cols={10}
+        sx={{ marginBottom: 0 }}
+      >
         {imageAttachments.map((attachment, index) => (
           <ImageListItem
             key={attachment.id}
             onClick={() => onClick(index)}
             sx={{ cursor: "pointer" }}
           >
-            <Image attachment={attachment} size={size} />
+            <Image
+              attachment={attachment}
+              size={size}
+            />
             <ImageListItemBar
               position="below"
               title={renderAttachmentTitle(attachment)}
@@ -150,22 +164,27 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
                 "& div": {
                   fontSize: "0.8rem",
                   fontStyle: "italic",
-                  paddingBottom: 0,
-                },
+                  paddingBottom: 0
+                }
               }}
             />
           </ImageListItem>
         ))}
         {fileAttachments.map((attachment) => (
           <Stack
+            key={attachment.id}
             sx={{
               cursor: "pointer",
               "&:hover > a > div > .file-overlay": {
-                display: "block",
-              },
+                display: "block"
+              }
             }}
           >
-            <FileLink key={attachment.id} attachment={attachment} size={size} />
+            <FileLink
+              key={attachment.id}
+              attachment={attachment}
+              size={size}
+            />
             <Stack flexDirection="row">
               <Typography
                 pl={2}
@@ -192,7 +211,7 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
               currentIndex,
               setCurrentIndex,
               onPrevious,
-              onNext,
+              onNext
             }}
           />
         }

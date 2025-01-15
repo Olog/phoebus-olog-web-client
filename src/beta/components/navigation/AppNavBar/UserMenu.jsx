@@ -1,18 +1,5 @@
-import {
-  Box,
-  Button,
-  Chip,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography,
-} from "@mui/material";
-import React, { useState } from "react";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { Box, Button } from "@mui/material";
 import { useShowLogout } from "features/authSlice";
-import UserAvatar from "beta/components/common/UserAvatar";
-import { theme } from "config/theme";
 const UserMenu = ({ user }) => {
   const { setShowLogout } = useShowLogout();
 

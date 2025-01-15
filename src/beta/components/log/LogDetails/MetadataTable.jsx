@@ -1,12 +1,20 @@
 import { Stack, Typography } from "@mui/material";
-import React from "react";
 import { EntryTypeChip } from "../EntryTypeChip";
 import { LogbookChip } from "../LogbookChip";
 import { TagChip } from "../TagChip";
 
 const Key = ({ name, children }) => (
-  <Stack flexDirection="row" gap={0.5} alignItems="center" flexWrap="wrap">
-    <Typography fontSize="0.8rem" fontWeight="bold" mr={0.5}>
+  <Stack
+    flexDirection="row"
+    gap={0.5}
+    alignItems="center"
+    flexWrap="wrap"
+  >
+    <Typography
+      fontSize="0.8rem"
+      fontWeight="bold"
+      mr={0.5}
+    >
       {name}
     </Typography>
     {children}
@@ -17,7 +25,11 @@ const MetadataTable = ({ log }) => (
   <Stack gap={2}>
     <Key name="Tags">
       {log?.tags?.map((it) => (
-        <TagChip sx={{ fontSize: ".75rem" }} key={it.name} value={it.name} />
+        <TagChip
+          sx={{ fontSize: ".75rem" }}
+          key={it.name}
+          value={it.name}
+        />
       ))}
     </Key>
 
@@ -32,8 +44,14 @@ const MetadataTable = ({ log }) => (
     </Key>
 
     {log?.level && (
-      <Key name="Entry type" value>
-        <EntryTypeChip sx={{ fontSize: ".75rem" }} value={log?.level} />
+      <Key
+        name="Entry type"
+        value
+      >
+        <EntryTypeChip
+          sx={{ fontSize: ".75rem" }}
+          value={log?.level}
+        />
       </Key>
     )}
   </Stack>

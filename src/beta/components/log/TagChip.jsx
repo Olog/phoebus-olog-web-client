@@ -1,4 +1,3 @@
-import React from "react";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import { Chip } from "@mui/material";
 

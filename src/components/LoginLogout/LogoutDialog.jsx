@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import { useEffect, useState } from "react";
-import Modal from "components/shared/Modal";
 import { Alert, Button, Stack, Typography } from "@mui/material";
+import Modal from "components/shared/Modal";
 import { ologApi } from "api/ologApi";
 import { useShowLogout } from "features/authSlice";
 
@@ -53,7 +53,11 @@ const LogoutDialog = () => {
       onClose={hideLogout}
       title="Log out?"
       content={
-        <Stack component="form" gap={1} paddingY={1}>
+        <Stack
+          component="form"
+          gap={1}
+          paddingY={1}
+        >
           <Typography>Would you like to logout?</Typography>
           {logoutErrorMessage ? (
             <Alert severity="error">{logoutErrorMessage}</Alert>
@@ -62,16 +66,22 @@ const LogoutDialog = () => {
       }
       actions={
         <>
-          <Button variant="outlined" onClick={hideLogout}>
+          <Button
+            variant="outlined"
+            onClick={hideLogout}
+          >
             Cancel
           </Button>
-          <Button variant="contained" onClick={logout}>
+          <Button
+            variant="contained"
+            onClick={logout}
+          >
             Logout
           </Button>
         </>
       }
       DialogProps={{
-        maxWidth: "sm",
+        maxWidth: "sm"
       }}
     />
   );

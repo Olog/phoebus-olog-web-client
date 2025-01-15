@@ -16,16 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
+import { styled } from "@mui/material";
 import GroupHeader from "./GroupHeader";
-import CommonMark from "components/shared/CommonMark";
-import customization from "config/customization";
 import { getLogEntryGroupId } from "../Properties/utils";
+import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
+import { CommonMark } from "components/shared/CommonMark";
+import customization from "config/customization";
 import { sortByCreatedDate } from "components/log/sort";
 import { ologApi } from "api/ologApi";
-import { styled } from "@mui/material";
 import useBetaNavigate from "hooks/useBetaNavigate";
 
 const Container = styled("div")`
@@ -56,7 +56,7 @@ const LogEntryGroupView = ({
   currentLogEntry,
   logGroupRecords,
   setLogGroupRecords,
-  className,
+  className
 }) => {
   const dispatch = useDispatch();
   const navigate = useBetaNavigate();
@@ -64,7 +64,7 @@ const LogEntryGroupView = ({
 
   useEffect(() => {
     const res = getLogGroup({
-      groupId: getLogEntryGroupId(currentLogEntry?.properties),
+      groupId: getLogEntryGroupId(currentLogEntry?.properties)
     });
     res
       .unwrap()
@@ -87,7 +87,10 @@ const LogEntryGroupView = ({
 
   const logGroupItems = logGroupRecords.map((row, index) => {
     return (
-      <GroupContainer key={index} onClick={() => showLog(row)}>
+      <GroupContainer
+        key={index}
+        onClick={() => showLog(row)}
+      >
         <GroupHeader logEntry={row} />
         <CommonMark
           commonmarkSrc={row.source}

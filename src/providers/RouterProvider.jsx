@@ -1,11 +1,11 @@
-import BetaApp from "beta/views/BetaApp";
-import SearchView from "beta/views/SearchView";
-import LogEntriesView from "components/LogEntriesView";
-import { AppErrorBoundary } from "components/shared/error/ErrorBoundary";
 import {
   createBrowserRouter,
-  RouterProvider as ReactRouterDomRouterProvider,
+  RouterProvider as ReactRouterDomRouterProvider
 } from "react-router-dom";
+import BetaApp from "beta/views/BetaApp";
+import SearchView from "beta/views/SearchView";
+import { LogEntriesView } from "components/LogEntriesView";
+import { AppErrorBoundary } from "components/shared/error/ErrorBoundary";
 import App from "views/App";
 import CreateLogView from "views/CreateLogView";
 import EditLogView from "views/EditLogView";
@@ -22,41 +22,41 @@ export const routes = [
     children: [
       {
         path: "",
-        element: <LogEntriesView />,
+        element: <LogEntriesView />
       },
       {
         path: "logs/:id",
-        element: <LogEntriesView />,
+        element: <LogEntriesView />
       },
       {
         path: "logs/create",
-        element: <CreateLogView />,
+        element: <CreateLogView />
       },
       {
         path: "logs/:id/reply",
-        element: <ReplyLogView />,
+        element: <ReplyLogView />
       },
       {
         path: "logs/:id/edit",
-        element: <EditLogView />,
+        element: <EditLogView />
       },
       {
         path: "logs/:id/history",
-        element: <LogHistoryView />,
+        element: <LogHistoryView />
       },
       {
         path: "error-test",
-        element: <TestErrorView />,
+        element: <TestErrorView />
       },
       {
         path: "help",
-        element: <HelpView />,
+        element: <HelpView />
       },
       {
         path: "*",
-        element: <NotFoundView />,
-      },
-    ],
+        element: <NotFoundView />
+      }
+    ]
   },
   {
     path: "/beta",
@@ -65,42 +65,42 @@ export const routes = [
     children: [
       {
         path: "",
-        element: <SearchView />,
+        element: <SearchView />
       },
       {
         path: "logs/:id",
-        element: <SearchView />,
+        element: <SearchView />
       },
       {
         path: "logs/create",
-        element: <CreateLogView />,
+        element: <CreateLogView />
       },
       {
         path: "logs/:id/reply",
-        element: <ReplyLogView />,
+        element: <ReplyLogView />
       },
       {
         path: "logs/:id/edit",
-        element: <EditLogView />,
+        element: <EditLogView />
       },
       {
         path: "logs/:id/history",
-        element: <LogHistoryView />,
+        element: <LogHistoryView />
       },
       {
         path: "error-test",
-        element: <TestErrorView />,
+        element: <TestErrorView />
       },
       {
         path: "help",
-        element: <HelpView />,
+        element: <HelpView />
       },
       {
         path: "/beta/*",
-        element: <NotFoundView homeHref="/beta" />,
-      },
-    ],
-  },
+        element: <NotFoundView homeHref="/beta" />
+      }
+    ]
+  }
 ];
 
 const router = createBrowserRouter(routes);

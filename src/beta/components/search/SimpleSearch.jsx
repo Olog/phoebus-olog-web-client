@@ -1,23 +1,23 @@
 import { InputAdornment, Stack } from "@mui/material";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import SearchIcon from "@mui/icons-material/Search";
 import { removeEmptyKeys } from "api/ologApi";
-import TextInput from "components/shared/input/TextInput";
+import { TextInput } from "components/shared/input/TextInput";
 import {
   ButtonDatePicker,
-  DATE_FORMAT,
+  DATE_FORMAT
 } from "components/shared/input/WizardDateInput";
 import {
   defaultSearchParams,
   updateSearchParams,
-  useSearchParams,
+  useSearchParams
 } from "features/searchParamsReducer";
 import useSanitizedSearchParams, {
   withoutBetaParams,
-  withoutCacheBust,
+  withoutCacheBust
 } from "hooks/useSanitizedSearchParams";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import SearchIcon from "@mui/icons-material/Search";
 
 const SimpleSearch = () => {
   const dispatch = useDispatch();
@@ -27,9 +27,9 @@ const SimpleSearch = () => {
   const { control, handleSubmit, setValue, getValues } = useForm({
     defaultValues: {
       query: defaultSearchParams.query,
-      start: defaultSearchParams.start,
+      start: defaultSearchParams.start
     },
-    values: { query: searchParams?.query, start: searchParams?.start },
+    values: { query: searchParams?.query, start: searchParams?.start }
   });
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const SimpleSearch = () => {
 
     const params = {
       ...sanitizedSearchParams,
-      start,
+      start
     };
     dispatch(updateSearchParams(params));
   };
@@ -69,8 +69,8 @@ const SimpleSearch = () => {
         flex: 3,
         padding: "0 16px 0 30px",
         "& .MuiFormLabel-root[data-shrink='false']": {
-          transform: "translate(14px, 14px)",
-        },
+          transform: "translate(14px, 14px)"
+        }
       }}
     >
       <TextInput
@@ -85,7 +85,7 @@ const SimpleSearch = () => {
               <SearchIcon
                 sx={{
                   height: "20px",
-                  width: "20px",
+                  width: "20px"
                 }}
               />
             </InputAdornment>
@@ -96,9 +96,9 @@ const SimpleSearch = () => {
                 onAccept={onAccept}
                 ButtonFieldProps={{
                   inputProps: {
-                    "aria-label": `Select start date/time}`,
-                    size: "small",
-                  },
+                    "aria-label": "Select start date/time}",
+                    size: "small"
+                  }
                 }}
               />
             </InputAdornment>
@@ -107,18 +107,18 @@ const SimpleSearch = () => {
             fontSize: ".9rem",
             backgroundColor: "#fafafa",
             "& .MuiInputBase-input": {
-              padding: "14px 0",
+              padding: "14px 0"
             },
             "& .MuiOutlinedInput-notchedOutline": {
-              border: "1.5px solid #E2E8EE",
+              border: "1.5px solid #E2E8EE"
             },
             "&:hover .MuiOutlinedInput-notchedOutline": {
-              border: "1.5px solid #E2E8EE",
+              border: "1.5px solid #E2E8EE"
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              border: "1.5px solid #E2E8EE", // Custom border color when focused
-            },
-          },
+              border: "1.5px solid #E2E8EE" // Custom border color when focused
+            }
+          }
         }}
       />
     </Stack>

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import MultiSelect from "../MultiSelect";
+import { useEffect, useState } from "react";
 import { Alert, Snackbar, styled } from "@mui/material";
+import MultiSelect from "../MultiSelect";
 import customization from "config/customization";
 
 const errorText =

@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import { Help } from "components/shared/Help";
 import customization from "config/customization";
-import React from "react";
 
 export const HelpView = () => {
   const summary = `
@@ -10,7 +9,11 @@ export const HelpView = () => {
   `;
 
   return (
-    <Box margin="0 auto" paddingX={4} maxWidth="800px">
+    <Box
+      margin="0 auto"
+      paddingX={4}
+      maxWidth="800px"
+    >
       <Help
         summary={summary}
         docsHref={customization.DOCS_HREF}

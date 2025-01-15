@@ -1,11 +1,10 @@
-import React from "react";
 import { Box, Stack, Typography } from "@mui/material";
-import FormattedDate from "components/shared/FormattedDate";
 import TurnRightIcon from "@mui/icons-material/TurnRight";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { FormattedDate } from "components/shared/FormattedDate";
 import { LogbookChip } from "beta/components/log/LogbookChip";
 import { TagChip } from "beta/components/log/TagChip";
-import CommonMark from "components/shared/CommonMark";
+import { CommonMark } from "components/shared/CommonMark";
 
 export const SearchResultSingleItem = ({
   log,
@@ -13,7 +12,7 @@ export const SearchResultSingleItem = ({
   onClick,
   isReply,
   expandIcon,
-  handleKeyDown,
+  handleKeyDown
 }) => {
   return (
     <Stack
@@ -24,27 +23,27 @@ export const SearchResultSingleItem = ({
         borderBottom: "1px solid #bdbdbd",
         borderRadius: "1px",
         "&:focus": {
-          outline: "none",
+          outline: "none"
         },
         ...(!selected && {
           "&:hover": {
             cursor: "pointer",
-            backgroundColor: "#ECF0F3",
-          },
+            backgroundColor: "#ECF0F3"
+          }
         }),
         ...(selected && {
           "&:hover": {
-            cursor: "pointer",
+            cursor: "pointer"
           },
           borderRadius: "1px",
-          backgroundColor: "#0099dc24",
+          backgroundColor: "#0099dc24"
         }),
         ...(isReply && {
-          paddingLeft: "75px",
+          paddingLeft: "75px"
         }),
         "&:last-child": {
-          borderBottom: "none",
-        },
+          borderBottom: "none"
+        }
       }}
       onClick={() => onClick(log)}
       tabIndex={-1}
@@ -58,7 +57,7 @@ export const SearchResultSingleItem = ({
             top: "30%",
             left: "55px",
             transform: "rotate(-90deg) translate(-50%, -50%)",
-            color: "#6f6f6f",
+            color: "#6f6f6f"
           }}
           fontSize="small"
         />
@@ -69,7 +68,11 @@ export const SearchResultSingleItem = ({
         justifyContent="space-between"
         pb="4px"
       >
-        <Typography noWrap fontSize=".75rem" variant="body2">
+        <Typography
+          noWrap
+          fontSize=".75rem"
+          variant="body2"
+        >
           {log.owner}
         </Typography>
 
@@ -85,7 +88,11 @@ export const SearchResultSingleItem = ({
         flexDirection="row"
         justifyContent="space-between"
       >
-        <Typography fontSize=".85rem" noWrap fontWeight="bold">
+        <Typography
+          fontSize=".85rem"
+          noWrap
+          fontWeight="bold"
+        >
           {log.title}
         </Typography>
         <Box>
@@ -105,7 +112,7 @@ export const SearchResultSingleItem = ({
           fontSize: ".9rem",
           whiteSpace: "nowrap",
           overflow: "hidden",
-          textOverflow: "ellipsis",
+          textOverflow: "ellipsis"
         }}
       />
 
@@ -126,7 +133,11 @@ export const SearchResultSingleItem = ({
             />
           ))}
           {log?.tags?.map((it) => (
-            <TagChip sx={{ fontSize: ".7rem" }} key={it.name} value={it.name} />
+            <TagChip
+              sx={{ fontSize: ".7rem" }}
+              key={it.name}
+              value={it.name}
+            />
           ))}
         </Stack>
       )}
