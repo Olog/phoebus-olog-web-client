@@ -10,4 +10,4 @@ WORKDIR /usr/src/olog-web
 RUN npm ci
 RUN npm run build
 # Dummy command
-CMD ["echo", "success!"] 
+CMD ["echo", "success!"]

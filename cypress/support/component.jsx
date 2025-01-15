@@ -14,12 +14,12 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-import { mount } from 'cypress/react18'
+import { mount } from "cypress/react18";
 
 // Example use:
 // cy.mount(<MyComponent />)
@@ -27,25 +27,28 @@ import { setupStore } from "../../src/features/store";
 import { AppWrapper } from "../../src/test-utils/wrappers";
 
 // Cypress.Commands.add('mount', mount);
-Cypress.Commands.add('mount', (component, options = {}) => {
-    
-    // Use the default store if one is not provided
-    const { preloadedState = {}, store = setupStore(preloadedState), WrapperProps={} } = options;
-  
-    // return mount(wrapped, mountOptions)
-    return mount(
-        <AppWrapper 
-            store={store}
-            {...WrapperProps}
-        >
-            {component}
-        </AppWrapper>,
-        options
-    )
-})
+Cypress.Commands.add("mount", (component, options = {}) => {
+  // Use the default store if one is not provided
+  const {
+    preloadedState = {},
+    store = setupStore(preloadedState),
+    WrapperProps = {}
+  } = options;
+
+  // return mount(wrapped, mountOptions)
+  return mount(
+    <AppWrapper
+      store={store}
+      {...WrapperProps}
+    >
+      {component}
+    </AppWrapper>,
+    options
+  );
+});
 
 beforeEach(() => {
-    // currently we use cookies to store search state
-    // so these need to be cleared between tests
-    cy.clearAllCookies();
-})
+  // currently we use cookies to store search state
+  // so these need to be cleared between tests
+  cy.clearAllCookies();
+});

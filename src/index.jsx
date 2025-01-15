@@ -16,13 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import React from "react";
 import { createRoot } from "react-dom/client";
 import {
   MuiThemeProvider,
   LocalizationProvider,
   ReduxProvider,
-  RouterProvider,
+  RouterProvider
 } from "./providers";
 import { AppErrorBoundary } from "./components/shared/error/ErrorBoundary";
 
