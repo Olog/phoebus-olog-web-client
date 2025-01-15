@@ -1,0 +1,26 @@
+---
+default_language_version:
+  node: 20.10.0
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: prettier
+        name: format code
+        entry: npm run prettier:fix
+        language: node
+        pass_filenames: false
+      - id: eslint
+        name: lint and fix
+        entry: npm run lint:fix
+        language: node
+        pass_filenames: false
+      - id: typescript
+        name: check types
+        entry: npm run ts
+        language: node
+        pass_filenames: false

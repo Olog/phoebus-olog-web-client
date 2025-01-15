@@ -15,7 +15,32 @@
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "vite-plugin-svgr/client"]
+    "types": [
+      "vite/client",
+      "vite-plugin-svgr/client",
+      "@testing-library/cypress",
+      "@types/react",
+      "@types/react-dom",
+      "cypress",
+      "msw"
+    ],
+    // alias imports
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["src/*"],
+      "config/*": ["src/config/*"],
+      "components/*": ["src/components/*"],
+      "views/*": ["src/views/*"],
+      "hooks/*": ["src/hooks/*"],
+      "beta/*": ["src/beta/*"],
+      "providers/*": ["src/providers/*"],
+      "features/*": ["src/features/*"],
+      "api/*": ["src/api/*"],
+      "lib/*": ["src/lib/*"],
+      "mocks/*": ["src/mocks/*"],
+      "stories/*": ["src/stories/*"],
+      "test-utils/*": ["src/test-utils/*"]
+    }
   },
   "include": ["src"]
 }

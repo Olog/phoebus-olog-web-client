@@ -1,4 +1,3 @@
-import React from "react";
 import { MuiThemeProvider, ReduxProvider } from "providers";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import { defaultHandlers } from "../src/mocks/handlers";
@@ -12,9 +11,9 @@ const preview = {
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/,
-      },
-    },
+        date: /Date$/
+      }
+    }
   },
   decorators: [
     (Story) => (
@@ -23,9 +22,9 @@ const preview = {
           <Story />
         </ReduxProvider>
       </MuiThemeProvider>
-    ),
+    )
   ],
-  loaders: [mswLoader],
+  loaders: [mswLoader]
 };
 
 export default preview;

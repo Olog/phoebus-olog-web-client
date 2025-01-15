@@ -1,18 +1,19 @@
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react-swc";
+import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/",
   server: {
     port: 3000,
-    open: true,
+    open: true
   },
   build: {
     outDir: "build",
-    emptyOutDir: true,
+    emptyOutDir: true
   },
-  plugins: [react()],
+  plugins: [svgr(), react()],
   resolve: {
     alias: {
       src: "/src",
@@ -27,7 +28,15 @@ export default defineConfig({
       lib: "/src/lib",
       mocks: "/src/mocks",
       stories: "/src/stories",
-      "test-utils": "/src/test-utils",
-    },
+      "test-utils": "/src/test-utils"
+    }
   },
+  test: {
+    setupFiles: "./src/setupTests.ts",
+    environment: "jsdom",
+    coverage: {
+      reporter: ["lcov", "text"]
+    },
+    outputFile: "coverage/sonar-report.xml"
+  }
 });
