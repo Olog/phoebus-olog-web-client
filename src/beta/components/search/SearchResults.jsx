@@ -106,7 +106,7 @@ export const SearchResults = styled(({ className }) => {
       justifyContent="space-between"
       className={`SearchResultList ${className}`}
       position="relative"
-      sx={{ backgroundColor: "#fafafa", minWidth: "400px" }}
+      sx={{ backgroundColor: "#fafafa" }}
     >
       {advancedSearchActive && (
         <Box>

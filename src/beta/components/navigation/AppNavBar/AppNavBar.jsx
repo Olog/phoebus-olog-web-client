@@ -56,6 +56,7 @@ import {
   updateSearchPageParams,
   useSearchPageParams
 } from "features/searchPageParamsReducer";
+import { theme } from "src/config/theme";
 
 const showSearchBoxRegex = /^\/$|^\/beta$|^\/beta\/logs$|^\/beta\/logs\/\d+$/;
 
@@ -92,8 +93,7 @@ const AppNavBar = () => {
         sx={{
           backgroundColor: "transparent",
           borderBottom: "1px solid #E2E8EE",
-          color: "#0099dc",
-          height: "80px"
+          color: "#0099dc"
         }}
         component={"header"}
         position="static"
@@ -105,7 +105,24 @@ const AppNavBar = () => {
             display: "grid",
             gridTemplateColumns: onHomePage ? "1.15fr auto 2fr" : "auto",
             gridTemplateRows: "1fr",
-            height: "100%"
+            height: "80px",
+            [theme.breakpoints.down("md")]: {
+              height: "auto",
+              display: "flex",
+              flexDirection: "column-reverse",
+              alignItems: "flex-start",
+              gap: "20px",
+              padding: "10px 0",
+              "& > nav": {
+                width: "100%"
+              },
+              "& > div": {
+                flexFlow: "column"
+              },
+              "& > hr": {
+                display: "none"
+              }
+            }
           }}
         >
           {onHomePage && (
@@ -118,7 +135,7 @@ const AppNavBar = () => {
                   flexDirection="row"
                   justifyContent="space-between"
                   alignItems="center"
-                  sx={{ minWidth: "400px", height: "100%" }}
+                  sx={{ height: "100%" }}
                 >
                   <SimpleSearch />
 
