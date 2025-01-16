@@ -20,6 +20,7 @@ import { Outlet } from "react-router-dom";
 import { Box, styled } from "@mui/material";
 import { AppNavBar } from "beta/components/navigation/AppNavBar";
 import Initialize from "components/Initialize";
+import { theme } from "src/config/theme";
 
 const BetaApp = styled(({ className }) => {
   return (
@@ -27,11 +28,13 @@ const BetaApp = styled(({ className }) => {
       <Box
         className={className}
         sx={{
+          display: "block",
           height: "100dvh",
           width: "100dvw",
-          display: "grid",
-          gridTemplateColumns: "1fr",
-          gridTemplateRows: "min-content 1fr"
+          [theme.breakpoints.down("md")]: {
+            width: "auto",
+            height: "auto"
+          }
         }}
       >
         <AppNavBar />
