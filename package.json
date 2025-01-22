@@ -99,7 +99,7 @@
     "prop-types": "^15.8.1",
     "react-select-event": "^5.5.1",
     "storybook": "^8.4.7",
-    "vite": "^5.4.11",
+    "vite": "^5.4.14",
     "vite-plugin-svgr": "^4.3.0",
     "vitest": "^2.1.9"
   },
