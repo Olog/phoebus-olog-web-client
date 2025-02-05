@@ -110,6 +110,7 @@ export const SearchResultList = styled(
 
     return (
       <Stack
+        flex={2}
         px={0}
         overflow="scroll"
         className={`SearchResultList ${className}`}
