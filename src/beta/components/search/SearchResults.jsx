@@ -103,10 +103,9 @@ export const SearchResults = styled(({ className }) => {
 
   return (
     <Stack
-      justifyContent="space-between"
       className={`SearchResultList ${className}`}
       position="relative"
-      sx={{ backgroundColor: "#fafafa" }}
+      sx={{ backgroundColor: "#fafafa", minHeight: 0 }}
     >
       {advancedSearchActive && (
         <Box>
@@ -163,7 +162,7 @@ export const SearchResults = styled(({ className }) => {
         showLastButton
         sx={{
           borderTop: "1px solid #bdbdbd",
-          height: "auto",
+          minHeight: "52px",
           "&:last-child": {
             paddingRight: "20px"
           }

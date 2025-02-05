@@ -28,9 +28,9 @@ const BetaApp = styled(({ className }) => {
       <Box
         className={className}
         sx={{
-          display: "block",
-          height: "100dvh",
-          width: "100dvw",
+          display: "flex",
+          flexFlow: "column",
+          height: "100vh",
           [theme.breakpoints.down("md")]: {
             width: "auto",
             height: "auto"

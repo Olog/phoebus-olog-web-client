@@ -7,6 +7,7 @@ const ContentView = styled(Box)(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "1.15fr auto 2fr",
   gridTemplateRows: "1fr",
+  height: "100%",
   [theme.breakpoints.down("md")]: {
     display: "flex",
     flexDirection: "column-reverse",
@@ -27,14 +28,16 @@ const SearchView = styled(({ className }) => {
   const { id } = useParams();
 
   return (
-    <ContentView className={`SearchView ${className}`}>
-      <SearchResults />
-      <Divider
-        sx={{ borderColor: "#E2E8EE" }}
-        orientation="vertical"
-      />
-      <LogDetailsContainer id={id} />
-    </ContentView>
+    <Box height="100%">
+      <ContentView className={`SearchView ${className}`}>
+        <SearchResults />
+        <Divider
+          sx={{ borderColor: "#E2E8EE" }}
+          orientation="vertical"
+        />
+        <LogDetailsContainer id={id} />
+      </ContentView>
+    </Box>
   );
 })({
   "& > *": {
