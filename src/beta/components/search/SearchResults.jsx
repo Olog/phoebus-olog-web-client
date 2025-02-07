@@ -161,7 +161,7 @@ export const SearchResults = styled(({ className }) => {
         showFirstButton
         showLastButton
         sx={{
-          borderTop: "1px solid #bdbdbd",
+          borderTop: "1px solid #dedede",
           minHeight: "52px",
           "&:last-child": {
             paddingRight: "20px"

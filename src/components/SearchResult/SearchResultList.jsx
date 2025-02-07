@@ -22,7 +22,6 @@ import { useNavigate } from "react-router-dom";
 import { useCallback, useMemo, useState } from "react";
 import SearchBox from "./SearchBox";
 import SearchResultItem from "./SearchResultItem";
-import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
 import customization from "config/customization";
 import { updateSearchPageParams } from "features/searchPageParamsReducer";
 import { sortByCreatedDate } from "components/log/sort";
@@ -100,9 +99,9 @@ const SearchResultList = ({
 
   const handleClick = (params) => {
     const log = params.row.log;
-    dispatch(updateCurrentLogEntry(log));
     navigate(`/logs/${log.id}`);
   };
+
   const paginationModel = useMemo(
     () => ({
       page,

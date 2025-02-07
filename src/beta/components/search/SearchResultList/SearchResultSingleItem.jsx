@@ -1,5 +1,5 @@
-import { Box, Stack, Typography } from "@mui/material";
-import TurnRightIcon from "@mui/icons-material/TurnRight";
+import { Stack, Typography } from "@mui/material";
+import ReplyIcon from "@mui/icons-material/Reply";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { FormattedDate } from "components/shared/FormattedDate";
 import { LogbookChip } from "beta/components/log/LogbookChip";
@@ -12,15 +12,18 @@ export const SearchResultSingleItem = ({
   onClick,
   isReply,
   expandIcon,
-  handleKeyDown
+  handleKeyDown,
+  isNestedReply,
+  isParentNestedLog
 }) => {
   return (
     <Stack
       px={4}
-      py={1.3}
+      pb={1.2}
+      pt={0.8}
       sx={{
         position: "relative",
-        borderBottom: "1px solid #bdbdbd",
+        borderBottom: "1px solid #dedede",
         borderRadius: "1px",
         "&:focus": {
           outline: "none"
@@ -38,26 +41,27 @@ export const SearchResultSingleItem = ({
           borderRadius: "1px",
           backgroundColor: "#0099dc24"
         }),
-        ...(isReply && {
+        ...(isNestedReply && {
           paddingLeft: "75px"
         }),
         "&:last-child": {
           borderBottom: "none"
         }
       }}
-      onClick={() => onClick(log)}
+      onClick={() => onClick(log.id)}
       tabIndex={-1}
       onKeyDown={handleKeyDown}
       data-id={log.id}
     >
-      {isReply && (
-        <TurnRightIcon
+      {isNestedReply && !isParentNestedLog && (
+        <ReplyIcon
           sx={{
             position: "absolute",
-            top: "30%",
-            left: "55px",
-            transform: "rotate(-90deg) translate(-50%, -50%)",
-            color: "#6f6f6f"
+            top: "52%",
+            left: "35px",
+            transform: "rotate(0) scaleX(-1) translate(-50%, -50%)",
+            color: "#6f6f6f",
+            fontSize: "1.2rem"
           }}
           fontSize="small"
         />
@@ -80,7 +84,7 @@ export const SearchResultSingleItem = ({
           date={log.createdDate}
           whiteSpace="nowrap"
           variant="body2"
-          fontSize=".75rem"
+          fontSize={isNestedReply ? "0.7rem" : "0.8rem"}
         />
       </Stack>
       <Stack
@@ -89,34 +93,49 @@ export const SearchResultSingleItem = ({
         justifyContent="space-between"
       >
         <Typography
-          fontSize=".85rem"
+          fontSize={isNestedReply ? ".75rem" : ".85rem"}
           noWrap
           fontWeight="bold"
         >
           {log.title}
         </Typography>
-        <Box>
-          {log?.attachments?.length > 0 ? (
+        <Stack
+          flexDirection="row"
+          gap={0.5}
+        >
+          {isReply && (
+            <ReplyIcon
+              sx={{
+                fontSize: "1.5rem",
+                color: "#6f6f6f"
+              }}
+              fontSize="small"
+            />
+          )}
+          {log?.attachments?.length > 0 && (
             <AttachFileIcon
               fontSize="small"
-              sx={{ fontSize: "1.2rem", marginRight: "-2px", marginTop: "4px" }}
+              sx={{
+                fontSize: isNestedReply ? "1rem" : "1.2rem",
+                marginTop: !isNestedReply && "4px"
+              }}
             />
-          ) : null}
-        </Box>
+          )}
+        </Stack>
       </Stack>
 
       <CommonMark
         commonmarkSrc={log.source}
         isSummary
         sx={{
-          fontSize: ".9rem",
+          fontSize: isNestedReply ? ".8rem" : ".9rem",
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis"
         }}
       />
 
-      {!isReply && (
+      {!isNestedReply && (
         <Stack
           mt={1}
           flexDirection="row"
