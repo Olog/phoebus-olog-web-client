@@ -17,11 +17,9 @@
  */
 
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { styled } from "@mui/material";
 import GroupHeader from "./GroupHeader";
 import { getLogEntryGroupId } from "../Properties/utils";
-import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
 import { CommonMark } from "components/shared/CommonMark";
 import customization from "config/customization";
 import { sortByCreatedDate } from "components/log/sort";
@@ -58,7 +56,6 @@ const LogEntryGroupView = ({
   setLogGroupRecords,
   className
 }) => {
-  const dispatch = useDispatch();
   const navigate = useBetaNavigate();
   const [getLogGroup] = ologApi.endpoints.getLogGroup.useLazyQuery();
 
@@ -81,7 +78,6 @@ const LogEntryGroupView = ({
   }, [currentLogEntry?.properties, getLogGroup, setLogGroupRecords]);
 
   const showLog = (log) => {
-    dispatch(updateCurrentLogEntry(log));
     navigate(`/logs/${log.id}`);
   };
 

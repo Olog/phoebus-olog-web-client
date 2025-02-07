@@ -1,16 +1,40 @@
 import { useState } from "react";
-import { IconButton, Stack, Typography, styled } from "@mui/material";
+import { useParams } from "react-router-dom";
+import {
+  Box,
+  IconButton,
+  LinearProgress,
+  Stack,
+  Typography,
+  styled
+} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { SearchResultSingleItem } from "..";
-import { useCurrentLogEntry } from "features/currentLogEntryReducer";
+import { getLogEntryGroupId } from "components/Properties";
+import { ologApi } from "api/ologApi";
+import { sortByCreatedDate } from "src/components/log/sort";
 
 export const SearchResultGroupItem = styled(
-  ({ log, onClick = () => {}, handleKeyDown }) => {
-    const currentLogEntry = useCurrentLogEntry();
-    const currentLogEntryId = Number(currentLogEntry?.id);
-
+  ({ log, onClick = () => {}, handleKeyDown, dateDescending }) => {
     const [expanded, setExpanded] = useState(true);
+
+    const { id: paramLogId } = useParams();
+    const currentLogEntryId = Number(paramLogId);
+
+    const { data: groupOfLogs, isLoading: repliesLoading } =
+      ologApi.endpoints.getLogGroup.useQuery({
+        groupId: getLogEntryGroupId(log?.properties ?? [])
+      });
+
+    const sortedGroup = groupOfLogs?.toSorted(
+      sortByCreatedDate(dateDescending)
+    );
+
+    const parentLog = sortedGroup?.[0];
+    const nestedLogsCount = sortedGroup?.length - 1;
+    const nestedLogs = sortedGroup?.slice(1);
+
     const onExpandClick = (e) => {
       e.stopPropagation();
       setExpanded(!expanded);
@@ -39,29 +63,40 @@ export const SearchResultGroupItem = styled(
           color="#0099db"
           variant="body2"
         >
-          ({log?.replies.length}) {expanded ? "Hide" : "Show"} replies
+          ({nestedLogsCount}) {expanded ? "Hide" : "Show"} group
         </Typography>
       </Stack>
     );
 
     return (
       <>
-        <SearchResultSingleItem
-          log={log}
-          selected={currentLogEntryId === log.id}
-          onClick={onClick}
-          expandIcon={<ExpandIcon />}
-          handleKeyDown={handleKeyDown}
-        />
-
+        {parentLog && (
+          <SearchResultSingleItem
+            log={parentLog}
+            selected={currentLogEntryId === parentLog.id}
+            onClick={onClick}
+            expandIcon={<ExpandIcon />}
+            handleKeyDown={handleKeyDown}
+            isReply
+          />
+        )}
+        {repliesLoading && (
+          <Box
+            px={8}
+            py={2}
+          >
+            <LinearProgress sx={{ height: "4px", width: "100%" }} />
+          </Box>
+        )}
         {expanded &&
-          log?.replies.map((reply) => (
+          nestedLogs?.map((reply, i) => (
             <SearchResultSingleItem
               key={reply.id}
               log={reply}
               selected={currentLogEntryId === reply.id}
               onClick={onClick}
-              isReply
+              isNestedReply
+              isParentNestedLog={i === nestedLogs.length - 1}
               handleKeyDown={handleKeyDown}
             />
           ))}

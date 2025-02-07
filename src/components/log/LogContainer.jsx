@@ -1,9 +1,6 @@
-import { useEffect } from "react";
 import { LinearProgress } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { ologApi } from "api/ologApi";
 import { ServerErrorPage } from "components/shared/error";
-import { updateCurrentLogEntry } from "features/currentLogEntryReducer";
 
 const LogContainer = ({ id, renderLog }) => {
   const {
@@ -11,13 +8,6 @@ const LogContainer = ({ id, renderLog }) => {
     isLoading,
     error
   } = ologApi.endpoints.getLog.useQuery({ id }, { refetchOnFocus: true });
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (log) {
-      dispatch(updateCurrentLogEntry(log));
-    }
-  }, [dispatch, log]);
 
   if (isLoading) {
     return <LinearProgress width="100%" />;
@@ -29,6 +19,7 @@ const LogContainer = ({ id, renderLog }) => {
         <ServerErrorPage
           message={"Log not found"}
           status={error?.code}
+          homeHref="/beta"
         />
       );
     }
