@@ -1,6 +1,7 @@
 import { ButtonGroup } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import EditIcon from "@mui/icons-material/Edit";
+import HistoryIcon from "@mui/icons-material/History";
 import CopyUrlButton from "./CopyUrlButton";
 import { useUser } from "features/authSlice";
 import { InternalButtonLink } from "components/shared/Link";
@@ -27,19 +28,28 @@ const LogDetailActionButton = ({ log }) => {
             }
       }
     >
+      {log.modifyDate && (
+        <InternalButtonLink
+          to={`/beta/logs/${log.id}/history`}
+          startIcon={<HistoryIcon sx={{ width: "15px" }} />}
+          sx={{ borderRadiusRight: "100px", fontSize: ".775rem" }}
+        >
+          History
+        </InternalButtonLink>
+      )}
       <CopyUrlButton url={`${window.location.origin}/beta/logs/${log.id}`} />
       {user && (
         <>
           <InternalButtonLink
             to={`/beta/logs/${log.id}/reply`}
-            startIcon={<ReplyIcon sx={{ width: "13px" }} />}
+            startIcon={<ReplyIcon sx={{ width: "15px" }} />}
             sx={{ fontSize: ".775rem" }}
           >
             Reply
           </InternalButtonLink>
           <InternalButtonLink
             to={`/beta/logs/${log.id}/edit`}
-            startIcon={<EditIcon sx={{ width: "13px" }} />}
+            startIcon={<EditIcon sx={{ width: "15px" }} />}
             sx={{ borderRadiusRight: "100px", fontSize: ".775rem" }}
           >
             Edit

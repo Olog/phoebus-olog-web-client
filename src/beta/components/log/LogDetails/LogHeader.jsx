@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import LogDetailActionButton from "./LogDetailActionButton";
-import { CreatedDate } from "./CreatedDate";
 import { KeyValueTable } from "./KeyValueTable";
+import { FormattedDate } from "src/components/shared/FormattedDate";
 
 const LogHeader = ({ log, className }) => (
   <Stack
@@ -23,7 +23,12 @@ const LogHeader = ({ log, className }) => (
         },
         {
           name: "Created",
-          value: <CreatedDate log={log} />
+          value: (
+            <FormattedDate
+              date={log.createdDate}
+              component="span"
+            />
+          )
         }
       ]}
     />

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Accordion,
   AccordionDetails,
@@ -17,7 +18,7 @@ import { sortByCreatedDate } from "components/log/sort";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
 
 const LogDetailsAccordion = styled(
-  ({ log, defaultExpanded = false, className }) => {
+  ({ log, defaultExpanded = false, className, refProp }) => {
     const [expanded, setExpanded] = useState(defaultExpanded);
 
     const onChange = () => {
@@ -26,6 +27,7 @@ const LogDetailsAccordion = styled(
 
     return (
       <Accordion
+        ref={refProp}
         defaultExpanded={false}
         expanded={expanded}
         onChange={onChange}
@@ -68,6 +70,8 @@ const LogDetailsAccordion = styled(
 });
 
 const LogDetailsWithReplies = ({ log }) => {
+  const logScrollRef = useRef(null);
+  const { id: paramLogId } = useParams();
   // fetch any groups/conversations
   const groupId = getLogEntryGroupId(log.properties);
   const {
@@ -77,6 +81,14 @@ const LogDetailsWithReplies = ({ log }) => {
   } = ologApi.endpoints.getLogGroup.useQuery({ groupId });
 
   const { dateDescending } = useSearchPageParams();
+
+  useEffect(() => {
+    if (logScrollRef && logScrollRef.current) {
+      logScrollRef.current.scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+  }, [logScrollRef, log]);
 
   if (repliesLoading) {
     return <CircularProgress />;
@@ -97,8 +109,7 @@ const LogDetailsWithReplies = ({ log }) => {
       log,
       ...replies.filter((it) => it.id !== log.id)
     ].toSorted(sortByCreatedDate(dateDescending));
-    const parentLog = sortedLogs.pop();
-    sortedLogs.unshift(parentLog);
+
     return (
       <Stack
         sx={{
@@ -108,6 +119,9 @@ const LogDetailsWithReplies = ({ log }) => {
       >
         {sortedLogs.map((sortedLog) => (
           <LogDetailsAccordion
+            refProp={
+              sortedLog.id === Number(paramLogId) ? logScrollRef : undefined
+            }
             log={sortedLog}
             defaultExpanded={sortedLog.id === log.id}
             key={`current-${log.id}-accordion-${sortedLog.id}`}

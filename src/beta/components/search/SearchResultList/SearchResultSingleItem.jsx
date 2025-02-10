@@ -1,6 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import EditIcon from "@mui/icons-material/Edit";
 import { FormattedDate } from "components/shared/FormattedDate";
 import { LogbookChip } from "beta/components/log/LogbookChip";
 import { TagChip } from "beta/components/log/TagChip";
@@ -60,7 +61,6 @@ export const SearchResultSingleItem = ({
             top: "52%",
             left: "35px",
             transform: "rotate(0) scaleX(-1) translate(-50%, -50%)",
-            color: "#6f6f6f",
             fontSize: "1.2rem"
           }}
           fontSize="small"
@@ -91,6 +91,8 @@ export const SearchResultSingleItem = ({
         maxHeight="22px"
         flexDirection="row"
         justifyContent="space-between"
+        alignItems="center"
+        pb={0.2}
       >
         <Typography
           fontSize={isNestedReply ? ".75rem" : ".85rem"}
@@ -101,25 +103,22 @@ export const SearchResultSingleItem = ({
         </Typography>
         <Stack
           flexDirection="row"
+          alignItems="center"
           gap={0.5}
         >
-          {isReply && (
-            <ReplyIcon
-              sx={{
-                fontSize: "1.5rem",
-                color: "#6f6f6f"
-              }}
-              fontSize="small"
-            />
-          )}
           {log?.attachments?.length > 0 && (
             <AttachFileIcon
               fontSize="small"
               sx={{
-                fontSize: isNestedReply ? "1rem" : "1.2rem",
-                marginTop: !isNestedReply && "4px"
+                fontSize: isNestedReply ? "1.1rem" : "1.25rem"
               }}
             />
+          )}
+          {log?.modifyDate && (
+            <EditIcon sx={{ fontSize: isNestedReply ? "1rem" : "1.3rem" }} />
+          )}
+          {isReply && (
+            <ReplyIcon sx={{ fontSize: isNestedReply ? "1.1rem" : "1.5rem" }} />
           )}
         </Stack>
       </Stack>
