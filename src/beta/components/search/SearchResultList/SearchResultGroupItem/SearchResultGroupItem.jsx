@@ -17,7 +17,7 @@ import { sortByCreatedDate } from "src/components/log/sort";
 
 export const SearchResultGroupItem = styled(
   ({ log, onClick = () => {}, handleKeyDown, dateDescending }) => {
-    const [expanded, setExpanded] = useState(true);
+    const [expanded, setExpanded] = useState(false);
 
     const { id: paramLogId } = useParams();
     const currentLogEntryId = Number(paramLogId);
@@ -77,7 +77,7 @@ export const SearchResultGroupItem = styled(
             onClick={onClick}
             expandIcon={<ExpandIcon />}
             handleKeyDown={handleKeyDown}
-            isReply
+            isReply={dateDescending}
           />
         )}
         {repliesLoading && (
@@ -96,7 +96,7 @@ export const SearchResultGroupItem = styled(
               selected={currentLogEntryId === reply.id}
               onClick={onClick}
               isNestedReply
-              isParentNestedLog={i === nestedLogs.length - 1}
+              isParentNestedLog={dateDescending && i === nestedLogs.length - 1}
               handleKeyDown={handleKeyDown}
             />
           ))}

@@ -62,7 +62,7 @@ const LoginDialog = () => {
       }
       // clear bad creds field & bring focus to it
       resetField("password");
-      setFocus("password", { shouldSelect: true });
+      resetField("username");
     }
   }, [error, resetField, setFocus]);
 
