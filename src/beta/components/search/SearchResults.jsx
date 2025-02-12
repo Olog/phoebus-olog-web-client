@@ -4,38 +4,23 @@ import {
   Divider,
   LinearProgress,
   Stack,
-  TablePagination,
   Typography,
   styled
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useMemo } from "react";
 import { SearchResultList } from "./SearchResultList";
 import { SearchParamsBadges } from "./SearchParamsBadges";
 import { ologApi, removeEmptyKeys } from "api/ologApi";
 import customization from "config/customization";
-import {
-  updateSearchPageParams,
-  useSearchPageParams
-} from "features/searchPageParamsReducer";
+import { useSearchPageParams } from "features/searchPageParamsReducer";
 import { useSearchParams } from "features/searchParamsReducer";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
 import { withCacheBust } from "hooks/useSanitizedSearchParams";
 
 export const SearchResults = styled(({ className }) => {
-  const dispatch = useDispatch();
-
   const { active: advancedSearchActive } = useAdvancedSearch();
   const searchParams = useSearchParams();
   const searchPageParams = useSearchPageParams();
-  const rowsPerPageOptions = customization.defaultRowsPerPageOptions;
-
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(
-    rowsPerPageOptions.includes(searchPageParams?.size)
-      ? searchPageParams?.size
-      : customization.defaultPageSize
-  );
 
   const searchLogsQuery = useMemo(() => {
     let params = {
@@ -74,32 +59,13 @@ export const SearchResults = styled(({ className }) => {
       hitCount: 0
     },
     error,
-    isLoading: loading
+    isLoading: loading,
+    isFetching: isFetchingSearchResults
   } = ologApi.endpoints.searchLogs.useQuery(searchLogsQuery, {
     pollingInterval: customization.defaultSearchFrequency,
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true
   });
-
-  const count = searchResults?.hitCount ?? 0;
-
-  const onPageChange = (event, page) => {
-    setPage(page);
-  };
-
-  const onRowsPerPageChange = (event) => {
-    setPageSize(event.target.value);
-  };
-
-  useEffect(() => {
-    dispatch(
-      updateSearchPageParams({
-        from: page * pageSize,
-        size: pageSize,
-        dateDescending: searchPageParams?.dateDescending
-      })
-    );
-  }, [dispatch, page, pageSize, searchPageParams.dateDescending]);
 
   return (
     <Stack
@@ -123,7 +89,7 @@ export const SearchResults = styled(({ className }) => {
         </Box>
       )}
       {loading && <LinearProgress />}
-      {error ? (
+      {error && (
         <Box>
           <Alert severity="error">
             {error?.status === "FETCH_ERROR"
@@ -131,11 +97,12 @@ export const SearchResults = styled(({ className }) => {
               : `Error ${error?.code}: ${error?.message}`}
           </Alert>
         </Box>
-      ) : null}
+      )}
       {searchResults?.logs?.length > 0 ? (
         <SearchResultList
           logs={searchResults.logs}
           dateDescending={searchPageParams?.dateDescending}
+          isFetchingSearchResults={isFetchingSearchResults}
         />
       ) : (
         <Box
@@ -146,28 +113,6 @@ export const SearchResults = styled(({ className }) => {
           <Typography>No records found</Typography>
         </Box>
       )}
-      <TablePagination
-        component="div"
-        count={count}
-        page={page}
-        onPageChange={onPageChange}
-        rowsPerPageOptions={rowsPerPageOptions}
-        rowsPerPage={pageSize}
-        onRowsPerPageChange={onRowsPerPageChange}
-        variant={"outlined"}
-        shape={"rounded"}
-        labelRowsPerPage={"Hits Per Page"}
-        labelDisplayedRows={() => null}
-        showFirstButton
-        showLastButton
-        sx={{
-          borderTop: "1px solid #dedede",
-          minHeight: "52px",
-          "&:last-child": {
-            paddingRight: "20px"
-          }
-        }}
-      />
     </Stack>
   );
 })({});
