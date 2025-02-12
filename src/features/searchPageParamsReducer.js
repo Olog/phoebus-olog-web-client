@@ -22,11 +22,16 @@ export const searchPageParamsSlice = createSlice({
         maxAge: "100000000"
       });
       return searchPageParams;
-    }
+    },
+    incrementPageSize: (state) => ({
+      ...state,
+      size: state.size + 50
+    })
   }
 });
 
-export const { updateSearchPageParams } = searchPageParamsSlice.actions;
+export const { updateSearchPageParams, incrementPageSize } =
+  searchPageParamsSlice.actions;
 
 export const useSearchPageParams = () =>
   useSelector((state) => state.searchPageParams);

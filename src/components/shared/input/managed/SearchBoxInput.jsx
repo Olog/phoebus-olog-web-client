@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { InputAdornment, Link, OutlinedInput, styled } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
-import { updateSearchParams } from "features/searchParamsReducer";
+import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 import useSanitizedSearchParams, {
   withoutBetaParams,
   withoutCacheBust
@@ -54,7 +54,7 @@ const SearchBoxInput = styled(({ searchParams, showFilters, className }) => {
   const onKeyDown = (event) => {
     if (event.key === "Enter") {
       const sanitizedSearchParams = toSearchParams(searchString);
-      dispatch(updateSearchParams(sanitizedSearchParams));
+      dispatch(updateAdvancedSearch(sanitizedSearchParams));
     }
   };
 

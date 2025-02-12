@@ -6,9 +6,9 @@ import { TagChip } from "../log/TagChip";
 import { TextChip } from "../log/TextChip";
 import {
   defaultSearchParams,
-  updateSearchParams,
   useSearchParams
 } from "features/searchParamsReducer";
+import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
 const LogbooksList = ({ logbooks, onChange }) => {
   const onDelete = (logbook) => {
@@ -51,7 +51,7 @@ const TagsList = ({ tags, onChange }) => {
 export const SearchParamsBadges = () => {
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
-  const onSearch = (vals) => dispatch(updateSearchParams(vals));
+  const onSearch = (vals) => dispatch(updateAdvancedSearch(vals));
 
   const {
     title,

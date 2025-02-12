@@ -11,13 +11,13 @@ import {
 } from "components/shared/input/WizardDateInput";
 import {
   defaultSearchParams,
-  updateSearchParams,
   useSearchParams
 } from "features/searchParamsReducer";
 import useSanitizedSearchParams, {
   withoutBetaParams,
   withoutCacheBust
 } from "hooks/useSanitizedSearchParams";
+import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
 const SimpleSearch = () => {
   const dispatch = useDispatch();
@@ -56,7 +56,7 @@ const SimpleSearch = () => {
       ...sanitizedSearchParams,
       start
     };
-    dispatch(updateSearchParams(params));
+    dispatch(updateAdvancedSearch(params));
   };
 
   return (

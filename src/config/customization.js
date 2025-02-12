@@ -54,7 +54,7 @@ let customization = {
    * Default page size in search
    */
   defaultRowsPerPageOptions: [10, 30, 50],
-  defaultPageSize: 30,
+  defaultPageSize: 50,
 
   /**
    * Default frequency of background search, in milliseconds

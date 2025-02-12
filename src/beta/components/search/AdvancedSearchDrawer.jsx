@@ -8,10 +8,8 @@ import WizardDateInput from "components/shared/input/WizardDateInput";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
-import {
-  defaultSearchParams,
-  updateSearchParams
-} from "features/searchParamsReducer";
+import { defaultSearchParams } from "features/searchParamsReducer";
+import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
 const isDate = (obj) => {
   return obj instanceof Date && !isNaN(obj);
@@ -42,12 +40,12 @@ export const AdvancedSearchDrawer = ({
   const closeDrawer = () => setAdvancedSearchOpen(false);
 
   const clearFilters = () => {
-    dispatch(updateSearchParams(defaultSearchParams));
+    dispatch(updateAdvancedSearch(defaultSearchParams));
     form.reset(defaultSearchParams);
   };
 
   const onSubmit = () => {
-    dispatch(updateSearchParams(getValues()));
+    dispatch(updateAdvancedSearch(getValues()));
     closeDrawer();
   };
 

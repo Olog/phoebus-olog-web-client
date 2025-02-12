@@ -19,10 +19,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Button, Stack, Typography } from "@mui/material";
 import Collapse from "./Collapse";
-import {
-  updateSearchParams,
-  useSearchParams
-} from "features/searchParamsReducer";
+import { useSearchParams } from "features/searchParamsReducer";
 import {
   updateSearchPageParams,
   useSearchPageParams
@@ -34,6 +31,7 @@ import customization from "config/customization";
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
+import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
 /**
  * Component holding search criteria elements, i.e.
@@ -59,7 +57,7 @@ const Filters = ({ showFilters, className }) => {
       const updatedSearchPageParams = { ...searchPageParams, sort: data.sort };
       dispatch(updateSearchPageParams(updatedSearchPageParams));
     }
-    dispatch(updateSearchParams(updatedSearchParams));
+    dispatch(updateAdvancedSearch(updatedSearchParams));
   };
 
   const onSearchParamFieldValueChanged = (field, value, submit = true) => {
