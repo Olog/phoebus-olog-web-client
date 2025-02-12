@@ -49,7 +49,6 @@ import { SortToggleButton } from "beta/components/search/SortToggleButton";
 import { AdvancedSearchDrawer } from "beta/components/search/AdvancedSearchDrawer";
 import {
   defaultSearchParams,
-  updateSearchParams,
   useSearchParams
 } from "features/searchParamsReducer";
 import {
@@ -57,6 +56,7 @@ import {
   useSearchPageParams
 } from "features/searchPageParamsReducer";
 import { theme } from "src/config/theme";
+import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
 const showSearchBoxRegex = /^\/$|^\/beta$|^\/beta\/logs$|^\/beta\/logs\/\d+$/;
 
@@ -178,7 +178,7 @@ const AppNavBar = () => {
             <Button
               component={RouterLink}
               onClick={() =>
-                dispatch(updateSearchParams({ ...defaultSearchParams }))
+                dispatch(updateAdvancedSearch({ ...defaultSearchParams }))
               }
               to="/beta"
               sx={{ padding: "8px", marginLeft: "-8px" }}

@@ -2,16 +2,14 @@ import { LinearProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
-import {
-  defaultSearchParamsState,
-  updateSearchParams
-} from "features/searchParamsReducer";
+import { defaultSearchParamsState } from "features/searchParamsReducer";
 import {
   defaultSearchPageParamsState,
   updateSearchPageParams
 } from "features/searchPageParamsReducer";
 import customization from "config/customization";
 import { ologApi } from "api/ologApi";
+import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
 const cookies = new Cookies();
 
@@ -35,7 +33,7 @@ const Initialize = ({ children }) => {
       const initialSearchParams =
         cookies.get(customization.searchParamsCookie) ??
         defaultSearchParamsState;
-      dispatch(updateSearchParams(initialSearchParams));
+      dispatch(updateAdvancedSearch(initialSearchParams));
 
       setReady(true);
     }
