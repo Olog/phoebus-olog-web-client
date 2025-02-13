@@ -106,6 +106,7 @@ export const EntryEditor = ({
           type="submit"
           variant="contained"
           disabled={submitDisabled}
+          sx={{ marginBottom: 4 }}
         >
           Submit
         </Button>

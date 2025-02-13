@@ -1,17 +1,50 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
+  Divider,
   Link,
+  Paper,
   Stack,
   Typography
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import LogEntrySingleView from "components/LogDetails/LogEntrySingleView";
 import { FormattedDate } from "components/shared/FormattedDate";
+import LogDetails from "src/beta/components/log/LogDetails/LogDetails";
+import { KeyValueTable } from "src/beta/components/log/LogDetails/KeyValueTable";
+
+const LogHistoryHeader = ({ log }) => (
+  <Box
+    px={3}
+    pt={2}
+    sx={{ "& p, time": { fontSize: "1rem" } }}
+  >
+    <KeyValueTable
+      data={[
+        {
+          name: "Author",
+          value: log.owner
+        },
+        {
+          name: log.modifyDate ? "Edited" : "Created",
+          value: (
+            <FormattedDate
+              date={log?.modifyDate || log?.createdDate}
+              component="span"
+              sx={{ fontSize: ".875rem", fontWeight: "bold" }}
+            />
+          )
+        }
+      ]}
+    />
+    <Divider
+      sx={{
+        marginTop: "15px",
+        borderWidth: "1.25px",
+        borderColor: "#F3F5F7"
+      }}
+    />
+  </Box>
+);
 
 const DownloadButton = ({ currentLog, logHistory }) => {
   const data = {
@@ -38,43 +71,11 @@ const DownloadButton = ({ currentLog, logHistory }) => {
 };
 
 const LogHistory = ({ currentLog, logHistory }) => {
-  const renderTitle = (log, title) => {
-    return (
-      <Typography
-        component="h3"
-        variant="h6"
-      >
-        {title ?? (
-          <>
-            {`${log.modifyDate ? "Edited" : "Created"} `}
-            <FormattedDate date={log.modifyDate ?? log.createdDate} />
-          </>
-        )}
-      </Typography>
-    );
-  };
-
-  const renderLog = (log, title) => {
-    const id = log.modifyDate ?? log.createdBy;
-
-    return (
-      <Accordion defaultExpanded>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls={`${id}-content`}
-          id={`${id}-header`}
-        >
-          {renderTitle(log, title)}
-        </AccordionSummary>
-        <AccordionDetails>
-          <LogEntrySingleView currentLogEntry={log} />
-        </AccordionDetails>
-      </Accordion>
-    );
-  };
-
   return (
-    <Stack padding={1}>
+    <Stack
+      py={2}
+      px={4}
+    >
       <Stack
         flexDirection="row"
         justifyContent="space-between"
@@ -83,34 +84,42 @@ const LogHistory = ({ currentLog, logHistory }) => {
         <Typography
           component="h1"
           variant="h2"
+          mb={2}
         >
           Log History
         </Typography>
         <DownloadButton {...{ currentLog, logHistory }} />
       </Stack>
-      <Stack>
-        <Typography
-          component="h2"
-          variant="h4"
+      <Stack mb={4}>
+        <Paper
+          elevation={3}
+          sx={{ margin: "10px 0" }}
         >
-          Current Entry
-        </Typography>
-        <Box padding={1}>
-          <LogEntrySingleView currentLogEntry={currentLog} />
-        </Box>
-        <Typography
-          component="h2"
-          variant="h4"
-        >
-          Previous Edits
-        </Typography>
-        <Stack>
-          {logHistory?.hitCount === 0 ? (
-            <Typography fontStyle="italic">(No edit history)</Typography>
-          ) : (
-            logHistory?.logs?.map((log) => renderLog(log))
-          )}
-        </Stack>
+          <LogHistoryHeader log={currentLog} />
+          <LogDetails log={currentLog} />
+        </Paper>
+
+        {logHistory?.hitCount === 0 ? (
+          <Typography fontStyle="italic">(No edit history)</Typography>
+        ) : (
+          logHistory?.logs?.map((log) => {
+            const id = log.modifyDate ?? log.createdBy;
+
+            return (
+              <Paper
+                key={id}
+                elevation={3}
+                sx={{
+                  margin: "10px 0",
+                  "&:last-child": { marginBottom: "25px" }
+                }}
+              >
+                <LogHistoryHeader log={log} />
+                <LogDetails log={log} />
+              </Paper>
+            );
+          })
+        )}
       </Stack>
     </Stack>
   );
