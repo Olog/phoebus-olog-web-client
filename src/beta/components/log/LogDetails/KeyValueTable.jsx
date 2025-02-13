@@ -16,13 +16,13 @@ export const KeyValueTable = ({ data }) => (
         <Typography
           sx={{ gridColumn: "1" }}
           fontSize="0.875rem"
-          fontWeight="bold"
         >
           {name}
         </Typography>
         <Typography
           sx={{ gridColumn: "2" }}
           fontSize="0.875rem"
+          fontWeight="bold"
           ml={1}
         >
           {value}

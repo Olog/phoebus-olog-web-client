@@ -27,6 +27,7 @@ const LogHeader = ({ log, className }) => (
             <FormattedDate
               date={log.createdDate}
               component="span"
+              sx={{ fontSize: ".875rem", fontWeight: "bold" }}
             />
           )
         }
