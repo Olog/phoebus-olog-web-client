@@ -81,7 +81,7 @@ export const AdvancedSearchDrawer = ({
             />
             <TextInput
               name="desc"
-              label="Description"
+              label="Text"
               control={control}
               defaultValue=""
             />
