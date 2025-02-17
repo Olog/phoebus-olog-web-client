@@ -95,7 +95,10 @@ export const SearchParamsBadges = () => {
           name="desc"
           value={desc}
           onDelete={() =>
-            onSearch({ ...searchParams, desc: defaultSearchParams.desc })
+            onSearch({
+              ...searchParams,
+              desc: defaultSearchParams.desc
+            })
           }
         />
       ) : null}

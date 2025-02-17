@@ -52,11 +52,15 @@ export const EntryEditor = ({
       px={4}
       pb={4}
       pt={2}
+      maxWidth="1000px"
+      margin="0 auto"
+      width="100%"
       height="fit-content"
     >
       <Typography
         component="h2"
         variant="h3"
+        py={2}
       >
         {title}
       </Typography>
@@ -106,6 +110,7 @@ export const EntryEditor = ({
           type="submit"
           variant="contained"
           disabled={submitDisabled}
+          sx={{ marginBottom: 4 }}
         >
           Submit
         </Button>

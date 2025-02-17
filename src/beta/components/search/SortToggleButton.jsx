@@ -7,6 +7,7 @@ export const SortToggleButton = ({ isDescending, onClick, label }) => {
   return (
     <IconButton
       aria-label={`sort by ${label}, ${isDescending ? "descending" : "ascending"}`}
+      sx={{ color: "#616161" }}
       onClick={onClick}
     >
       <Badge
