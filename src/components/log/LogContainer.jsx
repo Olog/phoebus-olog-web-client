@@ -7,7 +7,12 @@ const LogContainer = ({ id, renderLog }) => {
     data: log,
     isLoading,
     error
-  } = ologApi.endpoints.getLog.useQuery({ id }, { refetchOnFocus: true });
+  } = ologApi.endpoints.getLog.useQuery(
+    { id },
+    {
+      refetchOnMountOrArgChange: true
+    }
+  );
 
   if (isLoading) {
     return <LinearProgress width="100%" />;

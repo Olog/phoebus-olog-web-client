@@ -150,7 +150,7 @@ const AppNavBar = () => {
                         }
                         color="primary"
                       >
-                        <FilterAltIcon />
+                        <FilterAltIcon sx={{ color: "#616161" }} />
                       </Badge>
                     </IconButton>
                     <SortToggleButton

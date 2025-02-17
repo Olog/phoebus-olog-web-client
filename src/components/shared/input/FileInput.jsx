@@ -117,8 +117,7 @@ export const DroppableFileUploadInput = ({
       disabled={disabled}
     >
       <StyledClickableArea onClick={onClick}>
-        {/* <MdFileUpload size={'5rem'}/> */}
-        <Box fontSize="5rem">
+        <Box fontSize="2.5rem">
           {disabled ? (
             <CloudOffIcon fontSize="inherit" />
           ) : (

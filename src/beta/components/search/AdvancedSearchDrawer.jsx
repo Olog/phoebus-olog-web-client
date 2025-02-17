@@ -60,6 +60,8 @@ export const AdvancedSearchDrawer = ({
             component="h2"
             variant="h4"
             id="advanced-search"
+            py={2}
+            px={1}
           >
             Filters
           </Typography>
@@ -69,6 +71,7 @@ export const AdvancedSearchDrawer = ({
             aria-labelledby="advanced-search"
             role="search"
             gap={1}
+            px={1}
           >
             <TextInput
               name="title"
@@ -78,7 +81,7 @@ export const AdvancedSearchDrawer = ({
             />
             <TextInput
               name="desc"
-              label="Text"
+              label="Description"
               control={control}
               defaultValue=""
             />

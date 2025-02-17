@@ -2,7 +2,6 @@ import { Box, Divider, Stack, Typography } from "@mui/material";
 import { LogAttachmentsHeader } from "./LogAttachmentsHeader";
 import LogProperty from "./LogProperty";
 import MetadataTable from "./MetadataTable";
-import customization from "config/customization";
 import { CommonMark } from "components/shared/CommonMark";
 
 const LogDetails = ({ log, className }) => {
@@ -29,12 +28,7 @@ const LogDetails = ({ log, className }) => {
       >
         {log.title}
       </Typography>
-      {log.source && (
-        <CommonMark
-          commonmarkSrc={log.source}
-          imageUrlPrefix={customization.APP_BASE_URL + "/"}
-        />
-      )}
+      {log.source && <CommonMark commonmarkSrc={log.source} />}
       {log?.properties && filteredProperties.length > 0 && (
         <Box mt={2}>
           {filteredProperties.map((it, i) => (
