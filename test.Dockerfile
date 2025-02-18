@@ -11,3 +11,4 @@ RUN npm ci
 RUN npm run build
 # Dummy command
 CMD ["echo", "success!"]
+
