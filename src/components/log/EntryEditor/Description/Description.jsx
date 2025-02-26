@@ -143,8 +143,7 @@ const Description = ({ form, attachmentsDisabled }) => {
   const addEmbeddedImage = (file, width, height) => {
     const id = uuidv4();
     appendAttachment(new OlogAttachment({ file, id }));
-    const imageMarkup =
-      "![](attachment/" + id + "){width=" + width + " height=" + height + "}";
+    const imageMarkup = `![](${customization.APP_BASE_URL}/attachment/${id}){width=${width} height=${height}}`;
     let description = getValues("description") || "";
     description += imageMarkup;
     setValue("description", description, {
@@ -273,13 +272,15 @@ const Description = ({ form, attachmentsDisabled }) => {
         setInitialImage={setInitialImage}
         maxFileSizeMb={maxFileSizeMb}
       />
-      <HtmlPreviewModal
-        showHtmlPreview={showHtmlPreview}
-        setShowHtmlPreview={setShowHtmlPreview}
-        commonmarkSrc={getValues("description")}
-        useRemoteAttachments={attachmentsDisabled}
-        attachedFiles={attachments ?? []}
-      />
+      {showHtmlPreview && (
+        <HtmlPreviewModal
+          showHtmlPreview={showHtmlPreview}
+          setShowHtmlPreview={setShowHtmlPreview}
+          commonmarkSrc={getValues("description")}
+          useRemoteAttachments={attachmentsDisabled}
+          attachedFiles={attachments ?? []}
+        />
+      )}
     </Stack>
   );
 };
