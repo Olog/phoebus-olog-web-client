@@ -14,11 +14,16 @@ const htmlToPlainText = (html) => {
 };
 
 export const CommonMark = styled(
-  ({ commonmarkSrc, className, isSummary, ...props }) => {
+  ({ commonmarkSrc, className, isSummary, isPreview, ...props }) => {
     const [html, setHtml] = useState("");
     useEffect(() => {
-      setHtml(DOMPurify.sanitize(md.render(commonmarkSrc)));
-    }, [commonmarkSrc]);
+      const renderedHtml = md.render(commonmarkSrc);
+      if (isPreview) {
+        setHtml(renderedHtml);
+      } else {
+        setHtml(DOMPurify.sanitize(renderedHtml));
+      }
+    }, [commonmarkSrc, isPreview]);
 
     const plainText = htmlToPlainText(html);
     const summary =
