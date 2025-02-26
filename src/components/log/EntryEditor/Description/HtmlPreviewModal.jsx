@@ -16,9 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import { useEffect, useState } from "react";
 import Modal from "../../../shared/Modal";
 import { CommonMark } from "../../../shared/CommonMark";
 import customization from "config/customization";
+
+const mdImageRegex = new RegExp(
+  `!\\[([^\\]]*)\\]\\(${customization.APP_BASE_URL}/attachment/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})\\)\\{width=(\\d+) height=(\\d+)\\}`,
+  "g"
+);
 
 const HtmlPreviewModal = ({
   commonmarkSrc,
@@ -27,26 +33,45 @@ const HtmlPreviewModal = ({
   setShowHtmlPreview,
   useRemoteAttachments
 }) => {
-  const CommonmarkPreviewArgs = {
-    commonmarkSrc
-  };
+  const [modifiedPreviewContent, setModifiedPreviewContent] =
+    useState(commonmarkSrc);
 
-  // If using remote attachments (e.g. editing an existing entry)
-  // then set the prefix and don't include any files (there aren't any!)
-  if (useRemoteAttachments) {
-    CommonmarkPreviewArgs.imageUrlPrefix = customization.APP_BASE_URL + "/";
-  }
-  // Otherwise, use the attached files that should exist
-  else {
-    CommonmarkPreviewArgs.attachedFiles = attachedFiles;
-  }
+  useEffect(() => {
+    if (!useRemoteAttachments) {
+      let newContent = commonmarkSrc;
+
+      // Replaces the remote image url with a local blob url for preview purposes
+      const matches = [...commonmarkSrc.matchAll(mdImageRegex)];
+      matches.forEach((match) => {
+        const altText = match[1];
+        const id = match[2];
+        const width = match[3];
+        const height = match[4];
+        const file = attachedFiles.find((file) => file.id === id);
+
+        if (file) {
+          newContent = newContent.replace(
+            match[0],
+            `![${altText}](${file.url}){width=${width} height=${height}}`
+          );
+        }
+      });
+
+      setModifiedPreviewContent(newContent);
+    }
+  }, [commonmarkSrc, attachedFiles, useRemoteAttachments]);
 
   return (
     <Modal
       open={showHtmlPreview}
       onClose={() => setShowHtmlPreview(false)}
       title="Description Preview"
-      content={<CommonMark {...CommonmarkPreviewArgs} />}
+      content={
+        <CommonMark
+          commonmarkSrc={modifiedPreviewContent}
+          isPreview
+        />
+      }
       DialogProps={{
         fullWidth: true,
         maxWidth: "lg"
