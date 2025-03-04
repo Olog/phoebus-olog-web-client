@@ -29,16 +29,17 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useController } from "react-hook-form";
 import { DateTimePicker, pickersLayoutClasses } from "@mui/x-date-pickers";
 import { useLocaleText } from "@mui/x-date-pickers/internals";
+import moment from "moment";
 
-export const DATE_FORMAT = "YYYY-MM-DD HH:mm";
+const DATE_FORMAT = "YYYY-MM-DD HH:mm";
 
 const CustomActionBar = ({
   onAccept,
-  onClear,
   onCancel,
   onSetToday,
   actions,
-  ...other
+  className,
+  ownerState
 }) => {
   const localeText = useLocaleText();
 
@@ -48,17 +49,6 @@ const CustomActionBar = ({
 
   const buttons = actions?.map((actionType) => {
     switch (actionType) {
-      case "clear":
-        return (
-          <Button
-            onClick={onClear}
-            key={actionType}
-            variant="contained"
-          >
-            {localeText.clearButtonLabel}
-          </Button>
-        );
-
       case "cancel":
         return (
           <Button
@@ -90,7 +80,7 @@ const CustomActionBar = ({
             variant="contained"
             color="secondary"
           >
-            {localeText.todayButtonLabel}
+            Now
           </Button>
         );
 
@@ -99,7 +89,14 @@ const CustomActionBar = ({
     }
   });
 
-  return <DialogActions {...other}>{buttons}</DialogActions>;
+  return (
+    <DialogActions
+      className={className}
+      ownerState={ownerState}
+    >
+      {buttons}
+    </DialogActions>
+  );
 };
 
 const ButtonField = ({
@@ -123,11 +120,17 @@ const ButtonField = ({
   );
 };
 
-export const ButtonDatePicker = ({ slots, ButtonFieldProps, ...props }) => {
+export const ButtonDatePicker = ({
+  value,
+  slots,
+  ButtonFieldProps,
+  ...props
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
     <DateTimePicker
+      value={value ? moment(value) : null}
       slots={{
         field: ButtonField,
         actionBar: CustomActionBar,
@@ -158,9 +161,7 @@ export const ButtonDatePicker = ({ slots, ButtonFieldProps, ...props }) => {
     />
   );
 };
-const defaultOnChange = (field, value) => {
-  field.onChange(value);
-};
+
 const WizardDateInput = styled(
   ({
     name,
@@ -168,18 +169,24 @@ const WizardDateInput = styled(
     form,
     rules,
     defaultValue,
-    onChange = defaultOnChange,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onChange,
     DatePickerProps,
     ...props
   }) => {
-    const { control } = form;
+    const { control, setValue, trigger } = form;
     const {
       field: { ...field },
       fieldState
     } = useController({ name, control, rules, defaultValue });
 
     const onAccept = (momentDate) => {
-      onChange(field, momentDate.format(DATE_FORMAT));
+      if (momentDate) {
+        setValue(name, momentDate.format(DATE_FORMAT), {
+          shouldValidate: true
+        });
+        trigger(name === "start" ? "end" : "start");
+      }
     };
 
     return (
@@ -188,11 +195,11 @@ const WizardDateInput = styled(
         label={label}
         helperText={fieldState?.error?.message}
         error={fieldState?.error}
-        inputRef={field.ref}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
               <ButtonDatePicker
+                value={field.value ?? null}
                 onAccept={onAccept}
                 ButtonFieldProps={{
                   inputProps: {
@@ -205,6 +212,7 @@ const WizardDateInput = styled(
           )
         }}
         {...field}
+        value={field.value ?? ""}
         {...props}
       />
     );

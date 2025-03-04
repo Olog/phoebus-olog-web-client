@@ -95,7 +95,7 @@ export const SearchResultList = styled(
           },
           {
             root: searchResultListRef.current,
-            rootMargin: "1500px",
+            rootMargin: "800px",
             threshold: 0
           }
         );

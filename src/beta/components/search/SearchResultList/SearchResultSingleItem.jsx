@@ -85,6 +85,7 @@ export const SearchResultSingleItem = ({
           whiteSpace="nowrap"
           variant="body2"
           fontSize={isNestedReply ? "0.7rem" : "0.8rem"}
+          mt={0.2}
         />
       </Stack>
       <Stack
@@ -145,14 +146,15 @@ export const SearchResultSingleItem = ({
         >
           {log?.logbooks?.map((it) => (
             <LogbookChip
-              sx={{ fontSize: ".7rem" }}
+              sx={{ fontSize: ".65rem", height: "20px" }}
               key={it.name}
               value={it.name}
             />
           ))}
           {log?.tags?.map((it) => (
             <TagChip
-              sx={{ fontSize: ".7rem" }}
+              sx={{ fontSize: ".65rem", height: "20px" }}
+              iconProps={{ width: "12px" }}
               key={it.name}
               value={it.name}
             />

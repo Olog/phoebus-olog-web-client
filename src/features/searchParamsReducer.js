@@ -11,9 +11,9 @@ export const defaultSearchParams = {
   desc: "",
   properties: "",
   owner: "",
-  level: undefined,
-  start: undefined,
-  end: undefined,
+  level: "",
+  start: "",
+  end: "",
   logbooks: [],
   tags: [],
   attachments: ""

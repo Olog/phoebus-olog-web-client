@@ -94,7 +94,7 @@ export const SearchResults = styled(({ className }) => {
           <Alert severity="error">
             {error?.status === "FETCH_ERROR"
               ? "Error: Log Service Unavailable"
-              : `Error ${error?.code}: ${error?.message}`}
+              : `${error?.data?.error ?? "Error"}: ${error?.data?.message ?? "Unknown"}`}
           </Alert>
         </Box>
       )}

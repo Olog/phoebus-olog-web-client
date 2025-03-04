@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Box, Button, Drawer, Stack, Typography } from "@mui/material";
+import { Box, Button, Drawer, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useDispatch } from "react-redux";
@@ -11,11 +11,8 @@ import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
 import { defaultSearchParams } from "features/searchParamsReducer";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
-const isDate = (obj) => {
-  return obj instanceof Date && !isNaN(obj);
-};
 const toDate = (dateString) => {
-  if (isDate(dateString)) {
+  if (dateString) {
     return new Date(dateString);
   } else {
     return null;
@@ -54,23 +51,19 @@ export const AdvancedSearchDrawer = ({
       open={advancedSearchOpen}
       onClose={closeDrawer}
     >
-      <Box padding={1}>
+      <Box
+        px={1}
+        pt={3}
+        pb={2}
+        sx={{ width: "315px" }}
+      >
         <Stack>
-          <Typography
-            component="h2"
-            variant="h4"
-            id="advanced-search"
-            py={2}
-            px={1}
-          >
-            Filters
-          </Typography>
           <Stack
             component="form"
             onSubmit={handleSubmit(onSubmit)}
             aria-labelledby="advanced-search"
             role="search"
-            gap={1}
+            gap={1.5}
             px={1}
           >
             <TextInput

@@ -6,10 +6,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { removeEmptyKeys } from "api/ologApi";
 import { TextInput } from "components/shared/input/TextInput";
 import {
-  ButtonDatePicker,
-  DATE_FORMAT
-} from "components/shared/input/WizardDateInput";
-import {
   defaultSearchParams,
   useSearchParams
 } from "features/searchParamsReducer";
@@ -26,10 +22,9 @@ const SimpleSearch = () => {
 
   const { control, handleSubmit, setValue, getValues } = useForm({
     defaultValues: {
-      query: defaultSearchParams.query,
-      start: defaultSearchParams.start
+      query: defaultSearchParams.query
     },
-    values: { query: searchParams?.query, start: searchParams?.start }
+    values: { query: searchParams?.query }
   });
 
   useEffect(() => {
@@ -43,18 +38,12 @@ const SimpleSearch = () => {
     }
   }, [setValue, searchParams, toQueryString]);
 
-  const onAccept = (momentDate) => {
-    setValue("start", momentDate.format(DATE_FORMAT));
-    onSubmit();
-  };
-
   const onSubmit = () => {
-    const { start, query } = getValues();
+    const { query } = getValues();
     const sanitizedSearchParams = toSearchParams(query);
 
     const params = {
-      ...sanitizedSearchParams,
-      start
+      ...sanitizedSearchParams
     };
     dispatch(updateAdvancedSearch(params));
   };
@@ -86,19 +75,6 @@ const SimpleSearch = () => {
                 sx={{
                   height: "20px",
                   width: "20px"
-                }}
-              />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <ButtonDatePicker
-                onAccept={onAccept}
-                ButtonFieldProps={{
-                  inputProps: {
-                    "aria-label": "Select start date/time}",
-                    size: "small"
-                  }
                 }}
               />
             </InputAdornment>
