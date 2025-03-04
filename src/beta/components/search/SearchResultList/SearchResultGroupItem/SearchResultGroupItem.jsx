@@ -14,10 +14,13 @@ import { SearchResultSingleItem } from "..";
 import { getLogEntryGroupId } from "components/Properties";
 import { ologApi } from "api/ologApi";
 import { sortByCreatedDate } from "src/components/log/sort";
+import { useSearchParams } from "src/features/searchParamsReducer";
 
 export const SearchResultGroupItem = styled(
   ({ log, onClick = () => {}, handleKeyDown, dateDescending }) => {
     const [expanded, setExpanded] = useState(false);
+
+    const { start, end } = useSearchParams();
 
     const { id: paramLogId } = useParams();
     const currentLogEntryId = Number(paramLogId);
@@ -31,9 +34,25 @@ export const SearchResultGroupItem = styled(
       sortByCreatedDate(dateDescending)
     );
 
-    const parentLog = sortedGroup?.[0];
-    const nestedLogsCount = sortedGroup?.length - 1;
-    const nestedLogs = sortedGroup?.slice(1);
+    // Since we do manual grouping of logs on the FE
+    // we also need to filter based on date range
+    let dateFilteredGroup = sortedGroup;
+
+    if (start) {
+      dateFilteredGroup = dateFilteredGroup?.filter(
+        (log) => new Date(log.createdDate) >= new Date(start)
+      );
+    }
+
+    if (end) {
+      dateFilteredGroup = dateFilteredGroup?.filter(
+        (log) => new Date(log.createdDate) <= new Date(end)
+      );
+    }
+
+    const parentLog = dateFilteredGroup?.[0];
+    const nestedLogsCount = dateFilteredGroup?.length - 1;
+    const nestedLogs = dateFilteredGroup?.slice(1);
 
     const onExpandClick = (e) => {
       e.stopPropagation();
@@ -75,7 +94,7 @@ export const SearchResultGroupItem = styled(
             log={parentLog}
             selected={currentLogEntryId === parentLog.id}
             onClick={onClick}
-            expandIcon={<ExpandIcon />}
+            expandIcon={nestedLogsCount > 1 && <ExpandIcon />}
             handleKeyDown={handleKeyDown}
             isReply={dateDescending}
           />
