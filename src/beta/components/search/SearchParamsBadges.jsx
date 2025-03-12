@@ -92,7 +92,7 @@ export const SearchParamsBadges = () => {
       ) : null}
       {desc ? (
         <TextChip
-          name="desc"
+          name="description"
           value={desc}
           onDelete={() =>
             onSearch({

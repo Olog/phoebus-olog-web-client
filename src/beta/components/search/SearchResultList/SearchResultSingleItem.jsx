@@ -128,10 +128,7 @@ export const SearchResultSingleItem = ({
         commonmarkSrc={log.source}
         isSummary
         sx={{
-          fontSize: isNestedReply ? ".8rem" : ".9rem",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis"
+          fontSize: isNestedReply ? ".8rem" : ".9rem"
         }}
       />
 
