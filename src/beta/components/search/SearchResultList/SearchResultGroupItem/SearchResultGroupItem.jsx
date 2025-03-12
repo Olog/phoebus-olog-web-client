@@ -94,7 +94,7 @@ export const SearchResultGroupItem = styled(
             log={parentLog}
             selected={currentLogEntryId === parentLog.id}
             onClick={onClick}
-            expandIcon={nestedLogsCount > 1 && <ExpandIcon />}
+            expandIcon={nestedLogsCount >= 1 && <ExpandIcon />}
             handleKeyDown={handleKeyDown}
             isReply={dateDescending}
           />
