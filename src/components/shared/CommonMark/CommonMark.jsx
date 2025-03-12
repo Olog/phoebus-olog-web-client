@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { styled } from "@mui/material";
+import { styled, Typography } from "@mui/material";
 import markdownit from "markdown-it";
 import markdownItAttrs from "markdown-it-attrs";
 import DOMPurify from "dompurify";
@@ -29,10 +29,27 @@ export const CommonMark = styled(
     const summary =
       plainText.length > 100 ? `${plainText.slice(0, 100)}...` : plainText;
 
+    if (isSummary) {
+      return (
+        <Typography
+          className={className}
+          mb={0.2}
+          sx={{
+            maxHeight: "22px",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis"
+          }}
+        >
+          {summary}
+        </Typography>
+      );
+    }
+
     return (
       <HtmlContent
         className={className}
-        html={isSummary ? summary : html}
+        html={html}
         {...props}
       />
     );

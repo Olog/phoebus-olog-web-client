@@ -22,9 +22,10 @@ const LogDetails = ({ log, className }) => {
     >
       <LogAttachmentsHeader log={log} />
       <Typography
-        sx={{ fontSize: "1.4rem" }}
+        sx={{ fontSize: "2rem" }}
         component="h2"
         fontWeight="600"
+        mb={1}
       >
         {log.title}
       </Typography>
