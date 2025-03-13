@@ -17,47 +17,50 @@ import { getLogEntryGroupId } from "components/Properties";
 import { sortByCreatedDate } from "components/log/sort";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
 
-const LogDetailsAccordion = styled(
-  ({ log, defaultExpanded = false, className, refProp }) => {
-    const [expanded, setExpanded] = useState(defaultExpanded);
+const LogDetailsAccordion = styled(({ log, className, refProp }) => {
+  const { id: paramLogId } = useParams();
+  const isSelected = log.id === Number(paramLogId);
+  const [expanded, setExpanded] = useState(true);
 
-    const onChange = () => {
-      setExpanded((prev) => !prev);
-    };
+  const onChange = () => {
+    setExpanded((prev) => !prev);
+  };
 
-    return (
-      <Accordion
-        ref={refProp}
-        defaultExpanded={false}
-        expanded={expanded}
-        onChange={onChange}
-        variant="outlined"
-        className={className}
-        square
-        sx={{ "& > .MuiButtonBase-root": { padding: 0 } }}
+  return (
+    <Accordion
+      ref={refProp}
+      defaultExpanded
+      expanded={expanded}
+      onChange={onChange}
+      variant="outlined"
+      className={className}
+      square
+      sx={{
+        "& > .MuiButtonBase-root": { padding: 0 },
+        border: isSelected ? "2px solid #0099dc24" : "2px solid #F3F5F7"
+      }}
+    >
+      <AccordionSummary
+        aria-controls={`${log.id}-content`}
+        id={`${log.id}-header`}
+        sx={{
+          bgcolor: isSelected ? "#0099dc24" : "#f2f5f7",
+
+          "& .MuiAccordionSummary-content, & .MuiAccordionSummary-content.Mui-expanded":
+            {
+              padding: "0",
+              margin: "0"
+            }
+        }}
       >
-        <AccordionSummary
-          aria-controls={`${log.id}-content`}
-          id={`${log.id}-header`}
-          sx={{
-            bgcolor: "#f2f5f7",
-            "& .MuiAccordionSummary-content, & .MuiAccordionSummary-content.Mui-expanded":
-              {
-                padding: "0",
-                margin: "0"
-              }
-          }}
-        >
-          <LogHeader log={log} />
-        </AccordionSummary>
-        <AccordionDetails sx={{ padding: 0 }}>
-          <LogDetails log={log} />
-        </AccordionDetails>
-      </Accordion>
-    );
-  }
-)({
-  border: "2px solid #F3F5F7",
+        <LogHeader log={log} />
+      </AccordionSummary>
+      <AccordionDetails sx={{ padding: 0 }}>
+        <LogDetails log={log} />
+      </AccordionDetails>
+    </Accordion>
+  );
+})({
   margin: "0 0 10px 0",
   borderRadius: "4px",
   "&.Mui-expanded": {
@@ -71,6 +74,7 @@ const LogDetailsAccordion = styled(
 
 const LogDetailsWithReplies = ({ log }) => {
   const logScrollRef = useRef(null);
+  const parentRef = useRef(null);
   const { id: paramLogId } = useParams();
   // fetch any groups/conversations
   const groupId = getLogEntryGroupId(log.properties);
@@ -83,12 +87,23 @@ const LogDetailsWithReplies = ({ log }) => {
   const { dateDescending } = useSearchPageParams();
 
   useEffect(() => {
-    if (logScrollRef && logScrollRef.current) {
-      logScrollRef.current.scrollIntoView({
+    if (
+      logScrollRef &&
+      logScrollRef.current &&
+      parentRef &&
+      parentRef.current
+    ) {
+      const y =
+        logScrollRef.current.getBoundingClientRect().top +
+        parentRef.current.scrollTop -
+        parentRef.current.getBoundingClientRect().top -
+        10;
+      parentRef.current.scrollTo({
+        top: y,
         behavior: "smooth"
       });
     }
-  }, [logScrollRef, log]);
+  }, [logScrollRef, paramLogId]);
 
   if (repliesLoading) {
     return <CircularProgress />;
@@ -112,6 +127,7 @@ const LogDetailsWithReplies = ({ log }) => {
 
     return (
       <Stack
+        ref={parentRef}
         sx={{
           overflow: "auto",
           padding: "10px 15px"
@@ -123,7 +139,6 @@ const LogDetailsWithReplies = ({ log }) => {
               sortedLog.id === Number(paramLogId) ? logScrollRef : undefined
             }
             log={sortedLog}
-            defaultExpanded={sortedLog.id === log.id}
             key={`current-${log.id}-accordion-${sortedLog.id}`}
           />
         ))}
