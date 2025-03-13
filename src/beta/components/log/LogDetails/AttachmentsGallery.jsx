@@ -73,14 +73,19 @@ const GalleryView = ({ attachments, onPrevious, onNext, currentIndex }) => {
         <NavigateBeforeIcon />
       </IconButton>
       <Box>
-        <Image
-          {...{
-            attachment,
-            fullSize: true,
-            maxHeight: "500px",
-            maxWidth: "100%"
-          }}
-        />
+        <Link
+          href={attachment.url}
+          target="_blank"
+        >
+          <Image
+            {...{
+              attachment,
+              fullSize: true,
+              maxHeight: "500px",
+              maxWidth: "100%"
+            }}
+          />
+        </Link>
       </Box>
       <IconButton
         onClick={onNext}
