@@ -43,7 +43,7 @@ export const SearchResultSingleItem = ({
           backgroundColor: "#0099dc24"
         }),
         ...(isNestedReply && {
-          paddingLeft: "75px"
+          paddingLeft: "55px"
         }),
         "&:last-child": {
           borderBottom: "none"
@@ -54,18 +54,6 @@ export const SearchResultSingleItem = ({
       onKeyDown={handleKeyDown}
       data-id={log.id}
     >
-      {isNestedReply && !isParentNestedLog && (
-        <ReplyIcon
-          sx={{
-            position: "absolute",
-            top: "52%",
-            left: "35px",
-            transform: "rotate(0) scaleX(-1) translate(-50%, -50%)",
-            fontSize: "1.2rem"
-          }}
-          fontSize="small"
-        />
-      )}
       <Stack
         flexDirection="row"
         alignItems="center"
@@ -106,6 +94,7 @@ export const SearchResultSingleItem = ({
           flexDirection="row"
           alignItems="center"
           gap={0.5}
+          sx={{ "& > svg": { color: "#616161" } }}
         >
           {log?.attachments?.length > 0 && (
             <AttachFileIcon
@@ -118,7 +107,7 @@ export const SearchResultSingleItem = ({
           {log?.modifyDate && (
             <EditIcon sx={{ fontSize: isNestedReply ? "1rem" : "1.3rem" }} />
           )}
-          {isReply && (
+          {!isParentNestedLog && (isReply || isNestedReply) && (
             <ReplyIcon sx={{ fontSize: isNestedReply ? "1.1rem" : "1.5rem" }} />
           )}
         </Stack>
