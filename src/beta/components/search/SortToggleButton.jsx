@@ -1,7 +1,7 @@
 import SortIcon from "@mui/icons-material/Sort";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import { Badge, IconButton } from "@mui/material";
+import { Badge, IconButton, Tooltip } from "@mui/material";
 
 export const SortToggleButton = ({ isDescending, onClick, label }) => {
   return (
@@ -10,19 +10,25 @@ export const SortToggleButton = ({ isDescending, onClick, label }) => {
       sx={{ color: "#616161" }}
       onClick={onClick}
     >
-      <Badge
-        badgeContent={
-          isDescending ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />
-        }
-        sx={{
-          "& .MuiBadge-badge": {
-            right: 4,
-            top: 18
-          }
-        }}
+      <Tooltip
+        enterDelay={200}
+        title="Sort"
+        sx={{ "& .MuiTooltip-tooltipPlacementBottom": { marginTop: 0 } }}
       >
-        <SortIcon />
-      </Badge>
+        <Badge
+          badgeContent={
+            isDescending ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />
+          }
+          sx={{
+            "& .MuiBadge-badge": {
+              right: 4,
+              top: 18
+            }
+          }}
+        >
+          <SortIcon />
+        </Badge>
+      </Tooltip>
     </IconButton>
   );
 };

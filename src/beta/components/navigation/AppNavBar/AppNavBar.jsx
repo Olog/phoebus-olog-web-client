@@ -27,7 +27,8 @@ import {
   ListItem,
   Divider,
   Badge,
-  Box
+  Box,
+  Tooltip
 } from "@mui/material";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -144,15 +145,21 @@ const AppNavBar = () => {
                       sx={{ marginRight: "10px" }}
                       onClick={() => setAdvancedSearchOpen(true)}
                     >
-                      <Badge
-                        badgeContent={
-                          advancedSearchActive ? advancedSearchFieldCount : 0
-                        }
-                        color="primary"
+                      <Tooltip
+                        enterDelay={200}
+                        title="Filter"
                       >
-                        <FilterAltIcon sx={{ color: "#616161" }} />
-                      </Badge>
+                        <Badge
+                          badgeContent={
+                            advancedSearchActive ? advancedSearchFieldCount : 0
+                          }
+                          color="primary"
+                        >
+                          <FilterAltIcon sx={{ color: "#616161" }} />
+                        </Badge>
+                      </Tooltip>
                     </IconButton>
+
                     <SortToggleButton
                       label="create date"
                       isDescending={searchPageParams?.dateDescending}
