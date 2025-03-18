@@ -151,14 +151,10 @@ const LogEntriesView = () => {
   // If viewing a specific log entry, then retrieve it
   // Otherwise clear the current entry
   useEffect(() => {
-    if (logId > 0) {
-      const result = getLog({ id: logId });
-      return () => {
-        result.abort();
-      };
-    } else {
-      dispatch(updateCurrentLogEntry(null));
-    }
+    const result = getLog({ id: logId });
+    return () => {
+      result.abort();
+    };
   }, [dispatch, getLog, logId]);
 
   // When the log entry is received, update the current entry to it
