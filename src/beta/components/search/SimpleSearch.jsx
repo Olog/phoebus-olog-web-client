@@ -83,7 +83,8 @@ const SimpleSearch = () => {
             fontSize: ".9rem",
             backgroundColor: "#fafafa",
             "& .MuiInputBase-input": {
-              padding: "14px 0"
+              padding: "14px 0",
+              paddingRight: "8px"
             },
             "& .MuiOutlinedInput-notchedOutline": {
               border: "1.5px solid #E2E8EE"
