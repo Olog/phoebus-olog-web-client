@@ -16,9 +16,6 @@ const LogDetails = ({ log, className }) => {
       gap={1}
       py={2}
       px={3}
-      sx={{
-        overflow: "scroll"
-      }}
     >
       <LogAttachmentsHeader log={log} />
       <Typography
