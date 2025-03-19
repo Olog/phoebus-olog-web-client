@@ -112,7 +112,7 @@ export const SearchResultList = styled(
         ref={searchResultListRef}
         flex={2}
         px={0}
-        overflow="scroll"
+        overflow="auto"
         className={`SearchResultList ${className}`}
       >
         {logsWithTrimmedGroupIds?.map((log) => {
