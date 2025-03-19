@@ -1,8 +1,6 @@
 import {
   Box,
   IconButton,
-  ImageList,
-  ImageListItem,
   ImageListItemBar,
   Link,
   Stack,
@@ -11,9 +9,11 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import DownloadIcon from "@mui/icons-material/Download";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { FileImage } from "components/Attachment";
 import Modal from "components/shared/Modal";
+import { InternalButtonLink } from "src/components/shared/Link";
 
 const Image = styled(({ attachment, className }) => {
   return (
@@ -72,21 +72,24 @@ const GalleryView = ({ attachments, onPrevious, onNext, currentIndex }) => {
       >
         <NavigateBeforeIcon />
       </IconButton>
-      <Box>
-        <Link
-          href={attachment.url}
-          target="_blank"
+      <Stack>
+        <Image
+          {...{
+            attachment,
+            fullSize: true,
+            maxHeight: "500px",
+            maxWidth: "100%"
+          }}
+        />
+        <InternalButtonLink
+          variant="outlined"
+          to={attachment.url}
+          sx={{ margin: "30px auto 10px" }}
         >
-          <Image
-            {...{
-              attachment,
-              fullSize: true,
-              maxHeight: "500px",
-              maxWidth: "100%"
-            }}
-          />
-        </Link>
-      </Box>
+          <DownloadIcon sx={{ fontSize: "1.1rem", margin: "0 5px 0 0" }} />
+          Download image
+        </InternalButtonLink>
+      </Stack>
       <IconButton
         onClick={onNext}
         sx={{ height: "min-content", marginLeft: "16px" }}
@@ -145,63 +148,63 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
   };
 
   return (
-    <Stack onKeyUp={onKeyPress}>
-      <ImageList
-        gap={5}
-        cols={10}
-        sx={{ marginBottom: 0 }}
-      >
-        {imageAttachments.map((attachment, index) => (
-          <ImageListItem
-            key={attachment.id}
-            onClick={() => onClick(index)}
-            sx={{ cursor: "pointer" }}
-          >
-            <Image
-              attachment={attachment}
-              size={size}
-            />
-            <ImageListItemBar
-              position="below"
-              title={renderAttachmentTitle(attachment)}
-              fontSize="small"
-              sx={{
-                "& div": {
-                  fontSize: "0.8rem",
-                  fontStyle: "italic",
-                  paddingBottom: 0
-                }
-              }}
-            />
-          </ImageListItem>
-        ))}
-        {fileAttachments.map((attachment) => (
-          <Stack
-            key={attachment.id}
+    <Stack
+      mt={1}
+      gap={1}
+      flexWrap={"wrap"}
+      flexDirection="row"
+      onKeyUp={onKeyPress}
+    >
+      {imageAttachments.map((attachment, index) => (
+        <Box
+          key={attachment.id}
+          onClick={() => onClick(index)}
+          sx={{ cursor: "pointer" }}
+        >
+          <Image
+            attachment={attachment}
+            size={size}
+          />
+          <ImageListItemBar
+            position="below"
+            title={renderAttachmentTitle(attachment)}
+            fontSize="small"
             sx={{
-              cursor: "pointer",
-              "&:hover > a > div > .file-overlay": {
-                display: "block"
+              "& div": {
+                fontSize: "0.8rem",
+                fontStyle: "italic",
+                paddingBottom: 0
               }
             }}
-          >
-            <FileLink
-              key={attachment.id}
-              attachment={attachment}
-              size={size}
-            />
-            <Stack flexDirection="row">
-              <Typography
-                pl={2}
-                sx={{ fontSize: "0.8rem", fontStyle: "italic" }}
-                mt={1}
-              >
-                {renderAttachmentTitle(attachment)}
-              </Typography>
-            </Stack>
+          />
+        </Box>
+      ))}
+      {fileAttachments.map((attachment) => (
+        <Stack
+          key={attachment.id}
+          sx={{
+            cursor: "pointer",
+            "&:hover > a > div > .file-overlay": {
+              display: "block"
+            }
+          }}
+        >
+          <FileLink
+            key={attachment.id}
+            attachment={attachment}
+            size={size}
+          />
+          <Stack flexDirection="row">
+            <Typography
+              pl={2}
+              sx={{ fontSize: "0.8rem", fontStyle: "italic" }}
+              mt={1}
+            >
+              {renderAttachmentTitle(attachment)}
+            </Typography>
           </Stack>
-        ))}
-      </ImageList>
+        </Stack>
+      ))}
       <Modal
         open={show}
         onClose={() => {
