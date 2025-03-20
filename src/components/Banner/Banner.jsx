@@ -127,7 +127,7 @@ export const Banner = () => {
               <List sx={{ padding: 0 }}>
                 <ListItem>
                   <InternalButtonLink
-                    to="/beta"
+                    to="/"
                     variant="outlined"
                     color="ologWhite"
                     aria-label="Navigate to Beta App"

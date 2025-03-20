@@ -59,7 +59,7 @@ import {
 import { theme } from "src/config/theme";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
-const showSearchBoxRegex = /^\/$|^\/beta$|^\/beta\/logs$|^\/beta\/logs\/\d+$/;
+const showSearchBoxRegex = /^\/$|^\/$|^\/logs$|^\/logs\/\d+$/;
 
 const AppNavBar = () => {
   const user = useUser();
@@ -187,7 +187,7 @@ const AppNavBar = () => {
               onClick={() =>
                 dispatch(updateAdvancedSearch({ ...defaultSearchParams }))
               }
-              to="/beta"
+              to="/"
               sx={{ padding: "8px", marginLeft: "-8px" }}
             >
               <IconButton
@@ -218,7 +218,7 @@ const AppNavBar = () => {
                 {user ? (
                   <ListItem sx={{ padding: 0 }}>
                     <InternalButtonLink
-                      to="/beta/logs/create"
+                      to="/logs/create"
                       color="inherit"
                       startIcon={<AddCircleIcon />}
                     >
@@ -236,7 +236,7 @@ const AppNavBar = () => {
                     <InternalButtonLink
                       component={RouterLink}
                       startIcon={<HelpCenterIcon titleAccess="help" />}
-                      to="/beta/help"
+                      to="/help"
                       color="inherit"
                     >
                       Help
