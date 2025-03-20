@@ -17,7 +17,7 @@ import { TestErrorView } from "views/TestErrorView";
 
 export const routes = [
   {
-    path: "/",
+    path: "/legacy",
     element: <App />,
     children: [
       {
@@ -59,7 +59,7 @@ export const routes = [
     ]
   },
   {
-    path: "/beta",
+    path: "/",
     element: <BetaApp />,
     errorElement: <AppErrorBoundary />,
     children: [
@@ -96,8 +96,8 @@ export const routes = [
         element: <HelpView />
       },
       {
-        path: "/beta/*",
-        element: <NotFoundView homeHref="/beta" />
+        path: "/*",
+        element: <NotFoundView homeHref="/" />
       }
     ]
   }

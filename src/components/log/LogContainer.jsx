@@ -24,7 +24,7 @@ const LogContainer = ({ id, renderLog }) => {
         <ServerErrorPage
           message={"Log not found"}
           status={error?.code}
-          homeHref="/beta"
+          homeHref="/"
         />
       );
     }
