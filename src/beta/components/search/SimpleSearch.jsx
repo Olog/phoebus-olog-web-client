@@ -1,7 +1,8 @@
-import { InputAdornment, Stack } from "@mui/material";
+import { IconButton, InputAdornment, Stack } from "@mui/material";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 import { removeEmptyKeys } from "api/ologApi";
 import { TextInput } from "components/shared/input/TextInput";
@@ -20,12 +21,14 @@ const SimpleSearch = () => {
   const searchParams = useSearchParams();
   const { toSearchParams, toQueryString } = useSanitizedSearchParams();
 
-  const { control, handleSubmit, setValue, getValues } = useForm({
+  const { control, handleSubmit, setValue, getValues, watch } = useForm({
     defaultValues: {
       query: defaultSearchParams.query
     },
     values: { query: searchParams?.query }
   });
+
+  const queryValue = watch("query");
 
   useEffect(() => {
     if (searchParams) {
@@ -79,12 +82,29 @@ const SimpleSearch = () => {
               />
             </InputAdornment>
           ),
+          endAdornment: (
+            <>
+              {queryValue && (
+                <IconButton
+                  onClick={() => setValue("query", "")}
+                  sx={{
+                    "&:hover": { backgroundColor: "transparent" },
+                    padding: "4px",
+                    marginRight: "-4px"
+                  }}
+                  fontSize="small"
+                >
+                  <ClearIcon sx={{ fontSize: "18px" }} />
+                </IconButton>
+              )}
+            </>
+          ),
           sx: {
             fontSize: ".9rem",
             backgroundColor: "#fafafa",
             "& .MuiInputBase-input": {
               padding: "14px 0",
-              paddingRight: "8px"
+              paddingRight: 0
             },
             "& .MuiOutlinedInput-notchedOutline": {
               border: "1.5px solid #E2E8EE"

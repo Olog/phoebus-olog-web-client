@@ -1,5 +1,6 @@
 import { Box, Stack, Typography, styled } from "@mui/material";
 import { ExternalLink } from "./Link";
+import customization from "src/config/customization";
 
 export const Help = styled(
   ({ summary, docsHref, supportHref, version, versionHref, className }) => {
@@ -45,6 +46,19 @@ export const Help = styled(
                 </Typography>
               </>
             ) : null}
+            <Typography
+              display="flex"
+              gap={0.5}
+            >
+              Want more information about how the search functionality works?
+              <ExternalLink
+                href={`${customization.APP_BASE_URL}/SearchHelp_en.html`}
+                target="_blank"
+                label="Visit the documentation to learn more"
+              >
+                Read the docs
+              </ExternalLink>
+            </Typography>
             {supportHref ? (
               <>
                 <Typography
