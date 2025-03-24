@@ -85,12 +85,6 @@ const LoginDialog = () => {
           gap={1}
           marginY={2}
         >
-          {/* Hidden button handles submit-on-enter automatically */}
-          <Button
-            type="submit"
-            hidden
-            tabIndex={-1}
-          />
           <TextInput
             name="username"
             label="Username"
@@ -103,6 +97,12 @@ const LoginDialog = () => {
             control={control}
             defaultValue=""
             inputProps={{ type: "password" }}
+          />
+          {/* Hidden button handles submit-on-enter automatically */}
+          <Button
+            type="submit"
+            hidden
+            tabIndex={-1}
           />
           {loginErrorMessage ? (
             <Alert severity="error">{loginErrorMessage}</Alert>
