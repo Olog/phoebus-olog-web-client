@@ -172,6 +172,7 @@ const WizardDateInput = styled(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onChange,
     DatePickerProps,
+    applyFilters,
     ...props
   }) => {
     const { control, setValue, trigger } = form;
@@ -186,6 +187,7 @@ const WizardDateInput = styled(
           shouldValidate: true
         });
         trigger(name === "start" ? "end" : "start");
+        applyFilters();
       }
     };
 
