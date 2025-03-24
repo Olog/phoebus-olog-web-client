@@ -12,7 +12,7 @@ export const SortToggleButton = ({ isDescending, onClick, label }) => {
     >
       <Tooltip
         enterDelay={200}
-        title="Sort"
+        title="Sort by date"
         sx={{ "& .MuiTooltip-tooltipPlacementBottom": { marginTop: 0 } }}
       >
         <Badge
