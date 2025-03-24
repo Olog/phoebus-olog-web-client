@@ -60,6 +60,7 @@ export const EntryEditor = ({
       <Typography
         component="h2"
         variant="h3"
+        fontSize="2rem"
         py={2}
       >
         {title}
