@@ -88,6 +88,7 @@ const MultiSelect = styled(
         clearOnBlur
         handleHomeEndKeys
         disablePortal
+        sx={{ "& .MuiAutocomplete-tag": { fontSize: ".9rem", height: "30px" } }}
         {...props}
       />
     );
