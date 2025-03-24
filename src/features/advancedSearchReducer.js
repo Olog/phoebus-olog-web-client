@@ -39,10 +39,10 @@ export const advancedSearchSlice = createSlice({
           activeFieldCount++;
         }
         if (searchParams?.logbooks?.length > 0) {
-          activeFieldCount++;
+          activeFieldCount += searchParams.logbooks.length;
         }
         if (searchParams?.tags?.length > 0) {
-          activeFieldCount++;
+          activeFieldCount += searchParams.tags.length;
         }
         if (searchParams.owner) {
           activeFieldCount++;
