@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Box, Button, Drawer, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useDispatch } from "react-redux";
 import { TextInput } from "components/shared/input/TextInput";
 import WizardDateInput from "components/shared/input/WizardDateInput";
@@ -41,9 +40,18 @@ export const AdvancedSearchDrawer = ({
     form.reset(defaultSearchParams);
   };
 
-  const onSubmit = () => {
+  const applyFilters = () => {
     dispatch(updateAdvancedSearch(getValues()));
+  };
+
+  const onSubmit = () => {
+    applyFilters();
     closeDrawer();
+  };
+
+  const handleSelectChange = (field, value) => {
+    field.onChange(value);
+    applyFilters();
   };
 
   return (
@@ -84,9 +92,18 @@ export const AdvancedSearchDrawer = ({
               control={control}
               defaultValue=""
             />
-            <EntryTypeSelect control={control} />
-            <LogbooksMultiSelect control={control} />
-            <TagsMultiSelect control={control} />
+            <EntryTypeSelect
+              onChange={handleSelectChange}
+              control={control}
+            />
+            <LogbooksMultiSelect
+              onChange={handleSelectChange}
+              control={control}
+            />
+            <TagsMultiSelect
+              onChange={handleSelectChange}
+              control={control}
+            />
             <TextInput
               name="owner"
               label="Author"
@@ -98,6 +115,7 @@ export const AdvancedSearchDrawer = ({
               label="Start Time"
               form={form}
               defaultValue={getValues("start")}
+              applyFilters={applyFilters}
               DatePickerProps={{
                 disableFuture: true
               }}
@@ -123,6 +141,7 @@ export const AdvancedSearchDrawer = ({
               label="End Time"
               form={form}
               defaultValue={getValues("end")}
+              applyFilters={applyFilters}
               DatePickerProps={{
                 disableFuture: true
               }}
@@ -161,11 +180,8 @@ export const AdvancedSearchDrawer = ({
               </Button>
               <Button
                 type="submit"
-                variant="contained"
-                startIcon={<FilterAltIcon />}
-              >
-                Apply
-              </Button>
+                sx={{ display: "none" }}
+              />
             </Stack>
           </Stack>
         </Stack>
