@@ -244,10 +244,11 @@ const AppNavBar = () => {
                         fontWeight: 600,
                         minWidth: "110px",
                         padding: "6px 15px",
-                        fontSize: "0.8rem"
+                        fontSize: "0.8rem",
+                        boxShadow: "none"
                       }}
                     >
-                      New Entry
+                      Create log
                     </InternalButtonLink>
                   </ListItem>
                 ) : null}
