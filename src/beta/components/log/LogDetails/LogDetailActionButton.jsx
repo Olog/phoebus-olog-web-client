@@ -31,8 +31,10 @@ const LogDetailActionButton = ({ log }) => {
       {log.modifyDate && (
         <InternalButtonLink
           to={`/logs/${log.id}/history`}
-          startIcon={<HistoryIcon sx={{ width: "15px" }} />}
-          sx={{ borderRadiusRight: "100px", fontSize: ".775rem" }}
+          startIcon={
+            <HistoryIcon sx={{ width: "17px", marginBottom: "2px" }} />
+          }
+          sx={{ borderRadiusRight: "100px", fontSize: ".85rem" }}
         >
           History
         </InternalButtonLink>
@@ -42,15 +44,17 @@ const LogDetailActionButton = ({ log }) => {
         <>
           <InternalButtonLink
             to={`/logs/${log.id}/reply`}
-            startIcon={<ReplyIcon sx={{ width: "15px" }} />}
-            sx={{ fontSize: ".775rem" }}
+            startIcon={
+              <ReplyIcon sx={{ width: "16px", marginBottom: "2px" }} />
+            }
+            sx={{ fontSize: ".85rem" }}
           >
             Reply
           </InternalButtonLink>
           <InternalButtonLink
             to={`/logs/${log.id}/edit`}
             startIcon={<EditIcon sx={{ width: "15px" }} />}
-            sx={{ borderRadiusRight: "100px", fontSize: ".775rem" }}
+            sx={{ borderRadiusRight: "100px", fontSize: ".85rem" }}
           >
             Edit
           </InternalButtonLink>
