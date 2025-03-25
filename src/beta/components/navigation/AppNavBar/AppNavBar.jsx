@@ -31,7 +31,6 @@ import {
   Tooltip
 } from "@mui/material";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { useState } from "react";
 import LockIcon from "@mui/icons-material/Lock";
 import HomeIcon from "@mui/icons-material/Home";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
@@ -46,11 +45,7 @@ import LogoutDialog from "components/LoginLogout/LogoutDialog";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
 import SimpleSearch from "beta/components/search/SimpleSearch";
 import { SortToggleButton } from "beta/components/search/SortToggleButton";
-import { AdvancedSearchDrawer } from "beta/components/search/AdvancedSearchDrawer";
-import {
-  defaultSearchParams,
-  useSearchParams
-} from "features/searchParamsReducer";
+import { defaultSearchParams } from "features/searchParamsReducer";
 import {
   updateSearchPageParams,
   useSearchPageParams
@@ -58,10 +53,9 @@ import {
 import { theme } from "src/config/theme";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 import useBetaNavigate from "src/hooks/useBetaNavigate";
+import { onHomePage } from "src/beta/utils/isHomePage";
 
-const showSearchBoxRegex = /^\/$|^\/$|^\/logs$|^\/logs\/\d+$/;
-
-const AppNavBar = () => {
+const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
   const user = useUser();
   const navigate = useBetaNavigate();
   const location = useLocation();
@@ -69,12 +63,8 @@ const AppNavBar = () => {
   const { setShowLogin } = useShowLogin();
   const { active: advancedSearchActive, fieldCount: advancedSearchFieldCount } =
     useAdvancedSearch();
-  const searchParams = useSearchParams();
   const searchPageParams = useSearchPageParams();
-  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
   const dispatch = useDispatch();
-
-  const onHomePage = showSearchBoxRegex.test(pathname);
 
   const toggleSort = () => {
     dispatch(
@@ -86,11 +76,6 @@ const AppNavBar = () => {
   };
   return (
     <Initialize>
-      <AdvancedSearchDrawer
-        searchParams={searchParams}
-        advancedSearchOpen={advancedSearchOpen}
-        setAdvancedSearchOpen={setAdvancedSearchOpen}
-      />
       <AppBar
         sx={{
           backgroundColor: "transparent",
@@ -105,7 +90,9 @@ const AppNavBar = () => {
           disableGutters
           sx={{
             display: "grid",
-            gridTemplateColumns: onHomePage ? "1.15fr auto 2fr" : "auto",
+            gridTemplateColumns: onHomePage(pathname)
+              ? "auto 1.25fr auto 2fr"
+              : "auto 1fr auto",
             gridTemplateRows: "1fr",
             height: "80px",
             [theme.breakpoints.down("md")]: {
@@ -127,7 +114,11 @@ const AppNavBar = () => {
             }
           }}
         >
-          {onHomePage && (
+          <Divider
+            sx={{ borderColor: "#E2E8EE" }}
+            orientation="vertical"
+          />
+          {onHomePage(pathname) && (
             <>
               <nav
                 style={{ height: "100%" }}
@@ -143,8 +134,18 @@ const AppNavBar = () => {
 
                   <Box sx={{ minWidth: "100px", flex: 1 }}>
                     <IconButton
-                      sx={{ marginRight: "10px" }}
-                      onClick={() => setAdvancedSearchOpen(true)}
+                      sx={{
+                        marginRight: "10px",
+                        backgroundColor: advancedSearchOpen
+                          ? "#dedede"
+                          : "inherit",
+                        "&:hover": {
+                          backgroundColor: advancedSearchOpen
+                            ? "#dedede"
+                            : "#F5F5F5"
+                        }
+                      }}
+                      onClick={() => setAdvancedSearchOpen((prev) => !prev)}
                     >
                       <Tooltip
                         enterDelay={200}

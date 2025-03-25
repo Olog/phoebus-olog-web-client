@@ -5,7 +5,7 @@ import { SearchResults } from "beta/components/search";
 
 const ContentView = styled(Box)(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "1.15fr auto 2fr",
+  gridTemplateColumns: "auto 1.25fr auto 2fr",
   gridTemplateRows: "1fr",
   height: "100%",
   [theme.breakpoints.down("md")]: {
@@ -30,6 +30,10 @@ const SearchView = styled(({ className }) => {
   return (
     <Box height="100%">
       <ContentView className={`SearchView ${className}`}>
+        <Divider
+          sx={{ borderColor: "#E2E8EE" }}
+          orientation="vertical"
+        />
         <SearchResults />
         <Divider
           sx={{ borderColor: "#E2E8EE" }}
