@@ -33,10 +33,9 @@ import {
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import LockIcon from "@mui/icons-material/Lock";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import HomeIcon from "@mui/icons-material/Home";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import HelpCenterIcon from "@mui/icons-material/HelpCenter";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useDispatch } from "react-redux";
 import UserMenu from "./UserMenu";
 import Initialize from "components/Initialize";
@@ -58,11 +57,13 @@ import {
 } from "features/searchPageParamsReducer";
 import { theme } from "src/config/theme";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
+import useBetaNavigate from "src/hooks/useBetaNavigate";
 
 const showSearchBoxRegex = /^\/$|^\/$|^\/logs$|^\/logs\/\d+$/;
 
 const AppNavBar = () => {
   const user = useUser();
+  const navigate = useBetaNavigate();
   const location = useLocation();
   const { pathname } = location;
   const { setShowLogin } = useShowLogin();
@@ -215,17 +216,6 @@ const AppNavBar = () => {
                   gap: "10px"
                 }}
               >
-                {user ? (
-                  <ListItem sx={{ padding: 0 }}>
-                    <InternalButtonLink
-                      to="/logs/create"
-                      color="inherit"
-                      startIcon={<AddCircleIcon />}
-                    >
-                      New Entry
-                    </InternalButtonLink>
-                  </ListItem>
-                ) : null}
                 <List
                   aria-label="help menu"
                   sx={{
@@ -233,16 +223,35 @@ const AppNavBar = () => {
                   }}
                 >
                   <ListItem sx={{ padding: 0 }}>
-                    <InternalButtonLink
-                      component={RouterLink}
-                      startIcon={<HelpCenterIcon titleAccess="help" />}
-                      to="/help"
-                      color="inherit"
-                    >
-                      Help
-                    </InternalButtonLink>
+                    <Tooltip title="Help">
+                      <IconButton onClick={() => navigate("/help")}>
+                        <HelpOutlineIcon
+                          color="primary"
+                          titleAccess="help"
+                          sx={{ fontSize: "25px" }}
+                        />
+                      </IconButton>
+                    </Tooltip>
                   </ListItem>
                 </List>
+                {user ? (
+                  <ListItem sx={{ padding: 0 }}>
+                    <InternalButtonLink
+                      to="/logs/create"
+                      variant="contained"
+                      color="primary"
+                      sx={{
+                        fontWeight: 600,
+                        minWidth: "110px",
+                        padding: "6px 15px",
+                        fontSize: "0.8rem"
+                      }}
+                    >
+                      New Entry
+                    </InternalButtonLink>
+                  </ListItem>
+                ) : null}
+
                 <ListItem sx={{ padding: "0 0 0 8px" }}>
                   {user?.userName ? (
                     <UserMenu user={user} />
