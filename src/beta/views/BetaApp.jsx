@@ -16,29 +16,57 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { Box, styled } from "@mui/material";
+import { AdvancedSearchDrawer } from "../components/search/AdvancedSearchDrawer";
+import { onHomePage } from "../utils/isHomePage";
 import { AppNavBar } from "beta/components/navigation/AppNavBar";
 import Initialize from "components/Initialize";
 import { theme } from "src/config/theme";
+import { useSearchParams } from "src/features/searchParamsReducer";
 
 const BetaApp = styled(({ className }) => {
+  const searchParams = useSearchParams();
+  const { pathname } = useLocation();
+  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
   return (
     <Initialize>
       <Box
-        className={className}
         sx={{
-          display: "flex",
-          flexFlow: "column",
+          display: "grid",
+          gridTemplateColumns: onHomePage(pathname) ? "auto 2fr" : null,
+          gridTemplateRows: "1fr",
           height: "100vh",
-          [theme.breakpoints.down("md")]: {
-            width: "auto",
-            height: "auto"
-          }
+          overflow: "auto",
+          transition: ""
         }}
       >
-        <AppNavBar />
-        <Outlet />
+        {onHomePage(pathname) && (
+          <AdvancedSearchDrawer
+            advancedSearchOpen={advancedSearchOpen}
+            searchParams={searchParams}
+          />
+        )}
+        <Box
+          className={className}
+          sx={{
+            display: "flex",
+            flexFlow: "column",
+            height: "100vh",
+            overflow: "auto",
+            [theme.breakpoints.down("md")]: {
+              width: "auto",
+              height: "auto"
+            }
+          }}
+        >
+          <AppNavBar
+            advancedSearchOpen={advancedSearchOpen}
+            setAdvancedSearchOpen={setAdvancedSearchOpen}
+          />
+          <Outlet />
+        </Box>
       </Box>
     </Initialize>
   );
