@@ -113,12 +113,7 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
     setCurrentIndex(index);
   };
 
-  const isValidIndex = (index) => {
-    if (index >= 0 && index < attachments.length) {
-      return true;
-    }
-    return false;
-  };
+  const isValidIndex = (index) => index >= 0 && index < imageAttachments.length;
 
   const onPrevious = () => {
     if (isValidIndex(currentIndex - 1)) {
