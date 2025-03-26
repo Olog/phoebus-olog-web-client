@@ -84,7 +84,7 @@ const ReplyLog = ({ log, isAuthenticated }) => {
       <EntryEditor
         {...{
           form,
-          title: `Reply to Log "${log?.title}" (id ${log?.id})`,
+          title: `Reply to Log "${log?.title}"`,
           onSubmit,
           submitDisabled: !isAuthenticated
         }}

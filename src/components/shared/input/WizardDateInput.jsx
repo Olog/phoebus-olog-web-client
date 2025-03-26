@@ -223,6 +223,7 @@ const WizardDateInput = styled(
             fontSize: ".9rem",
             top: "-4px"
           },
+          "& .MuiInputLabel-shrink": { top: "0" },
           "& .MuiInputBase-input": { padding: "11.5px 12px", fontSize: ".9rem" }
         }}
         {...props}

@@ -93,10 +93,10 @@ const LoginDialog = () => {
             sx={{
               "& .MuiFormLabel-root": {
                 fontSize: "1rem",
-                top: "-4px"
+                top: 0
               },
               "& .MuiInputBase-input": {
-                padding: "14px 12px",
+                padding: "16px 12px",
                 fontSize: "1rem"
               }
             }}
@@ -110,10 +110,10 @@ const LoginDialog = () => {
             sx={{
               "& .MuiFormLabel-root": {
                 fontSize: "1rem",
-                top: "-4px"
+                top: 0
               },
               "& .MuiInputBase-input": {
-                padding: "14px 12px",
+                padding: "16px 12px",
                 fontSize: "1rem"
               }
             }}

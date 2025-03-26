@@ -94,6 +94,7 @@ const MultiSelect = styled(
             fontSize: ".9rem",
             top: "-4px"
           },
+          "& .MuiInputLabel-shrink": { top: 0 },
           "& .MuiInputBase-root": { padding: "4px 9px", fontSize: ".9rem" },
           "& .MuiInputBase-input": { fontSize: ".9rem" },
           "& .MuiAutocomplete-popper": { fontSize: ".9rem" }
