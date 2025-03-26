@@ -244,7 +244,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                       color="primary"
                       sx={{
                         fontWeight: 600,
-                        minWidth: "110px",
+                        minWidth: "100px",
                         padding: "6px 15px",
                         fontSize: "0.8rem",
                         boxShadow: "none"
