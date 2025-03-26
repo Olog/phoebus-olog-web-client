@@ -90,7 +90,7 @@ const EditLog = ({ log, isAuthenticated }) => {
       <EntryEditor
         {...{
           form,
-          title: `Edit Log "${log?.title}" (id ${log?.id})`,
+          title: `Edit Log "${log?.title}"`,
           onSubmit,
           submitDisabled: !isAuthenticated,
           attachmentsDisabled: true

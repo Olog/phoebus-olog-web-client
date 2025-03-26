@@ -51,7 +51,7 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
         position: "static",
         transition: "width 0.25s ease, padding 0.25s ease",
         width: advancedSearchOpen ? "290px" : 0,
-        padding: advancedSearchOpen ? "16px 8px" : "16px 0",
+        padding: advancedSearchOpen ? "18px 8px" : "18px 0",
         height: "100vh",
         overflow: "auto",
         [theme.breakpoints.down("md")]: {
