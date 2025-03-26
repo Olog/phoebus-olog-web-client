@@ -155,13 +155,15 @@ const LogDetailsWithReplies = ({ log }) => {
         padding: "10px 15px 0 15px"
       }}
     >
-      <Box
-        borderRadius="4px"
-        bgcolor="#f2f5f7"
-      >
-        <LogHeader log={log} />
+      <Box sx={{ border: "2px solid transparent", borderRadius: "4px" }}>
+        <Box
+          borderRadius="4px"
+          bgcolor="#f2f5f7"
+        >
+          <LogHeader log={log} />
+        </Box>
+        <LogDetails log={log} />
       </Box>
-      <LogDetails log={log} />
     </Stack>
   );
 };
