@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Box, Button, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { TextInput } from "components/shared/input/TextInput";
 import WizardDateInput from "components/shared/input/WizardDateInput";
@@ -42,15 +43,23 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
     field.onChange(value);
     applyFilters();
   };
+  const theme = useTheme();
 
   return (
     <Box
       sx={{
+        position: "static",
         transition: "width 0.25s ease, padding 0.25s ease",
-        width: advancedSearchOpen ? "320px" : 0,
+        width: advancedSearchOpen ? "290px" : 0,
         padding: advancedSearchOpen ? "16px 8px" : "16px 0",
         height: "100vh",
-        overflow: "auto"
+        overflow: "auto",
+        [theme.breakpoints.down("md")]: {
+          width: advancedSearchOpen ? "240px" : 0,
+          position: "fixed",
+          zIndex: 3,
+          backgroundColor: theme.palette.background.paper
+        }
       }}
     >
       <Stack
@@ -58,7 +67,7 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
         onSubmit={handleSubmit(applyFilters)}
         aria-labelledby="advanced-search"
         role="search"
-        gap={1.5}
+        gap={2}
         px={1}
       >
         <TextInput

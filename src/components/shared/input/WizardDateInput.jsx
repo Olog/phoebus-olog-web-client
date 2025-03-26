@@ -115,7 +115,10 @@ const ButtonField = ({
       aria-label={ariaLabel}
       onClick={() => setOpen?.((prev) => !prev)}
     >
-      <CalendarMonthIcon color={disabled ? "disabled" : "secondary"} />
+      <CalendarMonthIcon
+        sx={{ width: "1.4rem", height: "1.4rem" }}
+        color={disabled ? "disabled" : "secondary"}
+      />
     </IconButton>
   );
 };
@@ -215,6 +218,13 @@ const WizardDateInput = styled(
         }}
         {...field}
         value={field.value ?? ""}
+        sx={{
+          "& .MuiFormLabel-root": {
+            fontSize: ".9rem",
+            top: "-4px"
+          },
+          "& .MuiInputBase-input": { padding: "11.5px 12px", fontSize: ".9rem" }
+        }}
         {...props}
       />
     );

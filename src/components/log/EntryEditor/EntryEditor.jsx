@@ -61,7 +61,7 @@ export const EntryEditor = ({
         component="h2"
         variant="h3"
         fontSize="2rem"
-        py={2}
+        py={1}
       >
         {title}
       </Typography>

@@ -86,7 +86,10 @@ const SimpleSearch = () => {
             <>
               {queryValue && (
                 <IconButton
-                  onClick={() => setValue("query", "")}
+                  onClick={() => {
+                    setValue("query", "");
+                    onSubmit();
+                  }}
                   sx={{
                     "&:hover": { backgroundColor: "transparent" },
                     padding: "4px",
@@ -103,7 +106,7 @@ const SimpleSearch = () => {
             fontSize: ".9rem",
             backgroundColor: "#fafafa",
             "& .MuiInputBase-input": {
-              padding: "14px 0",
+              padding: "11.5px 0",
               paddingRight: 0
             },
             "& .MuiOutlinedInput-notchedOutline": {

@@ -186,9 +186,10 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
           >
             <Button
               component={RouterLink}
-              onClick={() =>
-                dispatch(updateAdvancedSearch({ ...defaultSearchParams }))
-              }
+              onClick={() => {
+                dispatch(updateAdvancedSearch({ ...defaultSearchParams }));
+                setAdvancedSearchOpen(false);
+              }}
               to="/"
               sx={{ padding: "8px", marginLeft: "-8px" }}
             >

@@ -82,7 +82,7 @@ const LoginDialog = () => {
         <Stack
           component="form"
           onSubmit={handleSubmit(handleLogin)}
-          gap={1}
+          gap={2}
           marginY={2}
         >
           <TextInput
@@ -90,6 +90,16 @@ const LoginDialog = () => {
             label="Username"
             control={control}
             defaultValue=""
+            sx={{
+              "& .MuiFormLabel-root": {
+                fontSize: "1rem",
+                top: "-4px"
+              },
+              "& .MuiInputBase-input": {
+                padding: "14px 12px",
+                fontSize: "1rem"
+              }
+            }}
           />
           <TextInput
             name="password"
@@ -97,6 +107,16 @@ const LoginDialog = () => {
             control={control}
             defaultValue=""
             inputProps={{ type: "password" }}
+            sx={{
+              "& .MuiFormLabel-root": {
+                fontSize: "1rem",
+                top: "-4px"
+              },
+              "& .MuiInputBase-input": {
+                padding: "14px 12px",
+                fontSize: "1rem"
+              }
+            }}
           />
           {/* Hidden button handles submit-on-enter automatically */}
           <Button
