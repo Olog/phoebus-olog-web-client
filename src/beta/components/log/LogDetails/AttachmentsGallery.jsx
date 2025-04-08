@@ -23,11 +23,11 @@ const Image = styled(({ attachment, className }) => {
       src={attachment.url}
     />
   );
-})(({ size, fullSize, maxHeight, maxWidth }) => {
+})(({ size, fullSize, height, maxWidth }) => {
   if (fullSize) {
     return {
       objectFit: "contain",
-      maxHeight,
+      height,
       maxWidth
     };
   } else {
@@ -60,43 +60,51 @@ const GalleryView = ({ attachments, onPrevious, onNext, currentIndex }) => {
 
   return (
     <Stack
-      flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
       sx={{ maxWidth: "100%", maxHeight: "100%", margin: "0 auto" }}
     >
-      <IconButton
-        onClick={onPrevious}
-        sx={{ height: "min-content", marginRight: "16px" }}
-        disabled={currentIndex === 0}
+      <Image
+        {...{
+          attachment,
+          fullSize: true,
+          height: "calc(100vh - 260px)",
+          maxWidth: "100%"
+        }}
+      />
+      <Stack
+        width="100%"
+        maxWidth="300px"
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        pt={4}
       >
-        <NavigateBeforeIcon />
-      </IconButton>
-      <Stack>
-        <Image
-          {...{
-            attachment,
-            fullSize: true,
-            maxHeight: "500px",
-            maxWidth: "100%"
-          }}
-        />
         <InternalButtonLink
           variant="outlined"
           to={attachment.url}
-          sx={{ margin: "30px auto 10px" }}
+          download
         >
           <DownloadIcon sx={{ fontSize: "1.1rem", margin: "0 5px 0 0" }} />
           Download image
         </InternalButtonLink>
+        <Box>
+          <IconButton
+            onClick={onPrevious}
+            sx={{ height: "min-content", marginRight: "16px" }}
+            disabled={currentIndex === 0}
+          >
+            <NavigateBeforeIcon />
+          </IconButton>
+          <IconButton
+            onClick={onNext}
+            sx={{ height: "min-content", marginLeft: "16px" }}
+            disabled={currentIndex === attachments.length - 1}
+          >
+            <NavigateNextIcon />
+          </IconButton>
+        </Box>
       </Stack>
-      <IconButton
-        onClick={onNext}
-        sx={{ height: "min-content", marginLeft: "16px" }}
-        disabled={currentIndex === attachments.length - 1}
-      >
-        <NavigateNextIcon />
-      </IconButton>
     </Stack>
   );
 };
@@ -218,6 +226,14 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
             }}
           />
         }
+        DialogProps={{
+          maxWidth: "xl",
+          sx: {
+            "& .MuiDialogContent-root": {
+              padding: "24px 60px"
+            }
+          }
+        }}
       />
     </Stack>
   );
