@@ -13,7 +13,7 @@ const LogHeader = ({ log, className }) => (
     width="100%"
     gap={2}
     px={3}
-    py={1.5}
+    py={1}
   >
     <KeyValueTable
       data={[

@@ -59,7 +59,7 @@ const SimpleSearch = () => {
       onSubmit={handleSubmit(onSubmit)}
       sx={{
         flex: 3,
-        padding: "0 16px 0 30px",
+        padding: "0 14px 0 30px",
         "& .MuiFormLabel-root[data-shrink='false']": {
           transform: "translate(14px, 14px)"
         }
@@ -106,7 +106,7 @@ const SimpleSearch = () => {
             fontSize: ".9rem",
             backgroundColor: "#fafafa",
             "& .MuiInputBase-input": {
-              padding: "11.5px 0",
+              padding: "10px 0",
               paddingRight: 0
             },
             "& .MuiOutlinedInput-notchedOutline": {

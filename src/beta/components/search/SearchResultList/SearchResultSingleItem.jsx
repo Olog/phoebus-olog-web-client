@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack, Tooltip, Typography } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import EditIcon from "@mui/icons-material/Edit";
@@ -20,8 +20,7 @@ export const SearchResultSingleItem = ({
   return (
     <Stack
       px={4}
-      pb={1.2}
-      pt={0.8}
+      py={0.5}
       sx={{
         position: "relative",
         borderBottom: "1px solid #dedede",
@@ -58,11 +57,10 @@ export const SearchResultSingleItem = ({
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
-        pb="4px"
       >
         <Typography
           noWrap
-          fontSize=".75rem"
+          fontSize=".7rem"
           variant="body2"
         >
           {log.owner}
@@ -72,21 +70,20 @@ export const SearchResultSingleItem = ({
           date={log.createdDate}
           whiteSpace="nowrap"
           variant="body2"
-          fontSize={isNestedReply ? "0.7rem" : "0.8rem"}
-          mt={0.2}
+          fontSize={isNestedReply ? "0.7rem" : "0.75rem"}
         />
       </Stack>
       <Stack
-        maxHeight="22px"
+        maxHeight="20px"
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
-        pb={0.2}
       >
         <Typography
-          fontSize={isNestedReply ? ".75rem" : ".85rem"}
-          noWrap
+          fontSize={isNestedReply ? ".7rem" : ".8rem"}
           fontWeight="bold"
+          noWrap
+          textOverflow="ellipsis"
         >
           {log.title}
         </Typography>
@@ -95,20 +92,47 @@ export const SearchResultSingleItem = ({
           alignItems="center"
           gap={0.5}
           sx={{ "& > svg": { color: "#616161" } }}
+          mt={0.8}
         >
           {log?.attachments?.length > 0 && (
-            <AttachFileIcon
-              fontSize="small"
-              sx={{
-                fontSize: isNestedReply ? "1.1rem" : "1.25rem"
-              }}
-            />
+            <Tooltip
+              title="Attachments"
+              enterDelay={200}
+            >
+              <AttachFileIcon
+                fontSize="small"
+                sx={{
+                  cursor: "default",
+                  fontSize: isNestedReply ? "1rem" : "1.1rem"
+                }}
+              />
+            </Tooltip>
           )}
           {log?.modifyDate && (
-            <EditIcon sx={{ fontSize: isNestedReply ? "1rem" : "1.3rem" }} />
+            <Tooltip
+              title="Edited"
+              enterDelay={200}
+            >
+              <EditIcon
+                sx={{
+                  cursor: "default",
+                  fontSize: isNestedReply ? ".9rem" : "1.1rem"
+                }}
+              />
+            </Tooltip>
           )}
           {!isParentNestedLog && (isReply || isNestedReply) && (
-            <ReplyIcon sx={{ fontSize: isNestedReply ? "1.1rem" : "1.5rem" }} />
+            <Tooltip
+              title="Reply"
+              enterDelay={200}
+            >
+              <ReplyIcon
+                sx={{
+                  cursor: "default",
+                  fontSize: isNestedReply ? ".9rem" : "1.2rem"
+                }}
+              />
+            </Tooltip>
           )}
         </Stack>
       </Stack>
@@ -117,13 +141,15 @@ export const SearchResultSingleItem = ({
         commonmarkSrc={log.source}
         isSummary
         sx={{
-          fontSize: isNestedReply ? ".8rem" : ".9rem"
+          fontSize: isNestedReply ? ".75rem" : ".8rem",
+          margin: 0
         }}
       />
 
       {!isNestedReply && (
         <Stack
-          mt={1}
+          mt={0.5}
+          mb={0.5}
           flexDirection="row"
           gap={0.5}
           flexWrap="wrap"

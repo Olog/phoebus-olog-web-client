@@ -61,7 +61,8 @@ export const SearchResultGroupItem = styled(
 
     const ExpandIcon = () => (
       <Stack
-        mt={1.5}
+        mt={0.3}
+        mb={0.6}
         flexDirection="row"
         alignItems="center"
         onClick={onExpandClick}

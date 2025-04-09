@@ -8,10 +8,9 @@ const Key = ({ name, children }) => (
     flexDirection="row"
     gap={0.5}
     alignItems="center"
-    flexWrap="wrap"
   >
     <Typography
-      fontSize="0.8rem"
+      fontSize="0.75rem"
       fontWeight="bold"
       mr={0.5}
     >
@@ -22,21 +21,25 @@ const Key = ({ name, children }) => (
 );
 
 const MetadataTable = ({ log }) => (
-  <Stack gap={2}>
-    <Key name="Tags">
-      {log?.tags?.map((it) => (
-        <TagChip
-          sx={{ fontSize: ".75rem" }}
+  <Stack
+    direction="row"
+    flexWrap="wrap"
+    gap={2}
+  >
+    <Key name="Logbooks">
+      {log?.logbooks?.map((it) => (
+        <LogbookChip
+          sx={{ fontSize: ".7rem" }}
           key={it.name}
           value={it.name}
         />
       ))}
     </Key>
 
-    <Key name="Log books">
-      {log?.logbooks?.map((it) => (
-        <LogbookChip
-          sx={{ fontSize: ".75rem" }}
+    <Key name="Tags">
+      {log?.tags?.map((it) => (
+        <TagChip
+          sx={{ fontSize: ".7rem" }}
           key={it.name}
           value={it.name}
         />
@@ -49,7 +52,7 @@ const MetadataTable = ({ log }) => (
         value
       >
         <EntryTypeChip
-          sx={{ fontSize: ".75rem" }}
+          sx={{ fontSize: ".7rem" }}
           value={log?.level}
         />
       </Key>

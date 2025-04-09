@@ -19,6 +19,7 @@ const LogDetailActionButton = ({ log }) => {
               "& > button": { borderRadius: "4px" }
             }
           : {
+              height: "34px",
               "& > button,a": { borderRadius: "0px" },
               "& > :first-child": {
                 borderRadius: "4px 0 0 4px",

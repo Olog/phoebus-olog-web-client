@@ -152,7 +152,7 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
 
   return (
     <Stack
-      mt={1}
+      mt={0.5}
       gap={1}
       flexWrap={"wrap"}
       flexDirection="row"
