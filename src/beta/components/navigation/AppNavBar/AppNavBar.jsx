@@ -94,7 +94,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
               ? "auto 1.25fr auto 2fr"
               : "auto 1fr auto",
             gridTemplateRows: "1fr",
-            height: "80px",
+            height: "70px",
             [theme.breakpoints.down("md")]: {
               height: "auto",
               display: "flex",

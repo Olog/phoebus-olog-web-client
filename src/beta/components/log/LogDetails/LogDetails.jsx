@@ -13,16 +13,16 @@ const LogDetails = ({ log, className }) => {
   return (
     <Stack
       className={`LogDetails ${className}`}
-      gap={1}
-      py={2}
+      gap={0}
+      pt={1}
+      pb={1.5}
       px={3}
     >
       <LogAttachmentsHeader log={log} />
       <Typography
-        sx={{ fontSize: "2rem" }}
+        sx={{ fontSize: "1.4rem" }}
         component="h2"
         fontWeight="600"
-        mb={1}
       >
         {log.title}
       </Typography>
@@ -39,7 +39,7 @@ const LogDetails = ({ log, className }) => {
       )}
       <Divider
         sx={{
-          margin: "15px 0",
+          margin: "10px 0 15px",
           borderWidth: "1.25px",
           borderColor: "#F3F5F7"
         }}

@@ -45,7 +45,9 @@ const LogDetailsAccordion = styled(({ log, className, refProp }) => {
         id={`${log.id}-header`}
         sx={{
           bgcolor: isSelected ? "#0099dc24" : "#f2f5f7",
-
+          "&.Mui-expanded": {
+            minHeight: 0
+          },
           "& .MuiAccordionSummary-content, & .MuiAccordionSummary-content.Mui-expanded":
             {
               padding: "0",

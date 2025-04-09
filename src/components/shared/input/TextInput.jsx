@@ -21,7 +21,7 @@ export const TextInput = styled(
             top: "-4px"
           },
           "& .MuiInputLabel-shrink": { top: 0 },
-          "& .MuiInputBase-input": { padding: "11.5px 12px", fontSize: ".9rem" }
+          "& .MuiInputBase-input": { padding: "12.5px 15px", fontSize: ".9rem" }
         }}
         {...field}
         {...props}
