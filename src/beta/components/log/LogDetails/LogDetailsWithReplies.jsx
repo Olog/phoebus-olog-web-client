@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Accordion,
@@ -45,6 +45,7 @@ const LogDetailsAccordion = styled(({ log, className, refProp }) => {
         id={`${log.id}-header`}
         sx={{
           bgcolor: isSelected ? "#0099dc24" : "#f2f5f7",
+          userSelect: "text",
           "&.Mui-expanded": {
             minHeight: 0
           },
@@ -75,8 +76,8 @@ const LogDetailsAccordion = styled(({ log, className, refProp }) => {
 });
 
 const LogDetailsWithReplies = ({ log }) => {
-  const logScrollRef = useRef(null);
-  const parentRef = useRef(null);
+  const [parentRef, setParentRef] = useState(null);
+  const [logRef, setLogRef] = useState(null);
   const { id: paramLogId } = useParams();
   // fetch any groups/conversations
   const groupId = getLogEntryGroupId(log.properties);
@@ -89,23 +90,32 @@ const LogDetailsWithReplies = ({ log }) => {
   const { dateDescending } = useSearchPageParams();
 
   useEffect(() => {
-    if (
-      logScrollRef &&
-      logScrollRef.current &&
-      parentRef &&
-      parentRef.current
-    ) {
-      const y =
-        logScrollRef.current.getBoundingClientRect().top +
-        parentRef.current.scrollTop -
-        parentRef.current.getBoundingClientRect().top -
-        10;
-      parentRef.current.scrollTo({
-        top: y,
-        behavior: "smooth"
-      });
+    if (parentRef && logRef) {
+      setTimeout(() => {
+        const y =
+          logRef.getBoundingClientRect().top +
+          parentRef.scrollTop -
+          parentRef.getBoundingClientRect().top -
+          10;
+        parentRef.scrollTo({
+          top: y,
+          behavior: "smooth"
+        });
+      }, 0.1);
     }
-  }, [logScrollRef, paramLogId]);
+  }, [parentRef, logRef]);
+
+  const handleParentRef = (node) => {
+    if (node) {
+      setParentRef(node);
+    }
+  };
+
+  const handleLogRef = (node, sortedLogId) => {
+    if (node && sortedLogId === Number(paramLogId)) {
+      setLogRef(node);
+    }
+  };
 
   if (repliesLoading) {
     return <CircularProgress />;
@@ -129,7 +139,7 @@ const LogDetailsWithReplies = ({ log }) => {
 
     return (
       <Stack
-        ref={parentRef}
+        ref={handleParentRef}
         sx={{
           overflow: "auto",
           padding: "10px 15px"
@@ -137,9 +147,7 @@ const LogDetailsWithReplies = ({ log }) => {
       >
         {sortedLogs.map((sortedLog) => (
           <LogDetailsAccordion
-            refProp={
-              sortedLog.id === Number(paramLogId) ? logScrollRef : undefined
-            }
+            refProp={(node) => handleLogRef(node, sortedLog?.id)}
             log={sortedLog}
             key={`current-${log.id}-accordion-${sortedLog.id}`}
           />
