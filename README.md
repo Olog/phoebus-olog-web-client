@@ -66,7 +66,6 @@ Note that `VITE_APP_*` variables are only embedded during build time they cannot
 | VITE_APP_SUPPORT_HREF                               | URL where support can be found for Olog. Shown on Help page only if provided.                                                                                                                 |
 | VITE_APP_VERSION                                    | Version string for Olog; default is the version defined in `package.json`.                                                                                                                    |
 | VITE_APP_VERSION_HREF                               | URL where this version of Olog can be found. Shown on Help page only if provided.                                                                                                             |
-| VITE_APP_LEVEL_VALUES                               | List of values in the "Level" drop-down. NOTE: If set on the command line, quotes must be escaped, e.g. VITE_APP_LEVEL_VALUES=[\\"foo\\",\\"bar\\"]                                           |
 
 ## Development
 
