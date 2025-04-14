@@ -74,10 +74,12 @@ const GalleryView = ({ attachments, onPrevious, onNext, currentIndex }) => {
       />
       <Stack
         width="100%"
-        maxWidth="300px"
+        maxWidth="350px"
+        flexWrap="wrap"
         direction="row"
         alignItems="center"
         justifyContent="space-between"
+        gap={2}
         pt={4}
       >
         <InternalButtonLink
@@ -230,7 +232,7 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
           maxWidth: "xl",
           sx: {
             "& .MuiDialogContent-root": {
-              padding: "24px 60px"
+              padding: "20px"
             }
           }
         }}
