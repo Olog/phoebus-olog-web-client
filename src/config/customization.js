@@ -25,16 +25,6 @@ let customization = {
    */
   level: "Entry Type",
   /**
-   * Values for the "level" drop-down.
-   */
-  levelValues: import.meta.env.VITE_APP_LEVEL_VALUES,
-
-  /**
-   * Default "level" for new log entries
-   */
-  defaultLevel: import.meta.env.VITE_APP_DEFAULT_LEVEL,
-
-  /**
    * Specifies whether to support grouping of log entries.
    */
   log_entry_groups_support: true,

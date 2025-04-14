@@ -230,6 +230,11 @@ export const ologApi = createApi({
       query: () => ({
         url: "/"
       })
+    }),
+    getLevels: builder.query({
+      query: () => ({
+        url: "/levels"
+      })
     })
   })
 });
