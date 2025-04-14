@@ -13,8 +13,6 @@ const EntryTypeSelect = styled(({ control, className, ...props }) => {
   const { data: levels = [], isLoading } =
     ologApi.endpoints.getLevels.useQuery();
 
-  const defaultLevel = levels?.find((level) => level?.defaultLevel);
-
   return (
     <>
       <MultiSelect
@@ -22,7 +20,6 @@ const EntryTypeSelect = styled(({ control, className, ...props }) => {
         name="level"
         label={customization.level ?? "Entry type"}
         control={control}
-        defaultValue={defaultLevel?.name}
         options={levels?.map((level) => level?.name)}
         loading={isLoading}
         {...props}

@@ -23,6 +23,7 @@ import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSe
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
 import { PropertyCollectionInput } from "components/shared/input/managed/PropertyCollectionInput";
+import { ologApi } from "src/api/ologApi";
 
 export const EntryEditor = ({
   form,
@@ -32,7 +33,20 @@ export const EntryEditor = ({
   attachmentsDisabled
 }) => {
   const topElem = useRef();
-  const { control, handleSubmit, formState } = form;
+  const { control, handleSubmit, formState, setValue } = form;
+
+  const { data: defaultLevel } = ologApi.endpoints.getLevels.useQuery(
+    undefined,
+    {
+      selectFromResult: ({ data }) => {
+        return { data: data?.find((level) => level?.defaultLevel) };
+      }
+    }
+  );
+
+  useEffect(() => {
+    setValue("level", defaultLevel?.name);
+  }, [defaultLevel, setValue]);
 
   // Scroll to top if there are field errors
   useEffect(() => {
