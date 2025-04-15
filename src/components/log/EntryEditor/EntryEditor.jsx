@@ -35,18 +35,16 @@ export const EntryEditor = ({
   const topElem = useRef();
   const { control, handleSubmit, formState, setValue } = form;
 
-  const { data: defaultLevel } = ologApi.endpoints.getLevels.useQuery(
-    undefined,
-    {
-      selectFromResult: ({ data }) => {
-        return { data: data?.find((level) => level?.defaultLevel) };
-      }
-    }
-  );
+  const { data: levels } = ologApi.endpoints.getLevels.useQuery();
+  const defaultLevel = levels?.find((level) => level?.defaultLevel);
 
   useEffect(() => {
-    setValue("level", defaultLevel?.name);
-  }, [defaultLevel, setValue]);
+    if (!attachmentsDisabled) {
+      setTimeout(() => {
+        setValue("level", defaultLevel?.name);
+      }, 0);
+    }
+  }, [defaultLevel, setValue, attachmentsDisabled]);
 
   // Scroll to top if there are field errors
   useEffect(() => {
