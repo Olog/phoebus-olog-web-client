@@ -25,6 +25,7 @@ const MetadataTable = ({ log }) => (
     direction="row"
     flexWrap="wrap"
     gap={2}
+    mt={1.5}
   >
     <Key name="Logbooks">
       {log?.logbooks?.map((it) => (

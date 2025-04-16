@@ -52,15 +52,6 @@ export const SearchResultList = styled(
       navigate(`/logs/${logId}`);
     };
 
-    useEffect(() => {
-      if (!currentLogEntryId) {
-        const firstLogEntry = document.querySelector("[data-id]");
-        navigateToEntry(firstLogEntry.getAttribute("data-id"));
-        firstLogEntry.focus();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const handleKeyDown = (e) => {
       if (e.key === "ArrowDown") {
         const nextSibling = e?.target?.nextElementSibling;

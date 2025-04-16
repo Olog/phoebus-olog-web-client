@@ -68,6 +68,10 @@ export const routes = [
         element: <SearchView />
       },
       {
+        path: "logs/",
+        element: <SearchView />
+      },
+      {
         path: "logs/:id",
         element: <SearchView />
       },

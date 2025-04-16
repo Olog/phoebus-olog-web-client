@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { LogAttachmentsHeader } from "./LogAttachmentsHeader";
 import LogProperty from "./LogProperty";
 import MetadataTable from "./MetadataTable";
@@ -37,13 +37,6 @@ const LogDetails = ({ log, className }) => {
           ))}
         </Box>
       )}
-      <Divider
-        sx={{
-          margin: "10px 0 15px",
-          borderWidth: "1.25px",
-          borderColor: "#F3F5F7"
-        }}
-      />
       <MetadataTable log={log} />
     </Stack>
   );
