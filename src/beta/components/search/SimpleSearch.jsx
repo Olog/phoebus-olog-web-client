@@ -104,19 +104,19 @@ const SimpleSearch = () => {
           ),
           sx: {
             fontSize: ".9rem",
-            backgroundColor: "#fafafa",
+            backgroundColor: "#f5f5f5",
             "& .MuiInputBase-input": {
               padding: "10px 0",
               paddingRight: 0
             },
             "& .MuiOutlinedInput-notchedOutline": {
-              border: "1.5px solid #E2E8EE"
+              border: "1.5px solid #dcddde"
             },
             "&:hover .MuiOutlinedInput-notchedOutline": {
-              border: "1.5px solid #E2E8EE"
+              border: "1.5px solid #dcddde"
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              border: "1.5px solid #E2E8EE" // Custom border color when focused
+              border: "1.5px solid #dcddde" // Custom border color when focused
             }
           }
         }}
