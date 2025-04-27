@@ -19,12 +19,7 @@
 import { useEffect, useState } from "react";
 import Modal from "../../../shared/Modal";
 import { CommonMark } from "../../../shared/CommonMark";
-import customization from "config/customization";
-
-const mdImageRegex = new RegExp(
-  `!\\[([^\\]]*)\\]\\(${customization.APP_BASE_URL}/attachment/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})\\)\\{width=(\\d+) height=(\\d+)\\}`,
-  "g"
-);
+import { parseEmbeddedImages } from "src/beta/utils/parseEmbeddedImages";
 
 const HtmlPreviewModal = ({
   commonmarkSrc,
@@ -38,26 +33,9 @@ const HtmlPreviewModal = ({
 
   useEffect(() => {
     if (!useRemoteAttachments) {
-      let newContent = commonmarkSrc;
-
-      // Replaces the remote image url with a local blob url for preview purposes
-      const matches = [...commonmarkSrc.matchAll(mdImageRegex)];
-      matches.forEach((match) => {
-        const altText = match[1];
-        const id = match[2];
-        const width = match[3];
-        const height = match[4];
-        const file = attachedFiles.find((file) => file.id === id);
-
-        if (file) {
-          newContent = newContent.replace(
-            match[0],
-            `![${altText}](${file.url}){width=${width} height=${height}}`
-          );
-        }
-      });
-
-      setModifiedPreviewContent(newContent);
+      setModifiedPreviewContent(
+        parseEmbeddedImages(commonmarkSrc, attachedFiles)
+      );
     }
   }, [commonmarkSrc, attachedFiles, useRemoteAttachments]);
 

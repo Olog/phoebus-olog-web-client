@@ -143,7 +143,7 @@ const Description = ({ form, attachmentsDisabled }) => {
   const addEmbeddedImage = (file, width, height) => {
     const id = uuidv4();
     appendAttachment(new OlogAttachment({ file, id }));
-    const imageMarkup = `![](${customization.APP_BASE_URL}/attachment/${id}){width=${width} height=${height}}`;
+    const imageMarkup = `![](attachment/${id}){width=${width} height=${height}}`;
     let description = getValues("description") || "";
     description += imageMarkup;
     setValue("description", description, {

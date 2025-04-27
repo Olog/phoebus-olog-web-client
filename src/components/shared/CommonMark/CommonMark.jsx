@@ -4,6 +4,7 @@ import markdownit from "markdown-it";
 import markdownItAttrs from "markdown-it-attrs";
 import DOMPurify from "dompurify";
 import HtmlContent from "./HtmlContent";
+import { parseEmbeddedImages } from "src/beta/utils/parseEmbeddedImages";
 
 const md = markdownit().use(markdownItAttrs);
 
@@ -17,7 +18,8 @@ export const CommonMark = styled(
   ({ commonmarkSrc, className, isSummary, isPreview, ...props }) => {
     const [html, setHtml] = useState("");
     useEffect(() => {
-      const renderedHtml = md.render(commonmarkSrc);
+      const parsedEmbeddedImages = parseEmbeddedImages(commonmarkSrc);
+      const renderedHtml = md.render(parsedEmbeddedImages ?? commonmarkSrc);
       if (isPreview) {
         setHtml(renderedHtml);
       } else {
