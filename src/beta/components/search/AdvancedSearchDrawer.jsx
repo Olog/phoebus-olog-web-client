@@ -91,6 +91,9 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
         <EntryTypeSelect
           onChange={handleSelectChange}
           control={control}
+          getOptionLabel={(level) => level?.name || ""}
+          isOptionEqualToValue={(option, value) => option?.name === value?.name}
+          isMulti
         />
         <LogbooksMultiSelect
           onChange={handleSelectChange}

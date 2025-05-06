@@ -54,6 +54,7 @@ const MetadataTable = ({ log }) => (
       >
         <EntryTypeChip
           sx={{ fontSize: ".7rem" }}
+          key={log?.level}
           value={log?.level}
         />
       </Key>
