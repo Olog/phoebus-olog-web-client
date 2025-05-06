@@ -57,7 +57,8 @@ const asArray = (obj) => {
 export function queryStringToSearchParameters({
   queryString,
   availableTags = [],
-  availableLogbooks = []
+  availableLogbooks = [],
+  availableLevels = []
 }) {
   let result = queryStringParser.parse(queryString, options);
 
@@ -75,6 +76,9 @@ export function queryStringToSearchParameters({
   result.logbooks = availableLogbooks.filter((it) =>
     asArray(result?.logbooks).includes(it.name)
   );
+  result.level = availableLevels.filter((it) =>
+    asArray(result?.level).includes(it.name)
+  );
 
   // Return sanitized result
   return result;
@@ -87,6 +91,7 @@ export function searchParamsToQueryString({ searchParams }) {
   const copy = { ...searchParams };
   copy.tags = searchParams?.tags?.map((it) => it.name);
   copy.logbooks = searchParams?.logbooks?.map((it) => it.name);
+  copy.level = searchParams?.level?.map((it) => it.name);
 
   return queryStringParser.stringify(copy, options);
 }
@@ -118,16 +123,18 @@ const useSanitizedSearchParams = () => {
   // todo: display toast on error to let user know tags or logbooks couldn't be fetched
   const { data: tags = [] } = ologApi.endpoints.getTags.useQuery();
   const { data: logbooks = [] } = ologApi.endpoints.getLogbooks.useQuery();
+  const { data: levels = [] } = ologApi.endpoints.getLevels.useQuery();
 
   const toSearchParams = useCallback(
     (input) => {
       return queryStringToSearchParameters({
         queryString: input,
         availableTags: tags,
-        availableLogbooks: logbooks
+        availableLogbooks: logbooks,
+        availableLevels: levels
       });
     },
-    [tags, logbooks]
+    [tags, logbooks, levels]
   );
 
   const toQueryString = useCallback((input) => {

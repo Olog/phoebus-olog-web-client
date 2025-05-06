@@ -39,6 +39,9 @@ export const SearchResults = styled(({ className }) => {
       if (params.logbooks) {
         params.logbooks = params.logbooks.map((it) => it.name);
       }
+      if (params.level) {
+        params.level = params.level.map((it) => it.name);
+      }
       if (params.query) {
         delete params.query;
       }

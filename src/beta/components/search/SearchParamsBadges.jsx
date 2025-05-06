@@ -48,6 +48,24 @@ const TagsList = ({ tags, onChange }) => {
   );
 };
 
+const EntryTypeList = ({ level, onChange }) => {
+  const onDelete = (type) => {
+    const updated = level.filter((it) => it.name !== type.name);
+    onChange(updated);
+  };
+  return (
+    <>
+      {level?.map((type) => (
+        <EntryTypeChip
+          key={type.name}
+          value={type.name}
+          onDelete={() => onDelete(type)}
+        />
+      ))}
+    </>
+  );
+};
+
 export const SearchParamsBadges = () => {
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
@@ -83,11 +101,9 @@ export const SearchParamsBadges = () => {
         />
       ) : null}
       {level ? (
-        <EntryTypeChip
-          value={level}
-          onDelete={() =>
-            onSearch({ ...searchParams, level: defaultSearchParams.level })
-          }
+        <EntryTypeList
+          level={level}
+          onChange={(val) => onSearch({ ...searchParams, level: val })}
         />
       ) : null}
       {desc ? (

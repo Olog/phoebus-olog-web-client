@@ -35,8 +35,8 @@ export const advancedSearchSlice = createSlice({
         if (searchParams.end) {
           activeFieldCount++;
         }
-        if (searchParams.level) {
-          activeFieldCount++;
+        if (searchParams.level?.length > 0) {
+          activeFieldCount += searchParams.level.length;
         }
         if (searchParams?.logbooks?.length > 0) {
           activeFieldCount += searchParams.logbooks.length;
