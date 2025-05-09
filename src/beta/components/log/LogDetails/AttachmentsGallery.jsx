@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   IconButton,
   ImageListItemBar,
   Link,
@@ -13,7 +14,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { FileImage } from "components/Attachment";
 import Modal from "components/shared/Modal";
-import { InternalButtonLink } from "src/components/shared/Link";
 
 const Image = styled(({ attachment, className }) => {
   return (
@@ -82,14 +82,16 @@ const GalleryView = ({ attachments, onPrevious, onNext, currentIndex }) => {
         gap={2}
         pt={4}
       >
-        <InternalButtonLink
-          variant="outlined"
-          to={attachment.url}
+        <Button
+          component="a"
+          href={attachment.url}
           download
+          variant="outlined"
         >
           <DownloadIcon sx={{ fontSize: "1.1rem", margin: "0 5px 0 0" }} />
           Download image
-        </InternalButtonLink>
+        </Button>
+
         <Box>
           <IconButton
             onClick={onPrevious}

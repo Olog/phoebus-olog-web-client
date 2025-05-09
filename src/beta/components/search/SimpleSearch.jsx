@@ -108,15 +108,6 @@ const SimpleSearch = () => {
             "& .MuiInputBase-input": {
               padding: "10px 0",
               paddingRight: 0
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "1.5px solid #dcddde"
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              border: "1.5px solid #dcddde"
-            },
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              border: "1.5px solid #dcddde" // Custom border color when focused
             }
           }
         }}
