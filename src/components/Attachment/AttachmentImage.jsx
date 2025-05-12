@@ -1,7 +1,6 @@
-import { Box, Stack, styled } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import DownloadIcon from "@mui/icons-material/Download";
-import customization from "config/customization";
 
 export const isLocalFile = (attachment) => {
   return Boolean(attachment?.file);
@@ -60,49 +59,3 @@ export const FileImage = ({ alt, className, ...props }) => {
     </Stack>
   );
 };
-
-export const LocalImage = styled(
-  ({ attachment, className, ImageProps, FileProps }) => {
-    const alt = attachment.file.name;
-    if (isImage(attachment)) {
-      return (
-        <img
-          src={URL.createObjectURL(attachment.file)}
-          alt={alt}
-          className={className}
-          {...ImageProps}
-        />
-      );
-    } else {
-      return <FileImage {...{ alt, className, ...FileProps }} />;
-    }
-  }
-)({});
-
-export const RemoteImage = styled(
-  ({ attachment, className, ImageProps, FileProps }) => {
-    const alt = attachment?.filename ?? "unknown image";
-    if (isImage(attachment)) {
-      return (
-        <img
-          src={`${customization.APP_BASE_URL}/attachment/` + attachment.id}
-          alt={alt}
-          className={className}
-          {...ImageProps}
-        />
-      );
-    } else {
-      return <FileImage {...{ alt, className, ...FileProps }} />;
-    }
-  }
-)({});
-
-const AttachmentImage = styled(({ attachment, className, ...props }) => {
-  if (isLocalFile(attachment)) {
-    return <LocalImage {...{ attachment, className, ...props }} />;
-  } else {
-    return <RemoteImage {...{ attachment, className, ...props }} />;
-  }
-})({});
-
-export default AttachmentImage;
