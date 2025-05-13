@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { FormattedDate } from "components/shared/FormattedDate";
-import LogDetails from "src/beta/components/log/LogDetails/LogDetails";
-import { KeyValueTable } from "src/beta/components/log/LogDetails/KeyValueTable";
+import LogDetails from "src/components/log/LogDetails/LogDetails";
+import { KeyValueTable } from "src/components/log/LogDetails/KeyValueTable";
 
 const LogHistoryHeader = ({ log }) => (
   <Box

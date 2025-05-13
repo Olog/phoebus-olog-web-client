@@ -11,7 +11,7 @@ import {
   useSearchParams
 } from "features/searchParamsReducer";
 import useSanitizedSearchParams, {
-  withoutBetaParams,
+  withoutParams,
   withoutCacheBust
 } from "hooks/useSanitizedSearchParams";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
@@ -35,7 +35,7 @@ const SimpleSearch = () => {
       setValue(
         "query",
         toQueryString(
-          removeEmptyKeys(withoutCacheBust(withoutBetaParams(searchParams)))
+          removeEmptyKeys(withoutCacheBust(withoutParams(searchParams)))
         )
       );
     }

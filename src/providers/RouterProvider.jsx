@@ -2,8 +2,8 @@ import {
   createBrowserRouter,
   RouterProvider as ReactRouterDomRouterProvider
 } from "react-router-dom";
-import BetaApp from "beta/views/BetaApp";
-import SearchView from "beta/views/SearchView";
+import App from "src/views/App";
+import SearchView from "src/views/SearchView";
 // import { LogEntriesView } from "components/LogEntriesView";
 import { AppErrorBoundary } from "components/shared/error/ErrorBoundary";
 import CreateLogView from "views/CreateLogView";
@@ -17,7 +17,7 @@ import ReplyLogView from "views/ReplyLogView";
 export const routes = [
   {
     path: "/",
-    element: <BetaApp />,
+    element: <App />,
     errorElement: <AppErrorBoundary />,
     children: [
       {
@@ -56,10 +56,6 @@ export const routes = [
         path: "/*",
         element: <NotFoundView homeHref="/" />
       }
-      // {
-      //   path: "test",
-      //   element: <LogEntriesView />
-      // }
     ]
   }
 ];

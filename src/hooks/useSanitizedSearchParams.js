@@ -111,7 +111,7 @@ export function withoutCacheBust(searchParams) {
   return copy;
 }
 
-export function withoutBetaParams(searchParams) {
+export function withoutParams(searchParams) {
   const copy = { ...searchParams };
   if (copy.query) {
     delete copy.query;

@@ -4,7 +4,7 @@ import markdownit from "markdown-it";
 import markdownItAttrs from "markdown-it-attrs";
 import DOMPurify from "dompurify";
 import HtmlContent from "./HtmlContent";
-import { parseEmbeddedImages } from "src/beta/utils/parseEmbeddedImages";
+import { parseEmbeddedImages } from "src/hooks/parseEmbeddedImages";
 
 const md = markdownit().use(markdownItAttrs);
 

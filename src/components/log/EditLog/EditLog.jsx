@@ -1,15 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
-import useBetaNavigate from "hooks/useBetaNavigate";
 
 const EditLog = ({ log, isAuthenticated }) => {
   const [editInProgress, setEditInProgress] = useState(false);
   const [editLog] = ologApi.endpoints.editLog.useMutation();
   const verifyLogExists = useVerifyLogExists();
-  const navigate = useBetaNavigate();
+  const navigate = useNavigate();
 
   const existingLogGroup = log?.properties
     ?.filter((it) => it.name === "Log Entry Group")

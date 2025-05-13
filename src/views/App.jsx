@@ -20,8 +20,8 @@ import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Box, styled } from "@mui/material";
 import { AdvancedSearchDrawer } from "../components/search/AdvancedSearchDrawer";
-import { onHomePage } from "../utils/isHomePage";
-import { AppNavBar } from "beta/components/navigation/AppNavBar";
+import { onHomePage } from "../hooks/isHomePage";
+import { AppNavBar } from "src/components/AppNavBar";
 import Initialize from "components/Initialize";
 import { theme } from "src/config/theme";
 import { useSearchParams } from "src/features/searchParamsReducer";
@@ -38,7 +38,7 @@ const Overlay = styled("div")(({ theme }) => ({
   }
 }));
 
-const BetaApp = styled(({ className }) => {
+const App = styled(({ className }) => {
   const searchParams = useSearchParams();
   const { pathname } = useLocation();
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
@@ -90,4 +90,4 @@ const BetaApp = styled(({ className }) => {
     minHeight: 0
   }
 });
-export default BetaApp;
+export default App;

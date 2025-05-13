@@ -23,7 +23,7 @@ import { InputAdornment, Link, OutlinedInput, styled } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 import useSanitizedSearchParams, {
-  withoutBetaParams,
+  withoutParams,
   withoutCacheBust
 } from "hooks/useSanitizedSearchParams";
 import { removeEmptyKeys } from "api/ologApi";
@@ -41,7 +41,7 @@ const SearchBoxInput = styled(({ searchParams, showFilters, className }) => {
     if (searchParams) {
       setSearchString(
         toQueryString(
-          removeEmptyKeys(withoutCacheBust(withoutBetaParams(searchParams)))
+          removeEmptyKeys(withoutCacheBust(withoutParams(searchParams)))
         )
       );
     }

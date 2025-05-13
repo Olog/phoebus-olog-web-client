@@ -19,7 +19,7 @@
 import { useEffect, useState } from "react";
 import Modal from "../../../shared/Modal";
 import { CommonMark } from "../../../shared/CommonMark";
-import { parseEmbeddedImages } from "src/beta/utils/parseEmbeddedImages";
+import { parseEmbeddedImages } from "src/hooks/parseEmbeddedImages";
 
 const HtmlPreviewModal = ({
   commonmarkSrc,

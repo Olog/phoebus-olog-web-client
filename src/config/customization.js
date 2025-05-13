@@ -73,11 +73,6 @@ let customization = {
   APP_BASE_URL: import.meta.env.VITE_APP_BASE_URL, // e.g. http://localhost:8080/Olog
 
   /**
-   * Enable/Disable the beta feature
-   */
-  ENABLE_BETA: import.meta.env.VITE_APP_ENABLE_BETA === "true",
-
-  /**
    * Support and Docs URLs for Help page
    */
   DOCS_HREF:
