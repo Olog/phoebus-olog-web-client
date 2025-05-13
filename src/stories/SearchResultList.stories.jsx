@@ -1,8 +1,8 @@
 import { Paper } from "@mui/material";
 import moment from "moment/moment";
 import { rest } from "msw";
-import { SearchResultGroupItem } from "beta/components/search/SearchResultList/SearchResultGroupItem";
-import { SearchResultList } from "beta/components/search/SearchResultList";
+import { SearchResultGroupItem } from "components/search/SearchResultList/SearchResultGroupItem";
+import { SearchResultList } from "components/search/SearchResultList";
 import {
   attachment,
   attribute,
@@ -15,7 +15,7 @@ import {
 import { sbDisabledArg } from "stories/sb-utils";
 
 export default {
-  title: "beta/SearchResultList"
+  title: "SearchResultList"
 };
 
 let createdDate = moment();

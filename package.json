@@ -41,7 +41,6 @@
     "start": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "start-beta": "export VITE_APP_ENABLE_BETA=true && vite",
     "test": "vitest",
     "test:coverage": "vitest run --coverage --watch=false",
     "eslint": "npx eslint src",

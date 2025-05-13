@@ -30,21 +30,20 @@ import {
   Box,
   Tooltip
 } from "@mui/material";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import LockIcon from "@mui/icons-material/Lock";
 import HomeIcon from "@mui/icons-material/Home";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useDispatch } from "react-redux";
-import UserMenu from "./UserMenu";
 import Initialize from "components/Initialize";
 import { InternalButtonLink } from "components/shared/Link";
-import { useShowLogin, useUser } from "features/authSlice";
+import { useShowLogin, useShowLogout, useUser } from "features/authSlice";
 import LoginDialog from "components/LoginLogout/LoginDialog";
 import LogoutDialog from "components/LoginLogout/LogoutDialog";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
-import SimpleSearch from "beta/components/search/SimpleSearch";
-import { SortToggleButton } from "beta/components/search/SortToggleButton";
+import SimpleSearch from "components/search/SimpleSearch";
+import { SortToggleButton } from "components/search/SortToggleButton";
 import { defaultSearchParams } from "features/searchParamsReducer";
 import {
   updateSearchPageParams,
@@ -52,12 +51,11 @@ import {
 } from "features/searchPageParamsReducer";
 import { theme } from "src/config/theme";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
-import useBetaNavigate from "src/hooks/useBetaNavigate";
-import { onHomePage } from "src/beta/utils/isHomePage";
+import { onHomePage } from "src/hooks/isHomePage";
 
 const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
   const user = useUser();
-  const navigate = useBetaNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
   const { setShowLogin } = useShowLogin();
@@ -65,6 +63,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
     useAdvancedSearch();
   const searchPageParams = useSearchPageParams();
   const dispatch = useDispatch();
+  const { setShowLogout } = useShowLogout();
 
   const toggleSort = () => {
     dispatch(
@@ -257,7 +256,15 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
 
                 <ListItem sx={{ padding: "0 0 0 8px" }}>
                   {user?.userName ? (
-                    <UserMenu user={user} />
+                    <Box>
+                      <Button
+                        onClick={() => setShowLogout(true)}
+                        variant="outlined"
+                        color="primary"
+                      >
+                        {user.userName}
+                      </Button>
+                    </Box>
                   ) : (
                     <Button
                       onClick={() => setShowLogin(true)}

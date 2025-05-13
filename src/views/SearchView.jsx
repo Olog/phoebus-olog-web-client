@@ -1,7 +1,7 @@
 import { Box, Divider, styled } from "@mui/material";
 import { useParams } from "react-router-dom";
-import LogDetailsContainer from "beta/components/log/LogDetails/LogDetailsContainer";
-import { SearchResults } from "beta/components/search";
+import LogDetailsContainer from "src/components/log/LogDetails/LogDetailsContainer";
+import { SearchResults } from "components/search";
 
 const ContentView = styled(Box)(({ theme }) => ({
   display: "grid",

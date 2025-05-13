@@ -1,10 +1,10 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
-import LogDetails from "beta/components/log/LogDetails/LogDetails";
+import LogDetails from "src/components/log/LogDetails/LogDetails";
 
 export default {
-  title: "beta/LogDetails",
+  title: "LogDetails",
   component: LogDetails
 };
 

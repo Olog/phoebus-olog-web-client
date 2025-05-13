@@ -21,7 +21,6 @@ export default defineConfig({
       components: "/src/components",
       views: "/src/views",
       hooks: "/src/hooks",
-      beta: "/src/beta",
       providers: "/src/providers",
       features: "/src/features",
       api: "/src/api",

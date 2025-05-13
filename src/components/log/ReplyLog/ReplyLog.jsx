@@ -1,16 +1,16 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
 import customization from "config/customization";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
-import useBetaNavigate from "hooks/useBetaNavigate";
 
 const ReplyLog = ({ log, isAuthenticated }) => {
   const [replyInProgress, setReplyInProgress] = useState(false);
   const [createLog] = ologApi.endpoints.createLog.useMutation();
   const verifyLogExists = useVerifyLogExists();
-  const navigate = useBetaNavigate();
+  const navigate = useNavigate();
 
   const form = useForm({
     defaultValues: {

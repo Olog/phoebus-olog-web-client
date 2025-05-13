@@ -3,8 +3,8 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import EditIcon from "@mui/icons-material/Edit";
 import { FormattedDate } from "components/shared/FormattedDate";
-import { LogbookChip } from "beta/components/log/LogbookChip";
-import { TagChip } from "beta/components/log/TagChip";
+import { LogbookChip } from "src/components/log/LogbookChip";
+import { TagChip } from "src/components/log/TagChip";
 import { CommonMark } from "components/shared/CommonMark";
 
 export const SearchResultSingleItem = ({

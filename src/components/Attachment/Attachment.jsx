@@ -25,7 +25,7 @@ import {
   Typography,
   styled
 } from "@mui/material";
-import AttachmentImage, { isImage } from "./AttachmentImage";
+import { FileImage, isImage } from "./AttachmentImage";
 import Modal from "components/shared/Modal";
 
 const ImageContainer = styled("div")`
@@ -53,7 +53,7 @@ const Caption = styled("figcaption")`
   ${({ disabled }) => disabled && "color: gray"}
 `;
 
-const StyledAttachmentImage = styled(AttachmentImage)`
+const StyledAttachmentImage = styled(FileImage)`
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;

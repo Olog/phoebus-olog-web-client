@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Box, CircularProgress, Stack, styled } from "@mui/material";
-import { useParams } from "react-router-dom";
 import { SearchResultSingleItem } from "./SearchResultSingleItem";
 import { SearchResultGroupItem } from "./SearchResultGroupItem/SearchResultGroupItem";
 import { getLogEntryGroupId } from "components/Properties";
 import { sortByCreatedDate } from "components/log/sort";
-import useBetaNavigate from "hooks/useBetaNavigate";
 import { incrementPageSize } from "src/features/searchPageParamsReducer";
 
 export const SearchResultList = styled(
   ({ logs, dateDescending, isFetchingSearchResults, className }) => {
-    const navigate = useBetaNavigate();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const searchResultListRef = useRef(null);
     const loadMoreLogsRef = useRef(null);

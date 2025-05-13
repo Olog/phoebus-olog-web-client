@@ -1,10 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
-import useBetaNavigate from "hooks/useBetaNavigate";
 
 const CreateLog = ({ isAuthenticated }) => {
   const [createInProgress, setCreateInProgress] = useState(false);
@@ -17,7 +17,7 @@ const CreateLog = ({ isAuthenticated }) => {
     }
   });
   const { watch, setValue } = form;
-  const navigate = useBetaNavigate();
+  const navigate = useNavigate();
 
   /**
    * Save/restore form data
