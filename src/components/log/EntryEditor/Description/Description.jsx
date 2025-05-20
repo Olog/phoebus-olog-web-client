@@ -135,7 +135,7 @@ const Description = ({ form, attachmentsDisabled }) => {
     let imageFile = null;
     for (let item of items) {
       if (item.kind === "file" && item.type.match(/^image/)) {
-        imageFile = generateUniqueFileName(item.getAsFile());
+        imageFile = item.getAsFile();
       }
     }
     if (imageFile) {
@@ -154,7 +154,9 @@ const Description = ({ form, attachmentsDisabled }) => {
    */
   const addEmbeddedImage = (file, width, height) => {
     const id = uuidv4();
-    appendAttachment(new OlogAttachment({ file, id }));
+    appendAttachment(
+      new OlogAttachment({ file: generateUniqueFileName(file), id })
+    );
     const imageMarkup = `![](attachment/${id}){width=${width} height=${height}}`;
     let description = getValues("description") || "";
     description += imageMarkup;
