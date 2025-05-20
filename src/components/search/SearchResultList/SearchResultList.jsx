@@ -103,6 +103,7 @@ export const SearchResultList = styled(
         flex={2}
         px={0}
         overflow="auto"
+        id="searchResultList"
         className={`SearchResultList ${className}`}
       >
         {logsWithTrimmedGroupIds?.map((log) => {

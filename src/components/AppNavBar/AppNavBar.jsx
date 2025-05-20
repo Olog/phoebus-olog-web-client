@@ -188,6 +188,10 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
               onClick={() => {
                 dispatch(updateAdvancedSearch({ ...defaultSearchParams }));
                 setAdvancedSearchOpen(false);
+                document.getElementById("searchResultList").scrollTo({
+                  top: 0,
+                  behavior: "smooth"
+                });
               }}
               to="/"
               sx={{ padding: "8px", marginLeft: "-8px" }}

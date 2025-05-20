@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Box,
@@ -14,13 +14,17 @@ import { SearchResultSingleItem } from "..";
 import { getLogEntryGroupId } from "components/Properties";
 import { ologApi } from "api/ologApi";
 import { sortByCreatedDate } from "src/components/log/sort";
-import { useSearchParams } from "src/features/searchParamsReducer";
+import {
+  defaultSearchParams,
+  useSearchParams
+} from "src/features/searchParamsReducer";
 
 export const SearchResultGroupItem = styled(
   ({ log, onClick = () => {}, handleKeyDown, dateDescending }) => {
     const [expanded, setExpanded] = useState(false);
 
     const { start, end } = useSearchParams();
+    const searchParams = useSearchParams();
 
     const { id: paramLogId } = useParams();
     const currentLogEntryId = Number(paramLogId);
@@ -58,6 +62,16 @@ export const SearchResultGroupItem = styled(
       e.stopPropagation();
       setExpanded(!expanded);
     };
+
+    useEffect(() => {
+      if (
+        JSON.stringify(searchParams) !== JSON.stringify(defaultSearchParams)
+      ) {
+        setExpanded(true);
+      } else {
+        setExpanded(false);
+      }
+    }, [searchParams]);
 
     const ExpandIcon = () => (
       <Stack
