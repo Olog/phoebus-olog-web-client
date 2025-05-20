@@ -37,21 +37,20 @@ const MetadataTable = ({ log }) => (
       ))}
     </Key>
 
-    <Key name="Tags">
-      {log?.tags?.map((it) => (
-        <TagChip
-          sx={{ fontSize: ".7rem" }}
-          key={it.name}
-          value={it.name}
-        />
-      ))}
-    </Key>
+    {log?.tags.length > 0 && (
+      <Key name="Tags">
+        {log?.tags?.map((it) => (
+          <TagChip
+            key={it.name}
+            sx={{ fontSize: ".7rem" }}
+            value={it.name}
+          />
+        ))}
+      </Key>
+    )}
 
     {log?.level && (
-      <Key
-        name="Entry type"
-        value
-      >
+      <Key name="Entry type">
         <EntryTypeChip
           sx={{ fontSize: ".7rem" }}
           key={log?.level}

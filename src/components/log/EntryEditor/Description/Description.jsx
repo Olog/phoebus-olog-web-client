@@ -88,6 +88,13 @@ const Description = ({ form, attachmentsDisabled }) => {
 
   const { data: serverInfo } = ologApi.endpoints.getServerInfo.useQuery();
 
+  const generateUniqueFileName = (file) => {
+    return new File([file], `${new Date().getTime()}-${file.name}`, {
+      type: file.type,
+      lastModified: file.lastModified
+    });
+  };
+
   /**
    * Appends an attachment object to the attachments form field
    * @param {*} event
@@ -96,7 +103,12 @@ const Description = ({ form, attachmentsDisabled }) => {
     if (files) {
       // note event.target.files is a FileList, not an array! But we can convert it
       Array.from(files).forEach((file) => {
-        appendAttachment(new OlogAttachment({ file, id: uuidv4() }));
+        appendAttachment(
+          new OlogAttachment({
+            file: generateUniqueFileName(file),
+            id: uuidv4()
+          })
+        );
       });
     }
   };
@@ -123,16 +135,7 @@ const Description = ({ form, attachmentsDisabled }) => {
     let imageFile = null;
     for (let item of items) {
       if (item.kind === "file" && item.type.match(/^image/)) {
-        imageFile = item.getAsFile();
-
-        imageFile = new File(
-          [imageFile],
-          `${new Date().getTime()}-${imageFile.name}`,
-          {
-            type: imageFile.type,
-            lastModified: imageFile.lastModified
-          }
-        );
+        imageFile = generateUniqueFileName(item.getAsFile());
       }
     }
     if (imageFile) {
