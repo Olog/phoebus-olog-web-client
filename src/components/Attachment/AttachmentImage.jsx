@@ -1,6 +1,4 @@
 import { Box, Stack } from "@mui/material";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import DownloadIcon from "@mui/icons-material/Download";
 
 export const isLocalFile = (attachment) => {
   return Boolean(attachment?.file);
@@ -16,7 +14,7 @@ export const isImage = (attachment) => {
   }
 };
 
-export const FileImage = ({ alt, className, ...props }) => {
+export const FileImage = ({ attachment, alt, className, ...props }) => {
   return (
     <Stack
       fontSize="5rem"
@@ -39,22 +37,14 @@ export const FileImage = ({ alt, className, ...props }) => {
           zIndex: 1
         }}
       />
-      <DownloadIcon
-        className="file-overlay"
-        sx={{
-          color: "gray",
-          width: "30px",
-          height: "30px",
-          position: "absolute",
-          left: "33px",
-          bottom: "25px",
-          zIndex: 2
+      <img
+        src={attachment.url}
+        alt={alt}
+        style={{
+          width: "100%",
+          objectFit: "contain",
+          overflow: "hidden"
         }}
-      />
-      <InsertDriveFileIcon
-        titleAccess={"file: " + alt}
-        fontSize="inherit"
-        sx={{ perserveAspectRatio: "none" }}
       />
     </Stack>
   );
