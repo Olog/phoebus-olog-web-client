@@ -124,6 +124,15 @@ const Description = ({ form, attachmentsDisabled }) => {
     for (let item of items) {
       if (item.kind === "file" && item.type.match(/^image/)) {
         imageFile = item.getAsFile();
+
+        imageFile = new File(
+          [imageFile],
+          `${new Date().getTime()}-${imageFile.name}`,
+          {
+            type: imageFile.type,
+            lastModified: imageFile.lastModified
+          }
+        );
       }
     }
     if (imageFile) {
