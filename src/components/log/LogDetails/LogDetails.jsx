@@ -27,8 +27,17 @@ const LogDetails = ({ log, className }) => {
         {log.title}
       </Typography>
       {log.source && <CommonMark commonmarkSrc={log.source} />}
+      <MetadataTable log={log} />
       {log?.properties && filteredProperties.length > 0 && (
-        <Box mt={2}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            columnGap: 1,
+            rowGap: 1
+          }}
+          mt={2}
+        >
           {filteredProperties.map((it, i) => (
             <LogProperty
               property={it}
@@ -37,7 +46,6 @@ const LogDetails = ({ log, className }) => {
           ))}
         </Box>
       )}
-      <MetadataTable log={log} />
     </Stack>
   );
 };
