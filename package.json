@@ -12,7 +12,7 @@
     "@reduxjs/toolkit": "^1.9.1",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.4.3",
-    "axios": "^0.21.4",
+    "axios": "^0.30.0",
     "dompurify": "^3.2.4",
     "markdown-it": "^14.1.0",
     "markdown-it-attrs": "^4.3.0",
