@@ -39,18 +39,14 @@ const Image = styled(({ attachment, className }) => {
   }
 });
 
-const FileLink = ({ attachment, size }) => (
+const FileLink = ({ attachment }) => (
   <Link
     href={attachment.url}
     download
   >
     <FileImage
       alt={`file: ${attachment.filename}`}
-      fontSize={size}
-      sx={{
-        height: size,
-        width: size
-      }}
+      fontSize={90}
     />
   </Link>
 );
@@ -199,7 +195,6 @@ const AttachmentsGallery = ({ attachments, size = 100 }) => {
           <FileLink
             key={attachment.id}
             attachment={attachment}
-            size={size}
           />
           <Stack flexDirection="row">
             <Typography
