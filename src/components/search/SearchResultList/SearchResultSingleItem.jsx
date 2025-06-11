@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { Stack, Tooltip, Typography } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -17,10 +18,13 @@ export const SearchResultSingleItem = ({
   isNestedReply,
   isParentNestedLog
 }) => {
+  const isCondensed = useSelector(
+    (state) => state.advancedSearch.condensedEntries
+  );
   return (
     <Stack
       px={4}
-      py={0.5}
+      py={!isCondensed ? 0.6 : 0.8}
       sx={{
         position: "relative",
         borderBottom: "1px solid #dedede",
@@ -137,16 +141,18 @@ export const SearchResultSingleItem = ({
         </Stack>
       </Stack>
 
-      <CommonMark
-        commonmarkSrc={log.source}
-        isSummary
-        sx={{
-          fontSize: isNestedReply ? ".75rem" : ".8rem",
-          margin: 0
-        }}
-      />
+      {!isCondensed && (
+        <CommonMark
+          commonmarkSrc={log.source}
+          isSummary
+          sx={{
+            fontSize: isNestedReply ? ".75rem" : ".8rem",
+            margin: 0
+          }}
+        />
+      )}
 
-      {!isNestedReply && (
+      {!isNestedReply && !isCondensed && (
         <Stack
           mt={0.5}
           mb={0.5}
