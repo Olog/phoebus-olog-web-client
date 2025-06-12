@@ -27,6 +27,7 @@ const RenderedAttachmentsContainer = styled("div")(
     display: hasAttachments ? "grid" : "flex",
     placeItems: "center",
     gridTemplateColumns: "repeat(auto-fill, 10rem)",
+    gridAutoRows: "10rem",
     gridTemplateRows: "repeat(auto-fill, 10rem)",
     flexDirection: "row",
     alignItems: "center",
