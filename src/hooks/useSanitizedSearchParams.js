@@ -116,6 +116,8 @@ export function withoutParams(searchParams) {
   if (copy.query) {
     delete copy.query;
   }
+  delete copy.groupedReplies;
+  delete copy.condensedEntries;
   return copy;
 }
 
