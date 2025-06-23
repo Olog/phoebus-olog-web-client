@@ -8,6 +8,7 @@ import WizardDateInput from "components/shared/input/WizardDateInput";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
+import { Checkbox } from "components/shared/input/Checkbox";
 import { defaultSearchParams } from "features/searchParamsReducer";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
@@ -21,6 +22,7 @@ const toDate = (dateString) => {
 
 export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const form = useForm({
     defaultValues: defaultSearchParams
   });
@@ -43,7 +45,6 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
     field.onChange(value);
     applyFilters();
   };
-  const theme = useTheme();
 
   return (
     <Box
@@ -167,15 +168,28 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
           control={control}
           defaultValue=""
         />
+
         <Stack
-          flexDirection="row"
-          justifyContent="flex-end"
+          flexDirection="column"
+          alignItems="flex-start"
         >
+          <Checkbox
+            name="groupedReplies"
+            label="Grouped replies"
+            control={control}
+            onChange={handleSelectChange}
+          />
+          <Checkbox
+            name="condensedEntries"
+            label="Condensed entries"
+            control={control}
+            onChange={handleSelectChange}
+          />
           <Button
             onClick={clearFilters}
-            sx={{ marginRight: "10px" }}
+            sx={{ marginRight: "10px", alignSelf: "flex-end" }}
           >
-            Clear filters
+            Reset filters
           </Button>
           <Button
             type="submit"

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Box, CircularProgress, Stack, styled } from "@mui/material";
 import { SearchResultSingleItem } from "./SearchResultSingleItem";
 import { SearchResultGroupItem } from "./SearchResultGroupItem/SearchResultGroupItem";
@@ -12,6 +12,9 @@ export const SearchResultList = styled(
   ({ logs, dateDescending, isFetchingSearchResults, className }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const groupedRepliesActive = useSelector(
+      (state) => state.advancedSearch.groupedReplies
+    );
     const searchResultListRef = useRef(null);
     const loadMoreLogsRef = useRef(null);
 
@@ -106,29 +109,42 @@ export const SearchResultList = styled(
         id="searchResultList"
         className={`SearchResultList ${className}`}
       >
-        {logsWithTrimmedGroupIds?.map((log) => {
-          if (log.groupId) {
-            return (
-              <SearchResultGroupItem
-                key={log.id}
-                log={log}
-                dateDescending={dateDescending}
-                onClick={navigateToEntry}
-                handleKeyDown={handleKeyDown}
-              />
-            );
-          } else {
-            return (
-              <SearchResultSingleItem
-                key={log.id}
-                log={log}
-                selected={`${currentLogEntryId}` === `${log.id}`}
-                onClick={navigateToEntry}
-                handleKeyDown={handleKeyDown}
-              />
-            );
-          }
-        })}
+        {groupedRepliesActive
+          ? logsWithTrimmedGroupIds?.map((log) => {
+              if (log.groupId) {
+                return (
+                  <SearchResultGroupItem
+                    key={log.id}
+                    log={log}
+                    dateDescending={dateDescending}
+                    onClick={navigateToEntry}
+                    handleKeyDown={handleKeyDown}
+                  />
+                );
+              } else {
+                return (
+                  <SearchResultSingleItem
+                    key={log.id}
+                    log={log}
+                    selected={`${currentLogEntryId}` === `${log.id}`}
+                    onClick={navigateToEntry}
+                    handleKeyDown={handleKeyDown}
+                  />
+                );
+              }
+            })
+          : logsWithGroupIds.map((log) => {
+              return (
+                <SearchResultSingleItem
+                  key={log.id}
+                  log={log}
+                  selected={`${currentLogEntryId}` === `${log.id}`}
+                  onClick={navigateToEntry}
+                  handleKeyDown={handleKeyDown}
+                  isReply={!!log.groupId}
+                />
+              );
+            })}
         <Box ref={loadMoreLogsRef}>
           {isFetchingSearchResults && (
             <Box

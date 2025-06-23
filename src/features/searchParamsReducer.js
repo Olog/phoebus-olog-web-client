@@ -16,7 +16,9 @@ export const defaultSearchParams = {
   end: "",
   logbooks: [],
   tags: [],
-  attachments: ""
+  attachments: "",
+  groupedReplies: true,
+  condensedEntries: false
 };
 export const defaultSearchParamsState = {
   ...defaultSearchParams,

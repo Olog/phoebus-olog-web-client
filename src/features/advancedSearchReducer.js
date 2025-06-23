@@ -60,6 +60,8 @@ export const advancedSearchSlice = createSlice({
         // update state
         state.active = advancedSearchActive;
         state.fieldCount = activeFieldCount;
+        state.groupedReplies = searchParams.groupedReplies;
+        state.condensedEntries = searchParams.condensedEntries;
       }
     );
   }
