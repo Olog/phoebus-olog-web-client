@@ -74,6 +74,11 @@ const CreateLog = ({ isAuthenticated }) => {
     }
   };
 
+  const onCancel = ()=> {
+      clearFormData();
+      navigate(`/logs/`);
+  };
+
   return (
     <>
       <Backdrop
@@ -87,6 +92,7 @@ const CreateLog = ({ isAuthenticated }) => {
           form,
           title: "Create New Log",
           onSubmit,
+          onCancel,
           submitDisabled: !isAuthenticated
         }}
       />
