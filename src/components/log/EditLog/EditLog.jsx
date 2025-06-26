@@ -80,7 +80,6 @@ const EditLog = ({ log, isAuthenticated }) => {
   };
 
   const onCancel = ()=> {
-      clearFormData();
       navigate(`/logs/`);
   };
 
