@@ -15,7 +15,6 @@ import customization from "config/customization";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
 import { useSearchParams } from "features/searchParamsReducer";
 import { useAdvancedSearch } from "features/advancedSearchReducer";
-import { withCacheBust } from "hooks/useSanitizedSearchParams";
 
 export const SearchResults = styled(({ className }) => {
   const { active: advancedSearchActive } = useAdvancedSearch();
@@ -33,15 +32,6 @@ export const SearchResults = styled(({ className }) => {
         ...params,
         ...searchParams
       };
-      if (params.tags) {
-        params.tags = params.tags.map((it) => it.name);
-      }
-      if (params.logbooks) {
-        params.logbooks = params.logbooks.map((it) => it.name);
-      }
-      if (params.level) {
-        params.level = params.level.map((it) => it.name);
-      }
       if (params.query) {
         delete params.query;
       }
@@ -53,7 +43,7 @@ export const SearchResults = styled(({ className }) => {
       };
     }
 
-    return withCacheBust(removeEmptyKeys(params));
+    return removeEmptyKeys(params);
   }, [searchPageParams, searchParams, advancedSearchActive]);
 
   const {

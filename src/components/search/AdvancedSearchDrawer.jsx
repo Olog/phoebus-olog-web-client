@@ -11,6 +11,7 @@ import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
 import { Checkbox } from "components/shared/input/Checkbox";
 import { defaultSearchParams } from "features/searchParamsReducer";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
+import { ologApi } from "src/api/ologApi";
 
 const toDate = (dateString) => {
   if (dateString) {
@@ -27,6 +28,10 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
     defaultValues: defaultSearchParams
   });
   const { control, handleSubmit, getValues } = form;
+
+  const { data: levels } = ologApi.endpoints.getLevels.useQuery();
+  const { data: logbooks } = ologApi.endpoints.getLogbooks.useQuery();
+  const { data: tags } = ologApi.endpoints.getTags.useQuery();
 
   useEffect(() => {
     form.reset(searchParams);
@@ -92,17 +97,18 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
         <EntryTypeSelect
           onChange={handleSelectChange}
           control={control}
-          getOptionLabel={(level) => level?.name || ""}
-          isOptionEqualToValue={(option, value) => option?.name === value?.name}
+          options={levels?.map((level) => level.name)}
           isMulti
         />
         <LogbooksMultiSelect
           onChange={handleSelectChange}
           control={control}
+          options={logbooks?.map((logbook) => logbook.name)}
         />
         <TagsMultiSelect
           onChange={handleSelectChange}
           control={control}
+          options={tags?.map((tag) => tag.name)}
         />
         <TextInput
           name="owner"
@@ -187,7 +193,7 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
           />
           <Button
             onClick={clearFilters}
-            sx={{ marginRight: "10px", alignSelf: "flex-end" }}
+            sx={{ margin: "12px 0 0 4px" }}
           >
             Reset filters
           </Button>

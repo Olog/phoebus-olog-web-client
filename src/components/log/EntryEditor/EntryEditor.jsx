@@ -15,8 +15,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import { useEffect, useRef } from "react";
-import { Button, Stack, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import { Alert, Button, Snackbar, Stack, Typography } from "@mui/material";
 import { Description } from "./Description";
 import { TextInput } from "components/shared/input/TextInput";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
@@ -24,6 +24,12 @@ import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
 import { PropertyCollectionInput } from "components/shared/input/managed/PropertyCollectionInput";
 import { ologApi } from "src/api/ologApi";
+
+const errorText =
+  "Misconfigured level values. Please contact your administrator.";
+
+const getOptionLabel = (option) => option.name;
+const isOptionEqualToValue = (option, value) => option.name === value.name;
 
 export const EntryEditor = ({
   form,
@@ -35,14 +41,22 @@ export const EntryEditor = ({
   const topElem = useRef();
   const { control, handleSubmit, formState, setValue } = form;
 
-  const { data: levels } = ologApi.endpoints.getLevels.useQuery();
+  const { data: logbooks } = ologApi.endpoints.getLogbooks.useQuery();
+  const { data: tags } = ologApi.endpoints.getTags.useQuery();
+  const { data: levels, error: levelsError } =
+    ologApi.endpoints.getLevels.useQuery();
+  const [showLevelsError, setShowLevelsError] = useState(false);
   const defaultLevel = levels?.find((level) => level?.defaultLevel);
 
   useEffect(() => {
+    if (levelsError) {
+      setShowLevelsError(true);
+    }
+  }, [levelsError]);
+
+  useEffect(() => {
     if (!attachmentsDisabled) {
-      setTimeout(() => {
-        setValue("level", defaultLevel?.name);
-      }, 0);
+      setValue("level", defaultLevel);
     }
   }, [defaultLevel, setValue, attachmentsDisabled]);
 
@@ -91,17 +105,41 @@ export const EntryEditor = ({
                 val?.length > 0 || "Select at least one logbook"
             }
           }}
+          options={logbooks}
+          getOptionLabel={getOptionLabel}
+          isOptionEqualToValue={isOptionEqualToValue}
         />
-        <TagsMultiSelect control={control} />
+        <TagsMultiSelect
+          control={control}
+          options={tags}
+          getOptionLabel={getOptionLabel}
+          isOptionEqualToValue={isOptionEqualToValue}
+        />
         <EntryTypeSelect
           rules={{
             validate: {
-              notEmpty: (val) =>
-                val?.length > 0 || "Please select an Entry Type"
+              notEmpty: (val) => {
+                return val || "Please select an Entry Type";
+              }
             }
           }}
           control={control}
+          options={levels}
+          getOptionLabel={getOptionLabel}
+          isOptionEqualToValue={isOptionEqualToValue}
         />
+        <Snackbar
+          open={showLevelsError}
+          autoHideDuration={6000}
+        >
+          <Alert
+            severity="error"
+            variant="filled"
+            onClose={() => setShowLevelsError(false)}
+          >
+            {errorText}
+          </Alert>
+        </Snackbar>
         <TextInput
           name="title"
           label="Title"
