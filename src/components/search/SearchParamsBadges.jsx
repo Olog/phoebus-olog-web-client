@@ -10,56 +10,19 @@ import {
 } from "features/searchParamsReducer";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 
-const LogbooksList = ({ logbooks, onChange }) => {
-  const onDelete = (logbook) => {
-    const updated = logbooks.filter((it) => it.name !== logbook.name);
-    onChange(updated);
-  };
-
-  return (
-    <>
-      {logbooks.map((logbook) => (
-        <LogbookChip
-          key={logbook?.name}
-          value={logbook?.name}
-          onDelete={() => onDelete(logbook)}
-        />
-      ))}
-    </>
-  );
-};
-
-const TagsList = ({ tags, onChange }) => {
-  const onDelete = (tag) => {
-    const updated = tags.filter((it) => it.name !== tag.name);
-    onChange(updated);
-  };
-
-  return (
-    <>
-      {tags.map((tag) => (
-        <TagChip
-          key={tag?.name}
-          value={tag?.name}
-          onDelete={() => onDelete(tag)}
-        />
-      ))}
-    </>
-  );
-};
-
-const EntryTypeList = ({ level, onChange }) => {
-  const onDelete = (type) => {
-    const updated = level.filter((it) => it.name !== type.name);
+const ChipList = ({ items, onChange, Component }) => {
+  const onDelete = (itemToDelete) => {
+    const updated = items.filter((it) => it !== itemToDelete);
     onChange(updated);
   };
   return (
     <>
-      {level?.map((type) => (
-        <EntryTypeChip
-          key={type.name}
-          value={type.name}
-          onDelete={() => onDelete(type)}
+      {items.map((item) => (
+        <Component
+          key={item}
+          name={item}
+          value={item}
+          onDelete={() => onDelete(item)}
         />
       ))}
     </>
@@ -101,9 +64,10 @@ export const SearchParamsBadges = () => {
         />
       ) : null}
       {level ? (
-        <EntryTypeList
-          level={level}
+        <ChipList
+          items={level}
           onChange={(val) => onSearch({ ...searchParams, level: val })}
+          Component={EntryTypeChip}
         />
       ) : null}
       {desc ? (
@@ -170,15 +134,17 @@ export const SearchParamsBadges = () => {
         />
       ) : null}
       {tags ? (
-        <TagsList
-          tags={tags}
+        <ChipList
+          items={tags}
           onChange={(val) => onSearch({ ...searchParams, tags: val })}
+          Component={TagChip}
         />
       ) : null}
       {logbooks ? (
-        <LogbooksList
-          logbooks={logbooks}
+        <ChipList
+          items={logbooks}
           onChange={(val) => onSearch({ ...searchParams, logbooks: val })}
+          Component={LogbookChip}
         />
       ) : null}
     </Stack>
