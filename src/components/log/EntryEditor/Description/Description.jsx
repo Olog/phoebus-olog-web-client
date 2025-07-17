@@ -168,6 +168,26 @@ const Description = ({ form, attachmentsDisabled }) => {
     });
   };
 
+  const handleClipboardAttach = async () => {
+    const items = await navigator.clipboard.read();
+
+    for (const item of items) {
+      for (const type of item.types) {
+        if (type.startsWith("image/")) {
+          const blob = await item.getType(type);
+          const file = new File(
+            [blob],
+            `clipboard-image.${type.split("/")[1]}`,
+            {
+              type: "image/png"
+            }
+          );
+          onFileChanged([file]);
+        }
+      }
+    }
+  };
+
   // Set the max attachment filesize
   useEffect(() => {
     if (serverInfo) {
@@ -249,15 +269,31 @@ const Description = ({ form, attachmentsDisabled }) => {
         </Stack>
       </Stack>
       <Stack>
-        <FormLabel htmlFor="attachments-upload">
-          {!attachmentsDisabled ? "Attachments" : "Attachments (Disabled)"}
-        </FormLabel>
-        {!attachmentsDisabled ? (
-          <Typography>
-            max size per file: {maxFileSizeMb}MB, max total size:{" "}
-            {maxRequestSizeMb}MB
-          </Typography>
-        ) : null}
+        <Stack
+          direction="column"
+          mt={3}
+          mb={1}
+        >
+          <Box>
+            <FormLabel
+              htmlFor="attachments-upload"
+              sx={{ color: "text.primary" }}
+            >
+              {!attachmentsDisabled ? "Attachments" : "Attachments (Disabled)"}{" "}
+              <br />
+              (max size per file: {maxFileSizeMb}MB, max total size:{" "}
+              {maxRequestSizeMb}MB)
+            </FormLabel>
+          </Box>
+          <Button
+            sx={{ mt: 1, width: "fit-content" }}
+            variant="outlined"
+            disabled={attachmentsDisabled}
+            onClick={handleClipboardAttach}
+          >
+            Attach image from clipboard
+          </Button>
+        </Stack>
         <Stack>
           <RenderedAttachmentsContainer
             hasAttachments={attachments && attachments.length > 0}
