@@ -175,13 +175,10 @@ const Description = ({ form, attachmentsDisabled }) => {
       for (const type of item.types) {
         if (type.startsWith("image/")) {
           const blob = await item.getType(type);
-          const file = new File(
-            [blob],
-            `clipboard-image.${type.split("/")[1]}`,
-            {
-              type: "image/png"
-            }
-          );
+          const extension = type.split("/")[1];
+          const file = new File([blob], `clipboard-image.${extension}`, {
+            type: `image/${extension}`
+          });
           onFileChanged([file]);
         }
       }
