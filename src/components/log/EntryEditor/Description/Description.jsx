@@ -169,22 +169,24 @@ const Description = ({ form, attachmentsDisabled }) => {
   };
 
   const handleClipboardAttach = async () => {
-    const items = await navigator.clipboard.read();
-
-    for (const item of items) {
-      for (const type of item.types) {
-        if (type.startsWith("image/")) {
-          const blob = await item.getType(type);
-          const extension = type.split("/")[1];
-          const file = new File([blob], `clipboard-image.${extension}`, {
-            type: `image/${extension}`
-          });
-          onFileChanged([file]);
+    try {
+      const items = await navigator.clipboard.read();
+      for (const item of items) {
+        for (const type of item.types) {
+          if (type.startsWith("image/")) {
+            const blob = await item.getType(type);
+            const extension = type.split("/")[1];
+            const file = new File([blob], `clipboard-image.${extension}`, {
+              type: `image/${extension}`
+            });
+            onFileChanged([file]);
+          }
         }
       }
+    } catch (error) {
+      console.error("Failed to read clipboard:", error);
     }
   };
-
   // Set the max attachment filesize
   useEffect(() => {
     if (serverInfo) {
