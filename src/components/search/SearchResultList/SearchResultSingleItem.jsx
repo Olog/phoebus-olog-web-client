@@ -7,6 +7,8 @@ import { FormattedDate } from "components/shared/FormattedDate";
 import { LogbookChip } from "src/components/log/LogbookChip";
 import { TagChip } from "src/components/log/TagChip";
 import { CommonMark } from "components/shared/CommonMark";
+import { EntryTypeChip } from "src/components/log/EntryTypeChip";
+import { useAdvancedSearch } from "src/features/advancedSearchReducer";
 
 export const SearchResultSingleItem = ({
   log,
@@ -18,6 +20,7 @@ export const SearchResultSingleItem = ({
   isNestedReply,
   isParentNestedLog
 }) => {
+  const { active: advancedSearchActive } = useAdvancedSearch();
   const isCondensed = useSelector(
     (state) => state.advancedSearch.condensedEntries
   );
@@ -177,6 +180,14 @@ export const SearchResultSingleItem = ({
               value={it.name}
             />
           ))}
+          {advancedSearchActive && (
+            <EntryTypeChip
+              sx={{ fontSize: ".65rem", height: "20px" }}
+              iconProps={{ width: "12px" }}
+              key={log?.level}
+              value={log?.level}
+            />
+          )}
         </Stack>
       )}
       {expandIcon}
