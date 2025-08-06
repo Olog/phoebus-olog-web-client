@@ -1,15 +1,23 @@
-const { defineConfig } = require("cypress");
-const {seedDatabase} = require('./db');
+import { defineConfig } from "cypress";
+import { seedDatabase } from './db.js';
 
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      // Implement node event listeners here
       on('task', {
         async 'db:seed'() {
-          return seedDatabase();
+          try {
+            console.log('Seeding the database...');
+            await seedDatabase();
+            console.log('Database seeding completed.');
+            return null; // Return null if no specific value is needed
+          } catch (error) {
+            console.error('Database seeding failed:', error);
+            throw error; // Rethrow the error to fail the task
+          }
         }
-      })
+      });
     },
   },
 });

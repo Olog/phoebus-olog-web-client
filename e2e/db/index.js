@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 const TEST_BE_URL = import.meta.env.TEST_BE_URL;
 
@@ -48,6 +48,7 @@ const createLogbook = (name) => {
     },
   });
 };
+
 const createTag = (name) => {
   return axios.request({
     method: "put",
@@ -63,6 +64,7 @@ const createTag = (name) => {
     },
   });
 };
+
 const createProperty = (property) => {
   return axios.request({
     method: "put",
@@ -105,6 +107,4 @@ const seedDatabase = async () => {
   return null;
 };
 
-module.exports = {
-  seedDatabase,
-};
+export { seedDatabase };
