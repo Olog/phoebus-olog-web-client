@@ -1,20 +1,20 @@
 /**
- * Copyright (C) 2019 European Spallation Source ERIC.
- * <p>
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+* Copyright (C) 2019 European Spallation Source ERIC.
+* <p>
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* <p>
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* <p>
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
 import { useState } from "react";
 import {
@@ -29,7 +29,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useController } from "react-hook-form";
 import { DateTimePicker, pickersLayoutClasses } from "@mui/x-date-pickers";
 // import { useLocaleText } from "@mui/x-date-pickers/internals";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const DATE_FORMAT = "YYYY-MM-DD HH:mm";
 
@@ -42,11 +42,12 @@ const CustomActionBar = ({
   ownerState
 }) => {
   // const localeText = useLocaleText();
-
-  if (actions == null || actions.length === 0) {
+  
+  // Fixed: Correct syntax for null/empty check
+  if (!actions || actions.length === 0) {
     return null;
   }
-
+  
   const buttons = actions?.map((actionType) => {
     switch (actionType) {
       case "cancel":
@@ -61,7 +62,7 @@ const CustomActionBar = ({
             Cancel
           </Button>
         );
-
+      
       case "accept":
         return (
           <Button
@@ -73,7 +74,7 @@ const CustomActionBar = ({
             Ok
           </Button>
         );
-
+      
       case "today":
         return (
           <Button
@@ -85,12 +86,12 @@ const CustomActionBar = ({
             Now
           </Button>
         );
-
+      
       default:
         return null;
     }
   });
-
+  
   return (
     <DialogActions
       className={className}
@@ -132,10 +133,10 @@ export const ButtonDatePicker = ({
   ...props
 }) => {
   const [open, setOpen] = useState(false);
-
+  
   return (
     <DateTimePicker
-      value={value ? moment(value) : null}
+      value={value ? dayjs(value) : null}
       slots={{
         field: ButtonField,
         actionBar: CustomActionBar,
@@ -174,7 +175,6 @@ const WizardDateInput = styled(
     form,
     rules,
     defaultValue,
-
     onChange,
     DatePickerProps,
     applyFilters,
@@ -185,17 +185,17 @@ const WizardDateInput = styled(
       field: { ...field },
       fieldState
     } = useController({ name, control, rules, defaultValue });
-
-    const onAccept = (momentDate) => {
-      if (momentDate) {
-        setValue(name, momentDate.format(DATE_FORMAT), {
+    
+    const onAccept = (dayjsDate) => {
+      if (dayjsDate) {
+        setValue(name, dayjsDate.format(DATE_FORMAT), {
           shouldValidate: true
         });
         trigger(name === "start" ? "end" : "start");
         applyFilters();
       }
     };
-
+    
     return (
       <TextField
         id={name}
