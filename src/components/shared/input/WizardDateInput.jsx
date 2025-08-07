@@ -28,7 +28,7 @@ import {
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useController } from "react-hook-form";
 import { DateTimePicker, pickersLayoutClasses } from "@mui/x-date-pickers";
-import { useLocaleText } from "@mui/x-date-pickers/internals";
+// import { useLocaleText } from "@mui/x-date-pickers/internals";
 import moment from "moment";
 
 const DATE_FORMAT = "YYYY-MM-DD HH:mm";
@@ -41,7 +41,7 @@ const CustomActionBar = ({
   className,
   ownerState
 }) => {
-  const localeText = useLocaleText();
+  // const localeText = useLocaleText();
 
   if (actions == null || actions.length === 0) {
     return null;
@@ -57,7 +57,8 @@ const CustomActionBar = ({
             variant="contained"
             color="secondary"
           >
-            {localeText.cancelButtonLabel}
+          {/* {localeText.cancelButtonLabel} */}
+            Cancel
           </Button>
         );
 
@@ -68,7 +69,8 @@ const CustomActionBar = ({
             key={actionType}
             variant="contained"
           >
-            {localeText.okButtonLabel}
+            {/* {localeText.okButtonLabel} */}
+            Ok
           </Button>
         );
 
