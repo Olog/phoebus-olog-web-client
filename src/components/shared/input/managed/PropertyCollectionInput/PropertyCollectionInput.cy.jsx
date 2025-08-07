@@ -207,11 +207,11 @@ describe("Property Input", () => {
     cy.findByRole("button", { name: /close/i }).should("exist");
 
     // When clicking one, it should disappear
-     
+
     cy.findByRole("button", { name: /add resource/i })
       .click()
       .should("not.exist");
-     
+
     cy.findByRole("button", { name: /add contact/i })
       .click()
       .should("not.exist");
@@ -272,7 +272,7 @@ describe("Property Input", () => {
       });
 
     // Change the values
-     
+
     cy.findByRole("textbox", { name: "name" }).clear().type("some other name");
     cy.findByRole("button", { name: /submit/i }).click();
     cy.wait("@property-test")
@@ -327,7 +327,7 @@ describe("Property Input", () => {
       });
 
     // Change the values
-     
+
     cy.findByRole("textbox", { name: "email" })
       .clear()
       .type("bill.nye@gmail.com");
@@ -398,11 +398,11 @@ describe("Property Input", () => {
     cy.findByRole("button", { name: /close/i }).click();
 
     // fill out and submit resource property
-     
+
     cy.findByRole("textbox", { name: "file" })
       .type("some file")
       .should("have.value", "some file");
-     
+
     cy.findByRole("textbox", { name: "name" })
       .type("some name")
       .should("have.value", "some name");

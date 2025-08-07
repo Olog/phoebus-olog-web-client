@@ -95,7 +95,6 @@ const EmbedImageDialog = ({
     if (imageAttachment) {
       checkImageSize(imageAttachment, setSize);
     }
-     
   }, [imageAttachment]);
 
   const scalingFactorIsValid = (value) => {
@@ -111,7 +110,6 @@ const EmbedImageDialog = ({
     const newImageHeight = Math.round(scalingFactor * originalImageHeight);
     setValue("imageWidth", newImageWidth);
     setValue("imageHeight", newImageHeight);
-     
   }, [scalingFactor]);
 
   const handleClose = () => {

@@ -57,7 +57,7 @@ const CustomActionBar = ({
             variant="contained"
             color="secondary"
           >
-          {/* {localeText.cancelButtonLabel} */}
+            {/* {localeText.cancelButtonLabel} */}
             Cancel
           </Button>
         );
@@ -174,7 +174,7 @@ const WizardDateInput = styled(
     form,
     rules,
     defaultValue,
-     
+
     onChange,
     DatePickerProps,
     applyFilters,
