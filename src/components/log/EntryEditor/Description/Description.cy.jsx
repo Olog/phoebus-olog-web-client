@@ -43,7 +43,7 @@ describe("Attachments Features", () => {
 
     // But each have unique src attributes
     const srcs = new Set();
-    // eslint-disable-next-line
+     
     cy.findAllByRole("img", { name: "testImage.jpg" })
       .should("have.length", 3)
       .each((it) => {
