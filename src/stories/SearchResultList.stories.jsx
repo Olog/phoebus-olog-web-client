@@ -1,6 +1,6 @@
 import { Paper } from "@mui/material";
 import moment from "moment/moment";
-import { rest } from "msw";
+import { http } from "msw";
 import { SearchResultGroupItem } from "components/search/SearchResultList/SearchResultGroupItem";
 import { SearchResultList } from "components/search/SearchResultList";
 import {
@@ -157,8 +157,10 @@ Default.argTypes = {
 Default.parameters = {
   msw: {
     handlers: [
-      rest.get("**/logs?properties=Log**", (req, res, ctx) => {
-        return res(ctx.delay(1000), ctx.json([...replies]));
+      http.get("**/logs?properties=Log*", async () => {
+        // Add delay if needed
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return HttpResponse.json([...replies]);
       })
     ]
   }
@@ -196,8 +198,11 @@ ReplyItemError.args = { ...ReplyItem.args };
 ReplyItemError.parameters = {
   msw: {
     handlers: [
-      rest.get("**/logs?properties=Log**", (req, res, ctx) => {
-        return res(ctx.delay(1000), ctx.status(400));
+      http.get("**/logs?properties=Log*", async () => {
+        // Add delay
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Return 400 status
+        return HttpResponse.json(null, { status: 400 });
       })
     ]
   }
