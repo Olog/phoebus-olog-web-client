@@ -17,7 +17,7 @@ export const Checkbox = ({ name, label, control, onChange }) => {
         />
       }
       label={label}
-      labelPlacement="right"
+      labelPlacement="end"
       sx={{ "& span": { fontSize: ".85rem" }, marginLeft: "0px" }}
     />
   );
