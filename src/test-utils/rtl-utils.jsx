@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { http } from "msw";
+import { http, HttpResponse } from "msw";
 import { render, within } from "@testing-library/react";
 import { AppWrapper } from "./wrappers";
 import { setupStore } from "../features/store";

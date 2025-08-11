@@ -1,6 +1,6 @@
 import { Paper } from "@mui/material";
 import moment from "moment/moment";
-import { http } from "msw";
+import { http, HttpResponse } from "msw";
 import { SearchResultGroupItem } from "components/search/SearchResultList/SearchResultGroupItem";
 import { SearchResultList } from "components/search/SearchResultList";
 import {
