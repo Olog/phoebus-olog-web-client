@@ -39,26 +39,19 @@ export const EntryEditor = ({
   attachmentsDisabled
 }) => {
   const topElem = useRef();
-  const { control, handleSubmit, formState, setValue } = form;
+  const { control, handleSubmit, formState } = form;
 
   const { data: logbooks } = ologApi.endpoints.getLogbooks.useQuery();
   const { data: tags } = ologApi.endpoints.getTags.useQuery();
   const { data: levels, error: levelsError } =
     ologApi.endpoints.getLevels.useQuery();
   const [showLevelsError, setShowLevelsError] = useState(false);
-  const defaultLevel = levels?.find((level) => level?.defaultLevel);
 
   useEffect(() => {
     if (levelsError) {
       setShowLevelsError(true);
     }
   }, [levelsError]);
-
-  useEffect(() => {
-    if (!attachmentsDisabled) {
-      setValue("level", defaultLevel);
-    }
-  }, [defaultLevel, setValue, attachmentsDisabled]);
 
   // Scroll to top if there are field errors
   useEffect(() => {
