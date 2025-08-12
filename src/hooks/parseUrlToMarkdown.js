@@ -1,4 +1,4 @@
-const urlFormatRegex = /^https|http:\/\/([^/]+)\/logs\/(\d+)$/;
+const urlFormatRegex = /^(https|http):\/\/([^/]+)\/logs\/(\d+)$/;
 
 const replaceAt = (text, replacement, start, end) =>
   text.substring(0, start) + replacement + text.substring(end);
@@ -11,7 +11,7 @@ export const parseUrlToMarkdown = (input, descriptionRef) => {
   const selectedText = textarea.value.substring(start, end);
 
   if (matches) {
-    const replacementText = `[${selectedText || matches[2]}](${matches[0]})`;
+    const replacementText = `[${selectedText || matches[3]}](${matches[0]})`;
     return {
       parsedContent: replaceAt(textarea.value, replacementText, start, end),
       cursorPosition: start + replacementText.length
