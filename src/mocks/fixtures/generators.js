@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import customization from "config/customization";
 
 /*
     cyrb53 (c) 2018 bryc (github.com/bryc)
@@ -77,7 +76,7 @@ export const log = ({
   title,
   source,
   description,
-  level = customization.defaultLevel,
+  level = "Normal",
   state = "Active",
   owner = null,
   createdDate = Date.now(),

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
-import customization from "config/customization";
 import { ologApi, useVerifyLogExists } from "api/ologApi";
 
 const ReplyLog = ({ log, isAuthenticated }) => {
@@ -24,7 +23,7 @@ const ReplyLog = ({ log, isAuthenticated }) => {
        */
       logbooks: log?.logbooks ?? [],
       tags: log?.tags ?? [],
-      level: customization.defaultLevel,
+      level: { name: log?.level, defaultLevel: false },
       title: log?.title
     }
   });
