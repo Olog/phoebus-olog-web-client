@@ -43,7 +43,7 @@ export { renderWithProviders as render };
 
 export const givenServerRespondsWithSearchRequest = ({
   title,
-  requestPredicate,
+  requestPredicate
 }) => {
   server.use(
     http.get("*/logs/search", async (req) => {
