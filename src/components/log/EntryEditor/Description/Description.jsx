@@ -7,7 +7,7 @@ import {
   Typography,
   styled
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { FaMarkdown } from "react-icons/fa";
@@ -21,6 +21,7 @@ import { TextInput } from "components/shared/input/TextInput";
 import Attachment from "components/Attachment/Attachment";
 import customization from "config/customization";
 import { DroppableFileUploadInput } from "components/shared/input/FileInput";
+import { parseUrlToMarkdown } from "src/hooks/parseUrlToMarkdown";
 
 const RenderedAttachmentsContainer = styled("div")(
   ({ hasAttachments, theme }) => ({
@@ -40,6 +41,7 @@ const RenderedAttachmentsContainer = styled("div")(
 
 const Description = ({ form, attachmentsDisabled }) => {
   const { control, formState, getValues, setValue } = form;
+  const descriptionRef = useRef();
 
   const [maxRequestSizeMb, setMaxRequestSizeMb] = useState(
     customization.defaultMaxRequestSizeMb
@@ -129,21 +131,42 @@ const Description = ({ form, attachmentsDisabled }) => {
   };
 
   const handlePaste = (e) => {
-    if (attachmentsDisabled) {
-      return;
-    }
-    const items = e.clipboardData.items;
-    let imageFile = null;
+    e.preventDefault();
+    const items = Array.from(e.clipboardData.items);
     for (let item of items) {
       if (item.kind === "file" && item.type.match(/^image/)) {
-        imageFile = item.getAsFile();
+        const imageFile = item.getAsFile();
+        if (!attachmentsDisabled && imageFile) {
+          setInitialImage(imageFile);
+          setShowEmbedImageDialog(true);
+        }
       }
-    }
-    if (imageFile) {
-      setInitialImage(imageFile);
-      setShowEmbedImageDialog(true);
-      // prevent paste of image 'text'
-      e.preventDefault();
+      // Makes sure that the text/html that comes from copied image is not pasted
+      const isImagePaste = items.some(
+        (i) => i.kind === "file" && i.type.startsWith("image/")
+      );
+      if (item.kind === "string" && item.type.match(/^text/) && !isImagePaste) {
+        item.getAsString((text) => {
+          const { parsedContent, cursorPosition } = parseUrlToMarkdown(
+            text,
+            descriptionRef
+          );
+
+          setValue("description", parsedContent, {
+            shouldDirty: false,
+            shouldTouch: false,
+            shouldValidate: false
+          });
+
+          // Set correct cursor position after paste
+          setTimeout(() => {
+            if (descriptionRef.current) {
+              descriptionRef.current.selectionStart = cursorPosition;
+              descriptionRef.current.selectionEnd = cursorPosition;
+            }
+          }, 0);
+        });
+      }
     }
   };
 
@@ -226,6 +249,7 @@ const Description = ({ form, attachmentsDisabled }) => {
         minRows={10}
         sx={{ "& .MuiInputBase-root": { padding: 0 } }}
         onPaste={handlePaste}
+        inputRef={descriptionRef}
       />
       <Stack
         direction="row"
