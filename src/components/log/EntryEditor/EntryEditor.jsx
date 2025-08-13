@@ -35,6 +35,7 @@ export const EntryEditor = ({
   form,
   title,
   onSubmit,
+  onCancel,
   submitDisabled,
   attachmentsDisabled
 }) => {
@@ -161,9 +162,17 @@ export const EntryEditor = ({
           type="submit"
           variant="contained"
           disabled={submitDisabled}
-          sx={{ marginBottom: 4 }}
         >
           Submit
+        </Button>
+        <Button
+          type="cancel"
+          variant="contained"
+          color="ologRed"
+          sx={{ marginBottom: 4 }}
+          onClick={onCancel}
+        >
+        Cancel
         </Button>
       </Stack>
     </Stack>
