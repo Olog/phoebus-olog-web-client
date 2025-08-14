@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { rest } from "msw";
+import { http, HttpResponse, delay } from "msw";
 import { render, within } from "@testing-library/react";
 import { AppWrapper } from "./wrappers";
 import { setupStore } from "../features/store";
@@ -43,18 +43,16 @@ export { renderWithProviders as render };
 
 export const givenServerRespondsWithSearchRequest = ({
   title,
-  requestPredicate,
-  delay = 100
+  requestPredicate
 }) => {
   server.use(
-    rest.get("*/logs/search", (req, res, ctx) => {
+    http.get("*/logs/search", async (req) => {
       if (requestPredicate(req)) {
-        return res(
-          ctx.delay(delay),
-          ctx.json(resultList([testEntry({ title })]))
-        );
+        // Add delay
+        await delay();
+        return HttpResponse.json(resultList([testEntry({ title })]));
       } else {
-        return res(ctx.json(resultList([])));
+        return HttpResponse.json(resultList([]));
       }
     })
   );

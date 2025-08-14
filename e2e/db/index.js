@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 const TEST_BE_URL = import.meta.env.TEST_BE_URL;
 
@@ -105,6 +105,4 @@ const seedDatabase = async () => {
   return null;
 };
 
-module.exports = {
-  seedDatabase,
-};
+export { seedDatabase };
