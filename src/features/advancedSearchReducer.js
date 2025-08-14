@@ -4,7 +4,9 @@ import { searchParamsSlice } from "./searchParamsReducer";
 
 export const defaultAdvancedSearchState = {
   active: false,
-  fieldCount: 0
+  fieldCount: 0,
+  groupedReplies: true,
+  condensedEntries: false
 };
 
 export const advancedSearchSlice = createSlice({
@@ -16,7 +18,6 @@ export const advancedSearchSlice = createSlice({
       (state, action) => {
         const searchParams = action.payload;
 
-        let advancedSearchActive = false;
         let activeFieldCount = 0;
 
         // Increment field count if advanced-only fields have values
@@ -51,17 +52,22 @@ export const advancedSearchSlice = createSlice({
           activeFieldCount++;
         }
 
+        let advancedSearchActive = false;
         // If any of the advanced-only fields have values
         // then advanced search is active
         if (activeFieldCount > 0) {
           advancedSearchActive = true;
         }
 
-        // update state
         state.active = advancedSearchActive;
         state.fieldCount = activeFieldCount;
-        state.groupedReplies = searchParams.groupedReplies;
-        state.condensedEntries = searchParams.condensedEntries;
+
+        if (searchParams.groupedReplies !== undefined) {
+          state.groupedReplies = searchParams.groupedReplies;
+        }
+        if (searchParams.condensedEntries !== undefined) {
+          state.condensedEntries = searchParams.condensedEntries;
+        }
       }
     );
   }

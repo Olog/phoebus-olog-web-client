@@ -12,6 +12,7 @@ import { Checkbox } from "components/shared/input/Checkbox";
 import { defaultSearchParams } from "features/searchParamsReducer";
 import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 import { ologApi } from "src/api/ologApi";
+import { useAdvancedSearch } from "src/features/advancedSearchReducer";
 
 const toDate = (dateString) => {
   if (dateString) {
@@ -24,8 +25,9 @@ const toDate = (dateString) => {
 export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { groupedReplies, condensedEntries } = useAdvancedSearch();
   const form = useForm({
-    defaultValues: defaultSearchParams
+    defaultValues: { ...defaultSearchParams, groupedReplies, condensedEntries }
   });
   const { control, handleSubmit, getValues } = form;
 

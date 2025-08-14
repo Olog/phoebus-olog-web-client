@@ -18,6 +18,7 @@ import {
   defaultSearchParams,
   useSearchParams
 } from "src/features/searchParamsReducer";
+import { withoutParams } from "src/hooks/useSanitizedSearchParams";
 
 export const SearchResultGroupItem = styled(
   ({ log, onClick = () => {}, handleKeyDown, dateDescending }) => {
@@ -65,7 +66,8 @@ export const SearchResultGroupItem = styled(
 
     useEffect(() => {
       if (
-        JSON.stringify(searchParams) !== JSON.stringify(defaultSearchParams)
+        JSON.stringify(withoutParams(searchParams)) !==
+        JSON.stringify(withoutParams(defaultSearchParams))
       ) {
         setExpanded(true);
       } else {

@@ -31,11 +31,16 @@ export const searchParamsSlice = createSlice({
   reducers: {
     updateSearchParams: (state, action) => {
       const searchParams = action.payload;
-      cookies.set(customization.searchParamsCookie, searchParams, {
-        path: "/",
-        maxAge: "100000000"
-      });
-      return { ...searchParams };
+      cookies.set(
+        customization.searchParamsCookie,
+        { ...defaultSearchParamsState, ...searchParams },
+        {
+          path: "/",
+          maxAge: "100000000"
+        }
+      );
+
+      return { ...defaultSearchParamsState, ...searchParams };
     }
   }
 });
