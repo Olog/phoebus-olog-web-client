@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "CYPRESS_baseUrl=http://localhost:3000 TEST_BE_URL=http://localhost:8080/Olog cypress open"
   },
