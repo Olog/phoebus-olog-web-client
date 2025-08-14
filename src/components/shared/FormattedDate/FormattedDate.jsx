@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { moment } from "lib/moment";
+import dayjs from "dayjs";
 
 const formatVariants = {
   fullDateTime: "YYYY-MM-DD HH:mm:ss",
@@ -20,7 +20,7 @@ const FormattedDate = ({
       {...props}
       component="time"
     >
-      {moment(date).format(selectedFormat)}
+      {dayjs(date).format(selectedFormat)}
     </Typography>
   );
 };
