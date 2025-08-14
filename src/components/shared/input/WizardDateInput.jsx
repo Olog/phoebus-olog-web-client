@@ -29,7 +29,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useController } from "react-hook-form";
 import { DateTimePicker, pickersLayoutClasses } from "@mui/x-date-pickers";
 import { useLocaleText } from "@mui/x-date-pickers/internals";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const DATE_FORMAT = "YYYY-MM-DD HH:mm";
 
@@ -43,7 +43,7 @@ const CustomActionBar = ({
 }) => {
   const localeText = useLocaleText();
 
-  if (actions == null || actions.length === 0) {
+  if (!actions || actions.length === 0) {
     return null;
   }
 
@@ -133,7 +133,7 @@ export const ButtonDatePicker = ({
 
   return (
     <DateTimePicker
-      value={value ? moment(value) : null}
+      value={value ? dayjs(value) : null}
       slots={{
         field: ButtonField,
         actionBar: CustomActionBar,
@@ -184,9 +184,9 @@ const WizardDateInput = styled(
       fieldState
     } = useController({ name, control, rules, defaultValue });
 
-    const onAccept = (momentDate) => {
-      if (momentDate) {
-        setValue(name, momentDate.format(DATE_FORMAT), {
+    const onAccept = (dayjsDate) => {
+      if (dayjsDate) {
+        setValue(name, dayjsDate.format(DATE_FORMAT), {
           shouldValidate: true
         });
         trigger(name === "start" ? "end" : "start");
