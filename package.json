@@ -75,7 +75,7 @@
     "@typescript-eslint/eslint-plugin": "^8.39.1",
     "@typescript-eslint/parser": "^8.39.1",
     "@typescript-eslint/utils": "^8.39.1",
-    "@vitejs/plugin-react-swc": "^3.11.0",
+    "@vitejs/plugin-react-swc": "^4.0.0",
     "cypress": "^14.5.4",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
@@ -95,7 +95,7 @@
     "prop-types": "^15.8.1",
     "react-select-event": "^5.5.1",
     "storybook": "^9.1.2",
-    "vite": "^6.3.5",
+    "vite": "^7.1.2",
     "vite-plugin-svgr": "^4.3.0",
     "vitest": "^3.2.4"
   },
