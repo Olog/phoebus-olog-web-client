@@ -13,6 +13,7 @@
   "dependencies": {
     "@testing-library/cypress": "^10.0.3",
     "axios": "^1.11.0",
-    "cypress": "^14.5.4"
+    "cypress": "^14.5.4",
+    "uuid": "^11.1.0"
   }
 }
