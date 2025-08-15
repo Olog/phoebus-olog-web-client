@@ -3,7 +3,6 @@
 
 /**
  * Mock Service Worker.
- * Mock Service Worker.
  * @see https://github.com/mswjs/msw
  * - Please do NOT modify this file.
  */
@@ -53,10 +52,6 @@ addEventListener('message', async function (event) {
           packageVersion: PACKAGE_VERSION,
           checksum: INTEGRITY_CHECKSUM,
         },
-        payload: {
-          packageVersion: PACKAGE_VERSION,
-          checksum: INTEGRITY_CHECKSUM,
-        },
       })
       break
     }
@@ -66,12 +61,6 @@ addEventListener('message', async function (event) {
 
       sendToClient(client, {
         type: 'MOCKING_ENABLED',
-        payload: {
-          client: {
-            id: client.id,
-            frameType: client.frameType,
-          },
-        },
         payload: {
           client: {
             id: client.id,
@@ -189,10 +178,6 @@ async function resolveMainClient(event) {
     return client
   }
 
-  if (activeClientIds.has(event.clientId)) {
-    return client
-  }
-
   if (client?.frameType === 'top-level') {
     return client
   }
@@ -228,28 +213,7 @@ async function getResponse(event, client, requestId) {
     // Cast the request headers to a new Headers instance
     // so the headers can be manipulated with.
     const headers = new Headers(requestClone.headers)
-    // Cast the request headers to a new Headers instance
-    // so the headers can be manipulated with.
-    const headers = new Headers(requestClone.headers)
 
-    // Remove the "accept" header value that marked this request as passthrough.
-    // This prevents request alteration and also keeps it compliant with the
-    // user-defined CORS policies.
-    const acceptHeader = headers.get('accept')
-    if (acceptHeader) {
-      const values = acceptHeader.split(',').map((value) => value.trim())
-      const filteredValues = values.filter(
-        (value) => value !== 'msw/passthrough',
-      )
-
-      if (filteredValues.length > 0) {
-        headers.set('accept', filteredValues.join(', '))
-      } else {
-        headers.delete('accept')
-      }
-    }
-
-    return fetch(requestClone, { headers })
     // Remove the "accept" header value that marked this request as passthrough.
     // This prevents request alteration and also keeps it compliant with the
     // user-defined CORS policies.
@@ -302,7 +266,6 @@ async function getResponse(event, client, requestId) {
       return respondWithMock(clientMessage.data)
     }
 
-    case 'PASSTHROUGH': {
     case 'PASSTHROUGH': {
       return passthrough()
     }
