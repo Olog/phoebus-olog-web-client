@@ -19,7 +19,11 @@ const EditLog = ({ log, isAuthenticated }) => {
     defaultValues: {
       attachments: []
     },
-    values: { ...log, description: log.source }
+    values: {
+      ...log,
+      description: log.source,
+      level: { name: log.level, defaultLevel: false }
+    }
   });
 
   const onSubmit = async (formData) => {
