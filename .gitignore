@@ -12,3 +12,6 @@ build
 **/videos/*
 **/screenshots/*
 **/downloads/*
+
+# Test results
+coverage/*
