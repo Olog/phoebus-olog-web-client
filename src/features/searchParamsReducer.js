@@ -33,7 +33,7 @@ export const searchParamsSlice = createSlice({
       const searchParams = action.payload;
       cookies.set(customization.searchParamsCookie, searchParams, {
         path: "/",
-        maxAge: "100000000"
+        maxAge: 100000000
       });
       return { ...searchParams };
     }

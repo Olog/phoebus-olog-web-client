@@ -10,7 +10,6 @@ function useMountEffect(effect, deps = [], afterMount) {
     }
     didMountRef.current = true;
     return cleanup;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }
 
