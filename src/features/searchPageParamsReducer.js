@@ -19,7 +19,7 @@ export const searchPageParamsSlice = createSlice({
       const searchPageParams = action.payload;
       cookies.set(customization.searchPageParamsCookie, searchPageParams, {
         path: "/",
-        maxAge: "100000000"
+        maxAge: 100000000
       });
       return searchPageParams;
     },
