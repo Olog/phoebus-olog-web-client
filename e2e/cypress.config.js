@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-import { seedDatabase } from './db.js';
+import { seedDatabase } from './db';
 
 export default defineConfig({
   e2e: {
