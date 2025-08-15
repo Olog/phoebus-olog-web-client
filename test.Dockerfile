@@ -1,6 +1,6 @@
 # Verifies that image can be built successfully
 # For e.g. a production environment
-FROM node:18-alpine as first
+FROM node:22-alpine AS first
 ARG VITE_APP_BASE_URL=/Olog
 ENV NODE_ENV=production
 ENV VITE_APP_BASE_URL=${VITE_APP_BASE_URL}
