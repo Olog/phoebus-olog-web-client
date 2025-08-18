@@ -16,11 +16,7 @@ const ReplyLog = ({ log, isAuthenticated }) => {
       attachments: []
     },
     values: {
-      /**
-       * If currentLogEntry is defined, use it as a "template", i.e. user is replying to a log entry.
-       * Copy relevant fields to the state of this class EXCEPT FOR entryType/level.
-       * May or may not exist in the template.
-       */
+      attachments: [],
       logbooks: log?.logbooks ?? [],
       tags: log?.tags ?? [],
       level: { name: log?.level, defaultLevel: false },
@@ -40,7 +36,7 @@ const ReplyLog = ({ log, isAuthenticated }) => {
       tags: formData.tags,
       properties: formData.properties,
       title: formData.title,
-      level: formData.level,
+      level: formData.level?.name,
       description: formData.description,
       attachments: formData.attachments ?? []
     };
