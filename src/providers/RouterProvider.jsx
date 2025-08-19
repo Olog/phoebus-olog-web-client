@@ -12,6 +12,7 @@ import { HelpView } from "views/HelpView";
 import LogHistoryView from "views/LogHistoryView";
 import NotFoundView from "views/NotFoundView";
 import ReplyLogView from "views/ReplyLogView";
+import { WebSocketDemo } from "src/components/WebsocketDemo";
 // import LogEntriesView from "src/components/LogEntriesView/LogEntriesView";
 
 export const routes = [
@@ -51,6 +52,10 @@ export const routes = [
       {
         path: "help",
         element: <HelpView />
+      },
+      {
+        path: "websocket-demo",
+        element: <WebSocketDemo />
       },
       {
         path: "/*",
