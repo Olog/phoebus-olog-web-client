@@ -1,12 +1,14 @@
 import { useState, useCallback, useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
-const socketUrl = "wss://localhost:8080/Olog/websocket/echo";
+const subUrl = "wss://localhost:8080/Olog/websocket/messages";
+const pubUrl = "wss://localhost:8080/Olog/websocket/echo";
 
 export const WebSocketDemo = () => {
   const [messageHistory, setMessageHistory] = useState([]);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+  const { lastMessage, readyState } = useWebSocket(subUrl);
+  const { sendMessage } = useWebSocket(pubUrl);
 
   useEffect(() => {
     if (lastMessage !== null) {
