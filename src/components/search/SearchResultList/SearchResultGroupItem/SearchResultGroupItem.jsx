@@ -17,7 +17,14 @@ import { sortByCreatedDate } from "src/components/log/sort";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 export const SearchResultGroupItem = styled(
-  ({ log, onClick = () => {}, handleKeyDown, dateDescending }) => {
+  ({
+    log,
+    onClick = () => {},
+    handleKeyDown,
+    dateDescending,
+    shouldToggle,
+    onToggleComplete
+  }) => {
     const [expanded, setExpanded] = useState(false);
 
     const { searchParams, isSearchActive } = useEnhancedSearchParams();
@@ -67,6 +74,13 @@ export const SearchResultGroupItem = styled(
         setExpanded(false);
       }
     }, [isSearchActive, searchParams]);
+
+    useEffect(() => {
+      if (shouldToggle) {
+        setExpanded((prev) => !prev);
+        onToggleComplete();
+      }
+    }, [shouldToggle, onToggleComplete]);
 
     const ExpandIcon = () => (
       <Stack
