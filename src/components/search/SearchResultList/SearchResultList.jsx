@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, CircularProgress, Stack, styled } from "@mui/material";
@@ -26,6 +26,8 @@ export const SearchResultList = styled(
 
     const { id: paramLogId } = useParams();
     const currentLogEntryId = Number(paramLogId);
+
+    const [idToExpand, setIdToExpand] = useState(null);
 
     const removeSubsequentReplies = (logs) => {
       const visitedGroups = [];
@@ -78,6 +80,10 @@ export const SearchResultList = styled(
           prevSibling.focus();
         }
       }
+
+      if ((e.key === "ArrowRight") | (e.key === "ArrowLeft")) {
+        setIdToExpand(currentLogEntryId);
+      }
     };
 
     useEffect(() => {
@@ -125,6 +131,8 @@ export const SearchResultList = styled(
                     dateDescending={dateDescending}
                     onClick={navigateToEntry}
                     handleKeyDown={handleKeyDown}
+                    shouldToggle={idToExpand === log.id}
+                    onToggleComplete={() => setIdToExpand(null)}
                   />
                 );
               } else {
