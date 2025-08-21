@@ -27,7 +27,7 @@ export const SearchResultList = styled(
     const { id: paramLogId } = useParams();
     const currentLogEntryId = Number(paramLogId);
 
-    const [idToExpand, setIdToExpand] = useState(null);
+    const [idToToggleExpand, setIdToToggleExpand] = useState(null);
 
     const removeSubsequentReplies = (logs) => {
       const visitedGroups = [];
@@ -82,7 +82,7 @@ export const SearchResultList = styled(
       }
 
       if ((e.key === "ArrowRight") | (e.key === "ArrowLeft")) {
-        setIdToExpand(currentLogEntryId);
+        setIdToToggleExpand(currentLogEntryId);
       }
     };
 
@@ -131,8 +131,8 @@ export const SearchResultList = styled(
                     dateDescending={dateDescending}
                     onClick={navigateToEntry}
                     handleKeyDown={handleKeyDown}
-                    shouldToggle={idToExpand === log.id}
-                    onToggleComplete={() => setIdToExpand(null)}
+                    shouldParentToggleExpand={idToToggleExpand === log.id}
+                    onToggleComplete={() => setIdToToggleExpand(null)}
                   />
                 );
               } else {

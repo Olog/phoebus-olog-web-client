@@ -22,7 +22,7 @@ export const SearchResultGroupItem = styled(
     onClick = () => {},
     handleKeyDown,
     dateDescending,
-    shouldToggle,
+    shouldParentToggleExpand,
     onToggleComplete
   }) => {
     const [expanded, setExpanded] = useState(false);
@@ -76,11 +76,11 @@ export const SearchResultGroupItem = styled(
     }, [isSearchActive, searchParams]);
 
     useEffect(() => {
-      if (shouldToggle) {
+      if (shouldParentToggleExpand) {
         setExpanded((prev) => !prev);
         onToggleComplete();
       }
-    }, [shouldToggle, onToggleComplete]);
+    }, [shouldParentToggleExpand, onToggleComplete]);
 
     const ExpandIcon = () => (
       <Stack
