@@ -2,11 +2,13 @@ import SortIcon from "@mui/icons-material/Sort";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { Badge, IconButton, Tooltip } from "@mui/material";
+import { useSearchPageParams } from "src/features/searchPageParamsReducer";
 
-export const SortToggleButton = ({ isDescending, onClick, label }) => {
+export const SortToggleButton = ({ onClick, label }) => {
+  const dateDescending = useSearchPageParams().sort === "down";
   return (
     <IconButton
-      aria-label={`sort by ${label}, ${isDescending ? "descending" : "ascending"}`}
+      aria-label={`sort by ${label}, ${dateDescending ? "descending" : "ascending"}`}
       sx={{ color: "#616161" }}
       onClick={onClick}
     >
@@ -17,7 +19,7 @@ export const SortToggleButton = ({ isDescending, onClick, label }) => {
       >
         <Badge
           badgeContent={
-            isDescending ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />
+            dateDescending ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />
           }
           sx={{
             "& .MuiBadge-badge": {

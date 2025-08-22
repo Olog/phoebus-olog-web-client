@@ -10,42 +10,23 @@ import {
 import { useMemo } from "react";
 import { SearchResultList } from "./SearchResultList";
 import { SearchParamsBadges } from "./SearchParamsBadges";
-import { ologApi, removeEmptyKeys } from "api/ologApi";
+import { ologApi } from "api/ologApi";
 import customization from "config/customization";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
-import { useSearchParams } from "features/searchParamsReducer";
-import { useAdvancedSearch } from "features/advancedSearchReducer";
+import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 export const SearchResults = styled(({ className }) => {
-  const { active: advancedSearchActive } = useAdvancedSearch();
-  const searchParams = useSearchParams();
+  const { searchParams, isSearchActive } = useEnhancedSearchParams();
   const searchPageParams = useSearchPageParams();
 
   const searchLogsQuery = useMemo(() => {
     let params = {
       ...searchPageParams,
-      sort: searchPageParams.dateDescending ? "down" : "up"
+      ...searchParams
     };
 
-    if (advancedSearchActive) {
-      params = {
-        ...params,
-        ...searchParams
-      };
-      if (params.query) {
-        delete params.query;
-      }
-    } else {
-      params = {
-        ...params,
-        query: searchParams.query,
-        start: searchParams.start
-      };
-    }
-
-    return removeEmptyKeys(params);
-  }, [searchPageParams, searchParams, advancedSearchActive]);
-
+    return params;
+  }, [searchPageParams, searchParams]);
   const {
     data: searchResults = {
       logs: [],
@@ -66,7 +47,7 @@ export const SearchResults = styled(({ className }) => {
       position="relative"
       sx={{ backgroundColor: "#fafafa", minHeight: 0 }}
     >
-      {advancedSearchActive && (
+      {isSearchActive && (
         <Box>
           <Box px={4}>
             <Stack
@@ -94,7 +75,6 @@ export const SearchResults = styled(({ className }) => {
       {searchResults?.logs?.length > 0 ? (
         <SearchResultList
           logs={searchResults.logs}
-          dateDescending={searchPageParams?.dateDescending}
           isFetchingSearchResults={isFetchingSearchResults}
         />
       ) : (

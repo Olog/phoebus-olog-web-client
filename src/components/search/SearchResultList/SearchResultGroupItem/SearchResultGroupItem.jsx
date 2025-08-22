@@ -14,18 +14,14 @@ import { SearchResultSingleItem } from "..";
 import { getLogEntryGroupId } from "components/Properties";
 import { ologApi } from "api/ologApi";
 import { sortByCreatedDate } from "src/components/log/sort";
-import {
-  defaultSearchParams,
-  useSearchParams
-} from "src/features/searchParamsReducer";
-import { withoutParams } from "src/hooks/useSanitizedSearchParams";
+import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 export const SearchResultGroupItem = styled(
   ({ log, onClick = () => {}, handleKeyDown, dateDescending }) => {
     const [expanded, setExpanded] = useState(false);
 
-    const { start, end } = useSearchParams();
-    const searchParams = useSearchParams();
+    const { searchParams, isSearchActive } = useEnhancedSearchParams();
+    const { start, end } = searchParams;
 
     const { id: paramLogId } = useParams();
     const currentLogEntryId = Number(paramLogId);
@@ -65,15 +61,12 @@ export const SearchResultGroupItem = styled(
     };
 
     useEffect(() => {
-      if (
-        JSON.stringify(withoutParams(searchParams)) !==
-        JSON.stringify(withoutParams(defaultSearchParams))
-      ) {
+      if (isSearchActive) {
         setExpanded(true);
       } else {
         setExpanded(false);
       }
-    }, [searchParams]);
+    }, [isSearchActive, searchParams]);
 
     const ExpandIcon = () => (
       <Stack

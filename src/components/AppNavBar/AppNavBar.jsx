@@ -41,38 +41,40 @@ import { InternalButtonLink } from "components/shared/Link";
 import { useShowLogin, useShowLogout, useUser } from "features/authSlice";
 import LoginDialog from "components/LoginLogout/LoginDialog";
 import LogoutDialog from "components/LoginLogout/LogoutDialog";
-import { useAdvancedSearch } from "features/advancedSearchReducer";
 import SimpleSearch from "components/search/SimpleSearch";
 import { SortToggleButton } from "components/search/SortToggleButton";
-import { defaultSearchParams } from "features/searchParamsReducer";
-import {
-  updateSearchPageParams,
-  useSearchPageParams
-} from "features/searchPageParamsReducer";
+import { toggleSortOrder } from "features/searchPageParamsReducer";
 import { theme } from "src/config/theme";
-import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 import { onHomePage } from "src/hooks/isHomePage";
+import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
+
+const getFieldCount = (searchParams) => {
+  let fieldCount = 0;
+  for (const value of Object.values(searchParams)) {
+    if (Array.isArray(value) && value.length > 0) {
+      fieldCount += value.length;
+    } else if (value) {
+      fieldCount++;
+    }
+  }
+  return fieldCount;
+};
 
 const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
   const user = useUser();
   const navigate = useNavigate();
   const location = useLocation();
-  const { pathname } = location;
-  const { setShowLogin } = useShowLogin();
-  const { active: advancedSearchActive, fieldCount: advancedSearchFieldCount } =
-    useAdvancedSearch();
-  const searchPageParams = useSearchPageParams();
   const dispatch = useDispatch();
+  const { setShowLogin } = useShowLogin();
+  const { searchParams } = useEnhancedSearchParams();
   const { setShowLogout } = useShowLogout();
 
+  const { pathname } = location;
+
   const toggleSort = () => {
-    dispatch(
-      updateSearchPageParams({
-        ...searchPageParams,
-        dateDescending: !searchPageParams.dateDescending
-      })
-    );
+    dispatch(toggleSortOrder());
   };
+
   return (
     <Initialize>
       <AppBar
@@ -151,9 +153,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                         title="Filter"
                       >
                         <Badge
-                          badgeContent={
-                            advancedSearchActive ? advancedSearchFieldCount : 0
-                          }
+                          badgeContent={getFieldCount(searchParams)}
                           color="primary"
                         >
                           <FilterAltIcon sx={{ color: "#616161" }} />
@@ -163,7 +163,6 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
 
                     <SortToggleButton
                       label="create date"
-                      isDescending={searchPageParams?.dateDescending}
                       onClick={toggleSort}
                     />
                   </Box>
@@ -186,7 +185,6 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
             <Button
               component={RouterLink}
               onClick={() => {
-                dispatch(updateAdvancedSearch({ ...defaultSearchParams }));
                 setAdvancedSearchOpen(false);
                 const searchResultList =
                   document.getElementById("searchResultList");
