@@ -87,7 +87,7 @@ const LogDetailsWithReplies = ({ log }) => {
     error: repliesError
   } = ologApi.endpoints.getLogGroup.useQuery({ groupId });
 
-  const { dateDescending } = useSearchPageParams();
+  const dateDescending = useSearchPageParams().sort === "down";
 
   useEffect(() => {
     if (parentRef && logRef) {

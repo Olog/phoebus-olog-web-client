@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
-import { removeEmptyKeys } from "./ologApi";
+import { removeEmptyKeys } from "src/hooks/useEnhancedSearchParams";
 
-describe("removeEmtpyKeys util", () => {
+describe("removeEmptyKeys util", () => {
   test("Empty lists are removed", () => {
     const result = removeEmptyKeys({
       foo: ["bar"],

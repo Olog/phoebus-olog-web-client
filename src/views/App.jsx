@@ -25,7 +25,6 @@ import { onHomePage } from "../hooks/isHomePage";
 import { AppNavBar } from "src/components/AppNavBar";
 import Initialize from "components/Initialize";
 import { theme } from "src/config/theme";
-import { useSearchParams } from "src/features/searchParamsReducer";
 import customization from "src/config/customization";
 
 const Overlay = styled("div")(({ theme }) => ({
@@ -43,7 +42,6 @@ const Overlay = styled("div")(({ theme }) => ({
 const cookies = new Cookies();
 
 const App = styled(({ className }) => {
-  const searchParams = useSearchParams();
   const { pathname } = useLocation();
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
 
@@ -75,10 +73,7 @@ const App = styled(({ className }) => {
         }}
       >
         {onHomePage(pathname) && (
-          <AdvancedSearchDrawer
-            advancedSearchOpen={advancedSearchOpen}
-            searchParams={searchParams}
-          />
+          <AdvancedSearchDrawer advancedSearchOpen={advancedSearchOpen} />
         )}
         <Box
           className={className}
