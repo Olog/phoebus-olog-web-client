@@ -83,6 +83,10 @@ const EditLog = ({ log, isAuthenticated }) => {
     }
   };
 
+  const onCancel = ()=> {
+      navigate(`/logs/`);
+  };
+
   return (
     <>
       <Backdrop
@@ -96,6 +100,7 @@ const EditLog = ({ log, isAuthenticated }) => {
           form,
           title: `Edit Log "${log?.title}"`,
           onSubmit,
+          onCancel,
           submitDisabled: !isAuthenticated,
           attachmentsDisabled: true
         }}

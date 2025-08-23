@@ -70,6 +70,12 @@ theme = createTheme(theme, {
         main: "#003366"
       },
       name: "ologNavy"
+    }),
+    ologRed: theme.palette.augmentColor({
+      color: {
+        main: "#800000"
+      },
+      name: "ologRed"
     })
   }
 });
