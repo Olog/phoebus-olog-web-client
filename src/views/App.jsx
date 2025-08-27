@@ -17,13 +17,13 @@
  */
 
 import { useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Box, styled } from "@mui/material";
 import { AdvancedSearchDrawer } from "../components/search/AdvancedSearchDrawer";
 import { onHomePage } from "../hooks/onPage";
 import { AppNavBar } from "src/components/AppNavBar";
-import Initialize from "components/Initialize";
 import { theme } from "src/config/theme";
+import { ologApi } from "src/api/ologApi";
 
 const Overlay = styled("div")(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -38,25 +38,26 @@ const Overlay = styled("div")(({ theme }) => ({
 }));
 
 const App = styled(({ className }) => {
-  const { pathname } = useLocation();
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
 
+  ologApi.endpoints.getUser.useQuery({});
+
   return (
-    <Initialize>
+    <>
       {advancedSearchOpen && (
         <Overlay onClick={() => setAdvancedSearchOpen(false)} />
       )}
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: onHomePage(pathname) ? "auto 2fr" : null,
+          gridTemplateColumns: onHomePage() ? "auto 2fr" : null,
           gridTemplateRows: "1fr",
           height: "100vh",
           overflow: "auto",
           transition: ""
         }}
       >
-        {onHomePage(pathname) && (
+        {onHomePage() && (
           <AdvancedSearchDrawer advancedSearchOpen={advancedSearchOpen} />
         )}
         <Box
@@ -79,7 +80,7 @@ const App = styled(({ className }) => {
           <Outlet />
         </Box>
       </Box>
-    </Initialize>
+    </>
   );
 })({
   "& > *": {

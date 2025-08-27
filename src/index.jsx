@@ -17,6 +17,7 @@
  */
 
 import { createRoot } from "react-dom/client";
+import { SnackbarProvider } from "notistack";
 import {
   MuiThemeProvider,
   LocalizationProvider,
@@ -24,6 +25,7 @@ import {
   RouterProvider
 } from "./providers";
 import { AppErrorBoundary } from "./components/shared/error/ErrorBoundary";
+import { CustomSnackbar } from "./components/shared/CustomSnackbar";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -32,7 +34,13 @@ root.render(
     <ReduxProvider>
       <MuiThemeProvider>
         <LocalizationProvider>
-          <RouterProvider />
+          <SnackbarProvider
+            Components={{
+              customSnackbar: CustomSnackbar
+            }}
+          >
+            <RouterProvider />
+          </SnackbarProvider>
         </LocalizationProvider>
       </MuiThemeProvider>
     </ReduxProvider>
