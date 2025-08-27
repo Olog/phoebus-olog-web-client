@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
-import { ologApi, useVerifyLogExists } from "api/ologApi";
+import { ologApi } from "api/ologApi";
+import { useCustomSnackbar } from "src/hooks/useCustomSnackbar";
 
-const ReplyLog = ({ log, isAuthenticated }) => {
+const ReplyLog = ({ log }) => {
   const [replyInProgress, setReplyInProgress] = useState(false);
-  const [createLog] = ologApi.endpoints.createLog.useMutation();
-  const verifyLogExists = useVerifyLogExists();
+  const [replyLog] = ologApi.endpoints.createLog.useMutation();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useCustomSnackbar();
 
   const form = useForm({
     defaultValues: {
@@ -25,11 +26,6 @@ const ReplyLog = ({ log, isAuthenticated }) => {
   });
 
   const onSubmit = async (formData) => {
-    if (!formData || !isAuthenticated) {
-      setReplyInProgress(false);
-      return;
-    }
-
     setReplyInProgress(true);
     const body = {
       logbooks: formData.logbooks,
@@ -40,32 +36,23 @@ const ReplyLog = ({ log, isAuthenticated }) => {
       description: formData.description,
       attachments: formData.attachments ?? []
     };
-    try {
-      // create (reply to) the log
-      const data = await createLog({ log: body, replyTo: log.id }).unwrap();
-      try {
-        // verify log fully created before redirecting
-        await verifyLogExists({ logRequest: formData, logResult: data });
+    replyLog({ log: body, replyTo: log.id })
+      .unwrap()
+      .then((data) => {
         setReplyInProgress(false);
-      } catch (error) {
-        console.error("An error occured while checking log was created", error);
-      } finally {
         navigate(`/logs/${data.id}`);
-      }
-    } catch (error) {
-      if (
-        error.response &&
-        (error.response.status === 401 || error.response.status === 403)
-      ) {
-        alert("You are currently not authorized to reply to a log entry.");
-      } else if (error.response && error.response.status === 413) {
-        // 413 = payload too large
-        alert(error.response.data); // Message set in data by server
-      } else if (error.response && error.response.status >= 500) {
-        alert("Failed to reply to log entry.");
-      }
-      setReplyInProgress(false);
-    }
+      })
+      .catch((error) => {
+        setReplyInProgress(false);
+        enqueueSnackbar(
+          "Failed to reply to log entry. Please try again later.",
+          {
+            severity: "error"
+          }
+        );
+        console.error("Failed to reply to log entry.", error);
+        return error;
+      });
   };
 
   return (
@@ -80,8 +67,7 @@ const ReplyLog = ({ log, isAuthenticated }) => {
         {...{
           form,
           title: `Reply to Log "${log?.title}"`,
-          onSubmit,
-          submitDisabled: !isAuthenticated
+          onSubmit
         }}
       />
     </>

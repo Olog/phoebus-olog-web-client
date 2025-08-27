@@ -4,14 +4,15 @@ import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
-import { ologApi, useVerifyLogExists } from "api/ologApi";
+import { ologApi } from "api/ologApi";
+import { useCustomSnackbar } from "src/hooks/useCustomSnackbar";
 
-const CreateLog = ({ isAuthenticated }) => {
+const CreateLog = () => {
   const [createInProgress, setCreateInProgress] = useState(false);
   const [createLog] = ologApi.endpoints.createLog.useMutation();
-  const verifyLogExists = useVerifyLogExists();
   const { data: levels } = ologApi.endpoints.getLevels.useQuery();
   const defaultLevel = levels?.find((level) => level?.defaultLevel);
+  const { enqueueSnackbar } = useCustomSnackbar();
 
   const form = useForm({
     defaultValues: {
@@ -34,13 +35,9 @@ const CreateLog = ({ isAuthenticated }) => {
     exclude: "attachments" // serializing files is unsupported due to security risks
   });
 
-  const onSubmit = async (formData) => {
-    if (!formData || !isAuthenticated) {
-      setCreateInProgress(false);
-      return;
-    }
-
+  const onSubmit = (formData) => {
     setCreateInProgress(true);
+
     const body = {
       logbooks: formData.logbooks,
       tags: formData.tags,
@@ -50,33 +47,22 @@ const CreateLog = ({ isAuthenticated }) => {
       description: formData.description,
       attachments: formData.attachments ?? []
     };
-    try {
-      // Create log
-      const data = await createLog({ log: body }).unwrap();
-      try {
-        // Verify it is fully indexed/created before redirecting
-        await verifyLogExists({ logRequest: formData, logResult: data });
+
+    createLog({ log: body })
+      .unwrap()
+      .then((data) => {
         clearFormData();
         setCreateInProgress(false);
-      } catch (error) {
-        console.error("An error occured while checking log was created", error);
-      } finally {
         navigate(`/logs/${data.id}`);
-      }
-    } catch (error) {
-      if (
-        error.response &&
-        (error.response.status === 401 || error.response.status === 403)
-      ) {
-        alert("You are currently not authorized to create a log entry.");
-      } else if (error.response && error.response.status === 413) {
-        // 413 = payload too large
-        alert(error.response.data); // Message set in data by server
-      } else if (error.response && error.response.status >= 500) {
-        alert("Failed to create log entry.");
-      }
-      setCreateInProgress(false);
-    }
+      })
+      .catch((error) => {
+        setCreateInProgress(false);
+        enqueueSnackbar("Failed to create log entry. Please try again later.", {
+          severity: "error"
+        });
+        console.error("Failed to create log entry.", error);
+        return error;
+      });
   };
 
   return (
@@ -91,8 +77,7 @@ const CreateLog = ({ isAuthenticated }) => {
         {...{
           form,
           title: "Create new log",
-          onSubmit,
-          submitDisabled: !isAuthenticated
+          onSubmit
         }}
       />
     </>
