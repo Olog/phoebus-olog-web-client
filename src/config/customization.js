@@ -47,11 +47,6 @@ let customization = {
   defaultPageSize: 50,
 
   /**
-   * Default frequency of background search, in milliseconds
-   */
-  defaultSearchFrequency: 30000,
-
-  /**
    * Max total attachment upload size and individual file size (MB)
    */
   defaultMaxRequestSizeMb: 100,
