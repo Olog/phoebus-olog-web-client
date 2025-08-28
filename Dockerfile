@@ -1,11 +1,23 @@
-# Node 22
-FROM node:22-alpine
-RUN apk update && apk add curl bash
-WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
-COPY . ./
-RUN npm ci 
-# --silent
+ARG NODE_VERSION=22.13.1
 
-# start app
-CMD ["npm", "start"]
+FROM node:${NODE_VERSION}-alpine AS build
+
+LABEL maintainer="te-hung.tseng@ess.eu"
+ARG VITE_APP_BASE_URL=/Olog
+ENV VITE_APP_BASE_URL=${VITE_APP_BASE_URL}
+ENV VITE_APP_LEVEL_VALUES='["Normal","Shift Start","Shift End","Fault","Beam Loss","Beam Configuration","Crew","Expert Intervention Call","Incident"]'
+ENV VITE_APP_DEFAULT_LEVEL="Normal"
+WORKDIR /usr/src/phoebus-olog-web-client
+COPY . .
+RUN npm ci
+RUN npm run-script build
+
+FROM node:${NODE_VERSION}-alpine
+
+COPY --from=build /usr/src/phoebus-olog-web-client/build/ /usr/src/phoebus-olog-web-client/build/
+WORKDIR /usr/src/phoebus-olog-web-client/
+EXPOSE 5000
+RUN npm install -g serve
+RUN addgroup -S nodejs && adduser -s /bin/bash -S nodejs -G nodejs
+USER nodejs
+CMD ["serve", "-p", "5000", "-s", "build"]

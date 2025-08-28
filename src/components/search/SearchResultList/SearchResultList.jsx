@@ -1,25 +1,33 @@
-import { useEffect, useMemo, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, CircularProgress, Stack, styled } from "@mui/material";
 import { SearchResultSingleItem } from "./SearchResultSingleItem";
 import { SearchResultGroupItem } from "./SearchResultGroupItem/SearchResultGroupItem";
 import { getLogEntryGroupId } from "components/Properties";
 import { sortByCreatedDate } from "components/log/sort";
-import { incrementPageSize } from "src/features/searchPageParamsReducer";
+import {
+  incrementPageSize,
+  useSearchPageParams
+} from "src/features/searchPageParamsReducer";
 
 export const SearchResultList = styled(
-  ({ logs, dateDescending, isFetchingSearchResults, className }) => {
+  ({ logs, isFetchingSearchResults, className }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const dispatch = useDispatch();
+
     const groupedRepliesActive = useSelector(
       (state) => state.advancedSearch.groupedReplies
     );
+    const dateDescending = useSearchPageParams().sort === "down";
     const searchResultListRef = useRef(null);
     const loadMoreLogsRef = useRef(null);
 
     const { id: paramLogId } = useParams();
     const currentLogEntryId = Number(paramLogId);
+
+    const [idToToggleExpand, setIdToToggleExpand] = useState(null);
 
     const removeSubsequentReplies = (logs) => {
       const visitedGroups = [];
@@ -51,7 +59,7 @@ export const SearchResultList = styled(
     );
 
     const navigateToEntry = (logId) => {
-      navigate(`/logs/${logId}`);
+      navigate(`/logs/${logId}${location.search}`);
     };
 
     const handleKeyDown = (e) => {
@@ -71,6 +79,10 @@ export const SearchResultList = styled(
           navigateToEntry(logId);
           prevSibling.focus();
         }
+      }
+
+      if ((e.key === "ArrowRight") | (e.key === "ArrowLeft")) {
+        setIdToToggleExpand(currentLogEntryId);
       }
     };
 
@@ -119,6 +131,8 @@ export const SearchResultList = styled(
                     dateDescending={dateDescending}
                     onClick={navigateToEntry}
                     handleKeyDown={handleKeyDown}
+                    shouldParentToggleExpand={idToToggleExpand === log.id}
+                    onToggleComplete={() => setIdToToggleExpand(null)}
                   />
                 );
               } else {
