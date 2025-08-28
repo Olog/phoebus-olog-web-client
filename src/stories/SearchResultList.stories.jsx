@@ -1,5 +1,5 @@
 import { Paper } from "@mui/material";
-import moment from "moment/moment";
+import dayjs from "dayjs";
 import { http, HttpResponse, delay } from "msw";
 import { SearchResultGroupItem } from "components/search/SearchResultList/SearchResultGroupItem";
 import { SearchResultList } from "components/search/SearchResultList";
@@ -18,7 +18,7 @@ export default {
   title: "SearchResultList"
 };
 
-let createdDate = moment();
+let createdDate = dayjs();
 const replyGroup = group({});
 const log0 = {
   id: 0,
@@ -75,7 +75,7 @@ const log2 = {
   createdDate: createdDate.valueOf(),
   attachments: [attachment({ filename: "results.jpeg" })]
 };
-createdDate = createdDate.add(1, "minutes");
+createdDate = createdDate.add(1, "minute");
 const log3 = {
   ...log1,
   title: "An interesting observation 3",

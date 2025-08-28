@@ -15,13 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider as MuiLocalizationProvider } from "@mui/x-date-pickers";
 
 const LocalizationProvider = ({ children, ...props }) => {
   return (
     <MuiLocalizationProvider
-      dateAdapter={AdapterMoment}
+      dateAdapter={AdapterDayjs}
       {...props}
     >
       {children}
