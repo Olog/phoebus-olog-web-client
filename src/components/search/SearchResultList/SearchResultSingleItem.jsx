@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { Stack, Tooltip, Typography } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -9,6 +8,7 @@ import { TagChip } from "src/components/log/TagChip";
 import { CommonMark } from "components/shared/CommonMark";
 import { EntryTypeChip } from "src/components/log/EntryTypeChip";
 import { useAdvancedSearch } from "src/features/advancedSearchReducer";
+import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 export const SearchResultSingleItem = ({
   log,
@@ -20,14 +20,12 @@ export const SearchResultSingleItem = ({
   isNestedReply,
   isParentNestedLog
 }) => {
-  const { active: advancedSearchActive } = useAdvancedSearch();
-  const isCondensed = useSelector(
-    (state) => state.advancedSearch.condensedEntries
-  );
+  const { isSearchActive } = useEnhancedSearchParams();
+  const { condensedEntries } = useAdvancedSearch();
   return (
     <Stack
       px={4}
-      py={!isCondensed ? 0.6 : 0.8}
+      py={!condensedEntries ? 0.6 : 0.8}
       sx={{
         position: "relative",
         borderBottom: "1px solid #dedede",
@@ -144,7 +142,7 @@ export const SearchResultSingleItem = ({
         </Stack>
       </Stack>
 
-      {!isCondensed && (
+      {!condensedEntries && (
         <CommonMark
           commonmarkSrc={log.source}
           isSummary
@@ -155,7 +153,7 @@ export const SearchResultSingleItem = ({
         />
       )}
 
-      {!isNestedReply && !isCondensed && (
+      {!isNestedReply && !condensedEntries && (
         <Stack
           mt={0.5}
           mb={0.5}
@@ -180,10 +178,9 @@ export const SearchResultSingleItem = ({
               value={it.name}
             />
           ))}
-          {advancedSearchActive && (
+          {isSearchActive && (
             <EntryTypeChip
               sx={{ fontSize: ".65rem", height: "20px" }}
-              iconProps={{ width: "12px" }}
               key={log?.level}
               value={log?.level}
             />

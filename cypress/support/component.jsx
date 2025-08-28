@@ -46,9 +46,3 @@ Cypress.Commands.add("mount", (component, options = {}) => {
     options
   );
 });
-
-beforeEach(() => {
-  // currently we use cookies to store search state
-  // so these need to be cleared between tests
-  cy.clearAllCookies();
-});

@@ -14,17 +14,21 @@ import { SearchResultSingleItem } from "..";
 import { getLogEntryGroupId } from "components/Properties";
 import { ologApi } from "api/ologApi";
 import { sortByCreatedDate } from "src/components/log/sort";
-import {
-  defaultSearchParams,
-  useSearchParams
-} from "src/features/searchParamsReducer";
+import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 export const SearchResultGroupItem = styled(
-  ({ log, onClick = () => {}, handleKeyDown, dateDescending }) => {
+  ({
+    log,
+    onClick = () => {},
+    handleKeyDown,
+    dateDescending,
+    shouldParentToggleExpand,
+    onToggleComplete
+  }) => {
     const [expanded, setExpanded] = useState(false);
 
-    const { start, end } = useSearchParams();
-    const searchParams = useSearchParams();
+    const { searchParams, isSearchActive } = useEnhancedSearchParams();
+    const { start, end } = searchParams;
 
     const { id: paramLogId } = useParams();
     const currentLogEntryId = Number(paramLogId);
@@ -64,14 +68,19 @@ export const SearchResultGroupItem = styled(
     };
 
     useEffect(() => {
-      if (
-        JSON.stringify(searchParams) !== JSON.stringify(defaultSearchParams)
-      ) {
+      if (isSearchActive) {
         setExpanded(true);
       } else {
         setExpanded(false);
       }
-    }, [searchParams]);
+    }, [isSearchActive, searchParams]);
+
+    useEffect(() => {
+      if (shouldParentToggleExpand) {
+        setExpanded((prev) => !prev);
+        onToggleComplete();
+      }
+    }, [shouldParentToggleExpand, onToggleComplete]);
 
     const ExpandIcon = () => (
       <Stack

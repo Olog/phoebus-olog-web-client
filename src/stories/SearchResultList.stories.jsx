@@ -146,7 +146,6 @@ const SearchResultListTemplate = ({ ...props }) => {
 export const Default = (args) => <SearchResultListTemplate {...args} />;
 Default.args = {
   logs: [log0, log1, log2, log3, log4, log5],
-  dateDescending: true,
   selectedId: 1
 };
 Default.argTypes = {
@@ -183,7 +182,6 @@ const replies = [log1, log2, log3, log4]; // BE replies are a flat group that in
 export const ReplyItem = (args) => <ReplyItemTemplate {...args} />;
 ReplyItem.args = {
   log: log2,
-  dateDescending: true,
   selectedId: 1
 };
 ReplyItem.argTypes = {
