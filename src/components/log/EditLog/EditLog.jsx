@@ -1,19 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
-import { ologApi, useVerifyLogExists } from "api/ologApi";
+import { onEditPage } from "src/hooks/onPage";
+import { ologApi } from "api/ologApi";
+import { useWebsockets } from "src/hooks/useWebsockets";
+import { useCustomSnackbar } from "src/hooks/useCustomSnackbar";
 
-const EditLog = ({ log, isAuthenticated }) => {
+const EditLog = ({ log }) => {
+  const navigate = useNavigate();
+  const { updatedLogEntryId } = useWebsockets();
+  const { enqueueSnackbar, closeSnackbar } = useCustomSnackbar();
+
   const [editInProgress, setEditInProgress] = useState(false);
   const [editLog] = ologApi.endpoints.editLog.useMutation();
-  const verifyLogExists = useVerifyLogExists();
-  const navigate = useNavigate();
 
-  const existingLogGroup = log?.properties
-    ?.filter((it) => it.name === "Log Entry Group")
-    ?.at(0)?.value;
+  useEffect(() => {
+    setTimeout(() => {
+      if (
+        updatedLogEntryId &&
+        Number(updatedLogEntryId) === log?.id &&
+        onEditPage(window.location.pathname)
+      ) {
+        closeSnackbar(log?.id);
+        enqueueSnackbar(
+          "This log entry has been updated. Please refresh the page.",
+          {
+            severity: "warning",
+            autoHideDuration: null,
+            id: log?.id
+          }
+        );
+      }
+    }, 1000);
+
+    return () => {
+      closeSnackbar(log?.id);
+    };
+  }, [closeSnackbar, enqueueSnackbar, log?.id, updatedLogEntryId]);
 
   const form = useForm({
     defaultValues: {
@@ -27,11 +52,6 @@ const EditLog = ({ log, isAuthenticated }) => {
   });
 
   const onSubmit = async (formData) => {
-    if (!formData || !isAuthenticated) {
-      setEditInProgress(false);
-      return;
-    }
-
     setEditInProgress(true);
 
     const body = {
@@ -44,43 +64,20 @@ const EditLog = ({ log, isAuthenticated }) => {
       description: formData.description
     };
 
-    // Verify the group id hasn't been somehow edited
-    // This shouldn't happen, but we should try to protect against it
-    // since the backend currently does not protect against mangling the group id property
-    const currentGroupId = body?.properties
-      ?.filter((it) => it.name === "Log Entry Group")
-      ?.at(0)?.value;
-    if (currentGroupId !== existingLogGroup) {
-      console.error("Log group has been edited!", body);
-      return;
-    }
-
-    try {
-      // Edit the log
-      const data = await editLog({ log: body }).unwrap();
-      try {
-        // Verify full edited/available
-        await verifyLogExists({ logRequest: formData, logResult: data });
+    editLog({ log: body })
+      .unwrap()
+      .then((data) => {
         setEditInProgress(false);
-      } catch (error) {
-        console.error("An error occured while checking log was edited", error);
-      } finally {
         navigate(`/logs/${data.id}`);
-      }
-    } catch (error) {
-      if (
-        error.response &&
-        (error.response.status === 401 || error.response.status === 403)
-      ) {
-        alert("You are currently not authorized to edit a log entry.");
-      } else if (error.response && error.response.status === 413) {
-        // 413 = payload too large
-        alert(error.response.data); // Message set in data by server
-      } else if (error.response && error.response.status >= 500) {
-        alert("Failed to edit log entry.");
-      }
-      setEditInProgress(false);
-    }
+      })
+      .catch((error) => {
+        setEditInProgress(false);
+        enqueueSnackbar("Failed to edit log entry. Please try again later.", {
+          variant: "error"
+        });
+        console.error("Failed to edit log entry.", error);
+        return error;
+      });
   };
 
   return (
@@ -96,7 +93,6 @@ const EditLog = ({ log, isAuthenticated }) => {
           form,
           title: `Edit Log "${log?.title}"`,
           onSubmit,
-          submitDisabled: !isAuthenticated,
           attachmentsDisabled: true
         }}
       />
