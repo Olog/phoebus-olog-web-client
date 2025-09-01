@@ -5,7 +5,7 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
 import { onEditPage } from "src/hooks/onPage";
 import { ologApi } from "api/ologApi";
-import { useWebSockets } from "src/hooks/useWebSockets";
+import { useWebSockets } from "src/hooks/test";
 import { useCustomSnackbar } from "src/hooks/useCustomSnackbar";
 
 const EditLog = ({ log }) => {
