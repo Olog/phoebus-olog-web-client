@@ -6,7 +6,10 @@ export const CustomSnackbar = forwardRef(({ id, message, severity }, ref) => {
   const { closeSnackbar } = useSnackbar();
 
   return (
-    <SnackbarContent ref={ref}>
+    <SnackbarContent
+      ref={ref}
+      role="alert"
+    >
       <Alert
         severity={severity}
         variant="filled"
