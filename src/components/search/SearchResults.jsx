@@ -13,7 +13,7 @@ import { SearchParamsBadges } from "./SearchParamsBadges";
 import { ologApi } from "api/ologApi";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
-import { useWebsockets } from "src/hooks/useWebsockets";
+import { useWebSockets } from "src/hooks/useWebSockets";
 
 const withDelay = (fn) => {
   setTimeout(
@@ -27,7 +27,7 @@ const withDelay = (fn) => {
 export const SearchResults = styled(({ className }) => {
   const { searchParams, isSearchActive } = useEnhancedSearchParams();
   const searchPageParams = useSearchPageParams();
-  const { refetchLogs, updatedLogEntryId } = useWebsockets();
+  const { refetchLogs, updatedLogEntryId } = useWebSockets();
 
   const searchLogsQuery = useMemo(() => {
     let params = {

@@ -26,6 +26,7 @@ import {
 } from "./providers";
 import { AppErrorBoundary } from "./components/shared/error/ErrorBoundary";
 import { CustomSnackbar } from "./components/shared/CustomSnackbar";
+import { WebSocketProvider } from "./providers/WebSocketProvider";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -39,7 +40,9 @@ root.render(
               customSnackbar: CustomSnackbar
             }}
           >
-            <RouterProvider />
+            <WebSocketProvider>
+              <RouterProvider />
+            </WebSocketProvider>
           </SnackbarProvider>
         </LocalizationProvider>
       </MuiThemeProvider>
