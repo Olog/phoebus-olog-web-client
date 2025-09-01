@@ -51,7 +51,8 @@
     "prettier:fix": "npm run prettier -- --write",
     "cypress:open": "cypress open --component",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "tag-test": "git tag -d test 2>/dev/null || true && git tag test && git push origin :refs/tags/test 2>/dev/null || true && git push origin test"
   },
   "browserslist": {
     "production": [
