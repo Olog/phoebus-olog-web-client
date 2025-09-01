@@ -10,7 +10,7 @@ ENV VITE_APP_DEFAULT_LEVEL="Normal"
 WORKDIR /usr/src/phoebus-olog-web-client
 COPY . .
 RUN npm ci
-RUN npm run-script build
+RUN npm run build -- --force
 
 FROM node:${NODE_VERSION}-alpine
 
