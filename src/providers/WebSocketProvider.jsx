@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
+import customization from "src/config/customization";
 
 export const WebSocketContext = createContext();
 
@@ -35,7 +36,7 @@ export const WebSocketProvider = ({ children }) => {
 
     let disconnected = false;
     const client = new Client({
-      brokerURL: `ws://localhost:8080/${BASE_URL}`,
+      brokerURL: `ws://${customization.APP_BASE_URL}/${BASE_URL}`,
       reconnectDelay: 5000,
       onConnect: () => {
         disconnected = false;
