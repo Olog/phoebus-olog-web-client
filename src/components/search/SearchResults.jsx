@@ -13,7 +13,7 @@ import { SearchParamsBadges } from "./SearchParamsBadges";
 import { ologApi } from "api/ologApi";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
-import { useWebSockets } from "src/hooks/test";
+import { useWebSockets } from "src/hooks/useWebSockets";
 
 const withDelay = (fn) => {
   setTimeout(
