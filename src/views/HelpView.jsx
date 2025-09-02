@@ -1,26 +1,104 @@
-import { Box } from "@mui/material";
-import { Help } from "components/shared/Help";
+import { Box, Stack, Typography } from "@mui/material";
 import customization from "config/customization";
+import { ExternalLink } from "src/components/shared/Link";
 
 export const HelpView = () => {
-  const summary = `
-    OLOG (Online Logbook Service) allows for the creation and retrieval of log entries.
-    This service was developed to address the needs of operators, engineers, and users of large scientific facilities.
-  `;
-
+  const { SUPPORT_HREF, DOCS_HREF, VERSION } = customization;
   return (
     <Box
       margin="0 auto"
-      paddingX={4}
       maxWidth="800px"
     >
-      <Help
-        summary={summary}
-        docsHref={customization.DOCS_HREF}
-        supportHref={customization.SUPPORT_HREF}
-        version={customization.VERSION}
-        versionHref={customization.VERSION_HREF}
-      />
+      <Stack gap={1}>
+        <Box>
+          <Typography
+            variant="h3"
+            my="1rem"
+          >
+            About
+          </Typography>
+          <Typography>
+            OLOG (Online Logbook Service) allows for the creation and retrieval
+            of log entries. This service was developed to address the needs of
+            operators, engineers, and users of large scientific facilities.
+          </Typography>
+        </Box>
+        {(SUPPORT_HREF || DOCS_HREF) && (
+          <Box>
+            {DOCS_HREF && (
+              <>
+                <Typography
+                  variant="h3"
+                  my="1rem"
+                >
+                  Support
+                </Typography>
+                <Typography
+                  display="flex"
+                  gap={0.5}
+                >
+                  Want more information about this app?
+                  <ExternalLink
+                    href={DOCS_HREF}
+                    label="Visit the documentation to learn more"
+                  >
+                    Read the docs
+                  </ExternalLink>
+                </Typography>
+              </>
+            )}
+            <Typography
+              display="flex"
+              gap={0.5}
+            >
+              Want more information about how the search functionality works?
+              <ExternalLink
+                href={`${customization.APP_BASE_URL}/SearchHelp_en.html`}
+                target="_blank"
+                label="Visit the documentation to learn more"
+              >
+                Read the docs
+              </ExternalLink>
+            </Typography>
+            {SUPPORT_HREF && (
+              <>
+                <Typography
+                  display="flex"
+                  gap={0.5}
+                >
+                  Experiencing issues or want to suggest an improvement?
+                  <ExternalLink
+                    href={SUPPORT_HREF}
+                    label="Report an issue or improvement with the support desk"
+                  >
+                    Contact support
+                  </ExternalLink>
+                </Typography>
+              </>
+            )}
+          </Box>
+        )}
+
+        <Box mt="1rem">
+          <Typography
+            fontWeight="bold"
+            display="flex"
+          >
+            Version:{" "}
+            {VERSION ? (
+              <ExternalLink
+                ml={1}
+                href={`https://github.com/Olog/phoebus-olog-web-client/tree/v${VERSION}`}
+                label={`version ${VERSION}`}
+              >
+                {VERSION}
+              </ExternalLink>
+            ) : (
+              VERSION
+            )}
+          </Typography>
+        </Box>
+      </Stack>
     </Box>
   );
 };
