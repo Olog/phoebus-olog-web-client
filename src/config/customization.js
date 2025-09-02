@@ -58,6 +58,11 @@ let customization = {
   APP_BASE_URL: import.meta.env.VITE_APP_BASE_URL, // e.g. http://localhost:8080/Olog
 
   /**
+   * Base URL for the websocket connection to the Olog service.
+   */
+  WEBSOCKET_BASE_URL: import.meta.env.VITE_APP_WEBSOCKET_BASE_URL, // e.g. ws://localhost:8080/Olog/web-socket
+
+  /**
    * Support and Docs URLs for Help page
    */
   DOCS_HREF:
