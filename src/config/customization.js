@@ -47,11 +47,6 @@ let customization = {
   defaultPageSize: 50,
 
   /**
-   * Default frequency of background search, in milliseconds
-   */
-  defaultSearchFrequency: 30000,
-
-  /**
    * Max total attachment upload size and individual file size (MB)
    */
   defaultMaxRequestSizeMb: 100,
@@ -63,14 +58,18 @@ let customization = {
   APP_BASE_URL: import.meta.env.VITE_APP_BASE_URL, // e.g. http://localhost:8080/Olog
 
   /**
+   * Base URL for the websocket connection to the Olog service.
+   */
+  WEBSOCKET_BASE_URL: import.meta.env.VITE_APP_WEBSOCKET_BASE_URL, // e.g. ws://localhost:8080/Olog/web-socket
+
+  /**
    * Support and Docs URLs for Help page
    */
   DOCS_HREF:
     import.meta.env.VITE_APP_DOCS_HREF ??
     "https://olog.readthedocs.io/en/latest/",
   SUPPORT_HREF: import.meta.env.VITE_APP_SUPPORT_HREF,
-  VERSION: import.meta.env.VITE_APP_VERSION ?? packageInfo.version,
-  VERSION_HREF: import.meta.env.VITE_APP_VERSION_HREF
+  VERSION: import.meta.env.VITE_APP_VERSION ?? packageInfo.version
 };
 
 export default customization;

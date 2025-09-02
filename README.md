@@ -60,11 +60,11 @@ Note that `VITE_APP_*` variables are only embedded during build time they cannot
 | Environment variable                                | Description                                                                                                                                                                                   |
 | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | VITE_APP_BASE_URL                                   | The [Phoebus Olog Backend](https://github.com/Olog/phoebus-olog) base URL (for example: `http://localhost:8080/Olog`). Default is the same host as the frontend; e.g. `http://localhost:3000` |
+| VITE_APP_WEBSOCKET_BASE_URL                         | The Phoebus Olog Websocket base URL (for example: `ws://localhost:8080/Olog/web-socket`)                                                                                                      |
 | VITE_APP_DOCS_HREF                                  | URL where more information can be found on Olog, shown on Help page;                                                                                                                          |
 | default is `https://olog.readthedocs.io/en/latest/` |
 | VITE_APP_SUPPORT_HREF                               | URL where support can be found for Olog. Shown on Help page only if provided.                                                                                                                 |
 | VITE_APP_VERSION                                    | Version string for Olog; default is the version defined in `package.json`.                                                                                                                    |
-| VITE_APP_VERSION_HREF                               | URL where this version of Olog can be found. Shown on Help page only if provided.                                                                                                             |
 
 ## Development
 

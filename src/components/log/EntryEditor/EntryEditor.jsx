@@ -24,6 +24,8 @@ import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
 import { PropertyCollectionInput } from "components/shared/input/managed/PropertyCollectionInput";
 import { ologApi } from "src/api/ologApi";
+import { useIsAuthenticated } from "src/hooks/useIsAuthenticated";
+import { useCustomSnackbar } from "src/hooks/useCustomSnackbar";
 
 const errorText =
   "Misconfigured level values. Please contact your administrator.";
@@ -40,6 +42,9 @@ export const EntryEditor = ({
 }) => {
   const topElem = useRef();
   const { control, handleSubmit, formState } = form;
+
+  const { isAuthenticated } = useIsAuthenticated();
+  const { enqueueSnackbar } = useCustomSnackbar();
 
   const { data: logbooks } = ologApi.endpoints.getLogbooks.useQuery();
   const { data: tags } = ologApi.endpoints.getTags.useQuery();
@@ -65,6 +70,15 @@ export const EntryEditor = ({
     }
   }, [formState]);
 
+  const handleEntrySubmit = (formData) => {
+    if (!formData || !isAuthenticated) {
+      return enqueueSnackbar("You must be logged in to submit a log entry", {
+        severity: "error"
+      });
+    }
+    handleSubmit(onSubmit)(formData);
+  };
+
   return (
     <Stack
       gap={1}
@@ -86,7 +100,7 @@ export const EntryEditor = ({
       </Typography>
       <Stack
         component="form"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleEntrySubmit}
         gap={2}
       >
         <span ref={topElem} />
