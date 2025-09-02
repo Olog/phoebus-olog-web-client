@@ -141,11 +141,8 @@ const Description = ({ form, attachmentsDisabled }) => {
           setShowEmbedImageDialog(true);
         }
       }
-      // Makes sure that the text/html that comes from copied image is not pasted
-      const isImagePaste = items.some(
-        (i) => i.kind === "file" && i.type.startsWith("image/")
-      );
-      if (item.kind === "string" && item.type.match(/^text/) && !isImagePaste) {
+
+      if (item.kind === "string" && item.type.match(/^text\/plain$/)) {
         item.getAsString((text) => {
           const { parsedContent, cursorPosition } = parseUrlToMarkdown(
             text,
