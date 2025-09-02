@@ -69,8 +69,7 @@ let customization = {
     import.meta.env.VITE_APP_DOCS_HREF ??
     "https://olog.readthedocs.io/en/latest/",
   SUPPORT_HREF: import.meta.env.VITE_APP_SUPPORT_HREF,
-  VERSION: import.meta.env.VITE_APP_VERSION ?? packageInfo.version,
-  VERSION_HREF: import.meta.env.VITE_APP_VERSION_HREF
+  VERSION: import.meta.env.VITE_APP_VERSION ?? packageInfo.version
 };
 
 export default customization;
