@@ -5,7 +5,17 @@ import customization from "src/config/customization";
 
 export const WebSocketContext = createContext();
 
-const BASE_URL = "Olog/web-socket";
+const getBasePath = () => {
+  try {
+    const url = new URL(customization.WEBSOCKET_BASE_URL);
+    return url.pathname;
+  } catch (error) {
+    console.error("Invalid websocket base url:", error);
+    return null;
+  }
+};
+
+const BASE_PATH = getBasePath() || "";
 const NEW_LOG_ENTRY = "NEW_LOG_ENTRY";
 const LOG_ENTRY_UPDATED = "LOG_ENTRY_UPDATED";
 const SERVICE_UNAVAILABLE = "service_unavailable";
@@ -36,14 +46,14 @@ export const WebSocketProvider = ({ children }) => {
 
     let disconnected = false;
     const client = new Client({
-      brokerURL: `ws://${customization.APP_BASE_URL}/${BASE_URL}`,
+      brokerURL: customization.WEBSOCKET_BASE_URL,
       reconnectDelay: 5000,
       onConnect: () => {
         disconnected = false;
         closeSnackbar(SERVICE_UNAVAILABLE);
         setRefetchLogs((count) => count + 1);
 
-        client.subscribe(`/${BASE_URL}/messages`, (message) => {
+        client.subscribe(`${BASE_PATH}/messages`, (message) => {
           try {
             const parsedBody = JSON.parse(message.body);
             if (parsedBody.messageType === NEW_LOG_ENTRY) {
