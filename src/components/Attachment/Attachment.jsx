@@ -75,8 +75,8 @@ const Attachment = ({ attachment, removeAttachment, disabled, className }) => {
   return (
     <>
       <Stack
-        height="100%"
-        width="100%"
+        height="160px"
+        width="160px"
         gap={0.5}
         padding={0.5}
         className={className}
