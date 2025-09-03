@@ -156,8 +156,8 @@ const EmbedImageDialog = ({
             <DroppableFileUploadInput
               onFileChanged={onFileChanged}
               id="embed-image-upload"
-              dragLabel="Drag Image Here"
-              browseLabel="Choose an Image or"
+              dragLabel="Drag image here"
+              browseLabel="Choose an image"
               maxFileSizeMb={maxFileSizeMb}
             />
           )}

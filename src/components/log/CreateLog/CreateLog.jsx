@@ -90,7 +90,7 @@ const CreateLog = ({ isAuthenticated }) => {
       <EntryEditor
         {...{
           form,
-          title: "Create New Log",
+          title: "Create new log",
           onSubmit,
           submitDisabled: !isAuthenticated
         }}

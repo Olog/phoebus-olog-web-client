@@ -20,7 +20,7 @@ import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Box, styled } from "@mui/material";
 import { AdvancedSearchDrawer } from "../components/search/AdvancedSearchDrawer";
-import { onHomePage } from "../hooks/isHomePage";
+import { onHomePage } from "../hooks/onPage";
 import { AppNavBar } from "src/components/AppNavBar";
 import Initialize from "components/Initialize";
 import { theme } from "src/config/theme";

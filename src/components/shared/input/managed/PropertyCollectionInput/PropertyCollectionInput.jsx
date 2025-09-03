@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { Button, FormControl, FormLabel, Paper, Stack } from "@mui/material";
+import { Button, FormControl, Grid, Paper, Stack } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
@@ -56,31 +56,12 @@ const PropertyCollectionInput = ({ control, className }) => {
     }
   }, [allPropertiesSelected, setShowAddProperty]);
 
-  // Render, but visually hide, any group properties
-  // React Hook Form stores state in the form elements so they
-  // must be rendered even if they shouldn't be edited
-  const renderedProperties = properties.map((property, index) => {
-    return (
-      <PropertyInput
-        key={index}
-        index={index}
-        control={control}
-        property={property}
-        removeProperty={removeProperty}
-        updateProperty={updateProperty}
-        hidden={property.name === "Log Entry Group"}
-      />
-    );
-  });
-
   return (
     <FormControl className={className}>
-      <FormLabel>Properties</FormLabel>
       <Paper
         variant="outlined"
         component={Stack}
-        padding={1}
-        gap={1}
+        padding={1.5}
       >
         <Button
           variant="outlined"
@@ -92,7 +73,30 @@ const PropertyCollectionInput = ({ control, className }) => {
         >
           Add Property
         </Button>
-        {renderedProperties}
+        {properties.length > 0 && (
+          <Grid
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 2
+            }}
+            mt={2}
+          >
+            {properties.map((property, index) => {
+              return (
+                <PropertyInput
+                  key={index}
+                  index={index}
+                  control={control}
+                  property={property}
+                  removeProperty={removeProperty}
+                  updateProperty={updateProperty}
+                  hidden={property.name === "Log Entry Group"}
+                />
+              );
+            })}
+          </Grid>
+        )}
       </Paper>
       <Modal
         open={showAddProperty}
