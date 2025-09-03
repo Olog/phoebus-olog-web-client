@@ -30,7 +30,7 @@ const PropertyInput = ({
     <Paper
       component={Stack}
       variant="outlined"
-      padding={1}
+      padding={1.5}
       gap={0.5}
       width="100%"
       visibility={hidden ? "hidden" : "visible"}

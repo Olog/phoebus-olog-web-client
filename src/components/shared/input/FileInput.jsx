@@ -1,28 +1,22 @@
 import { useRef, useState } from "react";
-import { Box, Typography, styled } from "@mui/material";
+import { Box, Button, Stack, Typography, styled } from "@mui/material";
 import BackupIcon from "@mui/icons-material/Backup";
 import CloudOffIcon from "@mui/icons-material/CloudOff";
+import { InternalLink } from "../Link";
 
 const StyledDroppableFileUploadArea = styled("div")`
   width: 100%;
-  height: 100%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 5px dashed #ddd;
+  border: 3.5px dashed #ddd;
   border-radius: 20px;
-  padding: 1rem;
-  color: ${({ theme, disabled }) =>
-    disabled ? theme.palette.grey[400] : theme.palette.grey[600]};
 
   &.dragging-over {
     border-color: #777;
     background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  &:hover {
-    cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   }
 
   & input {
@@ -34,10 +28,17 @@ const StyledClickableArea = styled("div")`
   height: 100%;
   width: 100%;
   display: flex;
+  padding: 0.7rem 1rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  color: ${({ theme, disabled }) =>
+    disabled ? theme.palette.grey[400] : theme.palette.grey[600]};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  & > * {
+    cursor: inherit !important;
+  }
 `;
 
 export const DroppableFileUploadInput = ({
@@ -49,6 +50,7 @@ export const DroppableFileUploadInput = ({
   dragLabel,
   browseLabel,
   maxFileSizeMb,
+  maxRequestSizeMb,
   disabled
 }) => {
   const fileInputRef = useRef();
@@ -76,7 +78,8 @@ export const DroppableFileUploadInput = ({
   };
 
   const onClick = (event) => {
-    event.preventDefault(); // event bubbling can cause a page refresh in some components
+    event.preventDefault();
+    event.stopPropagation();
     fileInputRef.current.value = null;
     fileInputRef.current.click();
   };
@@ -106,6 +109,27 @@ export const DroppableFileUploadInput = ({
     dragAreaRef.current.classList.remove("dragging-over");
   };
 
+  const handleClipboardAttach = async (e) => {
+    e.stopPropagation();
+    try {
+      const items = await navigator.clipboard.read();
+      for (const item of items) {
+        for (const type of item.types) {
+          if (type.startsWith("image/")) {
+            const blob = await item.getType(type);
+            const extension = type.split("/")[1];
+            const file = new File([blob], `clipboard-image.${extension}`, {
+              type: `image/${extension}`
+            });
+            onFileChanged([file]);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Failed to read clipboard:", error);
+    }
+  };
+
   return (
     <StyledDroppableFileUploadArea
       ref={dragAreaRef}
@@ -114,34 +138,53 @@ export const DroppableFileUploadInput = ({
       onDragOver={handleDragEnter}
       onDragLeave={handleDragLeave}
       className={className}
-      disabled={disabled}
     >
-      <StyledClickableArea onClick={onClick}>
-        <Box fontSize="2.5rem">
-          {disabled ? (
-            <CloudOffIcon fontSize="inherit" />
-          ) : (
-            <BackupIcon fontSize="inherit" />
-          )}
-        </Box>
-        <Typography
-          component="label"
-          htmlFor={id}
-        >
-          {disabled ? (
-            "File Upload Disabled"
-          ) : (
-            <>
-              {browseLabel}{" "}
+      <StyledClickableArea
+        onClick={onClick}
+        disabled={disabled}
+      >
+        <Box mb={0.5}>{disabled ? <CloudOffIcon /> : <BackupIcon />}</Box>
+        {disabled ? (
+          <Typography fontSize=".875rem">File upload disabled</Typography>
+        ) : (
+          <>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap={0.8}
+            >
+              <InternalLink
+                onClick={onClick}
+                sx={{ fontSize: ".875rem" }}
+              >
+                {browseLabel}
+              </InternalLink>
+              {" or "}
               <Typography
                 component="span"
+                fontSize=".875rem"
                 fontWeight="bold"
               >
                 {dragLabel}
               </Typography>
-            </>
-          )}
-        </Typography>
+            </Stack>
+            <Button
+              sx={{ width: "fit-content", mt: 1.5, mb: 1 }}
+              variant="outlined"
+              disabled={disabled}
+              onClick={handleClipboardAttach}
+            >
+              Attach image from clipboard
+            </Button>
+            <Typography
+              mt={0.5}
+              fontSize=".78rem"
+            >
+              (max size per file: {maxFileSizeMb}MB, max total form size:{" "}
+              {maxRequestSizeMb}MB)
+            </Typography>
+          </>
+        )}
       </StyledClickableArea>
       <input
         id={id}

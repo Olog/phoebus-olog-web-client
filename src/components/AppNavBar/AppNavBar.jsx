@@ -45,7 +45,7 @@ import SimpleSearch from "components/search/SimpleSearch";
 import { SortToggleButton } from "components/search/SortToggleButton";
 import { toggleSortOrder } from "features/searchPageParamsReducer";
 import { theme } from "src/config/theme";
-import { onHomePage } from "src/hooks/isHomePage";
+import { onCreatePage, onHomePage } from "src/hooks/onPage";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 const getFieldCount = (searchParams) => {
@@ -245,10 +245,12 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                   <ListItem sx={{ padding: 0 }}>
                     <InternalButtonLink
                       to="/logs/create"
-                      variant="contained"
+                      variant={
+                        onCreatePage(pathname) ? "outlined" : "contained"
+                      }
                       color="primary"
                       sx={{
-                        fontWeight: 600,
+                        fontWeight: onCreatePage(pathname) ? 400 : 600,
                         minWidth: "100px",
                         padding: "6px 15px",
                         fontSize: "0.8rem",
