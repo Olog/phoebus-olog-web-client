@@ -25,7 +25,7 @@ const StyledDroppableFileUploadArea = styled("div")`
 `;
 
 const StyledClickableArea = styled("div")`
-  height: 100%;
+  height: 160px;
   width: 100%;
   display: flex;
   padding: 0.7rem 1rem;

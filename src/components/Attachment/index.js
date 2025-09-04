@@ -1,5 +1,5 @@
 import Attachment from "./Attachment";
-import { FileImage } from "./AttachmentImage";
+import { ImageOrFile } from "./AttachmentImage";
 
-export { Attachment, FileImage };
+export { Attachment, ImageOrFile };
 export default Attachment;

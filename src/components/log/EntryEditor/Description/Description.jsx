@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Stack, Typography, styled } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { FaMarkdown } from "react-icons/fa";
@@ -21,7 +21,8 @@ const RenderedAttachmentsContainer = styled("div")(
     flexWrap: "wrap",
     flexDirection: "row",
     alignItems: "center",
-    gap: "0.5rem",
+    columnGap: ".7rem",
+    rowGap: "1rem",
     padding: "0.5rem",
     border: `solid 1px ${theme.palette.gray}`,
     borderRadius: "5px",
@@ -83,6 +84,12 @@ const Description = ({ form, attachmentsDisabled }) => {
       }
     }
   });
+
+  const parsedAttachments = useMemo(
+    () =>
+      attachments?.map((it) => new OlogAttachment({ attachment: it })) ?? [],
+    [attachments]
+  );
 
   const { data: serverInfo } = ologApi.endpoints.getServerInfo.useQuery();
 
@@ -270,7 +277,7 @@ const Description = ({ form, attachmentsDisabled }) => {
             maxRequestSizeMb={maxRequestSizeMb}
             disabled={attachmentsDisabled}
           />
-          {attachments?.map((attachment, index) => {
+          {parsedAttachments?.map((attachment, index) => {
             return (
               <Attachment
                 key={index}

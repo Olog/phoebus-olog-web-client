@@ -33,9 +33,12 @@ export default class OlogAttachment {
     // Is a remote attachment from an existing log entry
     if (attachment) {
       this.id = attachment.id;
+      this.file = attachment.file;
       this.filename = attachment.filename;
       this.fileMetadataDescription = attachment.fileMetadataDescription;
-      this.url = `${customization.APP_BASE_URL}/attachment/${attachment.id}`;
+      this.url =
+        attachment.url ??
+        `${customization.APP_BASE_URL}/attachment/${attachment.id}`;
     }
     // Otherwise it is local to the browser / in the editor
     else {
