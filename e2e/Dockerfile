@@ -1,4 +1,4 @@
-FROM cypress/included:12.5.1
+FROM cypress/included:14.5.4
 WORKDIR /e2e
 COPY . ./
 RUN npm ci --silent
