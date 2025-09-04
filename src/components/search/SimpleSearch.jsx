@@ -1,51 +1,37 @@
 import { IconButton, InputAdornment, Stack } from "@mui/material";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
-import { removeEmptyKeys } from "api/ologApi";
 import { TextInput } from "components/shared/input/TextInput";
 import {
-  defaultSearchParams,
-  useSearchParams
-} from "features/searchParamsReducer";
-import useSanitizedSearchParams, {
+  removeEmptyKeys,
+  useEnhancedSearchParams,
   withoutParams
-} from "hooks/useSanitizedSearchParams";
-import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
+} from "src/hooks/useEnhancedSearchParams";
 
 const SimpleSearch = () => {
-  const dispatch = useDispatch();
-  const searchParams = useSearchParams();
-  const { toSearchParams, toQueryString } = useSanitizedSearchParams();
-
-  const { control, handleSubmit, setValue, getValues, watch } = useForm({
-    defaultValues: {
-      query: defaultSearchParams.query
-    },
-    values: { query: searchParams?.query }
-  });
+  const { searchParams } = useEnhancedSearchParams();
+  const { toSearchParams, toQueryString, setSearchParams } =
+    useEnhancedSearchParams();
+  const { control, handleSubmit, setValue, getValues, watch } = useForm({});
 
   const queryValue = watch("query");
 
   useEffect(() => {
-    if (searchParams) {
-      setValue(
-        "query",
-        toQueryString(removeEmptyKeys(withoutParams(searchParams)))
-      );
-    }
-  }, [setValue, searchParams, toQueryString]);
+    setValue(
+      "query",
+      toQueryString(removeEmptyKeys(withoutParams(searchParams)))
+    );
+  }, [searchParams, toQueryString, setValue]);
 
   const onSubmit = () => {
     const { query } = getValues();
-    if (!query) {
-      dispatch(updateAdvancedSearch(defaultSearchParams));
-    } else {
-      const sanitizedSearchParams = toSearchParams(query);
 
-      dispatch(updateAdvancedSearch(sanitizedSearchParams));
+    if (!query) {
+      setSearchParams({});
+    } else {
+      setSearchParams(toSearchParams(query));
     }
   };
 

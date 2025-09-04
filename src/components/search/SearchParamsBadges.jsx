@@ -1,20 +1,11 @@
 import { Stack } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { EntryTypeChip } from "../log/EntryTypeChip";
 import { LogbookChip } from "../log/LogbookChip";
 import { TagChip } from "../log/TagChip";
 import { TextChip } from "../log/TextChip";
-import {
-  defaultSearchParams,
-  useSearchParams
-} from "features/searchParamsReducer";
-import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
+import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
-const ChipList = ({ items, onChange, Component }) => {
-  const onDelete = (itemToDelete) => {
-    const updated = items.filter((it) => it !== itemToDelete);
-    onChange(updated);
-  };
+const ChipList = ({ items, onDelete, Component }) => {
   return (
     <>
       {items.map((item) => (
@@ -22,7 +13,7 @@ const ChipList = ({ items, onChange, Component }) => {
           key={item}
           name={item}
           value={item}
-          onDelete={() => onDelete(item)}
+          onDelete={() => onDelete(items.filter((it) => it !== item))}
         />
       ))}
     </>
@@ -30,9 +21,7 @@ const ChipList = ({ items, onChange, Component }) => {
 };
 
 export const SearchParamsBadges = () => {
-  const searchParams = useSearchParams();
-  const dispatch = useDispatch();
-  const onSearch = (vals) => dispatch(updateAdvancedSearch(vals));
+  const { searchParams, setSearchParams } = useEnhancedSearchParams();
 
   const {
     title,
@@ -47,6 +36,25 @@ export const SearchParamsBadges = () => {
     logbooks
   } = searchParams;
 
+  const handleDelete = (name) => {
+    let nameCopy = name;
+
+    if (nameCopy === "author") {
+      nameCopy = "owner";
+    }
+    setSearchParams({
+      ...searchParams,
+      [nameCopy]: ""
+    });
+  };
+
+  const handleDeleteList = (key, items) => {
+    setSearchParams({
+      ...searchParams,
+      [key]: items
+    });
+  };
+
   return (
     <Stack
       flexDirection="row"
@@ -58,92 +66,69 @@ export const SearchParamsBadges = () => {
         <TextChip
           name="title"
           value={title}
-          onDelete={() =>
-            onSearch({ ...searchParams, title: defaultSearchParams.title })
-          }
-        />
-      ) : null}
-      {level ? (
-        <ChipList
-          items={level}
-          onChange={(val) => onSearch({ ...searchParams, level: val })}
-          Component={EntryTypeChip}
+          onDelete={handleDelete}
         />
       ) : null}
       {desc ? (
         <TextChip
-          name="description"
+          name="desc"
           value={desc}
-          onDelete={() =>
-            onSearch({
-              ...searchParams,
-              desc: defaultSearchParams.desc
-            })
-          }
+          onDelete={handleDelete}
         />
       ) : null}
       {properties ? (
         <TextChip
           name="properties"
           value={properties}
-          onDelete={() =>
-            onSearch({
-              ...searchParams,
-              properties: defaultSearchParams.properties
-            })
-          }
+          onDelete={handleDelete}
         />
       ) : null}
       {owner ? (
         <TextChip
           name="author"
           value={owner}
-          onDelete={() =>
-            onSearch({ ...searchParams, owner: defaultSearchParams.owner })
-          }
+          onDelete={handleDelete}
         />
       ) : null}
       {attachments ? (
         <TextChip
-          name="attach"
+          name="attachments"
           value={attachments}
-          onDelete={() =>
-            onSearch({
-              ...searchParams,
-              attachments: defaultSearchParams.attachments
-            })
-          }
+          onDelete={handleDelete}
         />
       ) : null}
       {start ? (
         <TextChip
-          name="from"
+          name="start"
           value={start}
-          onDelete={() =>
-            onSearch({ ...searchParams, start: defaultSearchParams.start })
-          }
+          onDelete={handleDelete}
         />
       ) : null}
       {end ? (
         <TextChip
-          name="to"
+          name="end"
           value={end}
-          onDelete={() =>
-            onSearch({ ...searchParams, end: defaultSearchParams.end })
-          }
+          onDelete={handleDelete}
+        />
+      ) : null}
+      {level ? (
+        <ChipList
+          items={level}
+          onDelete={(items) => handleDeleteList("level", items)}
+          Component={EntryTypeChip}
         />
       ) : null}
       {tags ? (
         <ChipList
           items={tags}
-          onChange={(val) => onSearch({ ...searchParams, tags: val })}
+          onDelete={(items) => handleDeleteList("tags", items)}
           Component={TagChip}
         />
       ) : null}
       {logbooks ? (
         <ChipList
           items={logbooks}
-          onChange={(val) => onSearch({ ...searchParams, logbooks: val })}
+          onDelete={(items) => handleDeleteList("logbooks", items)}
           Component={LogbookChip}
         />
       ) : null}
