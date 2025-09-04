@@ -52,21 +52,6 @@ let customization = {
   defaultSearchFrequency: 30000,
 
   /**
-   * Name of the cookie that stores the current search string
-   */
-  searchParamsCookie: "searchParams",
-
-  /**
-   * Name of the cookie that stores the current search string
-   */
-  searchPageParamsCookie: "searchPageParams",
-
-  /**
-   * Name of the cookie that stores the current olog version string
-   */
-  versionCookie: "version",
-
-  /**
    * Max total attachment upload size and individual file size (MB)
    */
   defaultMaxRequestSizeMb: 100,

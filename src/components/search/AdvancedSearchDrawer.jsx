@@ -1,17 +1,20 @@
 import { useEffect } from "react";
 import { Box, Button, Stack } from "@mui/material";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@mui/material/styles";
-import { useDispatch } from "react-redux";
 import { TextInput } from "components/shared/input/TextInput";
 import WizardDateInput from "components/shared/input/WizardDateInput";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
 import { Checkbox } from "components/shared/input/Checkbox";
-import { defaultSearchParams } from "features/searchParamsReducer";
-import { updateAdvancedSearch } from "src/features/advancedSearchThunk";
 import { ologApi } from "src/api/ologApi";
+import {
+  updateAdvancedSearch,
+  useAdvancedSearch
+} from "src/features/advancedSearchReducer";
+import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 const toDate = (dateString) => {
   if (dateString) {
@@ -21,11 +24,28 @@ const toDate = (dateString) => {
   }
 };
 
-export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
-  const dispatch = useDispatch();
+export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
+  const { searchParams, setSearchParams } = useEnhancedSearchParams();
+  const { groupedReplies, condensedEntries } = useAdvancedSearch();
+
   const form = useForm({
-    defaultValues: defaultSearchParams
+    defaultValues: {
+      title: "",
+      desc: "",
+      properties: "",
+      level: [],
+      logbooks: [],
+      tags: [],
+      owner: "",
+      start: null,
+      end: null,
+      attachments: "",
+      groupedReplies: true,
+      condensedEntries: false
+    }
   });
   const { control, handleSubmit, getValues } = form;
 
@@ -34,21 +54,25 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
   const { data: tags } = ologApi.endpoints.getTags.useQuery();
 
   useEffect(() => {
-    form.reset(searchParams);
-  }, [form, searchParams]);
+    form.reset({ ...searchParams, groupedReplies, condensedEntries });
+  }, [condensedEntries, form, groupedReplies, searchParams]);
 
   const clearFilters = () => {
-    dispatch(updateAdvancedSearch(defaultSearchParams));
-    form.reset(defaultSearchParams);
+    setSearchParams({});
   };
 
   const applyFilters = () => {
-    dispatch(updateAdvancedSearch(getValues()));
+    setSearchParams(getValues());
   };
 
   const handleSelectChange = (field, value) => {
     field.onChange(value);
     applyFilters();
+  };
+
+  const handleCheckboxChange = (field, value) => {
+    field.onChange(value);
+    dispatch(updateAdvancedSearch({ [field.name]: value }));
   };
 
   return (
@@ -183,13 +207,13 @@ export const AdvancedSearchDrawer = ({ searchParams, advancedSearchOpen }) => {
             name="groupedReplies"
             label="Grouped replies"
             control={control}
-            onChange={handleSelectChange}
+            onChange={handleCheckboxChange}
           />
           <Checkbox
             name="condensedEntries"
             label="Condensed entries"
             control={control}
-            onChange={handleSelectChange}
+            onChange={handleCheckboxChange}
           />
           <Button
             onClick={clearFilters}

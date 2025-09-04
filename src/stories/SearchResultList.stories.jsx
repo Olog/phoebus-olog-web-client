@@ -1,6 +1,6 @@
 import { Paper } from "@mui/material";
-import moment from "moment/moment";
 import { http, HttpResponse, delay } from "msw";
+import dayjs from "dayjs";
 import { SearchResultGroupItem } from "components/search/SearchResultList/SearchResultGroupItem";
 import { SearchResultList } from "components/search/SearchResultList";
 import {
@@ -18,7 +18,7 @@ export default {
   title: "SearchResultList"
 };
 
-let createdDate = moment();
+let createdDate = dayjs();
 const replyGroup = group({});
 const log0 = {
   id: 0,
@@ -75,7 +75,7 @@ const log2 = {
   createdDate: createdDate.valueOf(),
   attachments: [attachment({ filename: "results.jpeg" })]
 };
-createdDate = createdDate.add(1, "minutes");
+createdDate = createdDate.add(1, "minute");
 const log3 = {
   ...log1,
   title: "An interesting observation 3",
@@ -146,7 +146,6 @@ const SearchResultListTemplate = ({ ...props }) => {
 export const Default = (args) => <SearchResultListTemplate {...args} />;
 Default.args = {
   logs: [log0, log1, log2, log3, log4, log5],
-  dateDescending: true,
   selectedId: 1
 };
 Default.argTypes = {
@@ -183,7 +182,6 @@ const replies = [log1, log2, log3, log4]; // BE replies are a flat group that in
 export const ReplyItem = (args) => <ReplyItemTemplate {...args} />;
 ReplyItem.args = {
   log: log2,
-  dateDescending: true,
   selectedId: 1
 };
 ReplyItem.argTypes = {

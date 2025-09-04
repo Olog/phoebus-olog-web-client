@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import { useEffect, useState } from "react";
-import Cookies from "universal-cookie";
+import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Box, styled } from "@mui/material";
 import { AdvancedSearchDrawer } from "../components/search/AdvancedSearchDrawer";
@@ -25,8 +24,6 @@ import { onHomePage } from "../hooks/isHomePage";
 import { AppNavBar } from "src/components/AppNavBar";
 import Initialize from "components/Initialize";
 import { theme } from "src/config/theme";
-import { useSearchParams } from "src/features/searchParamsReducer";
-import customization from "src/config/customization";
 
 const Overlay = styled("div")(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -40,24 +37,9 @@ const Overlay = styled("div")(({ theme }) => ({
   }
 }));
 
-const cookies = new Cookies();
-
 const App = styled(({ className }) => {
-  const searchParams = useSearchParams();
   const { pathname } = useLocation();
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
-
-  useEffect(() => {
-    // Reset cookies if the version has changed
-    const versionCookie = cookies.get(customization.versionCookie);
-    if (!versionCookie || versionCookie !== customization.VERSION) {
-      cookies.remove(customization.searchParamsCookie, { path: "/" });
-      cookies.remove(customization.searchPageParamsCookie, { path: "/" });
-      cookies.set(customization.versionCookie, customization.VERSION, {
-        path: "/"
-      });
-    }
-  }, []);
 
   return (
     <Initialize>
@@ -75,10 +57,7 @@ const App = styled(({ className }) => {
         }}
       >
         {onHomePage(pathname) && (
-          <AdvancedSearchDrawer
-            advancedSearchOpen={advancedSearchOpen}
-            searchParams={searchParams}
-          />
+          <AdvancedSearchDrawer advancedSearchOpen={advancedSearchOpen} />
         )}
         <Box
           className={className}
