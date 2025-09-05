@@ -12,7 +12,7 @@ import { useState } from "react";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import DownloadIcon from "@mui/icons-material/Download";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import { FileImage } from "components/Attachment";
+import { ImageOrFile } from "components/Attachment";
 import Modal from "components/shared/Modal";
 
 const Image = styled(({ attachment, className }) => {
@@ -44,7 +44,7 @@ const FileLink = ({ attachment }) => (
     href={attachment.url}
     download
   >
-    <FileImage
+    <ImageOrFile
       attachment={attachment}
       alt={`file: ${attachment.filename}`}
       fontSize={90}

@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-import CloseIcon from "@mui/icons-material/Close";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useState } from "react";
 import {
   Box,
@@ -25,7 +25,7 @@ import {
   Typography,
   styled
 } from "@mui/material";
-import { FileImage, isImage } from "./AttachmentImage";
+import { ImageOrFile, isImage } from "./AttachmentImage";
 import Modal from "components/shared/Modal";
 
 const ImageContainer = styled("div")`
@@ -36,8 +36,6 @@ const ImageContainer = styled("div")`
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.1);
   flex-grow: 1;
-  ${({ disabled }) =>
-    disabled ? "filter: grayscale(100%) opacity(0.5) blur(1px);" : ""}
 
   &:hover {
     cursor: pointer;
@@ -50,10 +48,10 @@ const Caption = styled("figcaption")`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  ${({ disabled }) => disabled && "color: gray"}
+  font-size: 0.9rem;
 `;
 
-const StyledAttachmentImage = styled(FileImage)`
+const StyledAttachmentImage = styled(ImageOrFile)`
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
@@ -75,36 +73,35 @@ const Attachment = ({ attachment, removeAttachment, disabled, className }) => {
   return (
     <>
       <Stack
-        height="100%"
-        width="100%"
+        height="160px"
+        width="160px"
         gap={0.5}
         padding={0.5}
         className={className}
         component={Paper}
         variant="outlined"
+        position="relative"
       >
-        <Stack
-          justifyContent="center"
-          alignItems="flex-end"
-        >
-          {!disabled ? (
-            <IconButton
-              onClick={() => removeAttachment(attachment.file)}
-              aria-label={`remove ${attachmentFileName}`}
-              size="small"
-            >
-              <CloseIcon />
-            </IconButton>
-          ) : null}
-        </Stack>
-        <ImageContainer
-          onClick={previewImage}
-          disabled={disabled}
-        >
-          {image}
-        </ImageContainer>
+        {!disabled ? (
+          <IconButton
+            onClick={() => removeAttachment(attachment.file)}
+            aria-label={`remove ${attachmentFileName}`}
+            size="small"
+            sx={{
+              position: "absolute",
+              zIndex: 99,
+              top: -15,
+              right: -15,
+              color: (theme) => theme.palette.secondary.main
+            }}
+          >
+            <CancelIcon />
+          </IconButton>
+        ) : null}
+
+        <ImageContainer onClick={previewImage}>{image}</ImageContainer>
         <Box>
-          <Caption disabled={disabled}>{attachmentFileName}</Caption>
+          <Caption>{attachmentFileName}</Caption>
         </Box>
       </Stack>
       <Modal
