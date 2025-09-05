@@ -46,7 +46,7 @@ export const WebSocketProvider = ({ children }) => {
 
     let disconnected = false;
     const client = new Client({
-      brokerURL: customization.WEBSOCKET_BASE_URL,
+      brokerURL: customization.WEBSOCKET_BASE_URL ?? "ws://localhost:8080/",
       reconnectDelay: 5000,
       onConnect: () => {
         disconnected = false;
