@@ -6,7 +6,7 @@ Technology stack:
 
 - ReactJS (main framework)
 - Redux Toolkit (app state, http clients)
-- Remarkable for commonmark processing/rendering (https://github.com/jonschlinkert/remarkable)
+- markdown-it for commonmark processing/rendering (https://github.com/markdown-it/markdown-it)
 - Jest for unit testing
 - Cypress and docker-compose for end-to-end testing
 - Storybook for previewing components in isolation (without a backend)
