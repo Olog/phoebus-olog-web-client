@@ -159,7 +159,7 @@ export const DroppableFileUploadInput = ({
               >
                 {browseLabel}
               </InternalLink>
-              {" or "}
+              <Typography fontSize=".875rem">or</Typography>
               <Typography
                 component="span"
                 fontSize=".875rem"
