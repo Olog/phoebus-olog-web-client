@@ -127,6 +127,12 @@ export const EntryEditor = ({
         </Typography>
       </Stack>
       <span ref={topElem} />
+      <Alert
+        severity="info"
+        sx={{ mb: 2 }}
+      >
+        You&apos;re editing an existing entry
+      </Alert>
       <Stack
         component="form"
         onSubmit={handleEntrySubmit}
