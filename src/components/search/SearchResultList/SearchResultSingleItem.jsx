@@ -24,6 +24,7 @@ export const SearchResultSingleItem = ({
   const { condensedEntries } = useAdvancedSearch();
   return (
     <Stack
+      id={`search-result-log-${log.id}`}
       px={4}
       py={!condensedEntries ? 0.6 : 0.8}
       sx={{
