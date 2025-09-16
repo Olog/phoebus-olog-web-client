@@ -65,7 +65,9 @@ export const SearchResultList = styled(
     const handleKeyDown = (e) => {
       if (e.key === "ArrowDown") {
         const nextSibling = e?.target?.nextElementSibling;
-        if (nextSibling) {
+        const id = nextSibling?.id ?? "";
+
+        if (id.includes("search-result-log")) {
           const logId = nextSibling.getAttribute("data-id");
           navigateToEntry(logId);
           nextSibling.focus();
@@ -74,7 +76,9 @@ export const SearchResultList = styled(
 
       if (e.key === "ArrowUp") {
         const prevSibling = e?.target?.previousElementSibling;
-        if (prevSibling) {
+        const id = prevSibling?.id ?? "";
+
+        if (id.includes("search-result-log")) {
           const logId = prevSibling.getAttribute("data-id");
           navigateToEntry(logId);
           prevSibling.focus();
