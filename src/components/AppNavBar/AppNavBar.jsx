@@ -44,7 +44,7 @@ import SimpleSearch from "components/search/SimpleSearch";
 import { SortToggleButton } from "components/search/SortToggleButton";
 import { toggleSortOrder } from "features/searchPageParamsReducer";
 import { theme } from "src/config/theme";
-import { onCreatePage, onHomePage } from "src/hooks/onPage";
+import { useOnPage } from "src/hooks/onPage";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 const getFieldCount = (searchParams) => {
@@ -66,6 +66,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
   const { setShowLogin } = useShowLogin();
   const { searchParams } = useEnhancedSearchParams();
   const { setShowLogout } = useShowLogout();
+  const { onHomePage, onCreatePage } = useOnPage();
 
   const toggleSort = () => {
     dispatch(toggleSortOrder());
@@ -86,7 +87,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
         disableGutters
         sx={{
           display: "grid",
-          gridTemplateColumns: onHomePage()
+          gridTemplateColumns: onHomePage
             ? "auto 1.25fr auto 2fr"
             : "auto 1fr auto",
           gridTemplateRows: "1fr",
@@ -114,7 +115,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
           sx={{ borderColor: "#E2E8EE" }}
           orientation="vertical"
         />
-        {onHomePage() && (
+        {onHomePage && (
           <>
             <nav
               style={{ height: "100%" }}
@@ -240,10 +241,10 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                 <ListItem sx={{ padding: 0 }}>
                   <InternalButtonLink
                     to="/logs/create"
-                    variant={onCreatePage() ? "outlined" : "contained"}
+                    variant={onCreatePage ? "outlined" : "contained"}
                     color="primary"
                     sx={{
-                      fontWeight: onCreatePage() ? 400 : 600,
+                      fontWeight: onCreatePage ? 400 : 600,
                       minWidth: "100px",
                       padding: "6px 15px",
                       fontSize: "0.8rem",

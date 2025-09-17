@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
-import { onEditPage } from "src/hooks/onPage";
+import { useOnPage } from "src/hooks/onPage";
 import { ologApi } from "api/ologApi";
 import { useWebSockets } from "src/hooks/useWebSockets";
 import { useCustomSnackbar } from "src/hooks/useCustomSnackbar";
@@ -12,6 +12,7 @@ const EditLog = ({ log }) => {
   const navigate = useNavigate();
   const { updatedLogEntryId } = useWebSockets();
   const { enqueueSnackbar, closeSnackbar } = useCustomSnackbar();
+  const { onEditPage } = useOnPage();
 
   const [editInProgress, setEditInProgress] = useState(false);
   const [editLog] = ologApi.endpoints.editLog.useMutation();
@@ -21,7 +22,7 @@ const EditLog = ({ log }) => {
       if (
         updatedLogEntryId &&
         Number(updatedLogEntryId) === log?.id &&
-        onEditPage(window.location.pathname)
+        onEditPage
       ) {
         closeSnackbar(log?.id);
         enqueueSnackbar(
@@ -38,7 +39,7 @@ const EditLog = ({ log }) => {
     return () => {
       closeSnackbar(log?.id);
     };
-  }, [closeSnackbar, enqueueSnackbar, log?.id, updatedLogEntryId]);
+  }, [closeSnackbar, enqueueSnackbar, log?.id, onEditPage, updatedLogEntryId]);
 
   const form = useForm({
     defaultValues: {

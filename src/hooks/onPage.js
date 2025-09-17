@@ -1,9 +1,14 @@
-const showSearchBoxRegex = /^\/$|^\/logs\/?$|^\/logs\/\d+$/;
+import { useLocation } from "react-router-dom";
+
+const showSearchBoxRegex = /^\/$|^\/logs$|^\/logs\/\d+$/;
 const createPageRegex = /^\/logs\/create\/?$/;
 const editPageRegex = /^\/logs\/\d+\/edit\/?$/;
 
-export const onHomePage = () =>
-  showSearchBoxRegex.test(window.location.pathname);
-export const onEditPage = () => editPageRegex.test(window.location.pathname);
-export const onCreatePage = () =>
-  createPageRegex.test(window.location.pathname);
+export const useOnPage = () => {
+  const { pathname } = useLocation();
+  return {
+    onHomePage: showSearchBoxRegex.test(pathname),
+    onEditPage: editPageRegex.test(pathname),
+    onCreatePage: createPageRegex.test(pathname)
+  };
+};

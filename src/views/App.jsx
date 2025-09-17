@@ -20,7 +20,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Box, styled } from "@mui/material";
 import { AdvancedSearchDrawer } from "../components/search/AdvancedSearchDrawer";
-import { onHomePage } from "../hooks/onPage";
+import { useOnPage } from "../hooks/onPage";
 import { AppNavBar } from "src/components/AppNavBar";
 import { theme } from "src/config/theme";
 import { ologApi } from "src/api/ologApi";
@@ -39,6 +39,7 @@ const Overlay = styled("div")(({ theme }) => ({
 
 const App = styled(({ className }) => {
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+  const { onHomePage } = useOnPage();
 
   ologApi.endpoints.getUser.useQuery({});
 
@@ -50,14 +51,14 @@ const App = styled(({ className }) => {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: onHomePage() ? "auto 2fr" : null,
+          gridTemplateColumns: onHomePage ? "auto 2fr" : null,
           gridTemplateRows: "1fr",
           height: "100vh",
           overflow: "auto",
           transition: ""
         }}
       >
-        {onHomePage() && (
+        {onHomePage && (
           <AdvancedSearchDrawer advancedSearchOpen={advancedSearchOpen} />
         )}
         <Box
