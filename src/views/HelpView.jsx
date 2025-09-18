@@ -23,59 +23,55 @@ export const HelpView = () => {
             operators, engineers, and users of large scientific facilities.
           </Typography>
         </Box>
-        {SUPPORT_HREF && (
-          <Box>
+        <Box>
+          <Typography
+            variant="h3"
+            my="1rem"
+          >
+            Support
+          </Typography>
+          <Typography
+            display="flex"
+            gap={0.5}
+          >
+            Want more information about this app?
+            <ExternalLink
+              href="https://olog.readthedocs.io/en/latest/"
+              label="Visit the documentation to learn more"
+            >
+              Read the docs
+            </ExternalLink>
+          </Typography>
+          <Typography
+            display="flex"
+            gap={0.5}
+          >
+            Want more information about how the search functionality works?
+            <ExternalLink
+              href={`${customization.APP_BASE_URL}/SearchHelp_en.html`}
+              target="_blank"
+              label="Visit the documentation to learn more"
+            >
+              Read the docs
+            </ExternalLink>
+          </Typography>
+          {SUPPORT_HREF && (
             <>
-              <Typography
-                variant="h3"
-                my="1rem"
-              >
-                Support
-              </Typography>
               <Typography
                 display="flex"
                 gap={0.5}
               >
-                Want more information about this app?
+                Experiencing issues or want to suggest an improvement?
                 <ExternalLink
-                  href="https://olog.readthedocs.io/en/latest/"
-                  label="Visit the documentation to learn more"
+                  href={SUPPORT_HREF}
+                  label="Report an issue or improvement with the support desk"
                 >
-                  Read the docs
+                  Contact support
                 </ExternalLink>
               </Typography>
             </>
-            <Typography
-              display="flex"
-              gap={0.5}
-            >
-              Want more information about how the search functionality works?
-              <ExternalLink
-                href={`${customization.APP_BASE_URL}/SearchHelp_en.html`}
-                target="_blank"
-                label="Visit the documentation to learn more"
-              >
-                Read the docs
-              </ExternalLink>
-            </Typography>
-            {SUPPORT_HREF && (
-              <>
-                <Typography
-                  display="flex"
-                  gap={0.5}
-                >
-                  Experiencing issues or want to suggest an improvement?
-                  <ExternalLink
-                    href={SUPPORT_HREF}
-                    label="Report an issue or improvement with the support desk"
-                  >
-                    Contact support
-                  </ExternalLink>
-                </Typography>
-              </>
-            )}
-          </Box>
-        )}
+          )}
+        </Box>
 
         <Box mt="1rem">
           <Typography
