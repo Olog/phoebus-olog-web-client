@@ -14,7 +14,7 @@ RUN mkdir /etc/nginx/conf.d
 COPY docker/default.conf /etc/nginx/conf.d
 COPY --from=builder /usr/src/phoebus-olog-web-client/build /usr/share/nginx/html/
 
-COPY env.sh /docker-entrypoint.d/env.sh
+COPY --chmod=755 env.sh /docker-entrypoint.d/env.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 EXPOSE 5000
