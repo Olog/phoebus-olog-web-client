@@ -3,7 +3,7 @@ import customization from "config/customization";
 import { ExternalLink } from "src/components/shared/Link";
 
 export const HelpView = () => {
-  const { SUPPORT_HREF, DOCS_HREF, VERSION } = customization;
+  const { SUPPORT_HREF, VERSION } = customization;
   return (
     <Box
       margin="0 auto"
@@ -23,30 +23,28 @@ export const HelpView = () => {
             operators, engineers, and users of large scientific facilities.
           </Typography>
         </Box>
-        {(SUPPORT_HREF || DOCS_HREF) && (
+        {SUPPORT_HREF && (
           <Box>
-            {DOCS_HREF && (
-              <>
-                <Typography
-                  variant="h3"
-                  my="1rem"
+            <>
+              <Typography
+                variant="h3"
+                my="1rem"
+              >
+                Support
+              </Typography>
+              <Typography
+                display="flex"
+                gap={0.5}
+              >
+                Want more information about this app?
+                <ExternalLink
+                  href="https://olog.readthedocs.io/en/latest/"
+                  label="Visit the documentation to learn more"
                 >
-                  Support
-                </Typography>
-                <Typography
-                  display="flex"
-                  gap={0.5}
-                >
-                  Want more information about this app?
-                  <ExternalLink
-                    href={DOCS_HREF}
-                    label="Visit the documentation to learn more"
-                  >
-                    Read the docs
-                  </ExternalLink>
-                </Typography>
-              </>
-            )}
+                  Read the docs
+                </ExternalLink>
+              </Typography>
+            </>
             <Typography
               display="flex"
               gap={0.5}

@@ -1,6 +1,5 @@
 ARG NODE_VERSION=22.13.1
-
-FROM node:${NODE_VERSION}-alpine AS build
+FROM node:${NODE_VERSION} AS builder
 
 LABEL maintainer="te-hung.tseng@ess.eu"
 WORKDIR /usr/src/phoebus-olog-web-client
@@ -8,12 +7,15 @@ COPY . .
 RUN npm ci
 RUN npm run build --force
 
-FROM node:${NODE_VERSION}-alpine
+FROM nginx:1.23.1-alpine
 
-COPY --from=build /usr/src/phoebus-olog-web-client/build/ /usr/src/phoebus-olog-web-client/build/
-WORKDIR /usr/src/phoebus-olog-web-client/
+RUN rm -rf /etc/nginx/conf.d
+RUN mkdir /etc/nginx/conf.d
+COPY docker/default.conf /etc/nginx/conf.d
+COPY --from=builder /usr/src/phoebus-olog-web-client/build /usr/share/nginx/html/
+
+COPY env.sh /docker-entrypoint.d/env.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
 EXPOSE 5000
-RUN npm install -g serve
-RUN addgroup -S nodejs && adduser -s /bin/bash -S nodejs -G nodejs
-USER nodejs
-CMD ["serve", "-p", "5000", "-s", "build"]
+CMD ["nginx", "-g", "daemon off;"]
