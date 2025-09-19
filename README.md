@@ -55,7 +55,7 @@ The file `src/config/customization.js` contains customizable items, such as leve
 
 Environment variables can be set directly on the terminal, or they can be loaded via the `.env` file automatically when npm runs. Copy the `.env.example` file and rename to `.env`.
 
-Note that `VITE_APP_*` variables are only embedded during build time they cannot be read from the environment during runtime.
+Note that, by default, `VITE_APP_*` variables are only embedded during build time they cannot be read from the environment during runtime. However, we have created a env.sh script which overrides our production env variables at run time.
 
 | Environment variable                                | Description                                                                                                                                                                                   |
 | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
