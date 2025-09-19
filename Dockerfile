@@ -1,5 +1,4 @@
-ARG NODE_VERSION=22.13.1
-FROM node:${NODE_VERSION} AS builder
+FROM node:22.13.1 AS builder
 
 LABEL maintainer="te-hung.tseng@ess.eu"
 WORKDIR /usr/src/phoebus-olog-web-client
@@ -9,8 +8,6 @@ RUN npm run build --force
 
 FROM nginx:1.23.1-alpine
 
-RUN rm -rf /etc/nginx/conf.d
-RUN mkdir /etc/nginx/conf.d
 COPY docker/default.conf /etc/nginx/conf.d
 COPY --from=builder /usr/src/phoebus-olog-web-client/build /usr/share/nginx/html/
 
