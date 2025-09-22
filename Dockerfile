@@ -14,5 +14,5 @@ COPY --from=builder /usr/src/phoebus-olog-web-client/build /usr/share/nginx/html
 COPY --chmod=755 env.sh /docker-entrypoint.d/env.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-EXPOSE 5000
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
