@@ -94,7 +94,7 @@ const EditLog = ({ log }) => {
           form,
           title: `Edit Log "${log?.title}"`,
           onSubmit,
-          attachmentsDisabled: true
+          isEditing: true
         }}
       />
     </>

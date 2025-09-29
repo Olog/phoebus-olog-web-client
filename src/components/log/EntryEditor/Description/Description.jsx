@@ -35,7 +35,7 @@ const RenderedAttachmentsContainer = styled("div")(
   })
 );
 
-const Description = ({ form, attachmentsDisabled }) => {
+const Description = ({ form, isEditing }) => {
   const { control, formState, getValues, setValue } = form;
   const descriptionRef = useRef();
 
@@ -138,7 +138,7 @@ const Description = ({ form, attachmentsDisabled }) => {
     for (let item of items) {
       if (item.kind === "file" && item.type.match(/^image/)) {
         const imageFile = item.getAsFile();
-        if (!attachmentsDisabled && imageFile) {
+        if (!isEditing && imageFile) {
           setInitialImage(imageFile);
           setShowEmbedImageDialog(true);
         }
@@ -250,7 +250,7 @@ const Description = ({ form, attachmentsDisabled }) => {
         >
           <Button
             variant="outlined"
-            disabled={attachmentsDisabled}
+            disabled={isEditing}
             onClick={() => setShowEmbedImageDialog(true)}
           >
             Embed Image
@@ -275,7 +275,7 @@ const Description = ({ form, attachmentsDisabled }) => {
             onFileChanged={onFileChanged}
             maxFileSizeMb={maxFileSizeMb}
             maxRequestSizeMb={maxRequestSizeMb}
-            disabled={attachmentsDisabled}
+            disabled={isEditing}
           />
           {parsedAttachments?.map((attachment, index) => {
             return (
@@ -283,7 +283,7 @@ const Description = ({ form, attachmentsDisabled }) => {
                 key={index}
                 attachment={attachment}
                 removeAttachment={() => onAttachmentRemoved(attachment, index)}
-                disabled={attachmentsDisabled}
+                disabled={isEditing}
               />
             );
           })}
@@ -307,7 +307,7 @@ const Description = ({ form, attachmentsDisabled }) => {
           showHtmlPreview={showHtmlPreview}
           setShowHtmlPreview={setShowHtmlPreview}
           commonmarkSrc={getValues("description")}
-          useRemoteAttachments={attachmentsDisabled}
+          useRemoteAttachments={isEditing}
           attachedFiles={attachments ?? []}
         />
       )}

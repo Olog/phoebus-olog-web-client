@@ -47,7 +47,7 @@ export const EntryEditor = ({
   title,
   onSubmit,
   submitDisabled,
-  attachmentsDisabled
+  isEditing
 }) => {
   const topElem = useRef();
   const navigate = useNavigate();
@@ -127,7 +127,7 @@ export const EntryEditor = ({
         </Typography>
       </Stack>
       <span ref={topElem} />
-      {attachmentsDisabled && (
+      {isEditing && (
         <Alert
           severity="info"
           sx={{ mb: 2 }}
@@ -213,7 +213,7 @@ export const EntryEditor = ({
         </Stack>
         <Description
           form={form}
-          attachmentsDisabled={attachmentsDisabled}
+          isEditing={isEditing}
         />
         <PropertyCollectionInput control={control} />
         <Stack
