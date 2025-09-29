@@ -198,6 +198,7 @@ export const DroppableFileUploadInput = ({
       />
       {error ? (
         <Typography
+          mb={2}
           variant="body2"
           fontStyle="italic"
           color="error"

@@ -35,6 +35,8 @@ const RenderedAttachmentsContainer = styled("div")(
   })
 );
 
+const UNSUPPORTED_FILE_TYPES = ["image/heic"];
+
 const Description = ({ form, isEditing }) => {
   const { control, formState, getValues, setValue } = form;
   const descriptionRef = useRef();
@@ -48,6 +50,8 @@ const Description = ({ form, isEditing }) => {
   const [initialImage, setInitialImage] = useState(null);
   const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
   const [showHtmlPreview, setShowHtmlPreview] = useState(false);
+
+  const [unsupportedFiles, setUnsupportedFiles] = useState([]);
 
   const {
     fields: attachments,
@@ -94,7 +98,7 @@ const Description = ({ form, isEditing }) => {
   const { data: serverInfo } = ologApi.endpoints.getServerInfo.useQuery();
 
   const generateUniqueFileName = (file) => {
-    return new File([file], `${new Date().getTime()}-${file.name}`, {
+    return new File([file], `${file.name}-${new Date().getTime()}`, {
       type: file.type,
       lastModified: file.lastModified
     });
@@ -108,12 +112,16 @@ const Description = ({ form, isEditing }) => {
     if (files) {
       // note event.target.files is a FileList, not an array! But we can convert it
       Array.from(files).forEach((file) => {
-        appendAttachment(
-          new OlogAttachment({
-            file: generateUniqueFileName(file),
-            id: uuidv4()
-          })
-        );
+        if (!UNSUPPORTED_FILE_TYPES.includes(file.type)) {
+          appendAttachment(
+            new OlogAttachment({
+              file: generateUniqueFileName(file),
+              id: uuidv4()
+            })
+          );
+        } else {
+          setUnsupportedFiles((prev) => [...new Set([...prev, file.type])]);
+        }
       });
     }
   };
@@ -294,6 +302,14 @@ const Description = ({ form, isEditing }) => {
           </Alert>
         ) : null}
       </Stack>
+      {unsupportedFiles.length > 0 && (
+        <Alert
+          severity="error"
+          onClose={() => setUnsupportedFiles([])}
+        >
+          Unsupported file format: {unsupportedFiles.join(", ")}
+        </Alert>
+      )}
       <EmbedImageDialog
         showEmbedImageDialog={showEmbedImageDialog}
         setShowEmbedImageDialog={setShowEmbedImageDialog}
