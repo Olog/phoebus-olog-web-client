@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Stack, Typography, styled } from "@mui/material";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { FaMarkdown } from "react-icons/fa";
@@ -35,7 +35,9 @@ const RenderedAttachmentsContainer = styled("div")(
   })
 );
 
-const UNSUPPORTED_FILE_TYPES = ["image/heic"];
+const UNSUPPORTED_FILE_TYPES = ["HEIC", "CSV"];
+const getFileType = (file) =>
+  file.type.split("/")[1].toUpperCase() || "unknown";
 
 const Description = ({ form, isEditing }) => {
   const { control, formState, getValues, setValue } = form;
@@ -112,7 +114,7 @@ const Description = ({ form, isEditing }) => {
     if (files) {
       // note event.target.files is a FileList, not an array! But we can convert it
       Array.from(files).forEach((file) => {
-        if (!UNSUPPORTED_FILE_TYPES.includes(file.type)) {
+        if (!UNSUPPORTED_FILE_TYPES.includes(getFileType(file))) {
           appendAttachment(
             new OlogAttachment({
               file: generateUniqueFileName(file),
@@ -120,7 +122,11 @@ const Description = ({ form, isEditing }) => {
             })
           );
         } else {
-          setUnsupportedFiles((prev) => [...new Set([...prev, file.type])]);
+          // Use 2 lists
+          setUnsupportedFiles((prev) => [
+            ...prev,
+            { type: getFileType(file), name: file.name }
+          ]);
         }
       });
     }
@@ -197,6 +203,19 @@ const Description = ({ form, isEditing }) => {
       shouldValidate: false
     });
   };
+
+  const getUnsupported = useCallback(
+    (key) => {
+      return [
+        ...new Set(
+          unsupportedFiles.map((file, i) =>
+            i < unsupportedFiles.length - 1 ? file[key] + ", " : file[key]
+          )
+        )
+      ];
+    },
+    [unsupportedFiles]
+  );
 
   // Set the max attachment filesize
   useEffect(() => {
@@ -307,7 +326,8 @@ const Description = ({ form, isEditing }) => {
           severity="error"
           onClose={() => setUnsupportedFiles([])}
         >
-          Unsupported file format: {unsupportedFiles.join(", ")}
+          Unsupported file format ({getUnsupported("type")}
+          ): {getUnsupported("name")}
         </Alert>
       )}
       <EmbedImageDialog
