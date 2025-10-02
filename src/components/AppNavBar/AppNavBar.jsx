@@ -237,11 +237,11 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                   </Tooltip>
                 </ListItem>
               </List>
-              {user ? (
+              {user && !onCreatePage ? (
                 <ListItem sx={{ padding: 0 }}>
                   <InternalButtonLink
                     to="/logs/create"
-                    variant={onCreatePage ? "outlined" : "contained"}
+                    variant="contained"
                     color="primary"
                     sx={{
                       fontWeight: onCreatePage ? 400 : 600,

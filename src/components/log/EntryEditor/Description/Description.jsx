@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Stack, Typography, styled } from "@mui/material";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { FaMarkdown } from "react-icons/fa";
@@ -14,6 +14,8 @@ import Attachment from "components/Attachment/Attachment";
 import customization from "config/customization";
 import { DroppableFileUploadInput } from "components/shared/input/FileInput";
 import { parseUrlToMarkdown } from "src/hooks/parseUrlToMarkdown";
+import { useUnsupported } from "src/hooks/useUnsupported";
+import { UnsupportedAlert } from "src/components/shared/UnsupportedAlert";
 
 const RenderedAttachmentsContainer = styled("div")(
   ({ hasAttachments, theme }) => ({
@@ -35,10 +37,6 @@ const RenderedAttachmentsContainer = styled("div")(
   })
 );
 
-const UNSUPPORTED_FILE_TYPES = ["HEIC", "CSV"];
-const getFileType = (file) =>
-  file.type.split("/")[1].toUpperCase() || "unknown";
-
 const Description = ({ form, isEditing }) => {
   const { control, formState, getValues, setValue } = form;
   const descriptionRef = useRef();
@@ -53,7 +51,9 @@ const Description = ({ form, isEditing }) => {
   const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
   const [showHtmlPreview, setShowHtmlPreview] = useState(false);
 
-  const [unsupportedFiles, setUnsupportedFiles] = useState([]);
+  const unsupportedState = useUnsupported();
+  const { unsupportedFiles, setUnsupportedFiles, checkIsUnsupported } =
+    unsupportedState;
 
   const {
     fields: attachments,
@@ -100,7 +100,10 @@ const Description = ({ form, isEditing }) => {
   const { data: serverInfo } = ologApi.endpoints.getServerInfo.useQuery();
 
   const generateUniqueFileName = (file) => {
-    return new File([file], `${file.name}-${new Date().getTime()}`, {
+    const splitFileName = file.name.split(".");
+    const name = splitFileName[0] ?? "unknown";
+    const extension = splitFileName[1] ?? ".jpg";
+    return new File([file], `${name}-${new Date().getTime()}.${extension}`, {
       type: file.type,
       lastModified: file.lastModified
     });
@@ -114,20 +117,16 @@ const Description = ({ form, isEditing }) => {
     if (files) {
       // note event.target.files is a FileList, not an array! But we can convert it
       Array.from(files).forEach((file) => {
-        if (!UNSUPPORTED_FILE_TYPES.includes(getFileType(file))) {
-          appendAttachment(
-            new OlogAttachment({
-              file: generateUniqueFileName(file),
-              id: uuidv4()
-            })
-          );
-        } else {
-          // Use 2 lists
-          setUnsupportedFiles((prev) => [
-            ...prev,
-            { type: getFileType(file), name: file.name }
-          ]);
+        if (checkIsUnsupported(file)) {
+          return;
         }
+        setUnsupportedFiles([]);
+        appendAttachment(
+          new OlogAttachment({
+            file: generateUniqueFileName(file),
+            id: uuidv4()
+          })
+        );
       });
     }
   };
@@ -203,19 +202,6 @@ const Description = ({ form, isEditing }) => {
       shouldValidate: false
     });
   };
-
-  const getUnsupported = useCallback(
-    (key) => {
-      return [
-        ...new Set(
-          unsupportedFiles.map((file, i) =>
-            i < unsupportedFiles.length - 1 ? file[key] + ", " : file[key]
-          )
-        )
-      ];
-    },
-    [unsupportedFiles]
-  );
 
   // Set the max attachment filesize
   useEffect(() => {
@@ -322,13 +308,7 @@ const Description = ({ form, isEditing }) => {
         ) : null}
       </Stack>
       {unsupportedFiles.length > 0 && (
-        <Alert
-          severity="error"
-          onClose={() => setUnsupportedFiles([])}
-        >
-          Unsupported file format ({getUnsupported("type")}
-          ): {getUnsupported("name")}
-        </Alert>
+        <UnsupportedAlert state={unsupportedState} />
       )}
       <EmbedImageDialog
         showEmbedImageDialog={showEmbedImageDialog}
