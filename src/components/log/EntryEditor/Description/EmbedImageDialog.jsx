@@ -22,6 +22,8 @@ import { Button, ImageList, ImageListItem, Stack } from "@mui/material";
 import Modal from "../../../shared/Modal";
 import { TextInput } from "components/shared/input/TextInput";
 import { DroppableFileUploadInput } from "components/shared/input/FileInput";
+import { useUnsupported } from "src/hooks/useUnsupported";
+import { UnsupportedAlert } from "src/components/shared/UnsupportedAlert";
 
 const EmbedImageDialog = ({
   addEmbeddedImage,
@@ -46,6 +48,10 @@ const EmbedImageDialog = ({
   const [originalImageHeight, setOriginalImageHeight] = useState(0);
   const scalingFactor = watch("scalingFactor");
 
+  const unsupportedState = useUnsupported();
+  const { unsupportedFiles, setUnsupportedFiles, checkIsUnsupported } =
+    unsupportedState;
+
   // If provided with an initial image, then use it
   useEffect(() => {
     if (initialImage) {
@@ -55,6 +61,10 @@ const EmbedImageDialog = ({
 
   const onFileChanged = (files) => {
     if (files) {
+      if (checkIsUnsupported(files[0])) {
+        return;
+      }
+      setUnsupportedFiles([]);
       setImageAttachment(files[0]);
       checkImageSize(imageAttachment, setSize);
     }
@@ -160,6 +170,9 @@ const EmbedImageDialog = ({
               browseLabel="Choose an image"
               maxFileSizeMb={maxFileSizeMb}
             />
+          )}
+          {unsupportedFiles.length > 0 && (
+            <UnsupportedAlert state={unsupportedState} />
           )}
           <TextInput
             name="scalingFactor"
