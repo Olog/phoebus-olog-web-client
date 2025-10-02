@@ -151,6 +151,11 @@ const Description = ({ form, isEditing }) => {
     for (let item of items) {
       if (item.kind === "file" && item.type.match(/^image/)) {
         const imageFile = item.getAsFile();
+        if (checkIsUnsupported(imageFile)) {
+          return;
+        }
+        setUnsupportedFiles([]);
+
         if (!isEditing && imageFile) {
           setInitialImage(imageFile);
           setShowEmbedImageDialog(true);
