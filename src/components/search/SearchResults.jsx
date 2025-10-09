@@ -7,27 +7,16 @@ import {
   Typography,
   styled
 } from "@mui/material";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { SearchResultList } from "./SearchResultList";
 import { SearchParamsBadges } from "./SearchParamsBadges";
 import { ologApi } from "api/ologApi";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
-import { useWebSockets } from "src/hooks/useWebSockets";
-
-const withDelay = (fn) => {
-  setTimeout(
-    () => {
-      fn();
-    },
-    Math.floor(Math.random() * 5001)
-  );
-};
 
 export const SearchResults = styled(({ className }) => {
   const { searchParams, isSearchActive } = useEnhancedSearchParams();
   const searchPageParams = useSearchPageParams();
-  const { refetchLogs, updatedLogEntryId } = useWebSockets();
 
   const searchLogsQuery = useMemo(() => {
     let params = {
@@ -45,18 +34,11 @@ export const SearchResults = styled(({ className }) => {
     },
     error,
     isLoading: loading,
-    isFetching: isFetchingSearchResults,
-    refetch: refetchSearchResults
+    isFetching: isFetchingSearchResults
   } = ologApi.endpoints.searchLogs.useQuery(searchLogsQuery, {
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true
   });
-
-  useEffect(() => {
-    if (refetchLogs || updatedLogEntryId) {
-      withDelay(refetchSearchResults);
-    }
-  }, [refetchLogs, updatedLogEntryId, refetchSearchResults]);
 
   return (
     <Stack

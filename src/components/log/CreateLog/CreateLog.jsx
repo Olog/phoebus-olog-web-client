@@ -42,10 +42,10 @@ const CreateLog = () => {
       logbooks: formData.logbooks,
       tags: formData.tags,
       properties: formData.properties,
-      title: formData.title,
+      title: formData.title || "",
       level: formData.level?.name,
-      description: formData.description,
-      attachments: formData.attachments ?? []
+      description: formData.description || "",
+      attachments: formData.attachments || []
     };
 
     createLog({ log: body })

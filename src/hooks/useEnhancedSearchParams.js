@@ -60,7 +60,10 @@ export const useEnhancedSearchParams = () => {
   }, []);
 
   const searchParams = useMemo(() => {
-    return queryStringParser.parse(params.toString(), options);
+    return queryStringParser.parse(
+      decodeURIComponent(params.toString()),
+      options
+    );
   }, [params]);
 
   const setSearchParams = useCallback(
