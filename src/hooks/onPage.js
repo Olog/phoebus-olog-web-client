@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 
 const showSearchBoxRegex = /^\/$|^\/logs$|^\/logs\/\d+$/;
 const createPageRegex = /^\/logs\/create\/?$/;
-const editPageRegex = /^\/logs\/\d+\/edit\/?$/;
+export const editPageRegex = /^\/logs\/\d+\/edit\/?$/;
 
 export const useOnPage = () => {
   const { pathname } = useLocation();

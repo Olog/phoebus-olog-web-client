@@ -26,7 +26,7 @@ export function ologClientInfoHeader() {
   };
 }
 
-export const ologApi = createApi({
+const ologApi = createApi({
   reducerPath: "ologApi",
   baseQuery: fetchBaseQuery({
     baseUrl: customization.APP_BASE_URL, // e.g. http://localhost:8080/Olog
@@ -173,3 +173,22 @@ export const ologApi = createApi({
     })
   })
 });
+
+export const TagTypes = {
+  GetLogs: "GetLogs"
+};
+
+const enhancedApiWithTags = ologApi.enhanceEndpoints({
+  addTagTypes: Object.values(TagTypes),
+  endpoints: {
+    searchLogs: {
+      providesTags: [TagTypes.GetLogs]
+    },
+    getLog: {
+      providesTags: (result, error, { noInvalidate }) =>
+        noInvalidate ? [] : [TagTypes.GetLogs]
+    }
+  }
+});
+
+export { enhancedApiWithTags as ologApi };
