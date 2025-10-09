@@ -3,43 +3,40 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { EntryEditor } from "../EntryEditor";
-import { useOnPage } from "src/hooks/onPage";
 import { ologApi } from "api/ologApi";
 import { useWebSockets } from "src/hooks/useWebSockets";
 import { useCustomSnackbar } from "src/hooks/useCustomSnackbar";
 
 const EditLog = ({ log }) => {
   const navigate = useNavigate();
-  const { updatedLogEntryId } = useWebSockets();
-  const { enqueueSnackbar, closeSnackbar } = useCustomSnackbar();
-  const { onEditPage } = useOnPage();
+  const { updatedLogEntryId, setUpdatedLogEntryId } = useWebSockets();
+  const { enqueueSnackbar } = useCustomSnackbar();
 
   const [editInProgress, setEditInProgress] = useState(false);
   const [editLog] = ologApi.endpoints.editLog.useMutation();
 
   useEffect(() => {
-    setTimeout(() => {
-      if (
-        updatedLogEntryId &&
-        Number(updatedLogEntryId) === log?.id &&
-        onEditPage
-      ) {
-        closeSnackbar(log?.id);
-        enqueueSnackbar(
-          "This log entry has been updated. Please refresh the page.",
-          {
-            severity: "warning",
-            autoHideDuration: null,
-            id: log?.id
-          }
-        );
-      }
-    }, 1000);
+    if (
+      updatedLogEntryId &&
+      Number(updatedLogEntryId) === log?.id &&
+      !editInProgress
+    ) {
+      enqueueSnackbar(
+        "This log entry has been updated. Please refresh the page.",
+        {
+          severity: "warning",
+          autoHideDuration: null,
+          id: log?.id
+        }
+      );
+    }
+  }, [editInProgress, enqueueSnackbar, log?.id, updatedLogEntryId]);
 
+  useEffect(() => {
     return () => {
-      closeSnackbar(log?.id);
+      setUpdatedLogEntryId(null);
     };
-  }, [closeSnackbar, enqueueSnackbar, log?.id, onEditPage, updatedLogEntryId]);
+  }, [setUpdatedLogEntryId]);
 
   const form = useForm({
     defaultValues: {
