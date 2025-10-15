@@ -184,6 +184,9 @@ const enhancedApiWithTags = ologApi.enhanceEndpoints({
     searchLogs: {
       providesTags: [TagTypes.GetLogs]
     },
+    getLogGroup: {
+      providesTags: [TagTypes.GetLogs]
+    },
     getLog: {
       providesTags: (result, error, { noInvalidate }) =>
         noInvalidate ? [] : [TagTypes.GetLogs]

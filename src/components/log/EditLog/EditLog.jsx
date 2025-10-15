@@ -59,7 +59,7 @@ const EditLog = ({ log }) => {
       properties: formData.properties,
       title: formData.title,
       level: formData.level?.name,
-      description: formData.description
+      description: formData.description || ""
     };
 
     editLog({ log: body })
@@ -69,6 +69,7 @@ const EditLog = ({ log }) => {
         navigate(`/logs/${data.id}`);
       })
       .catch((error) => {
+        setUpdatedLogEntryId(null);
         setEditInProgress(false);
         enqueueSnackbar("Failed to edit log entry. Please try again later.", {
           variant: "error"
