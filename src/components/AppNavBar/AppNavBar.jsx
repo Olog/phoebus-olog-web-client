@@ -251,7 +251,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                       boxShadow: "none"
                     }}
                   >
-                    Create log
+                    New entry
                   </InternalButtonLink>
                 </ListItem>
               ) : null}
