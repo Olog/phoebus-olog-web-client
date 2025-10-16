@@ -2,11 +2,11 @@ import { Box, Divider, styled } from "@mui/material";
 import { useParams } from "react-router-dom";
 import LogDetailsContainer from "src/components/log/LogDetails/LogDetailsContainer";
 import { SearchResults } from "components/search";
+import { Resizable } from "re-resizable";
 
 const ContentView = styled(Box)(({ theme }) => ({
-  display: "grid",
-  gridTemplateColumns: "auto 1.25fr auto 2fr",
-  gridTemplateRows: "1fr",
+  display: "flex",
+  flexDirection: "row",
   height: "100%",
   [theme.breakpoints.down("md")]: {
     display: "flex",
@@ -34,12 +34,15 @@ const SearchView = styled(({ className }) => {
           sx={{ borderColor: "#E2E8EE" }}
           orientation="vertical"
         />
-        <SearchResults />
+        <Resizable minWidth="200px" maxWidth="90%" defaultSize={{ width: "38.4%" }}>
+          <SearchResults />
+        </Resizable>
         <Divider
           sx={{ borderColor: "#E2E8EE" }}
           orientation="vertical"
         />
-        <LogDetailsContainer id={id} />
+          <LogDetailsContainer id={id} />
+
       </ContentView>
     </Box>
   );
