@@ -55,7 +55,10 @@ const App = styled(({ className }) => {
           gridTemplateRows: "1fr",
           height: "100vh",
           overflow: "auto",
-          transition: ""
+          transition: "",
+          [theme.breakpoints.down("md")]: {
+            gridTemplateColumns: "auto"
+          }
         }}
       >
         {onHomePage && (
