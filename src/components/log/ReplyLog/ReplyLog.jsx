@@ -33,8 +33,8 @@ const ReplyLog = ({ log }) => {
       properties: formData.properties,
       title: formData.title,
       level: formData.level?.name,
-      description: formData.description,
-      attachments: formData.attachments ?? []
+      description: formData.description || "",
+      attachments: formData.attachments || []
     };
     replyLog({ log: body, replyTo: log.id })
       .unwrap()

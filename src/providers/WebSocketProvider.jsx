@@ -1,7 +1,10 @@
 import { createContext, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Client } from "@stomp/stompjs";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 import customization from "src/config/customization";
+import { editPageRegex } from "src/hooks/onPage";
+import { ologApi, TagTypes } from "src/api/ologApi";
 
 export const WebSocketContext = createContext();
 
@@ -23,11 +26,20 @@ const NETWORK_LOST = "network_lost";
 
 export const WebSocketProvider = ({ children }) => {
   const [updatedLogEntryId, setUpdatedLogEntryId] = useState(null);
-  const [refetchLogs, setRefetchLogs] = useState(0);
+  const dispatch = useDispatch();
 
   const { enqueueSnackbar, closeSnackbar } = useCustomSnackbar();
 
   useEffect(() => {
+    const refetchLogs = () => {
+      setTimeout(
+        () => {
+          dispatch(ologApi.util.invalidateTags([{ type: TagTypes.GetLogs }]));
+        },
+        Math.floor(Math.random() * 5001)
+      );
+    };
+
     const handleOffline = () => {
       enqueueSnackbar("Network lost", {
         severity: "error",
@@ -37,7 +49,7 @@ export const WebSocketProvider = ({ children }) => {
     };
 
     const handleOnline = () => {
-      setRefetchLogs((count) => count + 1);
+      refetchLogs();
       closeSnackbar(NETWORK_LOST);
     };
 
@@ -51,16 +63,19 @@ export const WebSocketProvider = ({ children }) => {
       onConnect: () => {
         disconnected = false;
         closeSnackbar(SERVICE_UNAVAILABLE);
-        setRefetchLogs((count) => count + 1);
+        refetchLogs();
 
         client.subscribe(`${BASE_PATH}/messages`, (message) => {
           try {
             const parsedBody = JSON.parse(message.body);
             if (parsedBody.messageType === NEW_LOG_ENTRY) {
-              setRefetchLogs((count) => count + 1);
+              refetchLogs();
             }
             if (parsedBody.messageType === LOG_ENTRY_UPDATED) {
-              setUpdatedLogEntryId(parsedBody.payload);
+              refetchLogs();
+              if (editPageRegex.test(window.location.pathname)) {
+                setUpdatedLogEntryId(parsedBody.payload);
+              }
             }
           } catch (e) {
             console.error("Failed to parse websocket message", e);
@@ -90,11 +105,11 @@ export const WebSocketProvider = ({ children }) => {
       window.removeEventListener("online", handleOnline);
       client.deactivate();
     };
-  }, [enqueueSnackbar, closeSnackbar]);
+  }, [enqueueSnackbar, closeSnackbar, dispatch]);
 
   const value = {
     updatedLogEntryId,
-    refetchLogs
+    setUpdatedLogEntryId
   };
 
   return (
