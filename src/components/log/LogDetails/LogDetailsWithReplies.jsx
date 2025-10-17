@@ -6,10 +6,13 @@ import {
   AccordionSummary,
   Alert,
   Box,
+  Button,
   CircularProgress,
   Stack,
   styled
 } from "@mui/material";
+import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
+import UnfoldLessIcon from "@mui/icons-material/UnfoldLess";
 import LogDetails from "./LogDetails";
 import LogHeader from "./LogHeader";
 import { ologApi } from "api/ologApi";
@@ -17,34 +20,51 @@ import { getLogEntryGroupId } from "components/Properties";
 import { sortByCreatedDate } from "components/log/sort";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
 
-const LogDetailsAccordion = styled(({ log, className, refProp }) => {
+const LogDetailsAccordion = styled(({ log, expandAll, className, refProp }) => {
   const { id: paramLogId } = useParams();
   const isSelected = log.id === Number(paramLogId);
-  const [expanded, setExpanded] = useState(true);
+  const isSelectedColor = isSelected ? "#0099dc24" : "#f2f5f7";
+  const [expanded, setExpanded] = useState(isSelected);
 
   const onChange = () => {
     setExpanded((prev) => !prev);
   };
 
+  useEffect(() => {
+    if (expandAll) {
+      setExpanded(expandAll);
+    } else {
+      setExpanded(isSelected || false);
+    }
+  }, [expandAll, isSelected]);
+
   return (
     <Accordion
       ref={refProp}
-      defaultExpanded
       expanded={expanded}
       onChange={onChange}
       variant="outlined"
       className={className}
       square
+      transitionProps={{ timeout: 0 }}
       sx={{
         "& > .MuiButtonBase-root": { padding: 0 },
-        border: isSelected ? "2px solid #0099dc24" : "2px solid #F3F5F7"
+        border: 0,
+        opacity: !expanded ? 0.6 : 1,
+        "-webkit-filter": !expanded ? "grayscale(100%)" : "none",
+        "&:hover": { opacity: 1, "-webkit-filter": "none" },
+        "& .MuiCollapse-root": {
+          transition: "none !important"
+        }
       }}
     >
       <AccordionSummary
         aria-controls={`${log.id}-content`}
         id={`${log.id}-header`}
         sx={{
-          bgcolor: isSelected ? "#0099dc24" : "#f2f5f7",
+          borderRadius: expanded ? "4px 4px 0 0" : "4px",
+          bgcolor: isSelectedColor,
+          display: expanded ? "flex" : "block",
           userSelect: "text",
           "&.Mui-expanded": {
             minHeight: 0
@@ -56,9 +76,20 @@ const LogDetailsAccordion = styled(({ log, className, refProp }) => {
             }
         }}
       >
-        <LogHeader log={log} />
+        <LogHeader
+          log={log}
+          expanded={expanded}
+        />
       </AccordionSummary>
-      <AccordionDetails sx={{ padding: 0 }}>
+      <AccordionDetails
+        sx={{
+          padding: 0,
+          borderWidth: "0 2px 2px 2px",
+          borderStyle: "solid",
+          borderColor: isSelectedColor,
+          borderRadius: "0 0 4px 4px"
+        }}
+      >
         <LogDetails log={log} />
       </AccordionDetails>
     </Accordion>
@@ -78,6 +109,7 @@ const LogDetailsAccordion = styled(({ log, className, refProp }) => {
 const LogDetailsWithReplies = ({ log }) => {
   const [parentRef, setParentRef] = useState(null);
   const [logRef, setLogRef] = useState(null);
+  const [expandAll, setExpandAll] = useState(false);
   const { id: paramLogId } = useParams();
   // fetch any groups/conversations
   const groupId = getLogEntryGroupId(log.properties);
@@ -96,7 +128,7 @@ const LogDetailsWithReplies = ({ log }) => {
           logRef.getBoundingClientRect().top +
           parentRef.scrollTop -
           parentRef.getBoundingClientRect().top -
-          10;
+          40;
         parentRef.scrollTo({
           top: y,
           behavior: "smooth"
@@ -142,14 +174,40 @@ const LogDetailsWithReplies = ({ log }) => {
         ref={handleParentRef}
         sx={{
           overflow: "auto",
-          padding: "10px 15px"
+          padding: "0px 15px 10px 15px",
+          position: "relative"
         }}
       >
+        <Box
+          sx={{
+            backgroundColor: "#fff",
+            width: "100%",
+            position: "sticky",
+            top: "0px",
+            zIndex: 9999,
+            py: 0.8
+          }}
+        >
+          <Button
+            startIcon={
+              expandAll ? (
+                <UnfoldLessIcon sx={{ width: "16px", marginBottom: "2px" }} />
+              ) : (
+                <UnfoldMoreIcon sx={{ width: "16px", marginBottom: "2px" }} />
+              )
+            }
+            sx={{ fontSize: ".85rem", py: 0.2 }}
+            onClick={() => setExpandAll((prev) => !prev)}
+          >
+            {expandAll ? "Collapse all" : "Expand all"}
+          </Button>
+        </Box>
         {sortedLogs.map((sortedLog) => (
           <LogDetailsAccordion
             refProp={(node) => handleLogRef(node, sortedLog?.id)}
             log={sortedLog}
             key={`current-${log.id}-accordion-${sortedLog.id}`}
+            expandAll={expandAll}
           />
         ))}
       </Stack>
@@ -170,7 +228,10 @@ const LogDetailsWithReplies = ({ log }) => {
           borderRadius="4px"
           bgcolor="#f2f5f7"
         >
-          <LogHeader log={log} />
+          <LogHeader
+            log={log}
+            expanded
+          />
         </Box>
         <LogDetails log={log} />
       </Box>

@@ -157,7 +157,7 @@ const Container = styled(Box)(({ theme }) => {
         margin: 0;
     }
     width: 100%;
-    font-size: 1rem;
+    font-size: .9rem;
 
     `;
 });
