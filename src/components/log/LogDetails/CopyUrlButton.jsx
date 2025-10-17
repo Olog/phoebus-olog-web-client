@@ -66,10 +66,10 @@ const CopyUrlButton = ({ url }) => {
     >
       <Button
         startIcon={
-          <ContentCopyOutlined sx={{ width: "13px", marginBottom: "2px" }} />
+          <ContentCopyOutlined sx={{ width: "12px", marginBottom: "2px" }} />
         }
         onClick={onClick}
-        sx={{ fontSize: ".85rem" }}
+        sx={{ fontSize: ".8rem" }}
       >
         Copy
       </Button>
