@@ -14,7 +14,7 @@ const LogDetailsContainer = ({ id }) => {
 
   return (
     <Stack p={4}>
-      <Typography fontWeight="500">Select a log to view its details</Typography>
+      <Typography>Select a log to view its details</Typography>
     </Stack>
   );
 };

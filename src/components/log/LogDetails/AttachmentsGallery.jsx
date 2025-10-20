@@ -6,6 +6,7 @@ import {
   Link,
   Stack,
   styled,
+  Tooltip,
   Typography
 } from "@mui/material";
 import { useState } from "react";
@@ -172,7 +173,11 @@ const AttachmentsGallery = ({ attachments, size = 85 }) => {
           />
           <ImageListItemBar
             position="below"
-            title={renderAttachmentTitle(attachment)}
+            title={
+              <Tooltip title={attachment.filename}>
+                <span>{renderAttachmentTitle(attachment)}</span>
+              </Tooltip>
+            }
             fontSize="small"
             sx={{
               "& div": {

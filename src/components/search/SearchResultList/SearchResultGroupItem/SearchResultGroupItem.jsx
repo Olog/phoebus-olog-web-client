@@ -92,7 +92,12 @@ export const SearchResultGroupItem = styled(
         sx={{ cursor: "pointer", width: "fit-content" }}
       >
         <IconButton
-          sx={{ color: "#0099db", padding: "0 5px 0 0" }}
+          sx={{
+            color: "#0099db",
+            padding: "0 5px 0 0",
+            fontSize: ".9rem",
+            "&:hover": { backgroundColor: "transparent" }
+          }}
           size="small"
           aria-expanded={expanded ? "true" : "false"}
         >
@@ -104,7 +109,7 @@ export const SearchResultGroupItem = styled(
         </IconButton>
         <Typography
           color="#0099db"
-          variant="body2"
+          fontSize=".78rem"
         >
           ({nestedLogsCount}) {expanded ? "Hide" : "Show"} group
         </Typography>

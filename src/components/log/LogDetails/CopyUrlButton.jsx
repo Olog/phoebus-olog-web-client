@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Tooltip, styled, tooltipClasses } from "@mui/material";
+import {
+  Alert,
+  IconButton,
+  Tooltip,
+  styled,
+  tooltipClasses
+} from "@mui/material";
 import ContentCopyOutlined from "@mui/icons-material/ContentCopyOutlined";
 
 const StyledTooltip = styled(({ className, ...props }) => {
@@ -64,15 +70,16 @@ const CopyUrlButton = ({ url }) => {
         disablePortal: true
       }}
     >
-      <Button
-        startIcon={
-          <ContentCopyOutlined sx={{ width: "12px", marginBottom: "2px" }} />
-        }
+      <IconButton
+        size="medium"
+        color="primary"
+        sx={{ mb: "2px" }}
         onClick={onClick}
-        sx={{ fontSize: ".8rem" }}
       >
-        Copy
-      </Button>
+        <Tooltip title="Copy">
+          <ContentCopyOutlined sx={{ p: "4.5px" }} />
+        </Tooltip>
+      </IconButton>
     </StyledTooltip>
   );
 };

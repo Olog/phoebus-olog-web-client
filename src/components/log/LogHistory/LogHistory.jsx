@@ -5,8 +5,11 @@ import {
   Link,
   Paper,
   Stack,
+  Tooltip,
   Typography
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { FormattedDate } from "components/shared/FormattedDate";
 import LogDetails from "src/components/log/LogDetails/LogDetails";
@@ -71,23 +74,47 @@ const DownloadButton = ({ currentLog, logHistory }) => {
 };
 
 const LogHistory = ({ currentLog, logHistory }) => {
+  const navigate = useNavigate();
   return (
     <Stack
       py={2}
       px={4}
+      maxWidth={"900px"}
+      mx={"auto"}
     >
       <Stack
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
+        mb={1}
       >
-        <Typography
-          component="h1"
-          variant="h2"
-          mb={2}
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap={3}
         >
-          Log History
-        </Typography>
+          <Tooltip title="Go back">
+            <Button
+              sx={{
+                borderRadius: "100%",
+                minWidth: "fit-content",
+                color: (theme) => theme.palette.text.primary
+              }}
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBackIcon />
+            </Button>
+          </Tooltip>
+
+          <Typography
+            component="h2"
+            variant="h3"
+            fontSize="1.75rem"
+            py={1}
+          >
+            Log History ({currentLog.id})
+          </Typography>
+        </Stack>
         <DownloadButton {...{ currentLog, logHistory }} />
       </Stack>
       <Stack mb={4}>
