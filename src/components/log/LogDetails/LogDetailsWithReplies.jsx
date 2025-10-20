@@ -184,7 +184,7 @@ const LogDetailsWithReplies = ({ log }) => {
             width: "100%",
             position: "sticky",
             top: "0px",
-            zIndex: 9999,
+            zIndex: 1,
             py: 0.8
           }}
         >
