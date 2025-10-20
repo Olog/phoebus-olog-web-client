@@ -21,10 +21,14 @@ const LogHeader = ({ log, expanded, className }) => (
       sx={{ cursor: expanded ? "text" : "pointer", minWidth: "150px" }}
       onClick={expanded ? (e) => e.stopPropagation() : undefined}
     >
-      <Stack direction="row">
+      <Stack
+        direction="row"
+        gap={1}
+      >
         <Typography
           fontSize=".825rem"
-          mr={1}
+          maxWidth={expanded ? "none" : "100px"}
+          noWrap
         >
           {log.owner}
         </Typography>
@@ -82,6 +86,7 @@ const LogHeader = ({ log, expanded, className }) => (
             direction="row"
             height="100%"
             alignItems="center"
+            sx={{ "& > svg": { color: "#616161", opacity: 0.8 } }}
           >
             {log?.modifyDate && (
               <EditIcon

@@ -1,48 +1,56 @@
-import { Stack } from "@mui/material";
+import { IconButton, Stack, Tooltip } from "@mui/material";
+import { Link } from "react-router-dom";
 import ReplyIcon from "@mui/icons-material/Reply";
 import EditIcon from "@mui/icons-material/Edit";
 import HistoryIcon from "@mui/icons-material/History";
 import CopyUrlButton from "./CopyUrlButton";
 import { useUser } from "features/authSlice";
-import { InternalButtonLink } from "components/shared/Link";
 
 const LogDetailActionButton = ({ log }) => {
   const user = useUser();
 
   return (
-    <Stack
-      direction="row"
-      spacing={1}
-    >
+    <Stack direction="row">
       {user && (
-        <InternalButtonLink
+        <IconButton
+          component={Link}
           to={`/logs/${log.id}/reply`}
-          startIcon={<ReplyIcon sx={{ width: "14px", marginBottom: "2px" }} />}
-          sx={{ fontSize: ".8rem" }}
+          size="medium"
+          sx={{ mb: "2px" }}
+          color="primary"
         >
-          Reply
-        </InternalButtonLink>
+          <Tooltip title="Reply">
+            <ReplyIcon sx={{ p: "3px" }} />
+          </Tooltip>
+        </IconButton>
       )}
       <CopyUrlButton url={`${window.location.origin}/logs/${log.id}`} />
-      {log.modifyDate && (
-        <InternalButtonLink
-          to={`/logs/${log.id}/history`}
-          startIcon={
-            <HistoryIcon sx={{ width: "15px", marginBottom: "2px" }} />
-          }
-          sx={{ borderRadiusRight: "100px", fontSize: ".8rem" }}
-        >
-          History
-        </InternalButtonLink>
-      )}
       {user && (
-        <InternalButtonLink
-          to={`/logs/${log.id}/edit`}
-          startIcon={<EditIcon sx={{ width: "13px" }} />}
-          sx={{ borderRadiusRight: "100px", fontSize: ".8rem" }}
-        >
-          Edit
-        </InternalButtonLink>
+        <>
+          {log.modifyDate && (
+            <IconButton
+              size="medium"
+              sx={{ mb: "2px" }}
+              color="primary"
+              component={Link}
+              to={`/logs/${log.id}/history`}
+            >
+              <Tooltip title="History">
+                <HistoryIcon sx={{ p: "3px" }} />
+              </Tooltip>
+            </IconButton>
+          )}
+          <IconButton
+            size="medium"
+            color="primary"
+            component={Link}
+            to={`/logs/${log.id}/edit`}
+          >
+            <Tooltip title="Edit">
+              <EditIcon sx={{ p: "4.5px" }} />
+            </Tooltip>
+          </IconButton>
+        </>
       )}
     </Stack>
   );

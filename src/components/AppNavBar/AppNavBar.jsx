@@ -205,7 +205,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
             </IconButton>
             <Typography
               ml={1}
-              variant="h6"
+              fontSize="1.3rem"
               component="span"
             >
               ESS Logbook

@@ -50,7 +50,7 @@ const LogDetailsAccordion = styled(({ log, expandAll, className, refProp }) => {
       sx={{
         "& > .MuiButtonBase-root": { padding: 0 },
         border: 0,
-        opacity: !expanded ? 0.6 : 1,
+        opacity: !expanded ? 0.7 : 1,
         "-webkit-filter": !expanded ? "grayscale(100%)" : "none",
         "&:hover": { opacity: 1, "-webkit-filter": "none" },
         "& .MuiCollapse-root": {
