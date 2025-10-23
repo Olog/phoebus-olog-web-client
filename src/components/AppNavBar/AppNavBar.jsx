@@ -144,10 +144,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                     }}
                     onClick={() => setAdvancedSearchOpen((prev) => !prev)}
                   >
-                    <Tooltip
-                      enterDelay={200}
-                      title="Filter"
-                    >
+                    <Tooltip title="Filter">
                       <Badge
                         badgeContent={getFieldCount(searchParams)}
                         color="primary"
