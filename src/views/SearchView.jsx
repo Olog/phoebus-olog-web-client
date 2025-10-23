@@ -1,55 +1,100 @@
-import { Box, Divider, styled } from "@mui/material";
+import { useRef, useState } from "react";
+import { Box, Divider, styled, useTheme, useMediaQuery } from "@mui/material";
 import { useParams } from "react-router-dom";
+import { Resizable } from "re-resizable";
 import LogDetailsContainer from "src/components/log/LogDetails/LogDetailsContainer";
 import { SearchResults } from "components/search";
-import { Resizable } from "re-resizable";
 
 const ContentView = styled(Box)(({ theme }) => ({
   display: "flex",
-  flexDirection: "row",
   height: "100%",
+  width: "100%",
+  "& > *": {
+    minWidth: 0
+  },
   [theme.breakpoints.down("md")]: {
-    display: "flex",
     flexDirection: "column-reverse",
-    height: "100%",
-    width: "auto",
-    minWidth: 0,
-    "& > div": {
-      flex: 1
-    },
-    "& > hr": {
-      height: "auto",
-      minHeight: "auto"
+    "& > *": {
+      flex: 1,
+      minWidth: 0
     }
   }
 }));
 
-const SearchView = styled(({ className }) => {
+function SearchView() {
   const { id } = useParams();
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const containerRef = useRef(null);
+  const [leftPercent, setLeftPercent] = useState((1.25 / 3.25) * 100);
+
+  if (isDesktop) {
+    return (
+      <ContentView ref={containerRef}>
+        <Resizable
+          size={{ width: `${leftPercent}%`, height: "100%" }}
+          enable={{ right: true }}
+          minWidth={200}
+          maxWidth="80%"
+          style={{ height: "100%", display: "block" }}
+          handleStyles={{
+            right: {
+              width: 8,
+              marginRight: -4,
+              cursor: "col-resize",
+              background: "transparent",
+              height: "100%"
+            }
+          }}
+          handleComponent={{
+            right: (
+              <Divider
+                sx={{
+                  bgcolor: "#ffffffff",
+                  width: "4px",
+                  height: "100%",
+                  margin: 0,
+                  alignSelf: "stretch"
+                }}
+              />
+            )
+          }}
+          onResizeStop={(e, direction, ref) => {
+            const container = containerRef.current;
+            if (!container) {return;}
+            const containerWidth = container.getBoundingClientRect().width;
+            const newPercent = (ref.offsetWidth / containerWidth) * 100;
+            const clamped = Math.min(Math.max(newPercent, 15), 80);
+            setLeftPercent(clamped);
+          }}
+        >
+          <Box sx={{ height: "100%", overflow: "auto" }}>
+            <SearchResults />
+          </Box>
+        </Resizable>
+
+        <Box sx={{ flex: 1, minWidth: 0, overflow: "auto" }}>
+          <LogDetailsContainer id={id} />
+        </Box>
+      </ContentView>
+    );
+  }
 
   return (
-    <Box height="100%">
-      <ContentView className={`SearchView ${className}`}>
-        <Divider
-          sx={{ borderColor: "#E2E8EE" }}
-          orientation="vertical"
-        />
-        <Resizable minWidth="200px" maxWidth="90%" defaultSize={{ width: "38.4%" }}>
-          <SearchResults />
-        </Resizable>
-        <Divider
-          sx={{ borderColor: "#E2E8EE" }}
-          orientation="vertical"
-        />
-          <LogDetailsContainer id={id} />
-
-      </ContentView>
-    </Box>
+    <ContentView>
+      <Divider
+        orientation="horizontal"
+        sx={{ borderColor: "#E2E8EE" }}
+      />
+      <Box sx={{ flex: 50, minWidth: 0, height: "100%", overflow: "auto" }}>
+        <SearchResults />
+      </Box>
+      <Divider sx={{ borderColor: "#E2E8EE" }} />
+      <Box sx={{ flex: 50, minWidth: 0, height: "100%", overflow: "auto" }}>
+        <LogDetailsContainer id={id} />
+      </Box>
+    </ContentView>
   );
-})({
-  "& > *": {
-    minWidth: 0
-  }
-});
+}
 
 export default SearchView;
