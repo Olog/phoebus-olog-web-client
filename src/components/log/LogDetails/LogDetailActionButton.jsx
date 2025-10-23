@@ -10,7 +10,10 @@ const LogDetailActionButton = ({ log }) => {
   const user = useUser();
 
   return (
-    <Stack direction="row">
+    <Stack
+      direction="row"
+      onClick={(e) => e.stopPropagation()}
+    >
       {user && (
         <IconButton
           component={Link}

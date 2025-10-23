@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import EditIcon from "@mui/icons-material/Edit";
 import LogDetailActionButton from "./LogDetailActionButton";
@@ -27,7 +27,7 @@ const LogHeader = ({ log, expanded, className }) => (
       >
         <Typography
           fontSize=".825rem"
-          maxWidth={expanded ? "none" : "100px"}
+          maxWidth={expanded ? "none" : "105px"}
           noWrap
         >
           {log.owner}
@@ -45,70 +45,59 @@ const LogHeader = ({ log, expanded, className }) => (
         sx={{ fontSize: ".825rem" }}
       />
     </Stack>
-    <Stack
-      sx={{ height: "100%", maxWidth: "100%" }}
-      justifyContent={"center"}
-      onClick={expanded ? (e) => e.stopPropagation() : undefined}
-    >
-      {expanded && <LogDetailActionButton log={log} />}
-      {!expanded && (
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "auto 1fr auto",
-            gap: 2
-          }}
-        >
-          <Box />
-          <Stack sx={{ minWidth: 0 }}>
-            <Typography
+    {expanded && <LogDetailActionButton log={log} />}
+    {!expanded && (
+      <>
+        <Stack sx={{ minWidth: 0, flex: 1 }}>
+          <Typography
+            sx={{
+              fontSize: ".825rem",
+              fontWeight: 500
+            }}
+            noWrap
+          >
+            {log.title}
+          </Typography>
+          {log.source && (
+            <CommonMark
+              isSummary
+              commonmarkSrc={log.source}
               sx={{
                 fontSize: ".825rem",
-                fontWeight: 500
+                m: 0
               }}
               noWrap
-            >
-              {log.title}
-            </Typography>
-            {log.source && (
-              <CommonMark
-                isSummary
-                commonmarkSrc={log.source}
-                sx={{
-                  fontSize: ".825rem",
-                  m: 0
-                }}
-                noWrap
-              />
-            )}
-          </Stack>
-          <Stack
-            direction="row"
-            height="100%"
-            alignItems="center"
-            sx={{ "& > svg": { color: "#616161", opacity: 0.8 } }}
-          >
-            {log?.modifyDate && (
-              <EditIcon
-                sx={{
-                  cursor: "default",
-                  fontSize: ".9rem"
-                }}
-              />
-            )}
-            {log?.attachments?.length > 0 && (
-              <AttachFileIcon
-                fontSize="small"
-                sx={{
-                  cursor: "default",
-                  fontSize: "1rem"
-                }}
-              />
-            )}
-          </Stack>
-        </Box>
-      )}
-    </Stack>
+            />
+          )}
+        </Stack>
+        <Stack
+          direction="row"
+          height="100%"
+          alignItems="center"
+          justifyContent={"flex-end"}
+          minWidth="40px"
+          sx={{ "& > svg": { color: "#616161", opacity: 0.8 } }}
+        >
+          {log?.modifyDate && (
+            <EditIcon
+              sx={{
+                cursor: "default",
+                fontSize: ".9rem"
+              }}
+            />
+          )}
+          {log?.attachments?.length > 0 && (
+            <AttachFileIcon
+              fontSize="small"
+              sx={{
+                cursor: "default",
+                fontSize: "1rem"
+              }}
+            />
+          )}
+        </Stack>
+      </>
+    )}
   </Stack>
 );
 

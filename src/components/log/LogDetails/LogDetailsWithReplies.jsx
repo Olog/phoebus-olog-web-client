@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Accordion,
@@ -20,81 +20,71 @@ import { getLogEntryGroupId } from "components/Properties";
 import { sortByCreatedDate } from "components/log/sort";
 import { useSearchPageParams } from "features/searchPageParamsReducer";
 
-const LogDetailsAccordion = styled(({ log, expandAll, className, refProp }) => {
-  const { id: paramLogId } = useParams();
-  const isSelected = log.id === Number(paramLogId);
-  const isSelectedColor = isSelected ? "#0099dc24" : "#f2f5f7";
-  const [expanded, setExpanded] = useState(isSelected);
+const LogDetailsAccordion = styled(
+  ({ log, className, refProp, handleExpand, expandedLogs }) => {
+    const { id: paramLogId } = useParams();
+    const isSelected = log.id === Number(paramLogId);
+    const isSelectedColor = isSelected ? "#0099dc24" : "#f2f5f7";
 
-  const onChange = () => {
-    setExpanded((prev) => !prev);
-  };
-
-  useEffect(() => {
-    if (expandAll) {
-      setExpanded(expandAll);
-    } else {
-      setExpanded(isSelected || false);
-    }
-  }, [expandAll, isSelected]);
-
-  return (
-    <Accordion
-      ref={refProp}
-      expanded={expanded}
-      onChange={onChange}
-      variant="outlined"
-      className={className}
-      square
-      transitionProps={{ timeout: 0 }}
-      sx={{
-        "& > .MuiButtonBase-root": { padding: 0 },
-        border: 0,
-        opacity: !expanded ? 0.7 : 1,
-        "-webkit-filter": !expanded ? "grayscale(100%)" : "none",
-        "&:hover": { opacity: 1, "-webkit-filter": "none" },
-        "& .MuiCollapse-root": {
-          transition: "none !important"
-        }
-      }}
-    >
-      <AccordionSummary
-        aria-controls={`${log.id}-content`}
-        id={`${log.id}-header`}
+    const isExpanded = expandedLogs.includes(log.id);
+    return (
+      <Accordion
+        ref={refProp}
+        expanded={isExpanded}
+        onChange={() => handleExpand(log.id)}
+        variant="outlined"
+        className={className}
+        square
+        transitionProps={{ timeout: 0 }}
         sx={{
-          borderRadius: expanded ? "4px 4px 0 0" : "4px",
-          bgcolor: isSelectedColor,
-          display: expanded ? "flex" : "block",
-          userSelect: "text",
-          "&.Mui-expanded": {
-            minHeight: 0
-          },
-          "& .MuiAccordionSummary-content, & .MuiAccordionSummary-content.Mui-expanded":
-            {
-              padding: "0",
-              margin: "0"
-            }
+          "& > .MuiButtonBase-root": { padding: 0 },
+          border: 0,
+          opacity: !isExpanded ? 0.7 : 1,
+          "-webkit-filter": !isExpanded ? "grayscale(100%)" : "none",
+          "&:hover": { opacity: 1, "-webkit-filter": "none" },
+          "& .MuiCollapse-root": {
+            transition: "none !important"
+          }
         }}
       >
-        <LogHeader
-          log={log}
-          expanded={expanded}
-        />
-      </AccordionSummary>
-      <AccordionDetails
-        sx={{
-          padding: 0,
-          borderWidth: "0 2px 2px 2px",
-          borderStyle: "solid",
-          borderColor: isSelectedColor,
-          borderRadius: "0 0 4px 4px"
-        }}
-      >
-        <LogDetails log={log} />
-      </AccordionDetails>
-    </Accordion>
-  );
-})({
+        <AccordionSummary
+          aria-controls={`${log.id}-content`}
+          id={`${log.id}-header`}
+          sx={{
+            borderRadius: isExpanded ? "4px 4px 0 0" : "4px",
+            bgcolor: isSelectedColor,
+            display: isExpanded ? "flex" : "block",
+            userSelect: "text",
+            "&.Mui-expanded": {
+              minHeight: 0
+            },
+            "& .MuiAccordionSummary-content, & .MuiAccordionSummary-content.Mui-expanded":
+              {
+                padding: "0",
+                margin: "0"
+              }
+          }}
+        >
+          <LogHeader
+            log={log}
+            expanded={isExpanded}
+          />
+        </AccordionSummary>
+        <AccordionDetails
+          sx={{
+            padding: 0,
+            borderWidth: "0 2px 2px 2px",
+            borderStyle: "solid",
+            borderColor: isSelectedColor,
+            borderRadius: "0 0 4px 4px"
+          }}
+        >
+          <LogDetails log={log} />
+        </AccordionDetails>
+      </Accordion>
+    );
+  }
+)({
   margin: "0 0 10px 0",
   borderRadius: "4px",
   "&.Mui-expanded": {
@@ -109,7 +99,6 @@ const LogDetailsAccordion = styled(({ log, expandAll, className, refProp }) => {
 const LogDetailsWithReplies = ({ log }) => {
   const [parentRef, setParentRef] = useState(null);
   const [logRef, setLogRef] = useState(null);
-  const [expandAll, setExpandAll] = useState(false);
   const { id: paramLogId } = useParams();
   // fetch any groups/conversations
   const groupId = getLogEntryGroupId(log.properties);
@@ -120,6 +109,18 @@ const LogDetailsWithReplies = ({ log }) => {
   } = ologApi.endpoints.getLogGroup.useQuery({ groupId });
 
   const dateDescending = useSearchPageParams().sort === "down";
+  const [expandedLogs, setExpandedLogs] = useState([]);
+
+  const logsWithReplies = useMemo(() => {
+    return [log, ...replies.filter((it) => it.id !== log.id)].toSorted(
+      sortByCreatedDate(dateDescending)
+    );
+  }, [dateDescending, log, replies]);
+
+  const isExpandedAll = useMemo(
+    () => expandedLogs.length === logsWithReplies.length,
+    [expandedLogs, logsWithReplies]
+  );
 
   useEffect(() => {
     if (parentRef && logRef) {
@@ -136,6 +137,30 @@ const LogDetailsWithReplies = ({ log }) => {
       }, 0.1);
     }
   }, [parentRef, logRef]);
+
+  useEffect(() => {
+    setExpandedLogs((prev) => {
+      const numericParamLogId = Number(paramLogId);
+      const currentIsExpandedAll = prev.length === logsWithReplies.length;
+      return currentIsExpandedAll
+        ? [...prev, numericParamLogId]
+        : [numericParamLogId];
+    });
+  }, [paramLogId, logsWithReplies.length]);
+
+  const handleExpandAll = () => {
+    setExpandedLogs(() =>
+      !isExpandedAll ? logsWithReplies.map((logItem) => logItem.id) : []
+    );
+  };
+
+  const handleExpand = (logId) => {
+    setExpandedLogs((prev) =>
+      prev.includes(logId)
+        ? prev.filter((id) => id !== logId)
+        : [...prev, logId]
+    );
+  };
 
   const handleParentRef = (node) => {
     if (node) {
@@ -164,11 +189,6 @@ const LogDetailsWithReplies = ({ log }) => {
 
   // replies view
   if (replies?.length > 0) {
-    const sortedLogs = [
-      log,
-      ...replies.filter((it) => it.id !== log.id)
-    ].toSorted(sortByCreatedDate(dateDescending));
-
     return (
       <Stack
         ref={handleParentRef}
@@ -190,24 +210,25 @@ const LogDetailsWithReplies = ({ log }) => {
         >
           <Button
             startIcon={
-              expandAll ? (
+              isExpandedAll ? (
                 <UnfoldLessIcon sx={{ width: "16px", marginBottom: "2px" }} />
               ) : (
                 <UnfoldMoreIcon sx={{ width: "16px", marginBottom: "2px" }} />
               )
             }
             sx={{ fontSize: ".85rem", py: 0.2 }}
-            onClick={() => setExpandAll((prev) => !prev)}
+            onClick={handleExpandAll}
           >
-            {expandAll ? "Collapse all" : "Expand all"}
+            {isExpandedAll ? "Collapse all" : "Expand all"}
           </Button>
         </Box>
-        {sortedLogs.map((sortedLog) => (
+        {logsWithReplies.map((sortedLog) => (
           <LogDetailsAccordion
             refProp={(node) => handleLogRef(node, sortedLog?.id)}
             log={sortedLog}
             key={`current-${log.id}-accordion-${sortedLog.id}`}
-            expandAll={expandAll}
+            expandedLogs={expandedLogs}
+            handleExpand={handleExpand}
           />
         ))}
       </Stack>
