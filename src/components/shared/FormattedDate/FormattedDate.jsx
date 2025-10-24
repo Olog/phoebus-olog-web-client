@@ -9,6 +9,9 @@ const FormattedDate = ({ date, ...props }) => {
     <Stack
       direction="row"
       gap={1}
+      mr={1}
+      onClick={(e) => e.stopPropagation()}
+      sx={{ cursor: "auto" }}
     >
       <Typography
         {...props}
