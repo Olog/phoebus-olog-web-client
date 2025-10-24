@@ -129,7 +129,7 @@ export const EntryEditor = ({
       <span ref={topElem} />
       {isEditing && (
         <Alert
-          severity="info"
+          severity="warning"
           sx={{ mb: 2 }}
         >
           You&apos;re editing an existing entry
