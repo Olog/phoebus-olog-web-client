@@ -79,6 +79,7 @@ const LogHistory = ({ currentLog, logHistory }) => {
     <Stack
       py={2}
       px={4}
+      width="100%"
       maxWidth={"900px"}
       mx={"auto"}
     >
