@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { LogAttachmentsHeader } from "./LogAttachmentsHeader";
 import LogProperty from "./LogProperty";
 import MetadataTable from "./MetadataTable";
@@ -19,14 +19,12 @@ const LogDetails = ({ log, className }) => {
       px={3}
     >
       <LogAttachmentsHeader log={log} />
-      <Typography
-        sx={{ fontSize: "1.2rem" }}
-        component="h2"
-        fontWeight="600"
-      >
-        {log.title}
-      </Typography>
-      {log.source && <CommonMark commonmarkSrc={log.source} />}
+      {log.source && (
+        <CommonMark
+          sx={{ my: 0.5 }}
+          commonmarkSrc={log.source}
+        />
+      )}
       <MetadataTable log={log} />
       {log?.properties && filteredProperties.length > 0 && (
         <Box
