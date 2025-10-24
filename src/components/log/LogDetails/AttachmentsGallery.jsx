@@ -48,7 +48,7 @@ const FileLink = ({ attachment }) => (
     <ImageOrFile
       attachment={attachment}
       alt={`file: ${attachment.filename}`}
-      fontSize={90}
+      fontSize={85}
     />
   </Link>
 );
@@ -173,20 +173,21 @@ const AttachmentsGallery = ({ attachments, size = 85 }) => {
           />
           <ImageListItemBar
             position="below"
-            title={
-              <Tooltip title={attachment.filename}>
-                <span>{renderAttachmentTitle(attachment)}</span>
-              </Tooltip>
-            }
-            fontSize="small"
             sx={{
-              "& div": {
-                fontSize: "0.775rem",
-                fontStyle: "italic",
-                padding: 0,
-                margin: "4px 0 10px"
+              "& .MuiImageListItemBar-titleWrap": {
+                padding: "4px 0 0"
               }
             }}
+            title={
+              <Tooltip title={attachment.filename}>
+                <Typography
+                  fontSize=".775rem"
+                  component="span"
+                >
+                  {renderAttachmentTitle(attachment)}
+                </Typography>
+              </Tooltip>
+            }
           />
         </Stack>
       ))}
@@ -205,17 +206,25 @@ const AttachmentsGallery = ({ attachments, size = 85 }) => {
             key={attachment.id}
             attachment={attachment}
           />
-          <Stack flexDirection="row">
-            <Typography
-              sx={{
-                fontSize: "0.775rem",
-                fontStyle: "italic",
-                margin: "5px 0 10px"
-              }}
-            >
-              {renderAttachmentTitle(attachment)}
-            </Typography>
-          </Stack>
+
+          <ImageListItemBar
+            position="below"
+            sx={{
+              "& .MuiImageListItemBar-titleWrap": {
+                padding: "4px 0 0"
+              }
+            }}
+            title={
+              <Tooltip title={attachment.filename}>
+                <Typography
+                  fontSize=".775rem"
+                  component="span"
+                >
+                  {renderAttachmentTitle(attachment)}
+                </Typography>
+              </Tooltip>
+            }
+          />
         </Stack>
       ))}
       <Modal
