@@ -37,9 +37,10 @@ const SearchView = () => {
           orientation="vertical"
         />
         <Resizable
-          size={{ width: `${leftPercent}%`, height: "100%" }}
+          size={{ width: `${leftPercent}%` }}
           minWidth="10%"
           maxWidth="80%"
+          enable={{ right: true, left: false, top: false, bottom: false, topRight: false, bottomRight: false, topLeft: false, bottomLeft: false }}
           onResizeStop={(_e, _direction, ref) => {
             const container = containerRef.current;
             if (!container) {
@@ -51,7 +52,7 @@ const SearchView = () => {
             setLeftPercent(clamped);
           }}
         >
-          <Box sx={{ height: "100%", overflow: "auto" }}>
+          <Box sx={{ width: "100%", height: "100%", overflow: "auto" }}>
             <SearchResults />
           </Box>
         </Resizable>
