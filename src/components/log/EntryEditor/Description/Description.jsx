@@ -327,7 +327,7 @@ const Description = ({ form, isEditing }) => {
         <HtmlPreviewModal
           showHtmlPreview={showHtmlPreview}
           setShowHtmlPreview={setShowHtmlPreview}
-          commonmarkSrc={getValues("description")}
+          commonmarkSrc={getValues("description") ?? ""}
           useRemoteAttachments={isEditing}
           attachedFiles={attachments ?? []}
         />
