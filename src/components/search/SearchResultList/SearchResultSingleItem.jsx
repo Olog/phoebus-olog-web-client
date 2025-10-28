@@ -68,7 +68,9 @@ export const SearchResultSingleItem = ({
           noWrap
           fontSize=".7rem"
           variant="body2"
+          lineHeight={1.2}
         >
+          <span style={{ fontSize: ".57rem", mb: 1 }}>@</span>
           {log.owner}
         </Typography>
 
@@ -105,7 +107,7 @@ export const SearchResultSingleItem = ({
               fontSize="small"
               sx={{
                 cursor: "default",
-                fontSize: isNestedReply ? "1rem" : "1.1rem"
+                fontSize: "1rem"
               }}
             />
           )}
@@ -113,7 +115,7 @@ export const SearchResultSingleItem = ({
             <EditIcon
               sx={{
                 cursor: "default",
-                fontSize: isNestedReply ? ".9rem" : "1.1rem"
+                fontSize: ".9rem"
               }}
             />
           )}
@@ -121,7 +123,7 @@ export const SearchResultSingleItem = ({
             <ReplyIcon
               sx={{
                 cursor: "default",
-                fontSize: isNestedReply ? ".9rem" : "1.2rem"
+                fontSize: "1rem"
               }}
             />
           )}

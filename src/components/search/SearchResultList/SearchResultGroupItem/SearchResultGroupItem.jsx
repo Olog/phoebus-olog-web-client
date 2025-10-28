@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Box,
@@ -26,6 +26,7 @@ export const SearchResultGroupItem = styled(
     onToggleComplete
   }) => {
     const [expanded, setExpanded] = useState(false);
+    const initialized = useRef(false);
 
     const { searchParams, isSearchActive } = useEnhancedSearchParams();
     const { start, end } = searchParams;
@@ -74,6 +75,16 @@ export const SearchResultGroupItem = styled(
         setExpanded(false);
       }
     }, [isSearchActive, searchParams]);
+
+    useEffect(() => {
+      if (
+        !initialized.current &&
+        nestedLogs?.some((log) => log?.id === currentLogEntryId)
+      ) {
+        initialized.current = true;
+        setExpanded(true);
+      }
+    }, [nestedLogs, currentLogEntryId]);
 
     useEffect(() => {
       if (shouldParentToggleExpand) {
