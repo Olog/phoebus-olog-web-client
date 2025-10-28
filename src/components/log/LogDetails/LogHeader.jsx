@@ -5,10 +5,13 @@ import ContentCopyOutlined from "@mui/icons-material/ContentCopyOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import LogDetailActionButton from "./LogDetailActionButton";
 import { FormattedDate } from "src/components/shared/FormattedDate";
+import { InternalLink } from "src/components/shared/Link";
+import { useUser } from "src/features/authSlice";
 
 const LogHeader = ({ log, expanded, className }) => {
   const [copyUrlLabel, setCopyUrlLabel] = useState("Copy URL");
   const timeoutRef = useRef(null);
+  const user = useUser();
 
   const handleCopyUrl = () => {
     if (timeoutRef.current) {
@@ -21,6 +24,13 @@ const LogHeader = ({ log, expanded, className }) => {
       timeoutRef.current = null;
     }, 5000);
   };
+
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
+
+  const cursorStyle = expanded ? "auto" : "pointer";
+
   return (
     <Stack
       flexDirection="column"
@@ -40,13 +50,13 @@ const LogHeader = ({ log, expanded, className }) => {
           <Stack
             direction="row"
             alignItems="center"
-            height={"20px"}
+            height="22px"
           >
             <Typography
-              fontSize=".850rem"
+              fontSize=".85rem"
               noWrap
-              onClick={expanded ? (e) => e.stopPropagation() : undefined}
-              sx={{ cursor: "auto" }}
+              onClick={expanded ? stopPropagation : undefined}
+              sx={{ cursor: cursorStyle }}
             >
               @{log.owner}
             </Typography>
@@ -57,9 +67,9 @@ const LogHeader = ({ log, expanded, className }) => {
                 padding: "2px 4px",
                 borderRadius: "4px",
                 fontSize: ".7rem",
-                cursor: "auto"
+                cursor: cursorStyle
               }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={expanded ? stopPropagation : undefined}
             >
               #{log.id}
             </Typography>
@@ -67,18 +77,24 @@ const LogHeader = ({ log, expanded, className }) => {
               <Tooltip title={copyUrlLabel}>
                 <IconButton
                   size="small"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleCopyUrl();
+                  color="primary"
+                  onClick={
+                    expanded
+                      ? (e) => {
+                          e.stopPropagation();
+                          handleCopyUrl();
+                        }
+                      : undefined
+                  }
+                  sx={{
+                    ml: 0.8,
+                    p: "4px"
                   }}
-                  sx={{ ml: 0.5, p: "4px" }}
                 >
                   <ContentCopyOutlined
                     sx={{
-                      color: "primary.main",
-                      width: ".85rem",
-                      height: ".85rem",
-                      margin: "0 !important"
+                      width: ".9rem",
+                      height: ".9rem"
                     }}
                   />
                 </IconButton>
@@ -89,10 +105,10 @@ const LogHeader = ({ log, expanded, className }) => {
             sx={{
               fontSize: ".975rem",
               fontWeight: 500,
-              cursor: "auto"
+              cursor: cursorStyle
             }}
             mt={0.8}
-            onClick={expanded ? (e) => e.stopPropagation() : undefined}
+            onClick={expanded ? stopPropagation : undefined}
           >
             {log.title}
           </Typography>
@@ -102,10 +118,33 @@ const LogHeader = ({ log, expanded, className }) => {
           minWidth="130px"
           alignItems="flex-end"
         >
-          <FormattedDate
-            date={log.createdDate}
-            sx={{ fontSize: ".775rem", cursor: "select" }}
-          />
+          <Stack
+            flexDirection="row"
+            mr={1.5}
+          >
+            {user && expanded && log?.modifyDate && (
+              <InternalLink
+                to={`/logs/${log.id}/history`}
+                sx={{
+                  fontSize: ".75rem",
+                  fontStyle: "italic",
+                  fontWeight: 500,
+                  lineHeight: "1.2rem"
+                }}
+                mr={1.5}
+              >
+                Edited
+              </InternalLink>
+            )}
+            <FormattedDate
+              date={log.createdDate}
+              expanded={expanded}
+              sx={{
+                fontSize: ".8rem",
+                cursor: cursorStyle
+              }}
+            />
+          </Stack>
 
           {expanded && <LogDetailActionButton log={log} />}
           {!expanded && (
@@ -115,7 +154,14 @@ const LogHeader = ({ log, expanded, className }) => {
               alignItems="center"
               justifyContent={"flex-end"}
               mr={1}
-              sx={{ "& > svg": { color: "#616161", opacity: 0.8 } }}
+              sx={{
+                "& > svg": {
+                  color: "#616161",
+                  opacity: 0.8,
+                  cursor: cursorStyle
+                }
+              }}
+              onClick={expanded ? stopPropagation : undefined}
             >
               {log?.modifyDate && (
                 <EditIcon
