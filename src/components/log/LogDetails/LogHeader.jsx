@@ -67,6 +67,7 @@ const LogHeader = ({ log, expanded, className }) => {
                 padding: "2px 4px",
                 borderRadius: "4px",
                 fontSize: ".7rem",
+                lineHeight: "1rem",
                 cursor: cursorStyle
               }}
               onClick={expanded ? stopPropagation : undefined}
@@ -129,7 +130,7 @@ const LogHeader = ({ log, expanded, className }) => {
                   fontSize: ".75rem",
                   fontStyle: "italic",
                   fontWeight: 500,
-                  lineHeight: "1.2rem"
+                  lineHeight: "1rem"
                 }}
                 mr={1.5}
               >
