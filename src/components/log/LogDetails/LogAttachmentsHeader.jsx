@@ -9,8 +9,8 @@ export const LogAttachmentsHeader = styled(({ log, className }) => {
 
   return (
     <Stack
-      className={className}
       mb={1}
+      className={className}
     >
       <AttachmentsGallery
         attachments={

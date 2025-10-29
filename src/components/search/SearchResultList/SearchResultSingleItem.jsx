@@ -1,4 +1,4 @@
-import { Stack, Tooltip, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import EditIcon from "@mui/icons-material/Edit";
@@ -68,7 +68,9 @@ export const SearchResultSingleItem = ({
           noWrap
           fontSize=".7rem"
           variant="body2"
+          lineHeight={1.2}
         >
+          <span style={{ fontSize: ".57rem", mb: 1 }}>@</span>
           {log.owner}
         </Typography>
 
@@ -97,48 +99,33 @@ export const SearchResultSingleItem = ({
           flexDirection="row"
           alignItems="center"
           gap={0.5}
-          sx={{ "& > svg": { color: "#616161" } }}
+          sx={{ "& > svg": { color: "#616161", opacity: 0.8 } }}
           mt={0.8}
         >
           {log?.attachments?.length > 0 && (
-            <Tooltip
-              title="Attachments"
-              enterDelay={200}
-            >
-              <AttachFileIcon
-                fontSize="small"
-                sx={{
-                  cursor: "default",
-                  fontSize: isNestedReply ? "1rem" : "1.1rem"
-                }}
-              />
-            </Tooltip>
+            <AttachFileIcon
+              fontSize="small"
+              sx={{
+                cursor: "default",
+                fontSize: "1rem"
+              }}
+            />
           )}
           {log?.modifyDate && (
-            <Tooltip
-              title="Edited"
-              enterDelay={200}
-            >
-              <EditIcon
-                sx={{
-                  cursor: "default",
-                  fontSize: isNestedReply ? ".9rem" : "1.1rem"
-                }}
-              />
-            </Tooltip>
+            <EditIcon
+              sx={{
+                cursor: "default",
+                fontSize: ".9rem"
+              }}
+            />
           )}
           {!isParentNestedLog && (isReply || isNestedReply) && (
-            <Tooltip
-              title="Reply"
-              enterDelay={200}
-            >
-              <ReplyIcon
-                sx={{
-                  cursor: "default",
-                  fontSize: isNestedReply ? ".9rem" : "1.2rem"
-                }}
-              />
-            </Tooltip>
+            <ReplyIcon
+              sx={{
+                cursor: "default",
+                fontSize: "1rem"
+              }}
+            />
           )}
         </Stack>
       </Stack>

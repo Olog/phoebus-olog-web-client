@@ -144,10 +144,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                     }}
                     onClick={() => setAdvancedSearchOpen((prev) => !prev)}
                   >
-                    <Tooltip
-                      enterDelay={200}
-                      title="Filter"
-                    >
+                    <Tooltip title="Filter">
                       <Badge
                         badgeContent={getFieldCount(searchParams)}
                         color="primary"
@@ -205,7 +202,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
             </IconButton>
             <Typography
               ml={1}
-              variant="h6"
+              fontSize="1.3rem"
               component="span"
             >
               ESS Logbook

@@ -28,8 +28,6 @@ export const CommonMark = styled(
     }, [commonmarkSrc, isPreview]);
 
     const plainText = htmlToPlainText(html);
-    const summary =
-      plainText.length > 100 ? `${plainText.slice(0, 100)}...` : plainText;
 
     if (isSummary) {
       return (
@@ -38,12 +36,12 @@ export const CommonMark = styled(
           mb={0.2}
           sx={{
             maxHeight: "22px",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis"
+            whiteSpace: "nowrap"
           }}
+          noWrap
+          {...props}
         >
-          {summary}
+          {plainText}
         </Typography>
       );
     }

@@ -97,7 +97,7 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
         onSubmit={handleSubmit(applyFilters)}
         aria-labelledby="advanced-search"
         role="search"
-        gap={2}
+        gap={1.5}
         px={1}
       >
         <TextInput
@@ -217,7 +217,7 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
           />
           <Button
             onClick={clearFilters}
-            sx={{ margin: "12px 0 0 4px" }}
+            sx={{ margin: "10px 0 0 4px" }}
           >
             Reset filters
           </Button>

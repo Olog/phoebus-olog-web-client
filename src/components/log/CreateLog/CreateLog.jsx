@@ -76,7 +76,7 @@ const CreateLog = () => {
       <EntryEditor
         {...{
           form,
-          title: "Create new log",
+          title: "New log entry",
           onSubmit
         }}
       />
