@@ -56,7 +56,7 @@ const LogHeader = ({ log, expanded, className }) => {
               fontSize=".85rem"
               noWrap
               onClick={expanded ? stopPropagation : undefined}
-              sx={{ cursor: cursorStyle }}
+              sx={{ cursor: cursorStyle, lineHeight: "100%" }}
             >
               @{log.owner}
             </Typography>
@@ -64,10 +64,10 @@ const LogHeader = ({ log, expanded, className }) => {
               sx={{
                 ml: 1,
                 backgroundColor: "#dfdfdf",
-                padding: "2px 4px",
+                padding: "4px 6px",
                 borderRadius: "4px",
                 fontSize: ".7rem",
-                lineHeight: "1rem",
+                lineHeight: "100%",
                 cursor: cursorStyle
               }}
               onClick={expanded ? stopPropagation : undefined}
@@ -121,6 +121,7 @@ const LogHeader = ({ log, expanded, className }) => {
         >
           <Stack
             flexDirection="row"
+            alignItems="center"
             mr={1.5}
           >
             {user && expanded && log?.modifyDate && (
@@ -130,9 +131,10 @@ const LogHeader = ({ log, expanded, className }) => {
                   fontSize: ".75rem",
                   fontStyle: "italic",
                   fontWeight: 500,
-                  lineHeight: "1rem"
+                  lineHeight: "100%"
                 }}
                 mr={1.5}
+                mt={0.2}
               >
                 Edited
               </InternalLink>
