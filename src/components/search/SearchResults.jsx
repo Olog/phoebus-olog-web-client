@@ -19,9 +19,11 @@ export const SearchResults = styled(({ className }) => {
   const searchPageParams = useSearchPageParams();
 
   const searchLogsQuery = useMemo(() => {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     let params = {
       ...searchPageParams,
-      ...searchParams
+      ...searchParams,
+      tz
     };
 
     return params;

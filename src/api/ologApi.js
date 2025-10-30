@@ -50,7 +50,8 @@ const ologApi = createApi({
         attachments,
         from,
         size,
-        sort
+        sort,
+        tz
       }) => {
         return {
           url: "/logs/search",
@@ -68,7 +69,8 @@ const ologApi = createApi({
             attachments,
             from,
             size,
-            sort
+            sort,
+            tz
           }
         };
       }
