@@ -16,7 +16,13 @@ export const isImage = (attachment) => {
   }
 };
 
-export const ImageOrFile = ({ attachment, alt, className, ...props }) => {
+export const ImageOrFile = ({
+  attachment,
+  disabled,
+  alt,
+  className,
+  ...props
+}) => {
   return (
     <Stack
       fontSize="5rem"
@@ -52,7 +58,7 @@ export const ImageOrFile = ({ attachment, alt, className, ...props }) => {
             }}
           />
 
-          {!isLocalFile(attachment) && (
+          {!disabled && !isLocalFile(attachment) && (
             <DownloadIcon
               className="file-overlay"
               sx={{

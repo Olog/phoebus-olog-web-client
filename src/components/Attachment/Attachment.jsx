@@ -68,7 +68,12 @@ const Attachment = ({ attachment, removeAttachment, disabled, className }) => {
 
   const attachmentFileName = attachment?.file?.name ?? attachment?.filename;
 
-  const image = <StyledAttachmentImage attachment={attachment} />;
+  const image = (
+    <StyledAttachmentImage
+      attachment={attachment}
+      disabled={disabled}
+    />
+  );
 
   return (
     <>
