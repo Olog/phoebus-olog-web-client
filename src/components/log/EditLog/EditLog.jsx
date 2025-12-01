@@ -92,7 +92,8 @@ const EditLog = ({ log }) => {
           form,
           title: `Edit Log "${log?.title}"`,
           onSubmit,
-          isEditing: true
+          isEditing: true,
+          submitDisabled: !form.formState.isDirty
         }}
       />
     </>
