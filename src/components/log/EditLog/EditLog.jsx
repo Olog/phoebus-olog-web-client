@@ -44,7 +44,6 @@ const EditLog = ({ log }) => {
     },
     values: {
       ...log,
-      description: log.source,
       level: { name: log.level, defaultLevel: false }
     }
   });
@@ -92,7 +91,8 @@ const EditLog = ({ log }) => {
           form,
           title: `Edit Log "${log?.title}"`,
           onSubmit,
-          isEditing: true
+          isEditing: true,
+          submitDisabled: !form.formState.isDirty
         }}
       />
     </>

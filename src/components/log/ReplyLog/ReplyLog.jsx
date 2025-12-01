@@ -17,11 +17,8 @@ const ReplyLog = ({ log }) => {
       attachments: []
     },
     values: {
-      attachments: [],
-      logbooks: log?.logbooks ?? [],
-      tags: log?.tags ?? [],
-      level: { name: log?.level, defaultLevel: false },
-      title: log?.title
+      ...log,
+      level: { name: log?.level, defaultLevel: false }
     }
   });
 
@@ -67,7 +64,8 @@ const ReplyLog = ({ log }) => {
         {...{
           form,
           title: `Reply to Log "${log?.title}"`,
-          onSubmit
+          onSubmit,
+          submitDisabled: !form.formState.isDirty
         }}
       />
     </>
