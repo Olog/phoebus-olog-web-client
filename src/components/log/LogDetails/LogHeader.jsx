@@ -58,7 +58,7 @@ const LogHeader = ({ log, expanded, className }) => {
               onClick={expanded ? stopPropagation : undefined}
               sx={{ cursor: cursorStyle, lineHeight: "100%" }}
             >
-              @{log.owner}
+              {log.owner}
             </Typography>
             <Typography
               sx={{
@@ -72,7 +72,7 @@ const LogHeader = ({ log, expanded, className }) => {
               }}
               onClick={expanded ? stopPropagation : undefined}
             >
-              #{log.id}
+              {log.id}
             </Typography>
             {expanded && (
               <Tooltip title={copyUrlLabel}>
@@ -102,17 +102,35 @@ const LogHeader = ({ log, expanded, className }) => {
               </Tooltip>
             )}
           </Stack>
-          <Typography
-            sx={{
-              fontSize: ".975rem",
-              fontWeight: 500,
-              cursor: cursorStyle
-            }}
+          <Stack
+            flexDirection="row"
+            alignItems="center"
             mt={0.8}
-            onClick={expanded ? stopPropagation : undefined}
           >
-            {log.title}
-          </Typography>
+            <Typography
+              sx={{
+                fontSize: ".975rem",
+                fontWeight: 500,
+                cursor: cursorStyle
+              }}
+              onClick={expanded ? stopPropagation : undefined}
+            >
+              {log.title}
+            </Typography>
+            {user && expanded && log?.modifyDate && (
+              <InternalLink
+                to={`/logs/${log.id}/history`}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  fontSize: ".75rem",
+                  ml: 1.5
+                }}
+              >
+                Edited
+              </InternalLink>
+            )}
+          </Stack>
         </Stack>
 
         <Stack
@@ -124,21 +142,6 @@ const LogHeader = ({ log, expanded, className }) => {
             alignItems="center"
             mr={1.5}
           >
-            {user && expanded && log?.modifyDate && (
-              <InternalLink
-                to={`/logs/${log.id}/history`}
-                sx={{
-                  fontSize: ".75rem",
-                  fontStyle: "italic",
-                  fontWeight: 500,
-                  lineHeight: "100%"
-                }}
-                mr={1.5}
-                mt={0.2}
-              >
-                Edited
-              </InternalLink>
-            )}
             <FormattedDate
               date={log.createdDate}
               expanded={expanded}

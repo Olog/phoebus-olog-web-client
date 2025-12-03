@@ -70,7 +70,6 @@ export const SearchResultSingleItem = ({
           variant="body2"
           lineHeight={1.2}
         >
-          <span style={{ fontSize: ".57rem", mb: 1 }}>@</span>
           {log.owner}
         </Typography>
 
