@@ -60,20 +60,22 @@ const LogHeader = ({ log, expanded, className }) => {
             >
               {log.owner}
             </Typography>
-            <Typography
-              sx={{
-                ml: 1,
-                backgroundColor: "#dfdfdf",
-                padding: "4px 6px",
-                borderRadius: "4px",
-                fontSize: ".7rem",
-                lineHeight: "100%",
-                cursor: cursorStyle
-              }}
-              onClick={expanded ? stopPropagation : undefined}
-            >
-              {log.id}
-            </Typography>
+            <Tooltip title={expanded ? "Log ID" : null}>
+              <Typography
+                sx={{
+                  ml: 1,
+                  backgroundColor: "#dfdfdf",
+                  padding: "4px 6px",
+                  borderRadius: "4px",
+                  fontSize: ".7rem",
+                  lineHeight: "100%",
+                  cursor: cursorStyle
+                }}
+                onClick={expanded ? stopPropagation : undefined}
+              >
+                {log.id}
+              </Typography>
+            </Tooltip>
             {expanded && (
               <Tooltip title={copyUrlLabel}>
                 <IconButton
