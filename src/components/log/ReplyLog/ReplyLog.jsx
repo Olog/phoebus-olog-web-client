@@ -6,6 +6,13 @@ import { EntryEditor } from "../EntryEditor";
 import { ologApi } from "api/ologApi";
 import { useCustomSnackbar } from "src/hooks/useCustomSnackbar";
 
+const cleanLog = (log) => {
+  let cleanedLog = { ...log };
+  cleanedLog.description = "";
+  cleanedLog.attachments = [];
+  return cleanedLog;
+};
+
 const ReplyLog = ({ log }) => {
   const [replyInProgress, setReplyInProgress] = useState(false);
   const [replyLog] = ologApi.endpoints.createLog.useMutation();
@@ -17,7 +24,7 @@ const ReplyLog = ({ log }) => {
       attachments: []
     },
     values: {
-      ...log,
+      ...cleanLog(log),
       level: { name: log?.level, defaultLevel: false }
     }
   });
