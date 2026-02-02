@@ -1,5 +1,12 @@
 import { useRef, useState } from "react";
-import { Box, Button, Stack, Typography, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+  styled
+} from "@mui/material";
 import BackupIcon from "@mui/icons-material/Backup";
 import CloudOffIcon from "@mui/icons-material/CloudOff";
 import { InternalLink } from "../Link";
@@ -51,10 +58,13 @@ export const DroppableFileUploadInput = ({
   browseLabel,
   maxFileSizeMb,
   maxRequestSizeMb,
-  disabled
+  disabled,
+  isConvertingFile
 }) => {
   const fileInputRef = useRef();
   const [error, setError] = useState("");
+
+  const blockOperations = disabled || isConvertingFile;
 
   // Validates the filesize (if applicable)
   // And invokes the filechange callback if valid
@@ -133,49 +143,55 @@ export const DroppableFileUploadInput = ({
   return (
     <StyledDroppableFileUploadArea
       ref={dragAreaRef}
-      onDrop={handleDrop}
-      onDragEnter={handleDragEnter}
-      onDragOver={handleDragEnter}
-      onDragLeave={handleDragLeave}
+      onDrop={blockOperations ? undefined : handleDrop}
+      onDragEnter={blockOperations ? undefined : handleDragEnter}
+      onDragOver={blockOperations ? undefined : handleDragEnter}
+      onDragLeave={blockOperations ? undefined : handleDragLeave}
       className={className}
     >
       <StyledClickableArea
-        onClick={onClick}
-        disabled={disabled}
+        onClick={blockOperations ? undefined : onClick}
+        disabled={blockOperations}
       >
         <Box mb={0.5}>{disabled ? <CloudOffIcon /> : <BackupIcon />}</Box>
         {disabled ? (
           <Typography fontSize=".875rem">File upload disabled</Typography>
         ) : (
           <>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap={0.8}
-            >
-              <InternalLink
-                onClick={onClick}
-                sx={{ fontSize: ".875rem" }}
-              >
-                {browseLabel}
-              </InternalLink>
-              <Typography fontSize=".875rem">or</Typography>
-              <Typography
-                component="span"
-                fontSize=".875rem"
-                fontWeight="bold"
-              >
-                {dragLabel}
-              </Typography>
-            </Stack>
-            <Button
-              sx={{ width: "fit-content", mt: 1.5, mb: 1 }}
-              variant="outlined"
-              disabled={disabled}
-              onClick={handleClipboardAttach}
-            >
-              Attach image from clipboard
-            </Button>
+            {isConvertingFile ? (
+              <CircularProgress sx={{ my: 2 }} />
+            ) : (
+              <>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  gap={0.8}
+                >
+                  <InternalLink
+                    onClick={onClick}
+                    sx={{ fontSize: ".875rem" }}
+                  >
+                    {browseLabel}
+                  </InternalLink>
+                  <Typography fontSize=".875rem">or</Typography>
+                  <Typography
+                    component="span"
+                    fontSize=".875rem"
+                    fontWeight="bold"
+                  >
+                    {dragLabel}
+                  </Typography>
+                </Stack>
+                <Button
+                  sx={{ width: "fit-content", mt: 1.5, mb: 1 }}
+                  variant="outlined"
+                  disabled={blockOperations}
+                  onClick={handleClipboardAttach}
+                >
+                  Attach image from clipboard
+                </Button>
+              </>
+            )}
             <Typography
               mt={0.5}
               fontSize=".78rem"

@@ -14,8 +14,7 @@ import Attachment from "components/Attachment/Attachment";
 import customization from "config/customization";
 import { DroppableFileUploadInput } from "components/shared/input/FileInput";
 import { parseUrlToMarkdown } from "src/hooks/parseUrlToMarkdown";
-import { useUnsupported } from "src/hooks/useUnsupported";
-import { UnsupportedAlert } from "src/components/shared/UnsupportedAlert";
+import { useFileUtils } from "src/hooks/useFileUtils";
 
 const RenderedAttachmentsContainer = styled("div")(
   ({ hasAttachments, theme }) => ({
@@ -41,6 +40,8 @@ const Description = ({ form, isEditing }) => {
   const { control, formState, getValues, setValue } = form;
   const descriptionRef = useRef();
 
+  const { convertHeicToJpeg, splitFileName, isConvertingFile } = useFileUtils();
+
   const [maxRequestSizeMb, setMaxRequestSizeMb] = useState(
     customization.defaultMaxRequestSizeMb
   );
@@ -50,10 +51,6 @@ const Description = ({ form, isEditing }) => {
   const [initialImage, setInitialImage] = useState(null);
   const [showEmbedImageDialog, setShowEmbedImageDialog] = useState(false);
   const [showHtmlPreview, setShowHtmlPreview] = useState(false);
-
-  const unsupportedState = useUnsupported();
-  const { unsupportedFiles, setUnsupportedFiles, checkIsUnsupported } =
-    unsupportedState;
 
   const {
     fields: attachments,
@@ -100,10 +97,7 @@ const Description = ({ form, isEditing }) => {
   const { data: serverInfo } = ologApi.endpoints.getServerInfo.useQuery();
 
   const generateUniqueFileName = (file) => {
-    const fileName = file.name;
-    const lastDot = fileName.lastIndexOf(".");
-    const name = fileName.slice(0, lastDot) ?? "unknown";
-    const extension = fileName.slice(lastDot + 1).toLowerCase();
+    const { name, extension } = splitFileName(file.name);
     return new File([file], `${name}-${new Date().getTime()}.${extension}`, {
       type: file.type,
       lastModified: file.lastModified
@@ -117,14 +111,11 @@ const Description = ({ form, isEditing }) => {
   const onFileChanged = (files) => {
     if (files) {
       // note event.target.files is a FileList, not an array! But we can convert it
-      Array.from(files).forEach((file) => {
-        if (checkIsUnsupported(file)) {
-          return;
-        }
-        setUnsupportedFiles([]);
+      Array.from(files).forEach(async (file) => {
+        const convertedFile = await convertHeicToJpeg(file);
         appendAttachment(
           new OlogAttachment({
-            file: generateUniqueFileName(file),
+            file: generateUniqueFileName(convertedFile),
             id: uuidv4()
           })
         );
@@ -152,10 +143,6 @@ const Description = ({ form, isEditing }) => {
     for (let item of items) {
       if (item.kind === "file" && item.type.match(/^image/)) {
         const imageFile = item.getAsFile();
-        if (checkIsUnsupported(imageFile)) {
-          return;
-        }
-        setUnsupportedFiles([]);
 
         if (!isEditing && imageFile) {
           setInitialImage(imageFile);
@@ -295,6 +282,7 @@ const Description = ({ form, isEditing }) => {
             maxFileSizeMb={maxFileSizeMb}
             maxRequestSizeMb={maxRequestSizeMb}
             disabled={isEditing}
+            isConvertingFile={isConvertingFile}
           />
           {parsedAttachments?.map((attachment, index) => {
             return (
@@ -313,9 +301,6 @@ const Description = ({ form, isEditing }) => {
           </Alert>
         ) : null}
       </Stack>
-      {unsupportedFiles.length > 0 && (
-        <UnsupportedAlert state={unsupportedState} />
-      )}
       <EmbedImageDialog
         showEmbedImageDialog={showEmbedImageDialog}
         setShowEmbedImageDialog={setShowEmbedImageDialog}

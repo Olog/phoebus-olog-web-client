@@ -18,12 +18,17 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, ImageList, ImageListItem, Stack } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  ImageList,
+  ImageListItem,
+  Stack
+} from "@mui/material";
 import Modal from "../../../shared/Modal";
 import { TextInput } from "components/shared/input/TextInput";
 import { DroppableFileUploadInput } from "components/shared/input/FileInput";
-import { useUnsupported } from "src/hooks/useUnsupported";
-import { UnsupportedAlert } from "src/components/shared/UnsupportedAlert";
+import { useFileUtils } from "src/hooks/useFileUtils";
 
 const EmbedImageDialog = ({
   addEmbeddedImage,
@@ -48,9 +53,7 @@ const EmbedImageDialog = ({
   const [originalImageHeight, setOriginalImageHeight] = useState(0);
   const scalingFactor = watch("scalingFactor");
 
-  const unsupportedState = useUnsupported();
-  const { unsupportedFiles, setUnsupportedFiles, checkIsUnsupported } =
-    unsupportedState;
+  const { convertHeicToJpeg, isConvertingFile } = useFileUtils();
 
   // If provided with an initial image, then use it
   useEffect(() => {
@@ -59,14 +62,11 @@ const EmbedImageDialog = ({
     }
   }, [initialImage]);
 
-  const onFileChanged = (files) => {
+  const onFileChanged = async (files) => {
     if (files) {
-      if (checkIsUnsupported(files[0])) {
-        return;
-      }
-      setUnsupportedFiles([]);
-      setImageAttachment(files[0]);
-      checkImageSize(imageAttachment, setSize);
+      const convertedFile = await convertHeicToJpeg(files[0]);
+      setImageAttachment(convertedFile);
+      checkImageSize(convertedFile, setSize);
     }
   };
 
@@ -163,16 +163,22 @@ const EmbedImageDialog = ({
               </ImageListItem>
             </ImageList>
           ) : (
-            <DroppableFileUploadInput
-              onFileChanged={onFileChanged}
-              id="embed-image-upload"
-              dragLabel="Drag image here"
-              browseLabel="Choose an image"
-              maxFileSizeMb={maxFileSizeMb}
-            />
-          )}
-          {unsupportedFiles.length > 0 && (
-            <UnsupportedAlert state={unsupportedState} />
+            <Stack
+              alignItems="center"
+              my={1}
+            >
+              {isConvertingFile ? (
+                <CircularProgress />
+              ) : (
+                <DroppableFileUploadInput
+                  onFileChanged={onFileChanged}
+                  id="embed-image-upload"
+                  dragLabel="Drag image here"
+                  browseLabel="Choose an image"
+                  maxFileSizeMb={maxFileSizeMb}
+                />
+              )}
+            </Stack>
           )}
           <TextInput
             name="scalingFactor"
