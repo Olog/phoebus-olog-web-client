@@ -100,9 +100,10 @@ const Description = ({ form, isEditing }) => {
   const { data: serverInfo } = ologApi.endpoints.getServerInfo.useQuery();
 
   const generateUniqueFileName = (file) => {
-    const splitFileName = file.name.split(".");
-    const name = splitFileName[0] ?? "unknown";
-    const extension = splitFileName[1] ?? ".jpg";
+    const fileName = file.name;
+    const lastDot = fileName.lastIndexOf(".");
+    const name = fileName.slice(0, lastDot) ?? "unknown";
+    const extension = fileName.slice(lastDot + 1).toLowerCase();
     return new File([file], `${name}-${new Date().getTime()}.${extension}`, {
       type: file.type,
       lastModified: file.lastModified
