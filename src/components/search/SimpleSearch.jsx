@@ -1,29 +1,30 @@
 import { IconButton, InputAdornment, Stack } from "@mui/material";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useSearchParams } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 import { TextInput } from "components/shared/input/TextInput";
-import {
-  removeEmptyKeys,
-  useEnhancedSearchParams,
-  withoutParams
-} from "src/hooks/useEnhancedSearchParams";
+import {} from // removeEmptyKeys,
+// useEnhancedSearchParams,
+// withoutParams
+"src/hooks/useEnhancedSearchParams";
 
 const SimpleSearch = () => {
-  const { searchParams } = useEnhancedSearchParams();
-  const { toSearchParams, toQueryString, setSearchParams } =
-    useEnhancedSearchParams();
+  // const { searchParams } = useEnhancedSearchParams();
+  const [, setSearchParams] = useSearchParams();
+  // const { toSearchParams, toQueryString /*setSearchParams*/ } =
+  //   useEnhancedSearchParams();
   const { control, handleSubmit, setValue, getValues, watch } = useForm({});
 
   const queryValue = watch("query");
 
-  useEffect(() => {
-    setValue(
-      "query",
-      toQueryString(removeEmptyKeys(withoutParams(searchParams)))
-    );
-  }, [searchParams, toQueryString, setValue]);
+  // useEffect(() => {
+  //   setValue(
+  //     "query",
+  //     toQueryString(removeEmptyKeys(withoutParams(searchParams)))
+  //   );
+  // }, [searchParams, toQueryString, setValue]);
 
   const onSubmit = () => {
     const { query } = getValues();
@@ -31,7 +32,7 @@ const SimpleSearch = () => {
     if (!query) {
       setSearchParams({});
     } else {
-      setSearchParams(toSearchParams(query));
+      setSearchParams("?query=" + query);
     }
   };
 

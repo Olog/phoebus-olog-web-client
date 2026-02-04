@@ -5,7 +5,7 @@ import { Box, CircularProgress, Stack, styled } from "@mui/material";
 import { SearchResultSingleItem } from "./SearchResultSingleItem";
 import { SearchResultGroupItem } from "./SearchResultGroupItem/SearchResultGroupItem";
 import { getLogEntryGroupId } from "components/Properties";
-import { sortByCreatedDate } from "components/log/sort";
+// import { sortByCreatedDate } from "components/log/sort";
 import {
   incrementPageSize,
   useSearchPageParams
@@ -53,7 +53,8 @@ export const SearchResultList = styled(
     const logsWithTrimmedGroupIds = useMemo(
       () =>
         removeSubsequentReplies(
-          logsWithGroupIds.toSorted(sortByCreatedDate(dateDescending))
+          logsWithGroupIds
+          // .toSorted(sortByCreatedDate(dateDescending))
         ),
       [logsWithGroupIds, dateDescending]
     );
