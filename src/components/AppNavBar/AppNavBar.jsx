@@ -46,6 +46,7 @@ import { toggleSortOrder } from "features/searchPageParamsReducer";
 import { theme } from "src/config/theme";
 import { useOnPage } from "src/hooks/onPage";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
+import customization from "src/config/customization";
 
 const getFieldCount = (searchParams) => {
   let fieldCount = 0;
@@ -205,7 +206,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
               fontSize="1.3rem"
               component="span"
             >
-              ESS Logbook
+              {customization.logbookTitle}
             </Typography>
           </Button>
           <nav aria-label="user menu">
