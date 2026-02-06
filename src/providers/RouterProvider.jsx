@@ -53,14 +53,14 @@ export const routes = [
         element: <HelpView />
       },
       {
-        path: "/*",
+        path: "*",
         element: <NotFoundView homeHref="/" />
       }
     ]
   }
 ];
 
-const router = createBrowserRouter(routes);
+const router = createBrowserRouter(routes, {basename: import.meta.env.BASE_URL});
 
 const RouterProvider = () => {
   return <ReactRouterDomRouterProvider router={router} />;
