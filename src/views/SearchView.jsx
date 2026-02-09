@@ -33,35 +33,13 @@ function SearchView() {
       <ContentView ref={containerRef}>
         <Resizable
           size={{ width: `${leftPercent}%`, height: "100%" }}
-          enable={{ right: true }}
-          minWidth={200}
+          minWidth="10%"
           maxWidth="80%"
-          style={{ height: "100%", display: "block" }}
-          handleStyles={{
-            right: {
-              width: 8,
-              marginRight: -4,
-              cursor: "col-resize",
-              background: "transparent",
-              height: "100%"
-            }
-          }}
-          handleComponent={{
-            right: (
-              <Divider
-                sx={{
-                  bgcolor: "#ffffffff",
-                  width: "4px",
-                  height: "100%",
-                  margin: 0,
-                  alignSelf: "stretch"
-                }}
-              />
-            )
-          }}
-          onResizeStop={(e, direction, ref) => {
+          onResizeStop={(_e, _direction, ref) => {
             const container = containerRef.current;
-            if (!container) {return;}
+            if (!container) {
+              return;
+            }
             const containerWidth = container.getBoundingClientRect().width;
             const newPercent = (ref.offsetWidth / containerWidth) * 100;
             const clamped = Math.min(Math.max(newPercent, 15), 80);
