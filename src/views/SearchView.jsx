@@ -16,12 +16,13 @@ const ContentView = styled(Box)(({ theme }) => ({
     flexDirection: "column-reverse",
     "& > *": {
       flex: 1,
-      minWidth: 0
+      height: "50%",
+      width: "100%"
     }
   }
 }));
 
-function SearchView() {
+const SearchView = () => {
   const { id } = useParams();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
@@ -31,6 +32,10 @@ function SearchView() {
   if (isDesktop) {
     return (
       <ContentView ref={containerRef}>
+        <Divider
+          sx={{ borderColor: "#E2E8EE" }}
+          orientation="vertical"
+        />
         <Resizable
           size={{ width: `${leftPercent}%`, height: "100%" }}
           minWidth="10%"
@@ -50,7 +55,10 @@ function SearchView() {
             <SearchResults />
           </Box>
         </Resizable>
-
+        <Divider
+          sx={{ borderColor: "#E2E8EE" }}
+          orientation="vertical"
+        />
         <Box sx={{ flex: 1, minWidth: 0, overflow: "auto" }}>
           <LogDetailsContainer id={id} />
         </Box>
@@ -59,20 +67,17 @@ function SearchView() {
   }
 
   return (
-    <ContentView>
-      <Divider
-        orientation="horizontal"
-        sx={{ borderColor: "#E2E8EE" }}
-      />
-      <Box sx={{ flex: 50, minWidth: 0, height: "100%", overflow: "auto" }}>
+    <ContentView useRef={containerRef}>
+      <Divider sx={{ borderColor: "#E2E8EE" }} />
+      <Box sx={{ width: "100%", height: "50%", overflow: "auto" }}>
         <SearchResults />
       </Box>
       <Divider sx={{ borderColor: "#E2E8EE" }} />
-      <Box sx={{ flex: 50, minWidth: 0, height: "100%", overflow: "auto" }}>
+      <Box sx={{ width: "100%", height: "50%", overflow: "auto" }}>
         <LogDetailsContainer id={id} />
       </Box>
     </ContentView>
   );
-}
+};
 
 export default SearchView;
