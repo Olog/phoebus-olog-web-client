@@ -1,9 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Box, Divider, styled, useTheme, useMediaQuery } from "@mui/material";
 import { useParams } from "react-router-dom";
 import LogDetailsContainer from "src/components/log/LogDetails/LogDetailsContainer";
 import { SearchResults } from "components/search";
-import { useCallback } from "react";
 
 const ContentView = styled(Box, {
   shouldForwardProp: (prop) => prop !== "leftFlex" && prop !== "rightFlex"
@@ -26,15 +25,17 @@ function SearchView() {
   const [leftFlex, setLeftFlex] = useState(1.25);
   const rightFlex = 3.24 - leftFlex;
 
-  const { onMouseMove, onMouseUp, containerRef, onMouseDown } =
-    changeLayoutRatio(leftFlex, setLeftFlex);
+  const { onMouseMove, onMouseUp, containerRef, onMouseDown } = useLayoutRatio(
+    leftFlex,
+    setLeftFlex
+  );
 
   useEffect(() => {
     return () => {
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
     };
-  }, []);
+  }, [onMouseMove, onMouseUp]);
 
   return isDesktop ? (
     <ContentView
@@ -65,7 +66,7 @@ function SearchView() {
 
 export default SearchView;
 
-function changeLayoutRatio(leftFlex, setLeftFlex) {
+function useLayoutRatio(leftFlex, setLeftFlex) {
   const containerRef = useRef(null);
   const dragging = useRef(false);
   const startX = useRef(0);
@@ -75,7 +76,9 @@ function changeLayoutRatio(leftFlex, setLeftFlex) {
 
   const onMouseMove = useCallback(
     (e) => {
-      if (!dragging.current) return;
+      if (!dragging.current) {
+        return;
+      }
       const dx = e.clientX - startX.current;
       const { width } = containerRef.current.getBoundingClientRect();
       const flexArea = width - 16;
@@ -93,7 +96,9 @@ function changeLayoutRatio(leftFlex, setLeftFlex) {
 
   const onMouseDown = useCallback(
     (e) => {
-      if (e.button !== 0) return;
+      if (e.button !== 0) {
+        return;
+      }
       e.preventDefault();
       dragging.current = true;
       startX.current = e.clientX;
