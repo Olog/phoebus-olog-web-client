@@ -15,7 +15,7 @@
     "dayjs": "^1.11.13",
     "dompurify": "^3.2.6",
     "heic2any": "^0.0.4",
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.1.1",
     "markdown-it-attrs": "^4.3.1",
     "notistack": "^3.0.2",
     "query-string": "^9.2.2",
