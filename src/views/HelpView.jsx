@@ -39,7 +39,7 @@ export const HelpView = () => {
               href="https://olog.readthedocs.io/en/latest/"
               label="Visit the documentation to learn more"
             >
-              Read the docs
+              App docs
             </ExternalLink>
           </Typography>
           <Typography
@@ -52,7 +52,20 @@ export const HelpView = () => {
               target="_blank"
               label="Visit the documentation to learn more"
             >
-              Read the docs
+              Search docs
+            </ExternalLink>
+          </Typography>
+          <Typography
+            display="flex"
+            gap={0.5}
+          >
+            Want to use the Swagger API client?
+            <ExternalLink
+              href={`${customization.APP_BASE_URL}/api/swagger-ui/index.html`}
+              target="_blank"
+              label="Visit the documentation to learn more"
+            >
+              Swagger API client
             </ExternalLink>
           </Typography>
           {SUPPORT_HREF && (
