@@ -61,7 +61,7 @@ export const HelpView = () => {
           >
             Want to use the Swagger API client?
             <ExternalLink
-              href={`${customization.APP_BASE_URL}/api/swagger-ui/index.html`}
+              href={`${customization.APP_BASE_URL}${customization.SWAGGER_URL}`}
               target="_blank"
               label="Visit the documentation to learn more"
             >
