@@ -16,7 +16,6 @@ const options = {
 
 export function withoutParams(searchParams) {
   const copy = { ...searchParams };
-  delete copy.query;
   delete copy.groupedReplies;
   delete copy.condensedEntries;
   return copy;
