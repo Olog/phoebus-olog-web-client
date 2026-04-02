@@ -15,7 +15,11 @@ import { useSearchPageParams } from "features/searchPageParamsReducer";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 export const SearchResults = styled(({ className }) => {
-  const { searchParams, isSearchActive } = useEnhancedSearchParams();
+  const { searchParams } = useEnhancedSearchParams();
+
+  const hasBadgeParams = useMemo(() => {
+    return Object.keys(searchParams).some((key) => key !== "query");
+  }, [searchParams]);
   const searchPageParams = useSearchPageParams();
 
   const searchLogsQuery = useMemo(() => {
@@ -48,7 +52,7 @@ export const SearchResults = styled(({ className }) => {
       position="relative"
       sx={{ backgroundColor: "#fafafa", minHeight: 0 }}
     >
-      {isSearchActive && (
+      {hasBadgeParams && (
         <Box>
           <Box px={4}>
             <Stack
