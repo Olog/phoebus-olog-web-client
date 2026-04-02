@@ -49,11 +49,13 @@ import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 const getFieldCount = (searchParams) => {
   let fieldCount = 0;
-  for (const value of Object.values(searchParams)) {
-    if (Array.isArray(value) && value.length > 0) {
-      fieldCount += value.length;
-    } else if (value) {
-      fieldCount++;
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (key !== "query") {
+      if (Array.isArray(value) && value.length > 0) {
+        fieldCount += value.length;
+      } else if (value) {
+        fieldCount++;
+      }
     }
   }
   return fieldCount;
@@ -67,6 +69,8 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
   const { searchParams } = useEnhancedSearchParams();
   const { setShowLogout } = useShowLogout();
   const { onHomePage, onCreatePage } = useOnPage();
+
+  const hasQuery = !!searchParams.query?.trim();
 
   const toggleSort = () => {
     dispatch(toggleSortOrder());
@@ -157,6 +161,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                   <SortToggleButton
                     label="create date"
                     onClick={toggleSort}
+                    disabled={hasQuery}
                   />
                 </Box>
               </Stack>
