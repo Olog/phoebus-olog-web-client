@@ -50,12 +50,16 @@ export const SearchResultList = styled(
       [logs]
     );
 
+    const hasQuery = new URLSearchParams(location.search).get("query")?.trim();
+
     const logsWithTrimmedGroupIds = useMemo(
       () =>
         removeSubsequentReplies(
-          logsWithGroupIds.toSorted(sortByCreatedDate(dateDescending))
+          hasQuery
+            ? logsWithGroupIds
+            : logsWithGroupIds.toSorted(sortByCreatedDate(dateDescending))
         ),
-      [logsWithGroupIds, dateDescending]
+      [logsWithGroupIds, dateDescending, hasQuery]
     );
 
     const navigateToEntry = (logId) => {
