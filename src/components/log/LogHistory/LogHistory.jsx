@@ -1,53 +1,8 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Link,
-  Paper,
-  Stack,
-  Tooltip,
-  Typography
-} from "@mui/material";
+import { Button, Link, Stack, Tooltip, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import { FormattedDate } from "components/shared/FormattedDate";
-import LogDetails from "src/components/log/LogDetails/LogDetails";
-import { KeyValueTable } from "src/components/log/LogDetails/KeyValueTable";
-
-const LogHistoryHeader = ({ log }) => (
-  <Box
-    px={3}
-    pt={2}
-    sx={{ "& p, time": { fontSize: "1rem" } }}
-  >
-    <KeyValueTable
-      data={[
-        {
-          name: "Author",
-          value: log.owner
-        },
-        {
-          name: log.modifyDate ? "Edited" : "Created",
-          value: (
-            <FormattedDate
-              date={log?.modifyDate || log?.createdDate}
-              component="span"
-              sx={{ fontSize: ".875rem", fontWeight: "bold" }}
-            />
-          )
-        }
-      ]}
-    />
-    <Divider
-      sx={{
-        marginTop: "15px",
-        borderWidth: "1.25px",
-        borderColor: "#F3F5F7"
-      }}
-    />
-  </Box>
-);
+import LogHistoryEntryCard from "./LogHistoryEntryCard";
 
 const DownloadButton = ({ currentLog, logHistory }) => {
   const data = {
@@ -77,8 +32,8 @@ const LogHistory = ({ currentLog, logHistory }) => {
   const navigate = useNavigate();
   return (
     <Stack
-      py={2}
       px={4}
+      pb={2}
       width="100%"
       maxWidth={"900px"}
       mx={"auto"}
@@ -87,7 +42,14 @@ const LogHistory = ({ currentLog, logHistory }) => {
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
-        mb={1}
+        sx={(theme) => ({
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          py: 2,
+          mb: 1,
+          backgroundColor: theme.palette.background.paper
+        })}
       >
         <Stack
           direction="row"
@@ -107,46 +69,53 @@ const LogHistory = ({ currentLog, logHistory }) => {
             </Button>
           </Tooltip>
 
-          <Typography
-            component="h2"
-            variant="h3"
-            fontSize="1.75rem"
+          <Stack
+            direction="row"
+            alignItems="center"
+            gap={1.5}
             py={1}
           >
-            Log History ({currentLog.id})
-          </Typography>
+            <Typography
+              component="h2"
+              variant="h3"
+              fontSize="1.75rem"
+            >
+              Log History
+            </Typography>
+            <Tooltip title="Log ID">
+              <Typography
+                component="span"
+                sx={{
+                  backgroundColor: "#dfdfdf",
+                  padding: "6px 10px",
+                  borderRadius: "4px",
+                  fontSize: "1rem",
+                  fontWeight: 500,
+                  lineHeight: 1.2
+                }}
+              >
+                {currentLog.id}
+              </Typography>
+            </Tooltip>
+          </Stack>
         </Stack>
         <DownloadButton {...{ currentLog, logHistory }} />
       </Stack>
-      <Stack mb={4}>
-        <Paper
-          elevation={3}
-          sx={{ margin: "10px 0" }}
-        >
-          <LogHistoryHeader log={currentLog} />
-          <LogDetails log={currentLog} />
-        </Paper>
+      <Stack
+        mb={4}
+        sx={{ "& > *:last-child": { marginBottom: "15px" } }}
+      >
+        <LogHistoryEntryCard log={currentLog} />
 
         {logHistory?.hitCount === 0 ? (
           <Typography fontStyle="italic">(No edit history)</Typography>
         ) : (
-          logHistory?.logs?.map((log) => {
-            const id = log.modifyDate ?? log.createdBy;
-
-            return (
-              <Paper
-                key={id}
-                elevation={3}
-                sx={{
-                  margin: "10px 0",
-                  "&:last-child": { marginBottom: "25px" }
-                }}
-              >
-                <LogHistoryHeader log={log} />
-                <LogDetails log={log} />
-              </Paper>
-            );
-          })
+          logHistory?.logs?.map((log, index) => (
+            <LogHistoryEntryCard
+              key={`${log.id}-${log.modifyDate ?? log.createdDate ?? ""}-${index}`}
+              log={log}
+            />
+          ))
         )}
       </Stack>
     </Stack>

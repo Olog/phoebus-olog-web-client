@@ -8,6 +8,7 @@ const Key = ({ name, children }) => (
     flexDirection="row"
     gap={0.5}
     alignItems="center"
+    flexWrap="wrap"
   >
     <Typography
       fontSize="0.75rem"
