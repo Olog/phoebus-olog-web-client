@@ -63,6 +63,7 @@ let customization = {
   WEBSOCKET_BASE_URL: import.meta.env.VITE_APP_WEBSOCKET_BASE_URL, // e.g. ws://localhost:8080/Olog/web-socket
   SUPPORT_HREF: import.meta.env.VITE_APP_SUPPORT_HREF,
   VERSION: import.meta.env.VITE_APP_VERSION ?? packageInfo.version,
+  SWAGGER_URL: import.meta.env.VITE_APP_SWAGGER_URL,
 
   logbookTitle: import.meta.env.VITE_APP_APP_TITLE ?? "ESS Logbook"
 };

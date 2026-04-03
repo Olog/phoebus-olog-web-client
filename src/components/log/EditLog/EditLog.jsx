@@ -44,6 +44,7 @@ const EditLog = ({ log }) => {
     },
     values: {
       ...log,
+      description: log.source || log.description,
       level: { name: log.level, defaultLevel: false }
     }
   });

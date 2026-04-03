@@ -4,7 +4,6 @@ import {
 } from "react-router-dom";
 import App from "src/views/App";
 import SearchView from "src/views/SearchView";
-// import { LogEntriesView } from "components/LogEntriesView";
 import { AppErrorBoundary } from "components/shared/error/ErrorBoundary";
 import CreateLogView from "views/CreateLogView";
 import EditLogView from "views/EditLogView";
@@ -12,7 +11,6 @@ import { HelpView } from "views/HelpView";
 import LogHistoryView from "views/LogHistoryView";
 import NotFoundView from "views/NotFoundView";
 import ReplyLogView from "views/ReplyLogView";
-// import LogEntriesView from "src/components/LogEntriesView/LogEntriesView";
 
 export const routes = [
   {
@@ -53,14 +51,16 @@ export const routes = [
         element: <HelpView />
       },
       {
-        path: "/*",
+        path: "*",
         element: <NotFoundView homeHref="/" />
       }
     ]
   }
 ];
 
-const router = createBrowserRouter(routes);
+const router = createBrowserRouter(routes, {
+  basename: import.meta.env.BASE_URL
+});
 
 const RouterProvider = () => {
   return <ReactRouterDomRouterProvider router={router} />;
