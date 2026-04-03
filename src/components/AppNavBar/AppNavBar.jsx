@@ -206,7 +206,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
               fontSize="1.3rem"
               component="span"
             >
-              {customization.logbookTitle}
+              {customization.APP_TITLE}
             </Typography>
           </Button>
           <nav aria-label="user menu">

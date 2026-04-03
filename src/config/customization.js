@@ -65,7 +65,7 @@ let customization = {
   VERSION: import.meta.env.VITE_APP_VERSION ?? packageInfo.version,
   SWAGGER_URL: import.meta.env.VITE_APP_SWAGGER_URL,
 
-  logbookTitle: import.meta.env.VITE_APP_APP_TITLE ?? "ESS Logbook"
+  APP_TITLE: import.meta.env.VITE_APP_APP_TITLE ?? "ESS Logbook"
 };
 
 export default customization;
