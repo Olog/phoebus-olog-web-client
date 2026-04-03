@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Stack, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@mui/material/styles";
@@ -53,9 +53,22 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
   const { data: logbooks } = ologApi.endpoints.getLogbooks.useQuery();
   const { data: tags } = ologApi.endpoints.getTags.useQuery();
 
+  const hasQuery = !!searchParams.query?.trim();
+  const hasQueryTooltipTitle = hasQuery
+    ? "Can't use while search is active"
+    : "";
+  const hasQueryTooltipStyle = hasQuery
+    ? { "& *": { cursor: "not-allowed !important" } }
+    : undefined;
+
   useEffect(() => {
-    form.reset({ ...searchParams, groupedReplies, condensedEntries });
-  }, [condensedEntries, form, groupedReplies, searchParams]);
+    form.reset({
+      ...searchParams,
+      ...(hasQuery ? { title: "", desc: "" } : {}),
+      groupedReplies,
+      condensedEntries
+    });
+  }, [condensedEntries, form, groupedReplies, hasQuery, searchParams]);
 
   const clearFilters = () => {
     setSearchParams({});
@@ -100,18 +113,32 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
         gap={1.5}
         px={1}
       >
-        <TextInput
-          name="title"
-          label="Title"
-          control={control}
-          defaultValue=""
-        />
-        <TextInput
-          name="desc"
-          label="Description"
-          control={control}
-          defaultValue=""
-        />
+        <Tooltip title={hasQueryTooltipTitle}>
+          <div>
+            <TextInput
+              name="title"
+              label="Title"
+              control={control}
+              defaultValue=""
+              disabled={hasQuery}
+              fullWidth
+              sx={hasQueryTooltipStyle}
+            />
+          </div>
+        </Tooltip>
+        <Tooltip title={hasQueryTooltipTitle}>
+          <div>
+            <TextInput
+              name="desc"
+              label="Description"
+              control={control}
+              defaultValue=""
+              disabled={hasQuery}
+              fullWidth
+              sx={hasQueryTooltipStyle}
+            />
+          </div>
+        </Tooltip>
         <TextInput
           name="properties"
           label="Properties"
