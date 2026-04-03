@@ -4,10 +4,10 @@ import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, process.cwd(), '')
+  const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    base: env.VITE_APP_ENDPOINT,
+    base: env.VITE_APP_ENDPOINT ?? "/",
     server: {
       port: 3000,
       open: true
@@ -42,4 +42,4 @@ export default defineConfig(({ mode }) => {
       outputFile: "coverage/sonar-report.xml"
     }
   };
-})
+});
