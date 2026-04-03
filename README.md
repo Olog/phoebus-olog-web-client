@@ -64,6 +64,7 @@ Note that, by default, `VITE_APP_*` variables are only embedded during build tim
 | default is `https://olog.readthedocs.io/en/latest/` |
 | VITE_APP_SUPPORT_HREF                               | URL where support can be found for Olog. Shown on Help page only if provided.                                                                                                                 |
 | VITE_APP_VERSION                                    | Version string for Olog; default is the version defined in `package.json`.                                                                                                                    |
+| VITE_APP_APP_TITLE                                  | Title to show app header. Default is `ESS Logbook`.                                                                                                                 |
 
 ## Development
 

@@ -64,7 +64,7 @@ let customization = {
   SUPPORT_HREF: import.meta.env.VITE_APP_SUPPORT_HREF,
   VERSION: import.meta.env.VITE_APP_VERSION ?? packageInfo.version,
 
-  logbookTitle: import.meta.env.VITE_APP_LOGBOOK_TITLE ?? "ESS Logbook"
+  logbookTitle: import.meta.env.VITE_APP_APP_TITLE ?? "ESS Logbook"
 };
 
 export default customization;
