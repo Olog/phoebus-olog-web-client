@@ -3,10 +3,8 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import EditIcon from "@mui/icons-material/Edit";
 import { FormattedDate } from "components/shared/FormattedDate";
-import { LogbookChip } from "src/components/log/LogbookChip";
-import { TagChip } from "src/components/log/TagChip";
+import { EntryPillList } from "src/components/log/EntryPillList";
 import { CommonMark } from "components/shared/CommonMark";
-import { EntryTypeChip } from "src/components/log/EntryTypeChip";
 import { useAdvancedSearch } from "src/features/advancedSearchReducer";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
@@ -140,41 +138,23 @@ export const SearchResultSingleItem = ({
         />
       )}
 
-      {!isNestedReply && !condensedEntries && (
+      {!isNestedReply && (
         <Stack
-          mt={0.5}
-          mb={0.5}
           flexDirection="row"
-          gap={0.5}
-          flexWrap="wrap"
-          gridColumn="span 2"
-          sx={{ "& > div": { cursor: "pointer" } }}
+          alignItems="center"
         >
-          {log?.logbooks?.map((it) => (
-            <LogbookChip
-              sx={{ fontSize: ".65rem", height: "20px" }}
-              key={it.name}
-              value={it.name}
-            />
-          ))}
-          {log?.tags?.map((it) => (
-            <TagChip
-              sx={{ fontSize: ".65rem", height: "20px" }}
-              iconProps={{ width: "12px" }}
-              key={it.name}
-              value={it.name}
-            />
-          ))}
-          {isSearchActive && (
-            <EntryTypeChip
-              sx={{ fontSize: ".65rem", height: "20px" }}
-              key={log?.level}
-              value={log?.level}
+          {!condensedEntries && (
+            <EntryPillList
+              logbooks={log?.logbooks}
+              tags={log?.tags}
+              level={log?.level}
+              showLevel={isSearchActive}
+              sx={{ flex: 1, minWidth: 0 }}
             />
           )}
+          {expandIcon}
         </Stack>
       )}
-      {expandIcon}
     </Stack>
   );
 };

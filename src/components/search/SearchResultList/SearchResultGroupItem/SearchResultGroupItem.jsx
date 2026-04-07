@@ -4,12 +4,10 @@ import {
   Box,
   IconButton,
   LinearProgress,
-  Stack,
   Typography,
   styled
 } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import ForumIcon from "@mui/icons-material/Forum";
 import { SearchResultSingleItem } from "..";
 import { getLogEntryGroupId } from "components/Properties";
 import { ologApi } from "api/ologApi";
@@ -94,37 +92,30 @@ export const SearchResultGroupItem = styled(
     }, [shouldParentToggleExpand, onToggleComplete]);
 
     const ExpandIcon = () => (
-      <Stack
-        mt={0.3}
-        mb={0.6}
-        flexDirection="row"
-        alignItems="center"
+      <IconButton
         onClick={onExpandClick}
-        sx={{ cursor: "pointer", width: "fit-content" }}
+        size="small"
+        aria-expanded={expanded ? "true" : "false"}
+        sx={{
+          color: "#0099db",
+          padding: "4px 6px",
+          marginRight: "-4px",
+          gap: "3px",
+          borderRadius: "4px",
+          flexShrink: 0,
+          backgroundColor: expanded ? "rgba(0,153,219,0.12)" : "transparent",
+          "&:hover": { backgroundColor: "rgba(0,153,219,0.2)" }
+        }}
       >
-        <IconButton
-          sx={{
-            color: "#0099db",
-            padding: "0 5px 0 0",
-            fontSize: ".9rem",
-            "&:hover": { backgroundColor: "transparent" }
-          }}
-          size="small"
-          aria-expanded={expanded ? "true" : "false"}
-        >
-          {expanded ? (
-            <RemoveCircleOutlineIcon fontSize="inherit" />
-          ) : (
-            <AddCircleOutlineIcon fontSize="inherit" />
-          )}
-        </IconButton>
+        <ForumIcon sx={{ fontSize: ".95rem" }} />
         <Typography
-          color="#0099db"
-          fontSize=".78rem"
+          fontSize=".7rem"
+          fontWeight="bold"
+          lineHeight={1}
         >
-          ({nestedLogsCount}) {expanded ? "Hide" : "Show"} group
+          {nestedLogsCount}
         </Typography>
-      </Stack>
+      </IconButton>
     );
 
     return (
