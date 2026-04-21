@@ -29,7 +29,7 @@ export function ologClientInfoHeader() {
 const ologApi = createApi({
   reducerPath: "ologApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: customization.APP_BASE_URL, // e.g. http://localhost:8080/Olog
+    baseUrl: customization.BACKEND_URL, // e.g. http://localhost:8080/Olog
     credentials: "include", // send credentials with requests
     headers: { ...ologClientInfoHeader() }
   }),

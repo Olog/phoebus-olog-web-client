@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    base: env.VITE_APP_ENDPOINT ?? "/",
+    base: env.VITE_APP_PUBLIC_PATH ?? "/",
     server: {
       port: 3000,
       open: true

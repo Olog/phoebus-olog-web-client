@@ -59,7 +59,7 @@ export const routes = [
 ];
 
 const router = createBrowserRouter(routes, {
-  basename: import.meta.env.BASE_URL
+  basename: import.meta.env.BASE_URL // Built-in Vite env derived from base in vite.config.ts aka VITE_APP_PUBLIC_PATH
 });
 
 const RouterProvider = () => {

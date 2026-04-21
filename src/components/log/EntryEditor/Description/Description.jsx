@@ -230,7 +230,7 @@ const Description = ({ form, isEditing }) => {
       >
         <Box mt={1}>
           <ExternalLink
-            href={`${customization.APP_BASE_URL}/help/CommonmarkCheatsheet`}
+            href={`${customization.BACKEND_URL}/help/CommonmarkCheatsheet`}
             label="CommonMark Formatting Help"
           >
             <Stack

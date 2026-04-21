@@ -59,13 +59,13 @@ Note that, by default, `VITE_APP_*` variables are only embedded during build tim
 
 | Environment variable                                | Description                                                                                                                                                                                   |
 | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| VITE_APP_BASE_URL                                   | The [Phoebus Olog Backend](https://github.com/Olog/phoebus-olog) base URL (for example: `http://localhost:8080/Olog`). Default is the same host as the frontend; e.g. `http://localhost:3000` |
+| VITE_APP_BACKEND_URL                                | The [Phoebus Olog Backend](https://github.com/Olog/phoebus-olog) base URL (for example: `http://localhost:8080/Olog`). Default is the same host as the frontend; e.g. `http://localhost:3000` |
 | VITE_APP_WEBSOCKET_BASE_URL                         | The Phoebus Olog Websocket base URL (for example: `ws://localhost:8080/Olog/web-socket`)                                                                                                      |
 | default is `https://olog.readthedocs.io/en/latest/` |
 | VITE_APP_SUPPORT_HREF                               | URL where support can be found for Olog. Shown on Help page only if provided.                                                                                                                 |
 | VITE_APP_VERSION                                    | Version string for Olog; default is the version defined in `package.json`.                                                                                                                    |
-| VITE_APP_ENDPOINT                                   | Base endpoint. Default is '/' but can be modified.                                                                                                                                            |
-| VITE_APP_APP_TITLE                                  | Title to show app header. Default is `ESS Logbook`.                                                                                                                 |
+| VITE_APP_PUBLIC_PATH                                | Path prefix where the frontend SPA is served (used as Vite `base` and React Router `basename`). Default is '/' but can be modified.                                                           |
+| VITE_APP_APP_TITLE                                  | Title to show app header. Default is `ESS Logbook`.                                                                                                                                           |
 
 ## Development
 

@@ -26,7 +26,7 @@ export const parseEmbeddedImages = (commonmarkSrc, attachedFiles) => {
     } else {
       newContent = newContent.replace(
         match[0],
-        `![${altText}](${customization.APP_BASE_URL}/attachment/${id}){width=${width} height=${height}}`
+        `![${altText}](${customization.BACKEND_URL}/attachment/${id}){width=${width} height=${height}}`
       );
     }
   });

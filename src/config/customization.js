@@ -55,7 +55,7 @@ let customization = {
   /**
    * Base URL pointing to the Olog service. Required in order to support imbedded into the description (body) of a log entry.
    */
-  APP_BASE_URL: import.meta.env.VITE_APP_BASE_URL, // e.g. http://localhost:8080/Olog
+  BACKEND_URL: import.meta.env.VITE_APP_BACKEND_URL, // e.g. http://localhost:8080/Olog
 
   /**
    * Base URL for the websocket connection to the Olog service.

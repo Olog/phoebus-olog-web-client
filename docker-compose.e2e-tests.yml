@@ -33,7 +33,7 @@ services:
     depends_on:
       - fe-olog-service
     environment:
-      VITE_APP_BASE_URL: http://localhost:8080/Olog
+      VITE_APP_BACKEND_URL: http://localhost:8080/Olog
     command: >
       /bin/bash -c "
           while ! curl -s -f fe-olog-service:8080/Olog;

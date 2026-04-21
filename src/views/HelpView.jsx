@@ -48,7 +48,7 @@ export const HelpView = () => {
           >
             Want more information about how the search functionality works?
             <ExternalLink
-              href={`${customization.APP_BASE_URL}/SearchHelp_en.html`}
+              href={`${customization.BACKEND_URL}/SearchHelp_en.html`}
               target="_blank"
               label="Visit the documentation to learn more"
             >
@@ -61,7 +61,7 @@ export const HelpView = () => {
           >
             Want to use the Swagger API client?
             <ExternalLink
-              href={`${customization.APP_BASE_URL}${customization.SWAGGER_URL}`}
+              href={`${customization.BACKEND_URL}${customization.SWAGGER_URL}`}
               target="_blank"
               label="Visit the documentation to learn more"
             >
