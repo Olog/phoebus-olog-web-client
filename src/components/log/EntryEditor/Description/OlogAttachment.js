@@ -38,7 +38,7 @@ export default class OlogAttachment {
       this.fileMetadataDescription = attachment.fileMetadataDescription;
       this.url =
         attachment.url ??
-        `${customization.APP_BASE_URL}/attachment/${attachment.id}`;
+        `${customization.BACKEND_URL}/attachment/${attachment.id}`;
     }
     // Otherwise it is local to the browser / in the editor
     else {
