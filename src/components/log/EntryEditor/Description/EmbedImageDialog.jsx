@@ -174,7 +174,7 @@ const EmbedImageDialog = ({
                   onFileChanged={onFileChanged}
                   id="embed-image-upload"
                   dragLabel="Drag image here"
-                  browseLabel="Choose an image"
+                  browseLabel="Choose file(s)"
                   maxFileSizeMb={maxFileSizeMb}
                 />
               )}
