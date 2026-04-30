@@ -8,6 +8,8 @@ export const TextInput = styled(
       fieldState
     } = useController({ name, control, rules, defaultValue });
 
+    const { onBlur: customOnBlur, ...restProps } = props;
+
     return (
       <TextField
         id={name}
@@ -29,7 +31,11 @@ export const TextInput = styled(
           "& .MuiInputBase-input": { padding: "12.5px 15px", fontSize: ".9rem" }
         }}
         {...field}
-        {...props}
+        {...restProps}
+        onBlur={(e) => {
+          field.onBlur(e);
+          customOnBlur?.(e);
+        }}
       />
     );
   }
