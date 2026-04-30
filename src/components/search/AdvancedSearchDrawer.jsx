@@ -105,18 +105,21 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
           label="Title"
           control={control}
           defaultValue=""
+          onBlur={applyFilters}
         />
         <TextInput
           name="desc"
           label="Description"
           control={control}
           defaultValue=""
+          onBlur={applyFilters}
         />
         <TextInput
           name="properties"
           label="Properties"
           control={control}
           defaultValue=""
+          onBlur={applyFilters}
         />
         <EntryTypeSelect
           onChange={handleSelectChange}
@@ -139,6 +142,7 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
           label="Author"
           control={control}
           defaultValue=""
+          onBlur={applyFilters}
         />
         <WizardDateInput
           name="start"
@@ -197,6 +201,7 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
           label="Attachments"
           control={control}
           defaultValue=""
+          onBlur={applyFilters}
         />
 
         <Stack
