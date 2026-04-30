@@ -276,7 +276,7 @@ const Description = ({ form, isEditing }) => {
           <DroppableFileUploadInput
             id="attachments-upload"
             dragLabel="Drag Here"
-            browseLabel="Choose File(s)"
+            browseLabel="Choose file(s)"
             multiple
             onFileChanged={onFileChanged}
             maxFileSizeMb={maxFileSizeMb}

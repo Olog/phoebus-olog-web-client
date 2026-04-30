@@ -147,7 +147,9 @@ export const EntryEditor = ({
           gap={2}
         >
           <Stack
-            sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}
+            direction="row"
+            gap={2}
+            sx={{ "& > div": { flex: "1" } }}
           >
             <TextInput
               name="title"
@@ -189,7 +191,9 @@ export const EntryEditor = ({
             </Snackbar>
           </Stack>
           <Stack
-            sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}
+            direction="row"
+            gap={2}
+            sx={{ "& > div": { flex: "1" } }}
           >
             <LogbooksMultiSelect
               control={control}
