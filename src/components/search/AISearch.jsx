@@ -1,39 +1,24 @@
 import { IconButton, InputAdornment, Stack } from "@mui/material";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import ClearIcon from "@mui/icons-material/Clear";
-import SearchIcon from "@mui/icons-material/Search";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { TextInput } from "components/shared/input/TextInput";
-import {
-  removeEmptyKeys,
-  useEnhancedSearchParams,
-  withoutParams
-} from "src/hooks/useEnhancedSearchParams";
+import { setAiQuery, useSearchMode } from "features/searchModeReducer";
 
-const SimpleSearch = () => {
-  const { searchParams } = useEnhancedSearchParams();
-  const { toSearchParams, toQueryString, setSearchParams } =
-    useEnhancedSearchParams();
-  const { control, handleSubmit, setValue, getValues, watch } = useForm({});
+const AISearch = () => {
+  const dispatch = useDispatch();
+  const { aiQuery } = useSearchMode();
+  const { control, handleSubmit, setValue, getValues, watch } = useForm({
+    defaultValues: { question: aiQuery }
+  });
 
-  const queryValue = watch("query");
-
-  useEffect(() => {
-    setValue(
-      "query",
-      toQueryString(removeEmptyKeys(withoutParams(searchParams)))
-    );
-  }, [searchParams, toQueryString, setValue]);
+  const questionValue = watch("question");
 
   const onSubmit = () => {
-    console.log("simple search submit fired", getValues());
-    const { query } = getValues();
-
-    if (!query) {
-      setSearchParams({});
-    } else {
-      setSearchParams(toSearchParams(query));
-    }
+    console.log("ai submit", getValues());
+    const { question } = getValues();
+    dispatch(setAiQuery(question ?? ""));
   };
 
   return (
@@ -52,28 +37,23 @@ const SimpleSearch = () => {
     >
       <TextInput
         control={control}
-        placeholder="Search"
-        name="query"
+        placeholder="AI Search"
+        name="question"
         defaultValue=""
         fullWidth
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon
-                sx={{
-                  height: "20px",
-                  width: "20px"
-                }}
-              />
+              <AutoAwesomeIcon sx={{ height: "20px", width: "20px" }} />
             </InputAdornment>
           ),
           endAdornment: (
             <>
-              {queryValue && (
+              {questionValue && (
                 <IconButton
                   onClick={() => {
-                    setValue("query", "");
-                    onSubmit();
+                    setValue("question", "");
+                    dispatch(setAiQuery(""));
                   }}
                   sx={{
                     "&:hover": { backgroundColor: "transparent" },
@@ -101,4 +81,4 @@ const SimpleSearch = () => {
   );
 };
 
-export default SimpleSearch;
+export default AISearch;

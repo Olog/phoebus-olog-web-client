@@ -3,13 +3,16 @@ version: "3.7"
 services:
 
   fe-olog-service:
-    image: ghcr.io/olog/org-phoebus-service-olog:latest
+    #image: ghcr.io/olog/org-phoebus-service-olog:latest
+    build: /home/alexa/nsls2/phoebus-olog
     ports:
       - "8080:8080"
       - "8181:8181"
     depends_on:
-      - fe-olog-mongo
-      - fe-olog-elastic
+      fe-olog-mongo:
+        condition: service_started
+      fe-olog-elastic:
+        condition: service_healthy
     environment:
       elasticsearch.network.host: fe-olog-elastic
       mongo.host: fe-olog-mongo
@@ -21,14 +24,7 @@ services:
 
     # Ensure that the elastic server is up before starting olog.
     command: >
-      /bin/bash -c "
-          while ! curl -s -f fe-olog-elastic:9200/_cluster/health?wait_for_status=green;
-        do
-          echo Waiting for Elasticsearch;
-          sleep 1;
-        done;
-        java -jar service-olog-*.jar --spring.config.name=application-docker
-      "
+       /bin/bash -c "java -jar service-olog-*.jar --spring.config.name=application-docker"
 
   fe-olog-mongo:
     image: mongo
@@ -38,7 +34,7 @@ services:
       - fe-olog-mongo-data:/etc/mongo
 
   fe-olog-elastic:
-    image: elasticsearch:8.2.3
+    image: elasticsearch:8.16.0
     environment:
       cluster.name: fe-olog-elastic-cluster
       bootstrap.memory_lock: "true"
@@ -55,6 +51,12 @@ services:
       memlock:
         soft: -1
         hard: -1
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
 
 # Configure persistent storage for mongo and elastic.
 volumes:

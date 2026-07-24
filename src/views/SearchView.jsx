@@ -2,6 +2,11 @@ import { Box, Divider, styled } from "@mui/material";
 import { useParams } from "react-router-dom";
 import LogDetailsContainer from "src/components/log/LogDetails/LogDetailsContainer";
 import { SearchResults } from "components/search";
+import { AISearchResults } from "components/search/AISearchResults";
+import {
+  SEARCH_MODES,
+  useSearchMode
+} from "features/searchModeReducer";
 
 const ContentView = styled(Box)(({ theme }) => ({
   display: "grid",
@@ -26,6 +31,7 @@ const ContentView = styled(Box)(({ theme }) => ({
 
 const SearchView = styled(({ className }) => {
   const { id } = useParams();
+  const { mode } = useSearchMode();
 
   return (
     <Box height="100%">
@@ -34,7 +40,7 @@ const SearchView = styled(({ className }) => {
           sx={{ borderColor: "#E2E8EE" }}
           orientation="vertical"
         />
-        <SearchResults />
+        {mode === SEARCH_MODES.AI ? <AISearchResults /> : <SearchResults />}
         <Divider
           sx={{ borderColor: "#E2E8EE" }}
           orientation="vertical"

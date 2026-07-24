@@ -40,7 +40,8 @@ import { InternalButtonLink } from "components/shared/Link";
 import { useShowLogin, useShowLogout, useUser } from "features/authSlice";
 import LoginDialog from "components/LoginLogout/LoginDialog";
 import LogoutDialog from "components/LoginLogout/LogoutDialog";
-import SimpleSearch from "components/search/SimpleSearch";
+//import SimpleSearch from "components/search/SimpleSearch";
+import SearchBar from "components/search/SearchBar";
 import { SortToggleButton } from "components/search/SortToggleButton";
 import { toggleSortOrder } from "features/searchPageParamsReducer";
 import { theme } from "src/config/theme";
@@ -92,7 +93,9 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
             ? "auto 1.25fr auto 2fr"
             : "auto 1fr auto",
           gridTemplateRows: "1fr",
-          height: "70px",
+           minHeight: "70px",
+           height: "auto",
+            padding: "14px 0 18px",
           [theme.breakpoints.down("md")]: {
             height: "auto",
             display: "flex",
@@ -128,31 +131,31 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                 alignItems="center"
                 sx={{ height: "100%" }}
               >
-                <SimpleSearch />
-
-                <Box sx={{ minWidth: "100px", flex: 1 }}>
-                  <IconButton
-                    sx={{
-                      marginRight: "10px",
-                      backgroundColor: advancedSearchOpen
-                        ? "#dedede"
-                        : "inherit",
-                      "&:hover": {
-                        backgroundColor: advancedSearchOpen
-                          ? "#dedede"
-                          : "#F5F5F5"
-                      }
-                    }}
-                    onClick={() => setAdvancedSearchOpen((prev) => !prev)}
-                  >
-                    <Tooltip title="Filter">
-                      <Badge
-                        badgeContent={getFieldCount(searchParams)}
-                        color="primary"
+                <SearchBar
+                  actions={
+                    <Box sx={{ display: "flex" }}>
+                      <IconButton
+                        sx={{
+                          marginRight: "10px",
+                          backgroundColor: advancedSearchOpen
+                            ? "#dedede"
+                            : "inherit",
+                          "&:hover": {
+                            backgroundColor: advancedSearchOpen
+                              ? "#dedede"
+                              : "#F5F5F5"
+                          }
+                        }}
+                        onClick={() => setAdvancedSearchOpen((prev) => !prev)}
                       >
-                        <FilterAltIcon sx={{ color: "#616161" }} />
-                      </Badge>
-                    </Tooltip>
+                        <Tooltip title="Filter">
+                          <Badge
+                            badgeContent={getFieldCount(searchParams)}
+                            color="primary"
+                          >
+                            <FilterAltIcon sx={{ color: "#616161" }} />
+                          </Badge>
+                        </Tooltip>
                   </IconButton>
 
                   <SortToggleButton
@@ -160,6 +163,8 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
                     onClick={toggleSort}
                   />
                 </Box>
+              }
+            />
               </Stack>
             </nav>
             <Divider
@@ -171,7 +176,7 @@ const AppNavBar = ({ advancedSearchOpen, setAdvancedSearchOpen }) => {
         <Stack
           flexDirection="row"
           justifyContent="space-between"
-          alignItems="center"
+          alignItems="flex-start"
           width="100%"
           height="100%"
           px={5}

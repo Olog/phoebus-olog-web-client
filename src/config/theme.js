@@ -76,6 +76,9 @@ theme = createTheme(theme, {
 
 // // Compose remaining overrides
 theme = createTheme(theme, {
+  typography: {
+    fontSize: 20
+  },
   palette: {
     primary: theme.palette.augmentColor({
       color: {

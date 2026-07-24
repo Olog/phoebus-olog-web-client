@@ -75,6 +75,30 @@ const ologApi = createApi({
         };
       }
     }),
+    aiSearch: builder.query({
+      query: ({ query, start, end, logbooks, tags, level, owner, title, desc }) => ({
+        url: "/ai/search/semantic",
+        method: "POST",
+        body: {
+          query,
+          createdDateFrom: start ?? null,
+          createdDateTo: end ?? null,
+          logbooks: logbooks ?? [],
+          tags: tags ?? [],
+          levels: level ?? [],       // URL param is "level", backend field is "levels"
+          owner: owner ?? null,
+          title: title ?? null,
+          desc: desc ?? null
+        }
+      })
+    }),
+    aiAnalyze: builder.mutation({
+      query: ({ query, hits }) => ({
+        url: "/ai/search/analyze",
+        method: "POST",
+        body: { query, hits }
+      })
+    }),
     getTags: builder.query({
       query: () => ({
         url: "/tags"

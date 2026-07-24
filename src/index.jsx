@@ -27,6 +27,7 @@ import {
 import { AppErrorBoundary } from "./components/shared/error/ErrorBoundary";
 import { CustomSnackbar } from "./components/shared/CustomSnackbar";
 import { WebSocketProvider } from "./providers/WebSocketProvider";
+import "./index.css";
 
 const container = document.getElementById("root");
 const root = createRoot(container);

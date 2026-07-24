@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userSliceReducer from "./authSlice";
 import advancedSearchReducer from "./advancedSearchReducer";
 import searchPageParamsReducer from "features/searchPageParamsReducer";
+import searchModeReducer from "features/searchModeReducer";
 import { ologApi } from "api/ologApi";
 
 export const setupStore = (preloadedState) => {
@@ -9,6 +10,7 @@ export const setupStore = (preloadedState) => {
     reducer: {
       searchPageParams: searchPageParamsReducer,
       advancedSearch: advancedSearchReducer,
+      searchMode: searchModeReducer,
       [ologApi.reducerPath]: ologApi.reducer,
       auth: userSliceReducer
     },
