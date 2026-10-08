@@ -74,6 +74,7 @@ const CreateLog = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
       <EntryEditor
+        allowTemplates
         {...{
           form,
           title: "New log entry",

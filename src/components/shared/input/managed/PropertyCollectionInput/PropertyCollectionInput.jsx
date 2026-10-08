@@ -25,7 +25,7 @@ import PropertySelector from "./PropertySelector";
 import Modal from "components/shared/Modal";
 import { ologApi } from "api/ologApi";
 
-const PropertyCollectionInput = ({ control, className }) => {
+const PropertyCollectionInput = ({ control, className, children }) => {
   const [showAddProperty, setShowAddProperty] = useState(false);
   const { data: availableProperties } =
     ologApi.endpoints.getProperties.useQuery();
@@ -73,6 +73,7 @@ const PropertyCollectionInput = ({ control, className }) => {
         >
           Add Property
         </Button>
+        {children}
         {properties.length > 0 && (
           <Grid
             sx={{
@@ -85,7 +86,7 @@ const PropertyCollectionInput = ({ control, className }) => {
             {properties.map((property, index) => {
               return (
                 <PropertyInput
-                  key={index}
+                  key={property.reactHookFormId}
                   index={index}
                   control={control}
                   property={property}

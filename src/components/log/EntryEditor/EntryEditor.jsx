@@ -27,6 +27,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Description } from "./Description";
+import LoadTemplate from "./LoadTemplate";
 import { TextInput } from "components/shared/input/TextInput";
 import LogbooksMultiSelect from "components/shared/input/managed/LogbooksMultiSelect";
 import TagsMultiSelect from "components/shared/input/managed/TagsMultiSelect";
@@ -47,7 +48,8 @@ export const EntryEditor = ({
   title,
   onSubmit,
   submitDisabled,
-  isEditing
+  isEditing,
+  allowTemplates = false
 }) => {
   const topElem = useRef();
   const navigate = useNavigate();
@@ -219,7 +221,9 @@ export const EntryEditor = ({
           form={form}
           isEditing={isEditing}
         />
-        <PropertyCollectionInput control={control} />
+        <PropertyCollectionInput control={control}>
+          {allowTemplates && <LoadTemplate form={form} levels={levels} />}
+        </PropertyCollectionInput>
         <Stack
           gap={2}
           direction="row"

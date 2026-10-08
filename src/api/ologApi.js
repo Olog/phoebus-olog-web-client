@@ -80,6 +80,11 @@ const ologApi = createApi({
         url: "/tags"
       })
     }),
+    getTemplates: builder.query({
+      query: () => ({
+        url: "/templates"
+      })
+    }),
     getLogbooks: builder.query({
       query: () => ({
         url: "/logbooks"
