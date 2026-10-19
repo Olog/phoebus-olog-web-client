@@ -172,6 +172,14 @@ export const defaultHandlers = [
       }
     ]);
   }),
+  http.get("*/configuration", () => {
+    return HttpResponse.json({
+      logbooks: [],
+      tags: [],
+      levels: [],
+      authentication: { passwordLogin: true, oidcProviders: [] }
+    });
+  }),
   http.get("*/user", () => {
     return HttpResponse.json({ userName: "admin", roles: ["ROLE_ADMIN"] });
   }),

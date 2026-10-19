@@ -67,6 +67,14 @@ Note that, by default, `VITE_APP_*` variables are only embedded during build tim
 | VITE_APP_PUBLIC_PATH                                | Path prefix where the frontend SPA is served (used as Vite `base` and React Router `basename`). Default is '/' but can be modified.                                                           |
 | VITE_APP_APP_TITLE                                  | Title to show app header. Default is `ESS Logbook`.                                                                                                                                           |
 
+### Single Sign-On
+
+The login dialog asks the Olog service (`GET /configuration`, block `authentication`) how users can log in. If the
+service has OpenID Connect providers configured, a "Sign in with ..." button is shown for each of them, and the
+service may ask to hide the username/password form. No configuration of the web client is needed; see the
+authentication documentation of the [Phoebus Olog service](https://github.com/Olog/phoebus-olog). Older services
+that do not report this information get the username/password form only.
+
 ## Development
 
 ### Tooling
