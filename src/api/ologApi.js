@@ -143,6 +143,11 @@ const ologApi = createApi({
         body: log
       })
     }),
+    getServiceConfiguration: builder.query({
+      query: () => ({
+        url: "/configuration"
+      })
+    }),
     getUser: builder.query({
       query: () => ({
         url: "/user"

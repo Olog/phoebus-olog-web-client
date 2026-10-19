@@ -18,8 +18,10 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Alert, Button, Stack } from "@mui/material";
+import { Alert, Button, Divider, Stack } from "@mui/material";
+import { getLoginOptions, ssoLoginUrl } from "./loginOptions";
 import Modal from "../shared/Modal";
+import customization from "config/customization";
 import { TextInput } from "components/shared/input/TextInput";
 import { ologApi } from "api/ologApi";
 import { useShowLogin } from "features/authSlice";
@@ -29,6 +31,17 @@ const LoginDialog = () => {
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
   const [login, { isSuccess, error }] = ologApi.endpoints.login.useMutation();
   const { showLogin, setShowLogin } = useShowLogin();
+  const { data: serviceConfiguration, isLoading: isLoadingConfiguration } =
+    ologApi.endpoints.getServiceConfiguration.useQuery(undefined, {
+      skip: !showLogin
+    });
+  const { ssoProviders, passwordLogin } = getLoginOptions(
+    serviceConfiguration,
+    isLoadingConfiguration
+  );
+  const ssoFailed = new URLSearchParams(window.location.search).has(
+    "sso-error"
+  );
 
   const closeAndReset = () => {
     setLoginErrorMessage("");
@@ -85,45 +98,65 @@ const LoginDialog = () => {
           gap={2}
           marginY={2}
         >
-          <TextInput
-            name="username"
-            label="Username"
-            control={control}
-            defaultValue=""
-            sx={{
-              "& .MuiFormLabel-root": {
-                fontSize: "1rem",
-                top: 0
-              },
-              "& .MuiInputBase-input": {
-                padding: "16px 12px",
-                fontSize: "1rem"
-              }
-            }}
-          />
-          <TextInput
-            name="password"
-            label="Password"
-            control={control}
-            defaultValue=""
-            inputProps={{ type: "password" }}
-            sx={{
-              "& .MuiFormLabel-root": {
-                fontSize: "1rem",
-                top: 0
-              },
-              "& .MuiInputBase-input": {
-                padding: "16px 12px",
-                fontSize: "1rem"
-              }
-            }}
-          />
-          {/* Hidden button handles submit-on-enter automatically */}
-          <Button
-            type="submit"
-            hidden
-            tabIndex={-1}
-          />
+          {ssoFailed && ssoProviders.length > 0 ? (
+            <Alert severity="error">Single sign-on failed.</Alert>
+          ) : null}
+          {ssoProviders.map((provider) => (
+            <Button
+              key={provider.id}
+              variant="contained"
+              size="large"
+              href={ssoLoginUrl(customization.BACKEND_URL, provider.id)}
+            >
+              Sign in with {provider.name}
+            </Button>
+          ))}
+          {ssoProviders.length > 0 && passwordLogin ? (
+            <Divider>or</Divider>
+          ) : null}
+          {passwordLogin ? (
+            <>
+              <TextInput
+                name="username"
+                label="Username"
+                control={control}
+                defaultValue=""
+                sx={{
+                  "& .MuiFormLabel-root": {
+                    fontSize: "1rem",
+                    top: 0
+                  },
+                  "& .MuiInputBase-input": {
+                    padding: "16px 12px",
+                    fontSize: "1rem"
+                  }
+                }}
+              />
+              <TextInput
+                name="password"
+                label="Password"
+                control={control}
+                defaultValue=""
+                inputProps={{ type: "password" }}
+                sx={{
+                  "& .MuiFormLabel-root": {
+                    fontSize: "1rem",
+                    top: 0
+                  },
+                  "& .MuiInputBase-input": {
+                    padding: "16px 12px",
+                    fontSize: "1rem"
+                  }
+                }}
+              />
+              {/* Hidden button handles submit-on-enter automatically */}
+              <Button
+                type="submit"
+                hidden
+                tabIndex={-1}
+              />
+            </>
+          ) : null}
           {loginErrorMessage ? (
             <Alert severity="error">{loginErrorMessage}</Alert>
           ) : null}
@@ -138,13 +171,15 @@ const LoginDialog = () => {
           >
             Cancel
           </Button>
-          <Button
-            variant="contained"
-            type="submit"
-            onClick={handleSubmit(handleLogin)}
-          >
-            Login
-          </Button>
+          {passwordLogin ? (
+            <Button
+              variant="contained"
+              type="submit"
+              onClick={handleSubmit(handleLogin)}
+            >
+              Login
+            </Button>
+          ) : null}
         </>
       }
     />
