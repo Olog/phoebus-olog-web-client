@@ -7,14 +7,19 @@ import {
   Typography,
   styled
 } from "@mui/material";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { SearchResultList } from "./SearchResultList";
 import { SearchParamsBadges } from "./SearchParamsBadges";
 import { ologApi } from "api/ologApi";
-import { useSearchPageParams } from "features/searchPageParamsReducer";
+import {
+  resetPageSize,
+  useSearchPageParams
+} from "features/searchPageParamsReducer";
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 export const SearchResults = styled(({ className }) => {
+  const dispatch = useDispatch();
   const { searchParams } = useEnhancedSearchParams();
 
   const hasBadgeParams = Object.keys(searchParams).some(
@@ -44,6 +49,14 @@ export const SearchResults = styled(({ className }) => {
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true
   });
+
+  const previousSearchParams = useRef(searchParams);
+  useEffect(() => {
+    if (previousSearchParams.current !== searchParams) {
+      previousSearchParams.current = searchParams;
+      dispatch(resetPageSize());
+    }
+  }, [dispatch, searchParams]);
 
   return (
     <Stack
@@ -82,6 +95,9 @@ export const SearchResults = styled(({ className }) => {
         <SearchResultList
           logs={searchResults.logs}
           isFetchingSearchResults={isFetchingSearchResults}
+          hasMoreLogs={
+            !error && searchResults.logs.length < searchResults.hitCount
+          }
         />
       ) : (
         <Box
