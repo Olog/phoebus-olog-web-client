@@ -10,12 +10,14 @@ import {
   incrementPageSize,
   useSearchPageParams
 } from "src/features/searchPageParamsReducer";
+import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 export const SearchResultList = styled(
   ({ logs, isFetchingSearchResults, className }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
+    const { hasQuery } = useEnhancedSearchParams();
 
     const groupedRepliesActive = useSelector(
       (state) => state.advancedSearch.groupedReplies
@@ -49,8 +51,6 @@ export const SearchResultList = styled(
         })),
       [logs]
     );
-
-    const hasQuery = new URLSearchParams(location.search).get("query")?.trim();
 
     const logsWithTrimmedGroupIds = useMemo(
       () =>

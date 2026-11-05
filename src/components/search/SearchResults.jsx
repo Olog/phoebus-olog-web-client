@@ -17,9 +17,9 @@ import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 export const SearchResults = styled(({ className }) => {
   const { searchParams } = useEnhancedSearchParams();
 
-  const hasBadgeParams = useMemo(() => {
-    return Object.keys(searchParams).some((key) => key !== "query");
-  }, [searchParams]);
+  const hasBadgeParams = Object.keys(searchParams).some(
+    (key) => key !== "query"
+  );
   const searchPageParams = useSearchPageParams();
 
   const searchLogsQuery = useMemo(() => {
@@ -39,7 +39,6 @@ export const SearchResults = styled(({ className }) => {
       hitCount: 0
     },
     error,
-    isLoading: loading,
     isFetching: isFetchingSearchResults
   } = ologApi.endpoints.searchLogs.useQuery(searchLogsQuery, {
     refetchOnMountOrArgChange: true,
@@ -67,7 +66,9 @@ export const SearchResults = styled(({ className }) => {
           <Divider sx={{ marginTop: 1, borderWidth: "1px" }} />
         </Box>
       )}
-      {loading && <LinearProgress />}
+      {isFetchingSearchResults && (
+        <LinearProgress sx={{ marginBottom: "-4px", zIndex: 1 }} />
+      )}
       {error && (
         <Box>
           <Alert severity="error">
