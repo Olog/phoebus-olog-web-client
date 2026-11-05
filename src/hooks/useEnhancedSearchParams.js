@@ -8,6 +8,8 @@ const options = {
   encode: false,
   skipNull: true,
   types: {
+    title: "string",
+    desc: "string",
     level: "string[]",
     logbooks: "string[]",
     tags: "string[]"
@@ -47,40 +49,52 @@ export const removeEmptyKeys = (params) => {
   return cleanedParams;
 };
 
+// `query` is free text, so it bypasses query-string: otherwise "," would parse
+// to an array and "&" or "+" wouldn't survive the round trip.
+export const toUrlSearchParams = (searchParams) => {
+  const { query, ...rest } = removeEmptyKeys(searchParams);
+  const urlParams = new URLSearchParams(
+    queryStringParser.stringify(rest, options)
+  );
+  if (query) {
+    urlParams.set("query", query);
+  }
+  return urlParams;
+};
+
+export const fromUrlSearchParams = (urlParams) => {
+  const rest = new URLSearchParams(urlParams);
+  rest.delete("query");
+  const parsed = queryStringParser.parse(
+    decodeURIComponent(rest.toString()),
+    options
+  );
+  const query = urlParams.get("query");
+  return query === null ? parsed : { ...parsed, query };
+};
+
 export const useEnhancedSearchParams = () => {
   const [params, setParams] = useSearchParams();
 
-  const toSearchParams = useCallback((searchParams) => {
-    return queryStringParser.parse(searchParams, options);
-  }, []);
-
-  const toQueryString = useCallback((searchParams) => {
-    return queryStringParser.stringify(searchParams, options);
-  }, []);
-
-  const searchParams = useMemo(() => {
-    return queryStringParser.parse(
-      decodeURIComponent(params.toString()),
-      options
-    );
-  }, [params]);
+  const searchParams = useMemo(() => fromUrlSearchParams(params), [params]);
 
   const setSearchParams = useCallback(
-    (newParams) => {
-      setParams(toQueryString(removeEmptyKeys(newParams)));
+    (newParams, navigateOptions) => {
+      setParams(toUrlSearchParams(newParams), navigateOptions);
     },
-    [setParams, toQueryString]
+    [setParams]
   );
 
   const isSearchActive = useMemo(() => {
     return !isEmptyObject(searchParams);
   }, [searchParams]);
 
+  const hasQuery = !!searchParams.query?.trim();
+
   return {
     searchParams,
-    toSearchParams,
-    toQueryString,
     setSearchParams,
-    isSearchActive
+    isSearchActive,
+    hasQuery
   };
 };

@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { Box, Button, Stack, Tooltip } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@mui/material/styles";
+import { DisabledTooltip } from "components/shared/DisabledTooltip";
 import { TextInput } from "components/shared/input/TextInput";
 import WizardDateInput from "components/shared/input/WizardDateInput";
 import EntryTypeSelect from "components/shared/input/managed/EntryTypeSelect";
@@ -28,7 +29,7 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const { searchParams, setSearchParams } = useEnhancedSearchParams();
+  const { searchParams, setSearchParams, hasQuery } = useEnhancedSearchParams();
   const { groupedReplies, condensedEntries } = useAdvancedSearch();
 
   const form = useForm({
@@ -53,22 +54,11 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
   const { data: logbooks } = ologApi.endpoints.getLogbooks.useQuery();
   const { data: tags } = ologApi.endpoints.getTags.useQuery();
 
-  const hasQuery = !!searchParams.query?.trim();
-  const hasQueryTooltipTitle = hasQuery
-    ? "Can't use while search is active"
-    : "";
-  const hasQueryTooltipStyle = hasQuery
-    ? { "& *": { cursor: "not-allowed !important" } }
-    : undefined;
+  const disabledReason = hasQuery ? "Can't use while search is active" : "";
 
   useEffect(() => {
-    form.reset({
-      ...searchParams,
-      ...(hasQuery ? { title: "", desc: "" } : {}),
-      groupedReplies,
-      condensedEntries
-    });
-  }, [condensedEntries, form, groupedReplies, hasQuery, searchParams]);
+    form.reset({ ...searchParams, groupedReplies, condensedEntries });
+  }, [condensedEntries, form, groupedReplies, searchParams]);
 
   const clearFilters = () => {
     setSearchParams({});
@@ -113,34 +103,28 @@ export const AdvancedSearchDrawer = ({ advancedSearchOpen }) => {
         gap={1.5}
         px={1}
       >
-        <Tooltip title={hasQueryTooltipTitle}>
-          <div>
-            <TextInput
-              name="title"
-              label="Title"
-              control={control}
-              defaultValue=""
-              disabled={hasQuery}
-              sx={hasQueryTooltipStyle}
-              onBlur={applyFilters}
-              fullWidth
-            />
-          </div>
-        </Tooltip>
-        <Tooltip title={hasQueryTooltipTitle}>
-          <div>
-            <TextInput
-              name="desc"
-              label="Description"
-              control={control}
-              defaultValue=""
-              disabled={hasQuery}
-              sx={hasQueryTooltipStyle}
-              onBlur={applyFilters}
-              fullWidth
-            />
-          </div>
-        </Tooltip>
+        <DisabledTooltip reason={disabledReason}>
+          <TextInput
+            name="title"
+            label="Title"
+            control={control}
+            defaultValue=""
+            disabled={hasQuery}
+            onBlur={applyFilters}
+            fullWidth
+          />
+        </DisabledTooltip>
+        <DisabledTooltip reason={disabledReason}>
+          <TextInput
+            name="desc"
+            label="Description"
+            control={control}
+            defaultValue=""
+            disabled={hasQuery}
+            onBlur={applyFilters}
+            fullWidth
+          />
+        </DisabledTooltip>
         <TextInput
           name="properties"
           label="Properties"
