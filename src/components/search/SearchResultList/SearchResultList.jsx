@@ -13,11 +13,11 @@ import {
 import { useEnhancedSearchParams } from "src/hooks/useEnhancedSearchParams";
 
 export const SearchResultList = styled(
-  ({ logs, isFetchingSearchResults, className }) => {
+  ({ logs, isFetchingSearchResults, hasMoreLogs, className }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
-    const { hasQuery } = useEnhancedSearchParams();
+    const { searchParams, hasQuery } = useEnhancedSearchParams();
 
     const groupedRepliesActive = useSelector(
       (state) => state.advancedSearch.groupedReplies
@@ -95,8 +95,18 @@ export const SearchResultList = styled(
     };
 
     useEffect(() => {
-      // Infinite scrolling with IntersectionObserver
-      if (searchResultListRef.current && loadMoreLogsRef.current) {
+      searchResultListRef.current?.scrollTo({ top: 0 });
+    }, [searchParams]);
+
+    useEffect(() => {
+      // Infinite scrolling with IntersectionObserver. Recreated after each
+      // fetch, so it fires again if the sentinel is still within range.
+      if (
+        hasMoreLogs &&
+        !isFetchingSearchResults &&
+        searchResultListRef.current &&
+        loadMoreLogsRef.current
+      ) {
         const target = loadMoreLogsRef.current;
         const observer = new IntersectionObserver(
           (entries) => {
@@ -118,7 +128,13 @@ export const SearchResultList = styled(
           observer.unobserve(target);
         };
       }
-    }, [searchResultListRef, loadMoreLogsRef, dispatch]);
+    }, [
+      searchResultListRef,
+      loadMoreLogsRef,
+      dispatch,
+      hasMoreLogs,
+      isFetchingSearchResults
+    ]);
 
     return (
       <Stack

@@ -19,11 +19,15 @@ export const searchPageParamsSlice = createSlice({
     incrementPageSize: (state) => ({
       ...state,
       size: state.size + 50
+    }),
+    resetPageSize: (state) => ({
+      ...state,
+      size: defaultSearchPageParamsState.size
     })
   }
 });
 
-export const { toggleSortOrder, incrementPageSize } =
+export const { toggleSortOrder, incrementPageSize, resetPageSize } =
   searchPageParamsSlice.actions;
 
 export const useSearchPageParams = () =>
