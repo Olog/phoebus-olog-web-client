@@ -143,7 +143,6 @@ export const EntryEditor = ({
       >
         <Stack
           direction="column"
-          flexWrap="wrap"
           gap={2}
         >
           <Stack
