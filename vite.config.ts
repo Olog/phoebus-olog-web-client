@@ -10,7 +10,14 @@ export default defineConfig(({ mode }) => {
     base: env.VITE_APP_PUBLIC_PATH ?? "/",
     server: {
       port: 3000,
-      open: true
+      open: true,
+      proxy: {
+        "/Olog": {
+          target: "http://localhost:8080",
+          changeOrigin: true,
+          secure: false
+        }
+      }
     },
     build: {
       outDir: "build",
